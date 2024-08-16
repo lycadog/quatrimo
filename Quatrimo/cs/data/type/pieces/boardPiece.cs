@@ -39,7 +39,7 @@ public class boardPiece
         }
         
         
-        board.updateBoard();
+        //board.updateBoard();
     }
 
     public void rotatePiece(int direction) //returns true if the rotation is valid
@@ -61,7 +61,7 @@ public class boardPiece
         rotDimensions = swap; //switch rot dimensions since rotDimensions is rotate-adjusted dimensions
         renderDropShadow();
         
-        board.updateBoard();
+        //board.updateBoard();
     }
     
     public bool isRotationValid(int direction)
@@ -103,7 +103,7 @@ public class boardPiece
             tile.render(board);
         }
         isPlaced = true;
-        board.updateBoard();
+        //board.updateBoard();
     }
 
     public bool isMoveValid(int xOffset = 0, int yOffset = 0) //returns whether or not a move is valid
@@ -134,6 +134,7 @@ public class boardPiece
         return false; //if no tiles collide then return false
     }
 
+    //DEPRECRATED
     public bool fallPiece() //checks collision and lowers piece accordingly, returns if piece should be placed
     {
         if (shouldPlace())

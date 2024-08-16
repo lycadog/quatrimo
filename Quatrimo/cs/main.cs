@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
@@ -27,7 +28,10 @@ public class main
     public long scoreRequired = 10000000; //this is enemy health, rework later to initialize along with custom enemy class health
 
 	public double levelTimes = 1;
+
+	public double pieceWaitTimer = 0;
 	public double piecefallTimer = 0;
+	public double placeTimer = 0;
 	public double inputCooldownTimer = 1;
 	public double scoreAnimationTimer = 0;
 
@@ -40,7 +44,7 @@ public class main
 	public List<int> updatedRows = new List<int>();
 	public List<int> scorableRows = new List<int>();
 
-    public void coreGameLoop(double deltaTime)
+    public void coreGameLoop(GameTime gameTime)
     {
 		//COMPLETELY rewrite core game loop
 
@@ -71,18 +75,71 @@ public class main
 		//ends encounter
 
 		switch (state)
-		{
-			case gameState.turnStart:
+		{ //will need graphics update code
 
-				currentPiece = nextPiece; //grab next piece
+            // ================ TURN START ================
+            case gameState.turnStart:
+
+                pieceWaitTimer = 0;
+
+                currentPiece = nextPiece; //grab next piece
 				nextPiece = bag.getPiece(board);
 				Debug.WriteLine($"playing {currentPiece.name}");
 				//update piece preview
+
+				piecefallTimer = -600; //set timers to negative to give more reaction time when a piece is first placed
+				placeTimer = -600;
+
 				state = gameState.pieceWait;
 				break;
 
-			case gameState.pieceWait:
-				
+            // ================ PIECE WAIT ================
+            case gameState.pieceWait:
+
+				if(pieceWaitTimer >= 5000)
+				{
+					//START piece fall
+					currentPiece.playPiece();
+					canHold = true;
+					state = gameState.midTurn; break;
+				}
+
+				pieceWaitTimer += gameTime.ElapsedGameTime.Milliseconds;
+				break;
+
+            // ================ MID TURN ================
+            case gameState.midTurn:
+				//PROCESS INPUT here
+
+				//FALL & PLACE PIECE
+
+				if(piecefallTimer >= 600)
+				{
+
+                    if (currentPiece.shouldPlace()){
+                        if (placeTimer >= 600){
+
+                            currentPiece.placePiece();
+							state = gameState.scoreStep;
+
+                        }}
+
+                    else{
+                        currentPiece.moveFallingPiece(0, -1);
+						piecefallTimer = 0;
+						placeTimer = 0;
+                    }
+                }
+
+				//increment timers
+				piecefallTimer += gameTime.ElapsedGameTime.Milliseconds;
+				placeTimer += gameTime.ElapsedGameTime.Milliseconds;
+				break;
+
+            // ================ SCORE STEP ================
+            case gameState.scoreStep:
+				//check for scorable lines, tally up score, increase level & multiplier
+
 				break;
 		}
 
