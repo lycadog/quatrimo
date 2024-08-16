@@ -34,19 +34,64 @@ public class main
 	public bool canHold = false;
 
 	public boardPiece currentPiece;
-	public boardPiece heldPiece;
+	public boardPiece heldPiece = null;
 	public boardPiece nextPiece;
 
 	public List<int> updatedRows = new List<int>();
 	public List<int> scorableRows = new List<int>();
 
-    public void coreGameLoop(double deltaTime) //needs some cleanup
+    public void coreGameLoop(double deltaTime)
     {
+		//COMPLETELY rewrite core game loop
+
+		//gamesteps:
+		//ROUND START is ran from a method instead before coreGameLoop is called
+
+		//TURN START: RUNS ONCE
+		//grab new piece and update piece previews
+
+		//PIECE WAIT: LOOPS
+		//wait briefly until input or a timer ends to turn to MIDTURN
+
+		//MID TURN: LOOPS
+		//process input & move piece
+		//update graphics on move
+		//move piece down & place properly
+
+		//SCORE STEP: RUNS ONCE
+		//process score
+		//save scored rows
+
+		//SCORE ANIM: LOOPS
+		//runs end of turn animations like score
+
+		//END TURN: RUNS ONCE
+		//lowers rows
+		//ticks tiles
+		//ends encounter
+
+		switch (state)
+		{
+			case gameState.turnStart:
+
+				currentPiece = nextPiece; //grab next piece
+				nextPiece = bag.getPiece(board);
+				Debug.WriteLine($"playing {currentPiece.name}");
+				//update piece preview
+				state = gameState.pieceWait;
+				break;
+
+			case gameState.pieceWait:
+				
+				break;
+		}
 
 
 
 
 
+
+		//DEPRECATED
 			switch (state)
 		{
             // ========== ROUND START ==========
@@ -216,18 +261,18 @@ public class main
 
     }
 
-	//a lot of the functions below need to properly call the tileType function to do things rather than doing them on their own
-	//otherwise we will not get our intended custom tileType behavior //i think this is resolved
 
-	public void initializeRound() //add code to initialize board graphics properly
-	{
+	public void startEncounter(bag bag) //add code to initialize board graphics properly
+	{ //add code for enemy eventually
 		board = new board(new Vector2I(12, 22));
-		bag = new bag(data.freakyBag);
+		this.bag = bag;
 		
 		heldPiece = null;
 		nextPiece = bag.getPiece(board);
 
+		level = 0;
 		totalScore = 0;
+		state = gameState.turnStart;
 
     }
 
@@ -237,9 +282,10 @@ public class main
 		level = rowsCleared / 10;
 		Debug.WriteLine("level: " + level);
 		levelTimes = level / 2d + 1d;
-		board.updateLevelUI(level, levelTimes);
+		//board.updateLevelUI(level, levelTimes);
 	}
 
+	//DEPRECATED - REWRITE all input code
 	public void parseTurnInput(double deltaTime) //runs during piecefall, checks input to move piece, determines move validity and executes move
 	{
 		bool isMoveValid = false;
@@ -339,6 +385,7 @@ public class main
 
 	public void holdPiece()
 	{
+		//needs to be remade
 		if(heldPiece == null)
 		{
 			heldPiece = nextPiece;
@@ -356,35 +403,20 @@ public class main
 		
         currentPiece = temp;
 		canHold = false;
-		board.updatePiecePreview(currentPiece, nextPiece);
-		board.updateHeldUI(heldPiece);
+		//board.updatePiecePreview(currentPiece, nextPiece);
+		//board.updateHeldUI(heldPiece);
 
 		Debug.WriteLine(currentPiece.pos);
 		currentPiece.playPiece();
 	}
 
-	// Called when the node enters the scene tree for the first time.
-	public void _Ready()
-	{
-        state = new gameState();
-        state = gameState.roundStart;
-    }
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public void _Process(double delta)
-	{
-		coreGameLoop(delta);
-	}
-
     public enum gameState
     {
-        roundStart, //run once when round starts
 		turnStart, //once at the start of the turn
-		pieceWait, //checking for input before dropping piece
+		pieceWait, //waiting briefly before dropping piece
 		midTurn, //handling piece falling and collision
-		endTurnStart, //processing everything once
-		endTurnFinish, //finishing up animations then finalizing everything
-		endRound //finish up round and transition to the world map
-
+		scoreStep, //processing score
+		scoreAnim, //running score animations
+		endTurn //finalizing score, lowering rows & ending encounter
     }
 }
