@@ -1,7 +1,4 @@
-﻿using Godot;
-using System;
-using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
+﻿using System.Diagnostics;
 
 public class boardPiece
 { //add methods to move and rotate the piece during piecefall

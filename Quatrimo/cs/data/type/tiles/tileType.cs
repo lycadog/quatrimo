@@ -1,6 +1,3 @@
-using Godot;
-using System;
-
 public abstract class tileType //add method parameters later
 {
     //maybe rework these to take board as a paramter instead of board.tiles

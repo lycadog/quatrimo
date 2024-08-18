@@ -44,37 +44,51 @@ public class main
 	public List<int> updatedRows = new List<int>();
 	public List<int> scorableRows = new List<int>();
 
+    public main(bag bag)
+    {
+        this.bag = bag;
+
+        board = new board(new Vector2I(12, 22));
+
+        heldPiece = null;
+        nextPiece = bag.getPiece(board);
+
+        level = 0;
+        totalScore = 0;
+        state = gameState.turnStart;
+    }
+
     public void coreGameLoop(GameTime gameTime)
     {
-		//COMPLETELY rewrite core game loop
 
-		//gamesteps:
-		//ROUND START is ran from a method instead before coreGameLoop is called
+        //gamesteps:
+        //ROUND START is ran from a method instead before coreGameLoop is called
 
-		//TURN START: RUNS ONCE
-		//grab new piece and update piece previews
+        //TURN START: RUNS ONCE
+        //grab new piece and update piece previews
 
-		//PIECE WAIT: LOOPS
-		//wait briefly until input or a timer ends to turn to MIDTURN
+        //PIECE WAIT: LOOPS
+        //wait briefly until input or a timer ends to turn to MIDTURN
 
-		//MID TURN: LOOPS
-		//process input & move piece
-		//update graphics on move
-		//move piece down & place properly
+        //MID TURN: LOOPS
+        //process input & move piece
+        //update graphics on move
+        //move piece down & place properly
 
-		//SCORE STEP: RUNS ONCE
-		//process score
-		//save scored rows
+        //SCORE STEP: RUNS ONCE
+        //process score
+        //save scored rows
 
-		//SCORE ANIM: LOOPS
-		//runs end of turn animations like score
+        //SCORE ANIM: LOOPS
+        //runs end of turn animations like score
 
-		//END TURN: RUNS ONCE
-		//lowers rows
-		//ticks tiles
-		//ends encounter
+        //END TURN: RUNS ONCE
+        //ticks tiles
+		//finalizes score
+        //lowers rows
+        //ends encounter
 
-		switch (state)
+        switch (state)
 		{ //will need graphics update code
 
             // ================ TURN START ================
@@ -140,181 +154,85 @@ public class main
             case gameState.scoreStep:
 				//check for scorable lines, tally up score, increase level & multiplier
 
-				break;
-		}
-
-
-
-
-
-
-		//DEPRECATED
-			switch (state)
-		{
-            // ========== ROUND START ==========
-            case gameState.roundStart: //run once when entering a battle (round)!
-
-                initializeRound();
-				state = gameState.turnStart;
-                break;
-
-            // ========== TURN START ==========
-            case gameState.turnStart: //run once at the start of a turn
-
-                currentPiece = nextPiece;
-				nextPiece = bag.getPiece(board);
-				Debug.WriteLine(currentPiece.name);
-				board.updatePiecePreview(currentPiece, nextPiece);
-				state = gameState.pieceWait;
-                break;
-
-            // ========== PIECE WAIT ==========
-            case gameState.pieceWait: //run until input
-
-                /*if (Input.IsActionJustPressed("pieceDrop")) //change this to a configurable 5 second timer that can be ended early with an input eventually
-                {   //initiate piecefall
-                    currentPiece.playPiece();
-					canHold = true;
-                    state = gameState.midTurn;
-                }*/
-				break;
-
-            // ========== MID TURN ==========
-            case gameState.midTurn: //run continuously during a turn, while a piece is falling (ie piecefall!)
-
-                //add input code to move falling piece
-
-                piecefallTimer += deltaTime; //increment timer
-				inputCooldownTimer += deltaTime;
-
-                //rework the input later to be a bit more natural (like with pressing vs holding move keys
-                if (inputCooldownTimer >= 0.1)
-                {
-					parseTurnInput(deltaTime);
+				foreach(tile tile in currentPiece.tiles) //grab every tile's Y level
+				{
+					updatedRows.Add(tile.boardPos.y);
 				}
-
-                if (piecefallTimer >= 0.6)
-					{
-                        if (currentPiece.fallPiece())//check for collision
-                        {
-                        Debug.WriteLine("piece placed!");
-                            state = gameState.endTurnStart;
-                        }
-                        
-						Debug.WriteLine(currentPiece.pos.x + ", " + currentPiece.pos.y);
-						piecefallTimer = 0;
-                    }
 				
+				updatedRows = updatedRows.Distinct().ToList(); //remove duplicate entries
 
-                break;
-
-				// ========== END TURN START ==========
-			case gameState.endTurnStart: //process everything once
-
-                
-
-                currentPiece.placePiece();
-                Debug.WriteLine("piece placed at " + currentPiece.pos);
-                
-
-                foreach (tile tile in currentPiece.tiles) //when a piece is placed, add each row it intersects to updatedRows
+				foreach(int i in updatedRows)
 				{
-					if(tile != null) { updatedRows.Add(tile.boardPos.Y); }
+					if (isRowScoreable(i)) { scorableRows.Add(i); } //check rows, add rows that are full to the list
 				}
-				updatedRows = updatedRows.Distinct().ToList(); //remove duplicate rows
 
-				foreach(int row in updatedRows)	{ //checks each row that was just updated, if any are scorable they stored in scorableRows
-					if (isRowScoreable(row)){ //process through each scored row and set them to be scored
-						scorableRows.Add(row);
-					}
-				}
-				scorableRows.Sort();
 
-				for(int x = 0; x < board.dimensions.X; x++) //process top to bottom, left to right through every scorable line
+				for(int x = 0; x < board.dimensions.x; x++) //process score of every tile in every scored row
 				{
-					foreach(int y in scorableRows)
+					foreach(int y in scorableRows) //process through rows
 					{
-						tile tile = board.tiles[x,y];
-						turnScore += tile.score(turnScore);
+						tile tile = board.tiles[x, y];
+						turnScore += tile.score();
 						turnMultiplier += tile.type.getMultiplier(tile);
-						board.markBoardStale(tile.boardPos, 1);
-						animatable anim = new animatable(new List<string> { "█", "▓", "▒", "░", " " }, false, tile.boardPos, 0.05, board);
-						board.animatables.Add(anim);
 					}
 				}
-				board.updateBoard();
 
-                state = gameState.endTurnFinish;
+                
+
+                state = gameState.scoreAnim;
                 break;
 
-				// ========== END TURN FINISH ==========
-			case gameState.endTurnFinish: //finalize everything
-				if(scoreAnimationTimer >= 0.25 | scorableRows.Count == 0) //THIS SHOULD BE CHANGED LATER, waits for animation to finish then runs end turn
-				{ //finalize everything once animations are over
-                    scoreAnimationTimer = 0;
+			case gameState.scoreAnim:
+				//lol
+				//add animations later
+				state = gameState.endTurn; 
+				break;
+
+			case gameState.endTurn:
+
+				foreach(tile tile in board.tiles){ //tick every tile
+					if(tile != null){
+						tile.tick();}} //going to need to rework ticking tiles a bit to handling tick events that add score
 
 
-                    board.lowerRows(scorableRows);
 
-                    foreach (tile tile in board.tiles)
-                    { //tick every tile
-                        if (tile != null)
-                        { tile.tick(); }
-                    }
+				//final score operation
+                if (scorableRows.Count > 0) //get level multiplier and row bonus
+                {
+                    turnScore += (scorableRows.Count - 1) * 10; //increase by 10 for every extra row scored
+                    turnScore *= turnMultiplier;
 
-                    if (scorableRows.Count > 0)
+                    if (scorableRows.Count == 3)
                     {
-                        turnScore += (scorableRows.Count - 1) * 10; //increase by 10 for every extra row scored
-                        turnScore *= turnMultiplier;
-
-                        if (scorableRows.Count == 3)
-                        {
-                            turnScore = (long)(turnScore * (levelTimes / 4));
-                        }
-                        else if (scorableRows.Count >= 4)
-                        {
-                            turnScore = (long)(turnScore * levelTimes);
-                        }
-                        recalculateLevel(scorableRows.Count);
-
+                        turnScore = (long)(turnScore * (levelTimes / 4));
                     }
-
-                    totalScore += turnScore;
-                    turnScore = 0;
-
-                    updatedRows.Clear();
-                    scorableRows.Clear();
-
-                    board.updateBoard();
-
-                    board.updateScore(totalScore);
-                    Debug.WriteLine($"Current score: {totalScore}");
-                    if (totalScore >= scoreRequired) //if the player has enough score to beat the encounter, end the encounter
+                    else if (scorableRows.Count >= 4)
                     {
-                        Debug.WriteLine("ROUND ENDED!!!!!");
-                        state = gameState.endRound; break;
+                        turnScore = (long)(turnScore * levelTimes);
                     }
-
-                    //run enemy behavior like lowering enemy cooldown and playing enemy lines
-
-
-
-                    state = gameState.turnStart; break;
+                    recalculateLevel(scorableRows.Count);
                 }
-				scoreAnimationTimer += deltaTime;
+
+                board.lowerRows(scorableRows); //lower rows
+
+
+                totalScore += turnScore;
+                turnScore = 0;
+
+                updatedRows.Clear();
+                scorableRows.Clear();
+
+                Debug.WriteLine($"Current score: {totalScore}");
+                if (totalScore >= scoreRequired) //if the player has enough score to beat the encounter, end the encounter
+                {
+                    Debug.WriteLine("ROUND ENDED!!!!!");
+					//end encounter
+                }
+
+				state = gameState.turnStart;
+
                 break;
-
-            case gameState.endRound:
-
-				break;
-
-			default:
-				break;
 		}
-
-		parseGlobalInput();
-		board.animationTick(deltaTime);
-		board.updateGraphics();
 
     }
 

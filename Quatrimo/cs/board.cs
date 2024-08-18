@@ -38,6 +38,7 @@ public class board
     public board(Vector2I dim)
     {
         dimensions = dim;
+		tiles = new tile[dimensions.x, dimensions.y];
 		//initializeTiles();
     }
 

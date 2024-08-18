@@ -83,7 +83,7 @@ public class tile
         type.tick(this);
     }
 
-    public long score(long score) //runs when this tile is scored
+    public long score() //runs when this tile is scored
     {
         Debug.WriteLine($"score event at {boardPos.x}, {boardPos.y}");
 

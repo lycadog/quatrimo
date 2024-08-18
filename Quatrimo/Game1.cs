@@ -8,6 +8,7 @@ namespace Quatrimo
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        main main;
 
         public Game1()
         {
@@ -19,7 +20,7 @@ namespace Quatrimo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            main = new main( new bag(data.freakyBag));
             base.Initialize();
         }
 
@@ -35,6 +36,7 @@ namespace Quatrimo
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            main.coreGameLoop(gameTime);
             // TODO: Add your update logic here
 
             base.Update(gameTime);
