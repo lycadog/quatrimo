@@ -2,7 +2,8 @@ using System;
 using System.Numerics;
 
 public static class data
-{
+{ //URGENT: ADD NEW PIECES AND BAGS
+  //hook, pick, boson, etc
 
 
     static tileSet common = new(new tileType[] { new basicTile() }, new float[] { 100 }); //this contains all possible tiletypes for the Common tileset; rewrite this eventually to have weights as well
