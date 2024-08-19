@@ -26,7 +26,7 @@ public class tile
         Vector2I checkPos = new Vector2I(boardPos.x + xOffset, boardPos.y + yOffset);
         
         if(checkPos.x < 0) { return true; }
-        if(checkPos.x >= board.dimensions.y) { return true; } //if the tile is outside the board dimensions return true (invalid move)
+        if(checkPos.x >= board.dimensions.x) { return true; } //if the tile is outside the board dimensions return true (invalid move)
         if(checkPos.y < 0) { return true; }
         if(checkPos.y >= board.dimensions.y) { return true; } //maybe add game over code here?
 

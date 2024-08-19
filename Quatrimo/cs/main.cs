@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -125,13 +126,14 @@ public class main
             case gameState.midTurn:
 				//PROCESS INPUT here
 
-				//FALL & PLACE PIECE
+				parseInput();
 
-				if(piecefallTimer >= 600)
+                //FALL & PLACE PIECE
+                if (piecefallTimer >= 600)
 				{
 
                     if (currentPiece.shouldPlace()){
-                        if (placeTimer >= 600){
+                        if (placeTimer >= 1000){
 
                             currentPiece.placePiece();
 							state = gameState.scoreStep;
@@ -260,8 +262,33 @@ public class main
 		//board.updateLevelUI(level, levelTimes);
 	}
 
+	public void parseInput()
+	{
+		//rework inputs to add "on key down" kinda stuff
+		//movement should work 
+
+        if (Keyboard.GetState().IsKeyDown(Keys.Left))
+        {
+			if (currentPiece.isMoveValid(-1))
+			{
+				currentPiece.moveFallingPiece(-1, 0);
+			}
+        }
+		else if (Keyboard.GetState().IsKeyDown(Keys.Right))
+		{
+			if (currentPiece.isMoveValid(1))
+			{
+				currentPiece.moveFallingPiece(1, 0);
+			}
+		}
+        //quick acceleration for movement side to side
+
+
+    }
+
+
 	//DEPRECATED - REWRITE all input code
-	public void parseTurnInput(double deltaTime) //runs during piecefall, checks input to move piece, determines move validity and executes move
+	public void parseInputOLD(double deltaTime) //runs during piecefall, checks input to move piece, determines move validity and executes move
 	{
 		bool isMoveValid = false;
 		/*if (Input.IsActionPressed("boardLeft"))

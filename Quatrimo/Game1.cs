@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace Quatrimo
 {
@@ -37,6 +38,7 @@ namespace Quatrimo
                 Exit();
 
             main.coreGameLoop(gameTime);
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
