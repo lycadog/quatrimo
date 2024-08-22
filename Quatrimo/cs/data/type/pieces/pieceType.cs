@@ -1,10 +1,11 @@
 
 
+using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
 
 public class pieceType
 {
-    public pieceType(int xSize, int ySize, tileSet[,] tiles, Vector2I origin, int tileCount, string name, colorSet color) 
+    public pieceType(int xSize, int ySize, tileSet[,] tiles, Vector2I origin, int tileCount, string name, colorSet color, Texture2D tex) 
     {
         dimensions = new Vector2I(xSize, ySize);
         tileSet = tiles;
@@ -12,7 +13,8 @@ public class pieceType
         this.tileCount = tileCount;
         this.name = name;
         this.color = color;
- 
+        this.tex = tex;
+        Debug.WriteLine("RAAAH PIECETYPE TEX NULL: " + tex == null);
     }
     public tileSet[,] tileSet { get; set; }
     public Vector2I dimensions { get; set; }
@@ -21,6 +23,7 @@ public class pieceType
     public string name { get; set; }
     public rarity rarity { get; set; }
     public colorSet color { get; set; } //properly define and use colorsets
+    public Texture2D tex { get; set; }
 
     public void addToBag(bag bag) //add new piece to player's bag 
     {
@@ -33,8 +36,7 @@ public class pieceType
                     tiles[x, y] = tileSet[x, y].getRandomType();
                 }
             }}
-        bagPiece piece = new bagPiece(tiles, dimensions, origin, tileCount, name, rarity, color.getRandomColor()); //create new piece
-        //replace Colors.White with colorset.getrandomcolor later
+        bagPiece piece = new bagPiece(tiles, dimensions, origin, tileCount, name, rarity, color.getRandomColor(), tex); //create new piece
 
         bag.pieces.Add(piece); //add new piece to player's bag
         Debug.WriteLine("piece " + piece.name + " added!");

@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.Xna.Framework.Graphics;
+
 public class basicTile : tileType
 {
     public tile tile;
@@ -14,9 +16,9 @@ public class basicTile : tileType
     {
         return new basicTile(tile, board);
     }
-    public override string getAscii()
+    public override Texture2D getTexture(Texture2D tex)
     {
-        return "O";
+        return tex;
     }
     public override bool shouldCollide()
     {
@@ -28,7 +30,7 @@ public class basicTile : tileType
     }
     public override bool checkFallingCollision(Vector2I boardPos)
     {
-        return board.tiles[boardPos.x, boardPos.y - 1] != null && board.tiles[boardPos.x, boardPos.y -1].checkPlacedCollision(); //check if there is a piece below the tile
+        return board.tiles[boardPos.x, boardPos.y + 1] != null && board.tiles[boardPos.x, boardPos.y + 1].checkPlacedCollision(); //check if there is a piece below the tile
 
     }
     public override bool checkPlacedCollision()

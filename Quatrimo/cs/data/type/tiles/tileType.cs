@@ -1,8 +1,10 @@
+using Microsoft.Xna.Framework.Graphics;
+
 public abstract class tileType //add method parameters later
 {
     //maybe rework these to take board as a paramter instead of board.tiles
     public abstract bool shouldCollide();
-    public abstract string getAscii();
+    public abstract Texture2D getTexture(Texture2D tex);
     public abstract tileType getNewInstance(board board, tile tile);
 
     public abstract bool checkMoveCollision(Vector2I boardPos, Vector2I checkPos); //returns whether or not the next move collides

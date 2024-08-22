@@ -1,13 +1,15 @@
 
+using Microsoft.Xna.Framework;
+
 public class colorSet
 {
-    public colorSet(string[] colors)
+    public colorSet(Color[] colors)
     {
         this.colors = colors;
     }
 
-    public string[] colors;
-    public string getRandomColor()
+    public Color[] colors;
+    public Color getRandomColor()
     {
         return colors[ util.rand.Next(colors.Length - 1) ];
     }

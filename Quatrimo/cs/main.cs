@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -58,6 +59,7 @@ public class main
         totalScore = 0;
         state = gameState.turnStart;
     }
+
 
     public void coreGameLoop(GameTime gameTime)
     {
@@ -127,7 +129,7 @@ public class main
 				//PROCESS INPUT here
 
 				parseInput();
-
+				currentPiece.renderFalling();
                 //FALL & PLACE PIECE
                 if (piecefallTimer >= 600)
 				{
@@ -141,7 +143,7 @@ public class main
                         }}
 
                     else{
-                        currentPiece.moveFallingPiece(0, -1);
+                        currentPiece.moveFallingPiece(0, 1);
 						piecefallTimer = 0;
 						placeTimer = 0;
                     }
@@ -169,7 +171,7 @@ public class main
 				}
 
 
-				for(int x = 0; x < board.dimensions.x; x++) //process score of every tile in every scored row
+				for(int x = 0; x < board.boardDim.x; x++) //process score of every tile in every scored row
 				{
 					foreach(int y in scorableRows) //process through rows
 					{
@@ -282,8 +284,6 @@ public class main
 			}
 		}
         //quick acceleration for movement side to side
-
-
     }
 
 
@@ -377,7 +377,7 @@ public class main
 	
 	public bool isRowScoreable(int y)
 	{
-		for(int x = 0; x < board.dimensions.x; x++)
+		for(int x = 0; x < board.boardDim.x; x++)
 		{
 			if (board.tiles[x, y] == null) return false; //if any tile is empty, return false
 			else { continue; } //if the tile isn't empty, keep looping

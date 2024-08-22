@@ -1,8 +1,10 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 public class boardPiece
 { //add methods to move and rotate the piece during piecefall
-    public boardPiece(tile[] tiles, Vector2I dimensions, Vector2I origin, string name, rarity rarity, string color, board board)
+    public boardPiece(tile[] tiles, Vector2I dimensions, Vector2I origin, string name, rarity rarity, Color color, Texture2D tex ,board board)
     {
         this.tiles = tiles;
         this.dimensions = dimensions;
@@ -10,6 +12,7 @@ public class boardPiece
         this.name = name;
         this.rarity = rarity;
         this.color = color;
+        this.tex = tex;
         this.board = board;
         rotDimensions = dimensions;
         isPlaced = false;
@@ -24,20 +27,9 @@ public class boardPiece
     public int rotation { get; set; } //varies from 0-3
     public bool isPlaced {  get; set; }
     public string name { get; set; }
-    public string color { get; set; }
+    public Color color { get; set; }
+    public Texture2D tex { get; set; }
     public rarity rarity { get; set; }
-
-    public void updateGraphics()
-    {
-        if (!isPlaced) { renderDropShadow(); }
-        foreach (tile tile in tiles)
-        {
-                tile.render(board);
-        }
-        
-        
-        //board.updateBoard();
-    }
 
     public void rotatePiece(int direction) //returns true if the rotation is valid
     {
@@ -51,14 +43,12 @@ public class boardPiece
         }
         foreach(tile tile in tiles)
         {
-                tile.rotate(direction);
-                tile.render(board);
+            tile.rotate(direction);
+
         }
         Vector2I swap = new Vector2I(rotDimensions.x, rotDimensions.y);
         rotDimensions = swap; //switch rot dimensions since rotDimensions is rotate-adjusted dimensions
-        renderDropShadow();
-        
-        //board.updateBoard();
+      
     }
     
     public bool isRotationValid(int direction)
@@ -78,17 +68,18 @@ public class boardPiece
 
     public void playPiece() //runs when a piece is dropped
     {
-        pos = new Vector2I(5, 22-(dimensions.y -origin.y+1)); //change to proper position later
+        pos = new Vector2I(5, dimensions.y -origin.y+1); //change to proper position later
         updateTilePosition();
-        updateGraphics();
     }
 
     public void moveFallingPiece(int xOffset, int yOffset) //x and y offset for which direction to move
     {
+        Debug.WriteLine("PIECE POSITION PREMOVE: " + pos.x + ", " + pos.y);
         Vector2I offset = new Vector2I(xOffset, yOffset);
         pos = pos.add(offset);
+        Debug.WriteLine("PIECE POSITION POSTMOVE: " + pos.x + ", " + pos.y);
+
         updateTilePosition();
-        updateGraphics();
     }
 
     public void placePiece()
@@ -97,10 +88,9 @@ public class boardPiece
         {
             tile.place();
             tile.isPlaced = true;
-            tile.render(board);
+            tile.renderPlaced();
         }
         isPlaced = true;
-        //board.updateBoard();
     }
 
     public bool isMoveValid(int xOffset = 0, int yOffset = 0) //returns whether or not a move is valid
@@ -131,17 +121,11 @@ public class boardPiece
         return false; //if no tiles collide then return false
     }
 
-    //DEPRECRATED
-    public bool fallPiece() //checks collision and lowers piece accordingly, returns if piece should be placed
+    public void renderFalling()
     {
-        if (shouldPlace())
-        {
-            return true;
-        }
-        moveFallingPiece(0, -1);
-        return false;
+        foreach(tile tile in tiles) { tile.renderFalling(); }
     }
-
+ 
     public void renderDropShadow() //renders the shadow below pieces and the piece preview
     {
         int y = 0;
@@ -160,7 +144,6 @@ public class boardPiece
         {
             Vector2I previewPos = new Vector2I(tile.boardPos.x, tile.boardPos.y - y);
             renderable render = new renderable(previewPos, "[color=999999]▒", 0, true);
-            board.boardRenderQueue.Add(render);
             
         }
     }
