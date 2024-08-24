@@ -120,7 +120,7 @@ namespace Quatrimo
             nameO = Content.Load<Texture2D>("misc/nameO");
 
             data.dataInit();
-            main = new main(new bag(data.freakyBag));
+            main = new main(new bag(data.debugBag));
             main.board.initializeElements();
             // TODO: use this.Content to load your game content here
         }
@@ -180,9 +180,9 @@ namespace Quatrimo
 
             //need code to get the resolution scaling
             //recalculate scaling
-            graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-            graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
-            graphics.ApplyChanges();
+            //graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+            //graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+            //graphics.ApplyChanges();
             Debug.WriteLine("IM GAY");
         }
 

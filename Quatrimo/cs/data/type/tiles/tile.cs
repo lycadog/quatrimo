@@ -92,7 +92,7 @@ public class tile
     public void updatePos() //updates tile board position
     {
         boardPos = piece.pos.add(localPos);
-        elementPos = new Vector2I(boardPos.x + board.boardOffset.x + 1, boardPos.y - 1);
+        elementPos = new Vector2I(boardPos.x + board.boardOffset.x + 1, boardPos.y + 1);
     }
 
     public long score() //runs when this tile is scored
@@ -128,14 +128,14 @@ public class tile
     {
         if(elementPos.y > 2)
         {
-            Debug.WriteLine("POSITION: " + elementPos.x + ", " + elementPos.y);
+            Debug.WriteLine("ELEMENT POSITION: " + elementPos.x + ", " + elementPos.y);
             Texture2D tex = piece.tex;
             tex = type.getTexture(tex);
 
-            element element = board.elements[elementPos.x, elementPos.y, 2];
+            element element = board.elements[elementPos.x, elementPos.y, 3];
             element.tex = tex;
             element.color = piece.color;
-            element.animatable = new animatable(new List<Texture2D> { tex }, new List<Color>() { piece.color }, false, 1);
+            element.animatable = new animatable(new List<Texture2D> { tex }, new List<Color>() { piece.color }, false, 0);
         }   
     }
 

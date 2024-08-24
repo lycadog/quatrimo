@@ -50,7 +50,8 @@ public static class data
     public static starterBag bag1;
     public static starterBag bag2;
     public static starterBag bag3;
-  
+
+    public static starterBag debugBag;
     public static void dataInit()
     {
         bLong = new(4, 1, new tileSet[,] { { common }, { common }, { common }, { common } }, new Vector2I(2, 0), 4, "Line", deflt, Game1.round);
@@ -97,6 +98,8 @@ public static class data
     bag2 = new starterBag(new pieceType[] { bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong }, "bag2");
     bag3 = new starterBag(new pieceType[] { bNub, bCaret, bBowl, bStump, bSlash, bStick, bLong, bLepton, bBoson }, "bag3");
 
+
+        debugBag = new starterBag(new pieceType[] { bLong }, "debugbag");
 }
 
 

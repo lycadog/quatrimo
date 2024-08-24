@@ -67,8 +67,8 @@ public class boardPiece
     }
 
     public void playPiece() //runs when a piece is dropped
-    {
-        pos = new Vector2I(5, dimensions.y -origin.y+1); //change to proper position later
+    { //dimensions.y -origin.y+1
+        pos = new Vector2I(5, 0 ); //change to proper position later
         updateTilePosition();
     }
 

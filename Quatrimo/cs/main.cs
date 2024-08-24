@@ -130,6 +130,7 @@ public class main
 
 				parseInput();
 				currentPiece.renderFalling();
+				Debug.WriteLine("========= POSITION: " + currentPiece.pos.x + currentPiece.pos.y);
                 //FALL & PLACE PIECE
                 if (piecefallTimer >= 600)
 				{

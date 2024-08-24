@@ -4,10 +4,9 @@ using Quatrimo;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Xml.Linq;
 
 public class board
-{   //fix tiles placing in the air
+{
 	
 	public tile[,] tiles;
 	public element[,,] elements; 
@@ -223,9 +222,11 @@ public class board
 		return node;
     }*/
 
+
+	//REWRITE entire function
     public void lowerRows(List<int> scoredRows) //lowers rows above the scored rows after scoring
 	{
-		int length = scoredRows.Count; 
+		int length = scoredRows.Count;
 		List<tile> movedTiles = new List<tile>();
 		int[] rows = new int[length];
 
@@ -239,7 +240,7 @@ public class board
         for (int i = 0; i < length; i++)
 		{
 		
-			for (int y = rows[i] + 1; y < boardDim.y; y++)
+			for (int y = rows[i] - 1; y > 0; y++)
 			{
 				for (int x = 0; x < boardDim.x; x++)
 				{
@@ -248,13 +249,15 @@ public class board
 					{
                         //GD.Print($"MOVING PIECE from {tile.boardPos} to [{tile.boardPos.X}, {tile.boardPos.Y - 1}]");
 
-
-						//boardStaleTiles.Add(asciiForeground[x, y]);
-                        tiles[x, y - 1] = tile;
-                        tile.boardPos = new Vector2I(tile.boardPos.x, tile.boardPos.y - 1);
                         tiles[x, y] = null;
+
+
+                        elements[tile.elementPos.x, tile.elementPos.y, 2].tex = Game1.empty;
+                        tiles[x, y + 1] = tile;
+
+						tile.elementPos = tile.elementPos.add(new Vector2I(0, 1));
+						tile.boardPos = tile.boardPos.add(new Vector2I(0, 1));
 						
-							
 						movedTiles.Add(tile);
 					}
 				}
@@ -262,7 +265,7 @@ public class board
 		}
 		foreach(tile tile in movedTiles)
 		{
-
+			tile.renderPlaced();
 		}
 	}
 
