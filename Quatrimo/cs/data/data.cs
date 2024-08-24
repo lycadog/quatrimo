@@ -52,51 +52,75 @@ public static class data
     public static starterBag bag3;
 
     public static starterBag debugBag;
+
+    public static keybind[] keys;
+
+    public static keybind leftKey;
+    public static keybind rightKey;
+    public static keybind upKey;
+    public static keybind downKey;
+    public static keybind slamKey;
+    public static keybind leftRotateKey;
+    public static keybind rightRotateKey;
+
     public static void dataInit()
     {
+        leftKey = new keybind(Microsoft.Xna.Framework.Input.Keys.Left, Microsoft.Xna.Framework.Input.Keys.A);
+        rightKey = new keybind(Microsoft.Xna.Framework.Input.Keys.Right, Microsoft.Xna.Framework.Input.Keys.D);
+        upKey = new keybind(Microsoft.Xna.Framework.Input.Keys.Up, Microsoft.Xna.Framework.Input.Keys.W);
+        downKey = new keybind(Microsoft.Xna.Framework.Input.Keys.Down, Microsoft.Xna.Framework.Input.Keys.D);
+        slamKey = new keybind(Microsoft.Xna.Framework.Input.Keys.Space, Microsoft.Xna.Framework.Input.Keys.Space);
+        leftRotateKey = new keybind(Microsoft.Xna.Framework.Input.Keys.Q, Microsoft.Xna.Framework.Input.Keys.Q);
+        rightRotateKey = new keybind(Microsoft.Xna.Framework.Input.Keys.E, Microsoft.Xna.Framework.Input.Keys.E);
+
+        keys = new keybind[] {leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey};
+    }
+
+    public static void dataInitContent()
+    {
         bLong = new(4, 1, new tileSet[,] { { common }, { common }, { common }, { common } }, new Vector2I(2, 0), 4, "Line", deflt, Game1.round);
-    bSquare = new(2, 2, new tileSet[,] { { common, common }, { common, common } }, new Vector2I(1, 1), 4, "Square", deflt, Game1.round);
-    bTBlock = new(3, 2, new tileSet[,] { { common, null }, { common, common }, { common, null } }, new Vector2I(1, 0), 4, "T Block", deflt, Game1.round);
-    bLBlockR = new(2, 3, new tileSet[,] { { common, common, common }, { common, null, null } }, new Vector2I(0, 1), 4, "Right L Block", deflt, Game1.round);
-    bLBlockL = new(2, 3, new tileSet[,] { { common, null, null }, { common, common, common } }, new Vector2I(0, 1), 4, "Left L Block", deflt, Game1.round);
-    bZBlockR = new(2, 3, new tileSet[,] { { null, common, common }, { common, common, null } }, new Vector2I(0, 1), 4, "Right Z Block", deflt, Game1.round);
-    bZBlockL = new(2, 3, new tileSet[,] { { common, common, null }, { null, common, common } }, new Vector2I(0, 1), 4, "Left Z Block", deflt, Game1.round);
+        bSquare = new(2, 2, new tileSet[,] { { common, common }, { common, common } }, new Vector2I(1, 1), 4, "Square", deflt, Game1.round);
+        bTBlock = new(3, 2, new tileSet[,] { { common, null }, { common, common }, { common, null } }, new Vector2I(1, 0), 4, "T Block", deflt, Game1.round);
+        bLBlockR = new(2, 3, new tileSet[,] { { common, common, common }, { common, null, null } }, new Vector2I(0, 1), 4, "Right L Block", deflt, Game1.round);
+        bLBlockL = new(2, 3, new tileSet[,] { { common, null, null }, { common, common, common } }, new Vector2I(0, 1), 4, "Left L Block", deflt, Game1.round);
+        bZBlockR = new(2, 3, new tileSet[,] { { null, common, common }, { common, common, null } }, new Vector2I(0, 1), 4, "Right Z Block", deflt, Game1.round);
+        bZBlockL = new(2, 3, new tileSet[,] { { common, common, null }, { null, common, common } }, new Vector2I(0, 1), 4, "Left Z Block", deflt, Game1.round);
 
-    bWedge = new(2, 2, new tileSet[,] { { common, common }, { common, null } }, new Vector2I(0, 0), 3, "Wedge", deflt, Game1.box);
-    bTwig = new(1, 2, new tileSet[,] { { common, common } }, new Vector2I(0, 1), 2, "Twig", deflt, Game1.round);
+        bWedge = new(2, 2, new tileSet[,] { { common, common }, { common, null } }, new Vector2I(0, 0), 3, "Wedge", deflt, Game1.box);
+        bTwig = new(1, 2, new tileSet[,] { { common, common } }, new Vector2I(0, 1), 2, "Twig", deflt, Game1.round);
 
-    bStick = new(3, 1, new tileSet[,] { { common }, { common }, { common } }, new Vector2I(1, 0), 3, "Stick", deflt, Game1.round);
-    bBowl = new(3, 2, new tileSet[,] { { common, common }, { common, null }, { common, common } }, new Vector2I(1, 0), 5, "Bowl", deflt, Game1.circle);
-    bCorner = new(3, 3, new tileSet[,] { { common, common, common }, { common, null, null }, { common, null, null } }, new Vector2I(0, 0), 5, "Corner", deflt, Game1.box);
-    bRectangle = new(3, 2, new tileSet[,] { { common, common }, { common, common }, { common, common } }, new Vector2I(1, 0), 6, "Rectangle", deflt, Game1.box);
-    bCrowbarL = new(2, 5, new tileSet[,] { { common, common, common, common, common }, { null, null, null, null, common } }, new Vector2I(0, 3), 6, "Left Crowbar", deflt, Game1.box);
-    bCrowbarR = new(2, 5, new tileSet[,] { { null, null, null, null, common }, { common, common, common, common, common } }, new Vector2I(0, 3), 6, "Right Crowbar", deflt, Game1.box);
-    bLongT = new(3, 3, new tileSet[,] { { null, null, common }, { common, common, common }, { null, null, common } }, new Vector2I(1, 1), 5, "Long T Block", deflt, Game1.box_full);
+        bStick = new(3, 1, new tileSet[,] { { common }, { common }, { common } }, new Vector2I(1, 0), 3, "Stick", deflt, Game1.round);
+        bBowl = new(3, 2, new tileSet[,] { { common, common }, { common, null }, { common, common } }, new Vector2I(1, 0), 5, "Bowl", deflt, Game1.circle);
+        bCorner = new(3, 3, new tileSet[,] { { common, common, common }, { common, null, null }, { common, null, null } }, new Vector2I(0, 0), 5, "Corner", deflt, Game1.box);
+        bRectangle = new(3, 2, new tileSet[,] { { common, common }, { common, common }, { common, common } }, new Vector2I(1, 0), 6, "Rectangle", deflt, Game1.box);
+        bCrowbarL = new(2, 5, new tileSet[,] { { common, common, common, common, common }, { null, null, null, null, common } }, new Vector2I(0, 3), 6, "Left Crowbar", deflt, Game1.box);
+        bCrowbarR = new(2, 5, new tileSet[,] { { null, null, null, null, common }, { common, common, common, common, common } }, new Vector2I(0, 3), 6, "Right Crowbar", deflt, Game1.box);
+        bLongT = new(3, 3, new tileSet[,] { { null, null, common }, { common, common, common }, { null, null, common } }, new Vector2I(1, 1), 5, "Long T Block", deflt, Game1.box_full);
+    
+        bCaret = new(2, 3, new tileSet[,] { { common, null, common }, { null, common, null } }, new Vector2I(0, 1), 3, "Caret", deflt, Game1.circle);
+        bNub = new(1, 1, new tileSet[,] { { common } }, Vector2I.zero, 1, "Nub", deflt, Game1.circle);
+        bDipole = new(3, 2, new tileSet[,] { { common, common }, { null, null }, { common, common } }, new Vector2I(1, 1), 4, "Dipole", deflt, Game1.box_full);
+        bSlash = new(2, 2, new tileSet[,] { { common, null }, { null, common } }, Vector2I.zero, 2, "Slash", deflt, Game1.circle);
+        bStump = new(4, 2, new tileSet[,] { { common, null }, { common, common }, { common, common }, { common, null } }, new Vector2I(1, 1), 6, "Stump", deflt, Game1.circle);
+        bHatchetL = new(4, 2, new tileSet[,] { { common, common }, { common, common }, { null, common }, { null, common } }, new Vector2I(2, 0), 6, "Left Hatchet", deflt, Game1.box);
+        bHatchetR = new(4, 2, new tileSet[,] { { null, common }, { null, common }, { common, common }, { common, common } }, new Vector2I(1, 0), 6, "Right Hatchet", deflt, Game1.box);
 
-    bCaret = new(2, 3, new tileSet[,] { { common, null, common }, { null, common, null } }, new Vector2I(0, 1), 3, "Caret", deflt, Game1.circle);
-    bNub = new(1, 1, new tileSet[,] { { common } }, Vector2I.zero, 1, "Nub", deflt, Game1.circle);
-    bDipole = new(3, 2, new tileSet[,] { { common, common }, { null, null }, { common, common } }, new Vector2I(1, 1), 4, "Dipole", deflt, Game1.box_full);
-    bSlash = new(2, 2, new tileSet[,] { { common, null }, { null, common } }, Vector2I.zero, 2, "Slash", deflt, Game1.circle);
-    bStump = new(4, 2, new tileSet[,] { { common, null }, { common, common }, { common, common }, { common, null } }, new Vector2I(1, 1), 6, "Stump", deflt, Game1.circle);
-    bHatchetL = new(4, 2, new tileSet[,] { { common, common }, { common, common }, { null, common }, { null, common } }, new Vector2I(2, 0), 6, "Left Hatchet", deflt, Game1.box);
-    bHatchetR = new(4, 2, new tileSet[,] { { null, common }, { null, common }, { common, common }, { common, common } }, new Vector2I(1, 0), 6, "Right Hatchet", deflt, Game1.box);
+        bHookL = new(2, 3, new tileSet[,] { { null, null, common }, { common, common, null } }, new Vector2I(1, 1), 3, "Left Hook", deflt, Game1.box);
+        bHookR = new(2, 3, new tileSet[,] { { common, common, null }, { null, null, common } }, new Vector2I(0, 1), 3, "Right Hook", deflt, Game1.box);
+        bPickL = new(4, 2, new tileSet[,] { { common, null }, { common, common }, { common, null }, { common, null } }, new Vector2I(2, 0), 5, "Left Pick", deflt, Game1.box);
+        bPickR = new(4, 2, new tileSet[,] { { common, null }, { common, null }, { common, common }, { common, null } }, new Vector2I(2, 0), 5, "Right Pick", deflt, Game1.box);
+        bLepton = new(3, 1, new tileSet[,] { { common }, { null }, { common } }, new Vector2I(1, 0), 2, "Lepton", deflt, Game1.circle);
+        bBoson = new(3, 3, new tileSet[,] { { common, common, null }, { common, common, null }, { null, null, common } }, new Vector2I(1, 1), 5, "Boson", deflt, Game1.circle_full);
 
-    bHookL = new(2, 3, new tileSet[,] { { null, null, common }, { common, common, null } }, new Vector2I(1, 1), 3, "Left Hook", deflt, Game1.box);
-    bHookR = new(2, 3, new tileSet[,] { { common, common, null }, { null, null, common } }, new Vector2I(0, 1), 3, "Right Hook", deflt, Game1.box);
-    bPickL = new(4, 2, new tileSet[,] { { common, null }, { common, common }, { common, null }, { common, null } }, new Vector2I(2, 0), 5, "Left Pick", deflt, Game1.box);
-    bPickR = new(4, 2, new tileSet[,] { { common, null }, { common, null }, { common, common }, { common, null } }, new Vector2I(2, 0), 5, "Right Pick", deflt, Game1.box);
-    bLepton = new(3, 1, new tileSet[,] { { common }, { null }, { common } }, new Vector2I(1, 0), 2, "Lepton", deflt, Game1.circle);
-    bBoson = new(3, 3, new tileSet[,] { { common, common, null }, { common, common, null }, { null, null, common } }, new Vector2I(1, 1), 5, "Boson", deflt, Game1.circle_full);
+        bDiamond = new(3, 3, new tileSet[,] { { null, common, null }, { common, common, common }, { null, common, null } }, new Vector2I(1, 1), 5, "Diamond", deflt, Game1.circle);
+        bBrick = new(4, 3, new tileSet[,] { { common, common, common }, { common, common, common }, { common, common, common }, { common, common, common } }, new Vector2I(2, 2), 12, "Brick", deflt, Game1.heavy_full);
 
-    bDiamond = new(3, 3, new tileSet[,] { { null, common, null }, { common, common, common }, { null, common, null } }, new Vector2I(1, 1), 5, "Diamond", deflt, Game1.circle);
-    bBrick = new(4, 3, new tileSet[,] { { common, common, common }, { common, common, common }, { common, common, common }, { common, common, common } }, new Vector2I(2, 2), 12, "Brick", deflt, Game1.heavy_full);
+        classicBag = new starterBag(new pieceType[] { bLong, bSquare, bTBlock, bLBlockR, bLBlockL, bZBlockR, bZBlockL }, "Classic Bag");
+        freakyBag = new starterBag(new pieceType[] { bCaret, bNub, bDipole, bSlash, bStump, bHatchetL, bHatchetR, bWedge, bTwig, bTwig, bLong }, "Freaky Bag");
 
-    classicBag = new starterBag(new pieceType[] { bLong, bSquare, bTBlock, bLBlockR, bLBlockL, bZBlockR, bZBlockL }, "Classic Bag");
-    freakyBag = new starterBag(new pieceType[] { bCaret, bNub, bDipole, bSlash, bStump, bHatchetL, bHatchetR, bWedge, bTwig, bTwig, bLong }, "Freaky Bag");
-
-    bag1 = new starterBag(new pieceType[] { bCorner, bSquare, bWedge, bStick, bRectangle, bPickL, bPickR, bLong }, "bag1");
-    bag2 = new starterBag(new pieceType[] { bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong }, "bag2");
-    bag3 = new starterBag(new pieceType[] { bNub, bCaret, bBowl, bStump, bSlash, bStick, bLong, bLepton, bBoson }, "bag3");
+        bag1 = new starterBag(new pieceType[] { bCorner, bSquare, bWedge, bStick, bRectangle, bPickL, bPickR, bLong }, "bag1");
+        bag2 = new starterBag(new pieceType[] { bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong }, "bag2");
+        bag3 = new starterBag(new pieceType[] { bNub, bCaret, bBowl, bStump, bSlash, bStick, bLong, bLepton, bBoson }, "bag3");
 
 
         debugBag = new starterBag(new pieceType[] { bLong }, "debugbag");

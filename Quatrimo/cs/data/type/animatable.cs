@@ -11,19 +11,30 @@ public class animatable
     public List<Color> colors = new List<Color>();
     public int frame = 0;
     public bool loops;
+    public bool removeSprite;
 
     public double time = 0;
     public double hangTime;
 
-    public animatable(List<Texture2D> sequence, List<Color> colors, bool loops, double hangTime)
+    public Texture2D oldTexture;
+    public Color oldColor;
+
+    public animatable(List<Texture2D> sequence, List<Color> colors, bool loops, double hangTime, bool removeSprite, element element)
     {
         this.sequence = sequence;
         this.colors = colors;
         this.loops = loops;
         this.hangTime = hangTime;
+        this.removeSprite = removeSprite;
         time = 0;
+        if (!removeSprite)
+        {
+            oldTexture = element.tex; oldColor = element.color;
+        }
+        else { oldTexture = Game1.empty; oldColor = Color.White; }
     }
 
+    //ISSUE: on low frame rates piece falling animation hangs too long!
     public void update(element element, GameTime gameTime)
     {
         if (time > hangTime) //if enough time has passed, advance the sequence
@@ -36,73 +47,21 @@ public class animatable
             }
             time = 0;
         }
-
-        
         //set the proper texture and color
         element.tex = sequence[frame];
         element.color = colors[frame];
 
         time += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+              
+
     }
 
     public void endSequence(element element)
     {
-        element.tex = Game1.empty; //this may need to be changed later! 
-        element.color = Color.White;
+        element.tex = oldTexture; //this may need to be changed later! 
+        element.color = oldColor;
         element.animatable = null;
     }
 
-    /*public List<string> sequence = new List<string>(); //the list of characters to display in order
-    public int frame; //indicates how far in the sequence the animation is
-    public bool loops;
-    public Vector2I pos;
-
-    public double time;
-    public double hangTime; //time needed before progressing to the next frame
-
-    public board board;
-
-    public animatable(List<string> sequence, bool loops, Vector2I pos, double hangTime, board board)
-    {
-        this.sequence = sequence;
-        this.loops = loops;
-        this.pos = pos;
-        this.hangTime = hangTime;
-        this.board = board;
-
-        frame = 0;
-        time = 0;
-        advanceSequence();
-    }
-
-    public void tick(double deltaTime)
-    {
-        
-        time += deltaTime;
-        if(time > hangTime) //if enough time has passed, advance the sequence
-        {
-            advanceSequence();
-            time = 0;
-        }
-    }
-
-    public void advanceSequence()
-    {
-        if (frame >= sequence.Count) //if the sequence is over: loop if the animation loops, otherwise end the animation
-        {
-            if (loops) { frame = 0; } else { endSequence(); return; }
-        }
-        
-        renderable render = new renderable(pos, sequence[frame], 2, false); //create a render object to add to the render queue
-        //board.tickRenderQueue.Add(render);
-
-        frame++; //increment frame
-    }
-
-    public void endSequence()
-    {
-        //remove from graphics
-        //board.markTickStale(pos, 2);
-        //board.staleAnimatables.Add(this);
-    }*/
 }

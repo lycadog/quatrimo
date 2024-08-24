@@ -135,7 +135,7 @@ public class tile
             element element = board.elements[elementPos.x, elementPos.y, 3];
             element.tex = tex;
             element.color = piece.color;
-            element.animatable = new animatable(new List<Texture2D> { tex }, new List<Color>() { piece.color }, false, 0);
+            element.animatable = new animatable(new List<Texture2D> { tex }, new List<Color>() { piece.color }, false, 0, true, element);
         }   
     }
 

@@ -34,7 +34,7 @@ public class main
 	public double pieceWaitTimer = 0;
 	public double piecefallTimer = 0;
 	public double placeTimer = 0;
-	public double inputCooldownTimer = 1;
+	public double inputCooldown = 1;
 	public double scoreAnimationTimer = 0;
 
 	public bool canHold = false;
@@ -113,7 +113,7 @@ public class main
             // ================ PIECE WAIT ================
             case gameState.pieceWait:
 
-				if(pieceWaitTimer >= 5000)
+				if(pieceWaitTimer >= 5000 || data.slamKey.keyDown)
 				{
 					//START piece fall
 					currentPiece.playPiece();
@@ -128,11 +128,11 @@ public class main
             case gameState.midTurn:
 				//PROCESS INPUT here
 
-				parseInput();
+				parseInput(gameTime);
 				currentPiece.renderFalling();
 				Debug.WriteLine("========= POSITION: " + currentPiece.pos.x + currentPiece.pos.y);
                 //FALL & PLACE PIECE
-                if (piecefallTimer >= 600)
+                if (piecefallTimer >= 400)
 				{
 
                     if (currentPiece.shouldPlace()){
@@ -265,27 +265,55 @@ public class main
 		//board.updateLevelUI(level, levelTimes);
 	}
 
-	public void parseInput()
+	public void parseInput(GameTime gameTime)
 	{
 		//rework inputs to add "on key down" kinda stuff
 		//movement should work 
 
-        if (Keyboard.GetState().IsKeyDown(Keys.Left))
+		
+        if (data.leftKey.keyHeld && inputCooldown > 100)
         {
 			if (currentPiece.isMoveValid(-1))
 			{
 				currentPiece.moveFallingPiece(-1, 0);
+				inputCooldown = 0;
 			}
         }
-		else if (Keyboard.GetState().IsKeyDown(Keys.Right))
+		else if (data.rightKey.keyHeld && inputCooldown > 100)
 		{
 			if (currentPiece.isMoveValid(1))
 			{
 				currentPiece.moveFallingPiece(1, 0);
-			}
+                inputCooldown = 0;
+            }
+        }
+
+		if(data.downKey.keyHeld)
+		{
+			piecefallTimer += gameTime.ElapsedGameTime.TotalMilliseconds * 4;
 		}
-        //quick acceleration for movement side to side
+		else if (data.upKey.keyHeld)
+		{
+			piecefallTimer -= gameTime.ElapsedGameTime.TotalMilliseconds * 0.8 ;
+		}
+
+		if (data.leftRotateKey.keyDown)
+		{
+            if (currentPiece.isRotationValid(1))
+            {
+                currentPiece.rotatePiece(1);
+            }
+        }
+		else if (data.rightRotateKey.keyDown)
+		{
+            if (currentPiece.isRotationValid(-1))
+            {
+                currentPiece.rotatePiece(-1);
+            }
+        }
+		inputCooldown += gameTime.ElapsedGameTime.TotalMilliseconds;
     }
+
 
 
 	//DEPRECATED - REWRITE all input code
@@ -354,7 +382,7 @@ public class main
 		{
 			
             piecefallTimer = 0;
-            inputCooldownTimer = 0;
+            inputCooldown = 0;
         }
     }
 

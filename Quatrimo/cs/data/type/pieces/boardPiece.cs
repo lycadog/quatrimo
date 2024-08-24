@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
 
 public class boardPiece
-{ //add methods to move and rotate the piece during piecefall
+{   //IDEA IDEA IDEA: add method to "undraw" piece from the element board after it is drawn while falling
     public boardPiece(tile[] tiles, Vector2I dimensions, Vector2I origin, string name, rarity rarity, Color color, Texture2D tex ,board board)
     {
         this.tiles = tiles;
@@ -125,8 +125,38 @@ public class boardPiece
     {
         foreach(tile tile in tiles) { tile.renderFalling(); }
     }
- 
-    public void renderDropShadow() //renders the shadow below pieces and the piece preview
+    public void updateTilePosition()
+    {
+        foreach (tile tile in tiles)
+        {
+            tile.updatePos();
+        }
+        getDropPos();
+    }
+
+    public void getDropPos()
+    {
+        int y = 0;
+        
+        while (true)
+        {
+            if(!isMoveValid(0, y))
+            {
+                dropPos = new Vector2I(pos.x, pos.y + y); break;
+            }
+            else { y++; }
+        }
+    }
+
+    public void renderDropShadow()
+    {
+        foreach(tile tile in tiles)
+        {
+            //need to convert drop pos into element pos!
+        }
+    }
+
+    /*public void renderDropShadow() //renders the shadow below pieces and the piece preview
     {
         int y = 0;
         dropPos = pos;
@@ -146,13 +176,7 @@ public class boardPiece
             renderable render = new renderable(previewPos, "[color=999999]▒", 0, true);
             
         }
-    }
+    }*/
 
-    public void updateTilePosition()
-    {
-        foreach(tile tile in tiles)
-        {
-            tile.updatePos();
-        }
-    }
+    
 }

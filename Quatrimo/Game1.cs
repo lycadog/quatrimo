@@ -74,6 +74,7 @@ namespace Quatrimo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            data.dataInit();
             base.Initialize();
         }
 
@@ -119,8 +120,8 @@ namespace Quatrimo
             nameM = Content.Load<Texture2D>("misc/nameM");
             nameO = Content.Load<Texture2D>("misc/nameO");
 
-            data.dataInit();
-            main = new main(new bag(data.debugBag));
+            data.dataInitContent();
+            main = new main(new bag(data.bag2));
             main.board.initializeElements();
             // TODO: use this.Content to load your game content here
         }
@@ -130,6 +131,7 @@ namespace Quatrimo
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            keybind.updateKeybinds(data.keys);
             main.coreGameLoop(gameTime);
 
             // TODO: Add your update logic here
