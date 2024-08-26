@@ -19,6 +19,9 @@ namespace Quatrimo
 
         public static Texture2D empty;
         public static Texture2D full;
+        public static Texture2D full75;
+        public static Texture2D full50;
+        public static Texture2D full25;
 
         public static Texture2D borderUL;
         public static Texture2D borderUR;
@@ -64,6 +67,7 @@ namespace Quatrimo
             Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
 
             graphics = new GraphicsDeviceManager(this);
+
             graphics.PreferredBackBufferWidth = 352;
             graphics.PreferredBackBufferHeight = 198;
             
@@ -83,6 +87,9 @@ namespace Quatrimo
             spriteBatch = new SpriteBatch(GraphicsDevice);
             empty = Content.Load<Texture2D>("empty");
             full = Content.Load<Texture2D>("full");
+            full75 = Content.Load<Texture2D>("75");
+            full50 = Content.Load<Texture2D>("50");
+            full25 = Content.Load<Texture2D>("25");
 
             borderUL = Content.Load<Texture2D>("png/borderUL");
             borderUR = Content.Load<Texture2D>("png/borderUR");
@@ -121,7 +128,7 @@ namespace Quatrimo
             nameO = Content.Load<Texture2D>("misc/nameO");
 
             data.dataInitContent();
-            main = new main(new bag(data.bag2));
+            main = new main(new bag(data.debugbag));
             main.board.initializeElements();
             // TODO: use this.Content to load your game content here
         }
@@ -131,7 +138,7 @@ namespace Quatrimo
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            keybind.updateKeybinds(data.keys);
+            keybind.updateKeybinds(data.keys, gameTime);
             main.coreGameLoop(gameTime);
 
             // TODO: Add your update logic here

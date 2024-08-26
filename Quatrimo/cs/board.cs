@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 
 public class board
-{
+{ //EXTEND BUFFER BY MULTIPLE TILES - SHOULD FIX SQUARE DROP PREVIEW CRASH
 	
 	public tile[,] tiles;
 	public element[,,] elements; 
@@ -19,7 +19,14 @@ public class board
     {
         boardDim = dim;
 		tiles = new tile[boardDim.x, boardDim.y];
-        elements = new element[eDimensions.x, eDimensions.y, 5];
+        elements = new element[eDimensions.x, eDimensions.y, 7];
+        ///LAYER 0: BG1 - maybe change this one later, we don't need an entire layer for just black boxes really
+        ///LAYER 1: BG2
+        ///LAYER 2: FALL PREVIEW ANIMATION
+        ///LAYER 3: PLACED TILES
+        ///LAYER 4: FALLING TILES
+        ///LAYER 5: MISC
+        ///LAYER 6: BOARD ANIMATIONS & BORDER
 
     }
 
@@ -29,7 +36,7 @@ public class board
 		
 		for(int x = 0; x < eDimensions.x; x++){ 
 			for(int y = 0; y < eDimensions.y; y++){ //create every element
-				for (int z = 0; z < 5; z++){
+				for (int z = 0; z < 7; z++){
                     elements[x, y, z] = new element(new Vector2I(x, y), z);
 				}}}
 		boardOffset = new Vector2I((eDimensions.x - boardDim.x) / 2 - 1, 3);
@@ -40,49 +47,49 @@ public class board
 
 	public void createBoardElements()
 	{
-		elements[1, 0, 4].tex = Game1.borderDL; elements[42, 0, 4].tex = Game1.borderDR; //top bar
+		elements[1, 0, 6].tex = Game1.borderDL; elements[42, 0, 6].tex = Game1.borderDR; //top bar
 		for(int i = 2; i < eDimensions.x-2; i++) //create top border
 		{
 			if(i == 17) //create title
 			{
-				elements[18, 0, 4].tex = Game1.nameQ; elements[18, 0, 4].color = new Color(new Vector3(1f, 0.067f, 0.933f));
+				elements[18, 0, 6].tex = Game1.nameQ; elements[18, 0, 6].color = new Color(new Vector3(1f, 0.067f, 0.933f));
 
-                elements[19, 0, 4].tex = Game1.nameU; elements[19, 0, 4].color = new Color(new Vector3(1f, 0.067f, 0.933f));
+                elements[19, 0, 6].tex = Game1.nameU; elements[19, 0, 6].color = new Color(new Vector3(1f, 0.067f, 0.933f));
 
-                elements[20, 0, 4].tex = Game1.nameA; elements[20, 0, 4].color = new Color(new Vector3(1f, 0.067f, 0.933f));
+                elements[20, 0, 6].tex = Game1.nameA; elements[20, 0, 6].color = new Color(new Vector3(1f, 0.067f, 0.933f));
 
-                elements[21, 0, 4].tex = Game1.nameT; elements[21, 0, 4].color = new Color(new Vector3(0.133f, 1f, 0.8f));
+                elements[21, 0, 6].tex = Game1.nameT; elements[21, 0, 6].color = new Color(new Vector3(0.133f, 1f, 0.8f));
 
-                elements[22, 0, 4].tex = Game1.nameR; elements[22, 0, 4].color = new Color(new Vector3(0.133f, 1f, 0.8f));
+                elements[22, 0, 6].tex = Game1.nameR; elements[22, 0, 6].color = new Color(new Vector3(0.133f, 1f, 0.8f));
 
-                elements[23, 0, 4].tex = Game1.nameI; elements[23, 0, 4].color = new Color(new Vector3(0.133f, 1f, 0.8f));
+                elements[23, 0, 6].tex = Game1.nameI; elements[23, 0, 6].color = new Color(new Vector3(0.133f, 1f, 0.8f));
 
-                elements[24, 0, 4].tex = Game1.nameM; elements[24, 0, 4].color = new Color(new Vector3(0.667f, 0f, 1f));
+                elements[24, 0, 6].tex = Game1.nameM; elements[24, 0, 6].color = new Color(new Vector3(0.667f, 0f, 1f));
 
-                elements[25, 0, 4].tex = Game1.nameO; elements[25, 0, 4].color = new Color(new Vector3(0.667f, 0f, 1f));
+                elements[25, 0, 6].tex = Game1.nameO; elements[25, 0, 6].color = new Color(new Vector3(0.667f, 0f, 1f));
             }
             else if (i > 17 && i < 26) { continue; }
-			elements[i, 0, 4].tex = Game1.borderD;
+			elements[i, 0, 6].tex = Game1.borderD;
 		}
 
 		//create board border
 		
 
-		elements[boardOffset.x,2, 4].tex = Game1.borderUL; //create 4 corner pieces
-        elements[boardOffset.x, boardDim.y+1, 4].tex = Game1.borderDL;
-        elements[boardOffset.x + boardDim.x+1, 2, 4].tex = Game1.borderUR;
-        elements[boardOffset.x + boardDim.x+1, boardDim.y+1, 4].tex = Game1.borderDR;
+		elements[boardOffset.x,2, 6].tex = Game1.borderUL; //create 4 corner pieces
+        elements[boardOffset.x, boardDim.y+1, 6].tex = Game1.borderDL;
+        elements[boardOffset.x + boardDim.x+1, 2, 6].tex = Game1.borderUR;
+        elements[boardOffset.x + boardDim.x+1, boardDim.y+1, 6].tex = Game1.borderDR;
 
 		for (int x = 0; x < boardDim.x; x++) //create top/bottom border
 		{
-			elements[boardOffset.x + x + 1, 2, 4].tex = Game1.borderU;
-			elements[boardOffset.x + x + 1, boardDim.y+1, 4].tex = Game1.borderD;
+			elements[boardOffset.x + x + 1, 2, 6].tex = Game1.borderU;
+			elements[boardOffset.x + x + 1, boardDim.y+1, 6].tex = Game1.borderD;
         }
 
 		for(int y = 0; y < boardDim.y-2; y++) //create left/right border
 		{
-			elements[boardOffset.x, y + 3, 4].tex = Game1.borderL;
-            elements[boardOffset.x + boardDim.x+1, y + 3, 4].tex = Game1.borderR;
+			elements[boardOffset.x, y + 3, 6].tex = Game1.borderL;
+            elements[boardOffset.x + boardDim.x+1, y + 3, 6].tex = Game1.borderR;
         }
 
 
@@ -112,16 +119,66 @@ public class board
 
     }
 
-
-
     public void drawElements(SpriteBatch spriteBatch, GameTime gameTime)
 	{
-		for(int z = 0; z < 5; z++){
+		for(int z = 0; z < 7; z++){
 			for(int x = 0; x < eDimensions.x; x++){
 				for (int y = 0; y < eDimensions.y; y++) {
 					elements[x,y,z].draw(spriteBatch, gameTime);
 				}}}
 	}
+
+    public Vector2I convertToElementPos(Vector2I pos)
+    {
+        return new Vector2I(pos.x + boardOffset.x + 1, pos.y + 1);
+    }
+
+    public void lowerRows(List<int> scoredRows)
+    {
+        int length = scoredRows.Count;
+        List<tile> movedTiles = new List<tile>();
+        int[] rows = new int[length];
+
+        for (int l = 0; l < length; l++) //sort scoredRows by descending
+        {
+            rows[l] = scoredRows.Min();
+            scoredRows.Remove(scoredRows.Min());
+        }
+
+        for (int i = 0; i < length; i++)
+        {
+            for (int y = rows[i]-1; y > 0; y--)
+            {
+                for(int x = 0; x < boardDim.x; x++)
+                {
+                    //Debug.WriteLine("===== LOWERING POS: " + x + ", " + y);
+                    tile tile = tiles[x, y];
+                    if(tile != null)
+                    {
+                        element element = elements[tile.elementPos.x, tile.elementPos.y, 3];
+
+                        element.tex = Game1.empty;
+                        element.color = Color.White;
+
+                        tiles[x, y + 1] = tile;
+
+                        tile.elementPos = tile.elementPos.add(new Vector2I(0, 1));
+                        tile.boardPos = tile.boardPos.add(new Vector2I(0, 1));
+
+                        tiles[x, y] = null;
+
+                        movedTiles.Add(tile);
+                    }
+                }
+            }
+        }
+
+        foreach(tile tile in movedTiles)
+        {
+            tile.renderPlaced();
+        }
+    }
+
 
     /*
     public void initializeTiles()
@@ -223,53 +280,9 @@ public class board
     }*/
 
 
-	//REWRITE entire function
-    public void lowerRows(List<int> scoredRows) //lowers rows above the scored rows after scoring
-	{
-		int length = scoredRows.Count;
-		List<tile> movedTiles = new List<tile>();
-		int[] rows = new int[length];
-
-		for(int l = 0; l < length; l++) //sort scoredRows by descending
-		{
-			rows[l] = scoredRows.Max();
-			scoredRows.Remove(scoredRows.Max());
-		}
-
-        Debug.WriteLine(length);
-        for (int i = 0; i < length; i++)
-		{
-		
-			for (int y = rows[i] - 1; y > 0; y++)
-			{
-				for (int x = 0; x < boardDim.x; x++)
-				{
-					tile tile = tiles[x, y];
-					if (tile != null)
-					{
-                        //GD.Print($"MOVING PIECE from {tile.boardPos} to [{tile.boardPos.X}, {tile.boardPos.Y - 1}]");
-
-                        tiles[x, y] = null;
 
 
-                        elements[tile.elementPos.x, tile.elementPos.y, 2].tex = Game1.empty;
-                        tiles[x, y + 1] = tile;
-
-						tile.elementPos = tile.elementPos.add(new Vector2I(0, 1));
-						tile.boardPos = tile.boardPos.add(new Vector2I(0, 1));
-						
-						movedTiles.Add(tile);
-					}
-				}
-			}
-		}
-		foreach(tile tile in movedTiles)
-		{
-			tile.renderPlaced();
-		}
-	}
-
-	/*
+    /*
 	public void updatePiecePreview(boardPiece currentPiece, boardPiece nextPiece)
 	{
 		currentPreview.Text = $"NOW PLAYING:\n{currentPiece.name}";
@@ -348,7 +361,7 @@ public class board
 		heldPiece.Text = "HOLD:";
 	}*/
 
-	public bool isPositionValid(Vector2I pos, bool shouldCollide) //checks if a tile is occupied or otherwise outside of the board
+    public bool isPositionValid(Vector2I pos, bool shouldCollide) //checks if a tile is occupied or otherwise outside of the board
 	{ //shouldCollide refers to colliding with other tiles
 
         //if the tile is outside the board dimensions return false (invalid)

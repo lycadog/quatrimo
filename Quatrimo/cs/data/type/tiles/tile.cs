@@ -92,7 +92,7 @@ public class tile
     public void updatePos() //updates tile board position
     {
         boardPos = piece.pos.add(localPos);
-        elementPos = new Vector2I(boardPos.x + board.boardOffset.x + 1, boardPos.y + 1);
+        elementPos = board.convertToElementPos(boardPos);
     }
 
     public long score() //runs when this tile is scored
@@ -119,8 +119,8 @@ public class tile
     public void remove(board board) //used to remove a tile
     {
         board.tiles[boardPos.x, boardPos.y] = null;
-        board.elements[elementPos.x, elementPos.y, 2].tex = Game1.empty;
-        board.elements[elementPos.x, elementPos.y, 2].color = Color.White;
+        board.elements[elementPos.x, elementPos.y, 3].tex = Game1.empty;
+        board.elements[elementPos.x, elementPos.y, 3].color = Color.White;
         isPlaced = false;
     }
 
@@ -128,15 +128,15 @@ public class tile
     {
         if(elementPos.y > 2)
         {
-            Debug.WriteLine("ELEMENT POSITION: " + elementPos.x + ", " + elementPos.y);
             Texture2D tex = piece.tex;
             tex = type.getTexture(tex);
 
-            element element = board.elements[elementPos.x, elementPos.y, 3];
+            element element = board.elements[elementPos.x, elementPos.y, 4];
             element.tex = tex;
             element.color = piece.color;
             element.animatable = new animatable(new List<Texture2D> { tex }, new List<Color>() { piece.color }, false, 0, true, element);
-        }   
+        }
+        renderDropPreview();
     }
 
     public void renderPlaced()
@@ -144,10 +144,19 @@ public class tile
         Texture2D tex = piece.tex;
         tex = type.getTexture(tex);
 
-        element element = board.elements[elementPos.x, elementPos.y, 2];
+        element element = board.elements[elementPos.x, elementPos.y, 3];
         element.tex = tex;
         element.color = piece.color;
         element.animatable = null;
+    }
+
+    public void renderDropPreview()
+    {
+        Debug.WriteLine("================ FUCK YOU OFFSET: " + piece.dropOffset);
+        Vector2I dropPos = board.convertToElementPos( new Vector2I(boardPos.x, boardPos.y + piece.dropOffset));
+        //Debug.WriteLine("BULLSHIT PIECE DROP POS: " + dropPos.x + ", " + dropPos.y + " ==============================");
+        element element = board.elements[dropPos.x, dropPos.y, 2];
+        element.animatable = new animatable(new List<Texture2D> { Game1.full25 }, new List<Color>() { Color.LightGray }, false, 0, false, element);
     }
 
 }

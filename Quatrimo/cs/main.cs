@@ -129,7 +129,6 @@ public class main
 				//PROCESS INPUT here
 
 				parseInput(gameTime);
-				currentPiece.renderFalling();
 				Debug.WriteLine("========= POSITION: " + currentPiece.pos.x + currentPiece.pos.y);
                 //FALL & PLACE PIECE
                 if (piecefallTimer >= 400)
@@ -150,8 +149,9 @@ public class main
                     }
                 }
 
-				//increment timers
-				piecefallTimer += gameTime.ElapsedGameTime.Milliseconds;
+                currentPiece.renderFalling();
+                //increment timers
+                piecefallTimer += gameTime.ElapsedGameTime.Milliseconds;
 				placeTimer += gameTime.ElapsedGameTime.Milliseconds;
 				break;
 
@@ -262,7 +262,6 @@ public class main
 		level = rowsCleared / 10;
 		Debug.WriteLine("level: " + level);
 		levelTimes = level / 2d + 1d;
-		//board.updateLevelUI(level, levelTimes);
 	}
 
 	public void parseInput(GameTime gameTime)
@@ -271,7 +270,7 @@ public class main
 		//movement should work 
 
 		
-        if (data.leftKey.keyHeld && inputCooldown > 100)
+        if ((data.leftKey.keyDown || data.leftKey.timeHeld > 200) && inputCooldown > 40)
         {
 			if (currentPiece.isMoveValid(-1))
 			{
@@ -279,7 +278,7 @@ public class main
 				inputCooldown = 0;
 			}
         }
-		else if (data.rightKey.keyHeld && inputCooldown > 100)
+		else if((data.rightKey.keyDown || data.rightKey.timeHeld > 200) && inputCooldown > 40)
 		{
 			if (currentPiece.isMoveValid(1))
 			{
@@ -311,6 +310,14 @@ public class main
                 currentPiece.rotatePiece(-1);
             }
         }
+
+		if (data.slamKey.keyDown)
+		{
+			currentPiece.moveFallingPiece(0, currentPiece.dropOffset);
+			currentPiece.placePiece();
+			state = gameState.scoreStep;
+		}
+		
 		inputCooldown += gameTime.ElapsedGameTime.TotalMilliseconds;
     }
 

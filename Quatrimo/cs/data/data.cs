@@ -51,7 +51,7 @@ public static class data
     public static starterBag bag2;
     public static starterBag bag3;
 
-    public static starterBag debugBag;
+    public static starterBag debugbag;
 
     public static keybind[] keys;
 
@@ -62,6 +62,7 @@ public static class data
     public static keybind slamKey;
     public static keybind leftRotateKey;
     public static keybind rightRotateKey;
+    public static keybind holdKey;
 
     public static void dataInit()
     {
@@ -72,6 +73,7 @@ public static class data
         slamKey = new keybind(Microsoft.Xna.Framework.Input.Keys.Space, Microsoft.Xna.Framework.Input.Keys.Space);
         leftRotateKey = new keybind(Microsoft.Xna.Framework.Input.Keys.Q, Microsoft.Xna.Framework.Input.Keys.Q);
         rightRotateKey = new keybind(Microsoft.Xna.Framework.Input.Keys.E, Microsoft.Xna.Framework.Input.Keys.E);
+        holdKey = new keybind(Microsoft.Xna.Framework.Input.Keys.F, Microsoft.Xna.Framework.Input.Keys.F);
 
         keys = new keybind[] {leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey};
     }
@@ -123,7 +125,7 @@ public static class data
         bag3 = new starterBag(new pieceType[] { bNub, bCaret, bBowl, bStump, bSlash, bStick, bLong, bLepton, bBoson }, "bag3");
 
 
-        debugBag = new starterBag(new pieceType[] { bLong }, "debugbag");
+        debugbag = new starterBag(new pieceType[] { bSquare }, "debugbag");
 }
 
 
