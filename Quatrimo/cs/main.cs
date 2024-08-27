@@ -106,7 +106,6 @@ public class main
 
 				piecefallTimer = -600; //set timers to negative to give more reaction time when a piece is first placed
 				placeTimer = -600;
-
 				state = gameState.pieceWait;
 				break;
 
@@ -131,7 +130,7 @@ public class main
 				parseInput(gameTime);
 				Debug.WriteLine("========= POSITION: " + currentPiece.pos.x + currentPiece.pos.y);
                 //FALL & PLACE PIECE
-                if (piecefallTimer >= 400)
+                if (piecefallTimer >= 600)
 				{
 
                     if (currentPiece.shouldPlace()){
@@ -139,7 +138,6 @@ public class main
 
                             currentPiece.placePiece();
 							state = gameState.scoreStep;
-
                         }}
 
                     else{
@@ -293,21 +291,21 @@ public class main
 		}
 		else if (data.upKey.keyHeld)
 		{
-			piecefallTimer -= gameTime.ElapsedGameTime.TotalMilliseconds * 0.8 ;
+			piecefallTimer -= gameTime.ElapsedGameTime.TotalMilliseconds * 0.2 ;
 		}
 
 		if (data.leftRotateKey.keyDown)
 		{
-            if (currentPiece.isRotationValid(1))
+            if (currentPiece.isRotationValid(-1))
             {
-                currentPiece.rotatePiece(1);
+                currentPiece.rotatePiece(-1);
             }
         }
 		else if (data.rightRotateKey.keyDown)
 		{
-            if (currentPiece.isRotationValid(-1))
+            if (currentPiece.isRotationValid(1))
             {
-                currentPiece.rotatePiece(-1);
+                currentPiece.rotatePiece(1);
             }
         }
 
@@ -317,91 +315,13 @@ public class main
 			currentPiece.placePiece();
 			state = gameState.scoreStep;
 		}
-		
-		inputCooldown += gameTime.ElapsedGameTime.TotalMilliseconds;
-    }
 
-
-
-	//DEPRECATED - REWRITE all input code
-	public void parseInputOLD(double deltaTime) //runs during piecefall, checks input to move piece, determines move validity and executes move
-	{
-		bool isMoveValid = false;
-		/*if (Input.IsActionPressed("boardLeft"))
-		{
-			if (currentPiece.isMoveValid(-1))
-			{
-				currentPiece.moveFallingPiece(-1, 0);
-				isMoveValid = true;
-			}
-
-		}
-		else if (Input.IsActionPressed("boardRight"))
-		{
-			if (currentPiece.isMoveValid(1))
-			{
-				currentPiece.moveFallingPiece(1, 0);
-				isMoveValid = true;
-			}
-		}
-		else if (Input.IsActionJustPressed("boardRotateLeft"))
-		{
-			if(isMoveValid = currentPiece.isRotationValid(1))
-			{
-				currentPiece.rotatePiece(1);
-			}
-        }
-        else if (Input.IsActionJustPressed("boardRotateRight"))
-        {
-            if (isMoveValid = currentPiece.isRotationValid(-1))
-            {
-                currentPiece.rotatePiece(-1);
-            }
-        }
-		else if (Input.IsActionJustPressed("holdPiece") && canHold)
+		if (data.holdKey.keyDown && canHold)
 		{
 			holdPiece();
-			isMoveValid = true;
 		}
-		else if (Input.IsActionPressed("boardUp"))
-		{
-			piecefallTimer -= deltaTime * 0.5;
-		}
-        else if (Input.IsActionPressed("boardDown"))
-		{
-			piecefallTimer += deltaTime * 5;
-		}
-		else if (Input.IsActionJustPressed("boardSlam"))
-		{
-			bool isSlamming = true;
-			while (isSlamming)
-			{
-				if (currentPiece.fallPiece())
-				{
-					isSlamming = false;
-					state = gameState.endTurnStart;
-					break;
-				}
-			}
-		}*/
-		
-		if (isMoveValid)
-		{
-			
-            piecefallTimer = 0;
-            inputCooldown = 0;
-        }
-    }
 
-	public void parseGlobalInput()
-	{
-        /*if (Input.IsActionJustPressed("restart"))
-        {
-            board.clearGraphics();
-            board.resetUI();
-			resetVariables();
-            state = gameState.roundStart;
-        }*/
+		inputCooldown += gameTime.ElapsedGameTime.TotalMilliseconds;
     }
 
 	public void resetVariables()
@@ -423,30 +343,25 @@ public class main
 
 	public void holdPiece()
 	{
-		//needs to be remade
+		Debug.WriteLine("IM GAY AH HELLL");
 		if(heldPiece == null)
 		{
 			heldPiece = nextPiece;
 			nextPiece = bag.getPiece(board);
 		}
-		boardPiece temp = heldPiece;
 
-		temp.pos = new Vector2I(5, 5);
+		boardPiece formerlyHeld = heldPiece;
 
 		heldPiece = currentPiece;
-        while (heldPiece.rotation != 0)
-        {
-            heldPiece.rotatePiece(1);
-        }
-		
-        currentPiece = temp;
-		canHold = false;
-		//board.updatePiecePreview(currentPiece, nextPiece);
-		//board.updateHeldUI(heldPiece);
+		while(heldPiece.rotation != 0)
+		{
+			heldPiece.rotatePiece(1);
+		}
 
-		Debug.WriteLine(currentPiece.pos);
+		currentPiece = formerlyHeld;
 		currentPiece.playPiece();
-	}
+		canHold = false;
+    }
 
     public enum gameState
     {

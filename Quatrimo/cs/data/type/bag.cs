@@ -30,7 +30,7 @@ public class bag
         {
             if(pieceW.weight != 1)
             {
-                pieceW.weight += 0.2f;
+                pieceW.weight += 0.15f;
             }
         }
 
@@ -39,14 +39,14 @@ public class bag
         for(int i = 0; i < 20; i++)
         {
             float rand = util.rand.NextSingle();
-            index = util.rand.Next(0, pieces.Count - 1);
+            index = util.rand.Next(0, pieces.Count);
 
             Debug.WriteLine(pieces.Count + ", " + index);
 
             piece = pieces[index];
             if (rand < piece.weight)
             {
-                piece.weight -= .4f;
+                piece.weight -= .5f;
                 break;
             }
         }

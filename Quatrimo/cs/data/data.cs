@@ -75,7 +75,7 @@ public static class data
         rightRotateKey = new keybind(Microsoft.Xna.Framework.Input.Keys.E, Microsoft.Xna.Framework.Input.Keys.E);
         holdKey = new keybind(Microsoft.Xna.Framework.Input.Keys.F, Microsoft.Xna.Framework.Input.Keys.F);
 
-        keys = new keybind[] {leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey};
+        keys = new keybind[] {leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey, holdKey};
     }
 
     public static void dataInitContent()

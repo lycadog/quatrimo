@@ -21,7 +21,9 @@ public class tile
     public Vector2I elementPos { get; set; }
     public bool isPlaced { get; set; }
 
-    public bool checkMoveCollision(int xOffset, int yOffset) //returns whether or not the next move will collide
+
+    //TRUE means invalid move
+    public bool checkMoveCollision(int xOffset, int yOffset) //returns whether or not the next move will collide //TRUE MEANS INVALID
     { //the offsets are for the tile to check
         //GD.Print($"checkMoveCollision event at {boardPos.X}, {boardPos.y} offset at {xOffset}, {yOffset}");
         Vector2I checkPos = new Vector2I(boardPos.x + xOffset, boardPos.y + yOffset);
@@ -152,7 +154,6 @@ public class tile
 
     public void renderDropPreview()
     {
-        Debug.WriteLine("================ FUCK YOU OFFSET: " + piece.dropOffset);
         Vector2I dropPos = board.convertToElementPos( new Vector2I(boardPos.x, boardPos.y + piece.dropOffset));
         //Debug.WriteLine("BULLSHIT PIECE DROP POS: " + dropPos.x + ", " + dropPos.y + " ==============================");
         element element = board.elements[dropPos.x, dropPos.y, 2];
