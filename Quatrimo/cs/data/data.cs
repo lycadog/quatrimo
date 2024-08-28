@@ -3,8 +3,7 @@ using Quatrimo;
 using System;
 
 public static class data
-{ //URGENT: ADD NEW PIECES AND BAGS
-  //hook, pick, boson, etc
+{ //ADJUST boson origin for better rotation (probably should be 1,1)
 
 
     static tileSet common = new(new tileType[] { new basicTile() }, new float[] { 100 }); //this contains all possible tiletypes for the Common tileset; rewrite this eventually to have weights as well

@@ -29,9 +29,9 @@ public class tile
         Vector2I checkPos = new Vector2I(boardPos.x + xOffset, boardPos.y + yOffset);
 
         if (checkPos.x < 0) { return true; }
-        if (checkPos.x >= board.boardDim.x) { return true; } //if the tile is outside the board dimensions return true (invalid move)
+        if (checkPos.x >= board.dimensions.x) { return true; } //if the tile is outside the board dimensions return true (invalid move)
         if (checkPos.y < 0) { return true; }
-        if (checkPos.y >= board.boardDim.y) { return true; } //maybe add game over code here?
+        if (checkPos.y >= board.dimensions.y) { return true; } //maybe add game over code here?
 
 
 
@@ -40,7 +40,7 @@ public class tile
     }
     public bool checkFallingCollision() //returns whether or not the piece is colliding with something below it
     {
-        if (boardPos.y >= board.boardDim.y-1) //check if the colliding tile is outside the array
+        if (boardPos.y >= board.dimensions.y-1) //check if the colliding tile is outside the array
         {
             boardCollideFalling();
             return true;
@@ -158,6 +158,8 @@ public class tile
         //Debug.WriteLine("BULLSHIT PIECE DROP POS: " + dropPos.x + ", " + dropPos.y + " ==============================");
         element element = board.elements[dropPos.x, dropPos.y, 2];
         element.animatable = new animatable(new List<Texture2D> { Game1.full25 }, new List<Color>() { Color.LightGray }, false, 0, false, element);
+        
+
     }
 
 }

@@ -128,7 +128,7 @@ namespace Quatrimo
             nameO = Content.Load<Texture2D>("misc/nameO");
 
             data.dataInitContent();
-            main = new main(new bag(data.bag1));
+            main = new main(new bag(data.bag2));
             main.board.initializeElements();
             // TODO: use this.Content to load your game content here
         }

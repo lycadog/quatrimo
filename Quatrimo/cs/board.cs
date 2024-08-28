@@ -10,15 +10,16 @@ public class board
 	
 	public tile[,] tiles;
 	public element[,,] elements; 
-	public Vector2I boardDim;
+	public Vector2I dimensions;
 	public readonly Vector2I eDimensions = new Vector2I(44, 25); //element dimensions
 	public Vector2I boardOffset;
-	
+
+    public int boardy = 22; //shouldnt change
 
     public board(Vector2I dim)
     {
-        boardDim = dim;
-		tiles = new tile[boardDim.x, boardDim.y];
+        dimensions = dim;
+		tiles = new tile[dimensions.x, dimensions.y];
         elements = new element[eDimensions.x, eDimensions.y, 7];
         ///LAYER 0: BG1 - maybe change this one later, we don't need an entire layer for just black boxes really
         ///LAYER 1: BG2
@@ -39,7 +40,7 @@ public class board
 				for (int z = 0; z < 7; z++){
                     elements[x, y, z] = new element(new Vector2I(x, y), z);
 				}}}
-		boardOffset = new Vector2I((eDimensions.x - boardDim.x) / 2 - 1, 3);
+		boardOffset = new Vector2I((eDimensions.x - dimensions.x) / 2 - 1, 3);
 
         createBoardElements();
     }
@@ -76,26 +77,26 @@ public class board
 		
 
 		elements[boardOffset.x,2, 6].tex = Game1.borderUL; //create 4 corner pieces
-        elements[boardOffset.x, boardDim.y+1, 6].tex = Game1.borderDL;
-        elements[boardOffset.x + boardDim.x+1, 2, 6].tex = Game1.borderUR;
-        elements[boardOffset.x + boardDim.x+1, boardDim.y+1, 6].tex = Game1.borderDR;
+        elements[boardOffset.x, boardy+1, 6].tex = Game1.borderDL;
+        elements[boardOffset.x + dimensions.x+1, 2, 6].tex = Game1.borderUR;
+        elements[boardOffset.x + dimensions.x+1, boardy + 1, 6].tex = Game1.borderDR;
 
-		for (int x = 0; x < boardDim.x; x++) //create top/bottom border
+		for (int x = 0; x < dimensions.x; x++) //create top/bottom border
 		{
 			elements[boardOffset.x + x + 1, 2, 6].tex = Game1.borderU;
-			elements[boardOffset.x + x + 1, boardDim.y+1, 6].tex = Game1.borderD;
+			elements[boardOffset.x + x + 1, boardy + 1, 6].tex = Game1.borderD;
         }
 
-		for(int y = 0; y < boardDim.y-2; y++) //create left/right border
+		for(int y = 0; y < boardy - 2; y++) //create left/right border
 		{
 			elements[boardOffset.x, y + 3, 6].tex = Game1.borderL;
-            elements[boardOffset.x + boardDim.x+1, y + 3, 6].tex = Game1.borderR;
+            elements[boardOffset.x + dimensions.x+1, y + 3, 6].tex = Game1.borderR;
         }
 
 
 
-		for (int x = 0; x < boardDim.x + 2; x++){ //generate black board background
-			for(int y = 0; y < boardDim.y; y++)
+		for (int x = 0; x < dimensions.x + 2; x++){ //generate black board background
+			for(int y = 0; y < boardy; y++)
 			{
 				element element = elements[boardOffset.x + x, y+2, 0];
                 element.tex = Game1.full;
@@ -105,9 +106,9 @@ public class board
 		//rewrite these two for blocks to be more efficient ie. place "full" during board border gen and in the loop below
         int counter = 0;
         Vector3[] colors = new Vector3[] { new Vector3(0.063f, 0.055f, 0.067f), new Vector3(0.09f, 0.086f, 0.094f) };
-        for (int x = 0; x < boardDim.x; x++) //generate board square background
+        for (int x = 0; x < dimensions.x; x++) //generate board square background
 		{
-			for(int y = 0; y < boardDim.y-2; y++)
+			for(int y = 0; y < boardy -2; y++)
 			{
                 element element = elements[boardOffset.x + x + 1, y + 3, 1];
                 element.tex = Game1.box;
@@ -128,9 +129,14 @@ public class board
 				}}}
 	}
 
+    public Vector2I convertToElementPos(int x, int y)
+    {
+        return new Vector2I(x + boardOffset.x + 1, y - 6 + 1);
+    }
+
     public Vector2I convertToElementPos(Vector2I pos)
     {
-        return new Vector2I(pos.x + boardOffset.x + 1, pos.y + 1);
+        return new Vector2I(pos.x + boardOffset.x + 1, pos.y-6 + 1);
     }
 
     public void lowerRows(List<int> scoredRows)
@@ -149,7 +155,7 @@ public class board
         {
             for (int y = rows[i]-1; y > 0; y--)
             {
-                for(int x = 0; x < boardDim.x; x++)
+                for(int x = 0; x < dimensions.x; x++)
                 {
                     //Debug.WriteLine("===== LOWERING POS: " + x + ", " + y);
                     tile tile = tiles[x, y];
@@ -366,9 +372,9 @@ public class board
 
         //if the tile is outside the board dimensions return false (invalid)
         if (pos.x < 0) { return false; }
-        if (pos.x >= boardDim.x) { return false; }
+        if (pos.x >= dimensions.x) { return false; }
         if (pos.y < 0) { return false; }
-        if (pos.y >= boardDim.y) { return false; }
+        if (pos.y >= dimensions.y) { return false; }
         Debug.WriteLine($"{pos.x}, {pos.y} IS VALID: {tiles[pos.x,pos.y] == null} =============");
 		
 

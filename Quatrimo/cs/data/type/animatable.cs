@@ -1,12 +1,15 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quatrimo;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 public class animatable
-{
-    //this class sucks dick
+{   //this class sucks dick
+    //rework so you can independently animate color and texture
+    //this needs to tell something when it finishes - maybe add a boolean in the constructor that's flagged when animation is terminated?
+
     public List<Texture2D> sequence = new List<Texture2D>(); //maybe combine texture and color into a class
     public List<Color> colors = new List<Color>();
     public int frame = 0;
@@ -44,8 +47,11 @@ public class animatable
         if (!overwrite && element.tex != Game1.empty) { return; }
 
         //set the proper texture and color
-        element.tex = sequence[frame];
-        element.color = colors[frame];
+        int frameTex = Math.Min(frame, sequence.Count - 1);
+        int frameColor = Math.Min(frame, colors.Count - 1);
+
+        element.tex = sequence[frameTex];
+        element.color = colors[frameColor];
 
 
               

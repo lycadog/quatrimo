@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Quatrimo;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -50,7 +51,7 @@ public class main
     {
         this.bag = bag;
 
-        board = new board(new Vector2I(12, 22));
+        board = new board(new Vector2I(12, 28));
 
         heldPiece = null;
         nextPiece = bag.getPiece(board);
@@ -170,7 +171,7 @@ public class main
 				}
 
 
-				for(int x = 0; x < board.boardDim.x; x++) //process score of every tile in every scored row
+				for(int x = 0; x < board.dimensions.x; x++) //process score of every tile in every scored row
 				{
 					foreach(int y in scorableRows) //process through rows
 					{
@@ -180,16 +181,35 @@ public class main
 					}
 				}
 
-                
+				if (scorableRows.Count > 0) //jank, handles scoring animations - put into a method?
+				{
+					for (int i = 0; i < scorableRows.Count; i++)
+					{
+						for (int x = 0; x < board.dimensions.x; x++)
+						{
+							Vector2I epos = board.convertToElementPos(x, scorableRows[i]);
+							element element = board.elements[epos.x, epos.y, 3];
+
+							animatable anim = new animatable(new List<Texture2D> { Game1.full, Game1.full75, Game1.full50, Game1.full25 }, new List<Color> { Color.White }, false, 80, true, element);
+							element.animatable = anim;
+						}
+
+					}
+				}
 
                 state = gameState.scoreAnim;
                 break;
 
 			case gameState.scoreAnim:
-				//lol
-				//add animations later
-				state = gameState.endTurn; 
-				break;
+				if(scoreAnimationTimer > 340) //kinda sucks but good enough
+				{
+                    state = gameState.endTurn;
+					scoreAnimationTimer = 0;
+                }
+				scoreAnimationTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+                //lol
+                //add animations later
+                break;
 
 			case gameState.endTurn:
 
@@ -264,10 +284,6 @@ public class main
 
 	public void parseInput(GameTime gameTime)
 	{
-		//rework inputs to add "on key down" kinda stuff
-		//movement should work 
-
-		
         if ((data.leftKey.keyDown || data.leftKey.timeHeld > 200) && inputCooldown > 40)
         {
 			if (currentPiece.isMoveValid(-1))
@@ -287,11 +303,11 @@ public class main
 
 		if(data.downKey.keyHeld)
 		{
-			piecefallTimer += gameTime.ElapsedGameTime.TotalMilliseconds * 4;
+			piecefallTimer += gameTime.ElapsedGameTime.TotalMilliseconds * 8;
 		}
 		else if (data.upKey.keyHeld)
 		{
-			piecefallTimer -= gameTime.ElapsedGameTime.TotalMilliseconds * 0.2 ;
+			piecefallTimer -= gameTime.ElapsedGameTime.TotalMilliseconds * 0.2;
 		}
 
 		if (data.leftRotateKey.keyDown)
@@ -333,7 +349,7 @@ public class main
 	
 	public bool isRowScoreable(int y)
 	{
-		for(int x = 0; x < board.boardDim.x; x++)
+		for(int x = 0; x < board.dimensions.x; x++)
 		{
 			if (board.tiles[x, y] == null) return false; //if any tile is empty, return false
 			else { continue; } //if the tile isn't empty, keep looping
