@@ -40,7 +40,6 @@ namespace Quatrimo
         public static Texture2D nameM;
         public static Texture2D nameO;
 
-
         public static Texture2D box;
         public static Texture2D box_full;
         public static Texture2D box_solid;
@@ -50,15 +49,21 @@ namespace Quatrimo
         public static Texture2D round;
         public static Texture2D round_full;
         public static Texture2D round_solid;
+        public static Texture2D block;
+        public static Texture2D block_full;
+        public static Texture2D block_fuller;
         public static Texture2D heavy;
         public static Texture2D heavy_full;
         public static Texture2D heavy_fuller;
-
+        public static Texture2D alloy1;
+        public static Texture2D alloy2;
 
         public static Texture2D corey;
 
         Texture2D bgTop;
         Texture2D bgBot;
+
+        public static SpriteFont font;
 
         public static readonly Vector2I baseRes = new Vector2I(352, 198);
         public Game1()
@@ -85,6 +90,9 @@ namespace Quatrimo
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            font = Content.Load<SpriteFont>("fonts/ToshibaSat");
+
             empty = Content.Load<Texture2D>("empty");
             full = Content.Load<Texture2D>("full");
             full75 = Content.Load<Texture2D>("75");
@@ -102,16 +110,24 @@ namespace Quatrimo
 
             box = Content.Load<Texture2D>("block/box");
             box_full = Content.Load<Texture2D>("block/box_full");
-            box_full = Content.Load<Texture2D>("block/box_solid");
+            box_solid = Content.Load<Texture2D>("block/box_solid");
             circle = Content.Load<Texture2D>("block/circle");
             circle_full = Content.Load<Texture2D>("block/circle_full");
             circle_solid = Content.Load<Texture2D>("block/circle_solid");
             round = Content.Load<Texture2D>("block/round");
             round_full = Content.Load<Texture2D>("block/round_full");
             round_solid = Content.Load<Texture2D>("block/round_solid");
+            block = Content.Load<Texture2D>("block/block");
+            block_full = Content.Load<Texture2D>("block/block_full");
+            block_fuller = Content.Load<Texture2D>("block/block_fuller");
+
             heavy = Content.Load<Texture2D>("block/heavy");
             heavy_full = Content.Load<Texture2D>("block/heavy_full");
             heavy_fuller = Content.Load<Texture2D>("block/heavy_fuller");
+
+            alloy1 = Content.Load<Texture2D>("block/alloy1");
+            alloy2 = Content.Load<Texture2D>("block/alloy2");
+
 
             corey = Content.Load<Texture2D>("png/Corey");
 
@@ -153,10 +169,18 @@ namespace Quatrimo
             GraphicsDevice.Clear(new Color(new Vector3(0.0f, 0.02f, 0.06f)));
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-            spriteBatch.Draw(bgTop, new Rectangle(0 + xOffset, 0, res(352), res(198)), new Color(new Vector3(0.0f, 0.02f, 0.06f)));
-            spriteBatch.Draw(bgBot, new Rectangle(0 + xOffset, 0, res(352), res(198)), new Color(new Vector3(0.02f, 0.04f, 0.14f)));
+            spriteBatch.Draw(bgTop, new Rectangle(0 + xOffset, 0, res(352), res(198)), new Color(new Vector3(0.01f, 0.00f, 0.02f)));
+            spriteBatch.Draw(bgBot, new Rectangle(0 + xOffset, 0, res(352), res(198)), new Color(new Vector3(0.02f, 0.01f, 0.12f)));
             
             main.board.drawElements(spriteBatch, gameTime);
+
+            spriteBatch.DrawString(font, "SCORE: " + main.totalScore.ToString(), new Vector2(260 * rScale, 130 * rScale), Color.White);
+
+            spriteBatch.DrawString(font, "LVL: " + main.level.ToString(), new Vector2(260*rScale, 140*rScale), Color.White);
+            spriteBatch.DrawString(font, "X: " + main.levelTimes.ToString(), new Vector2(260 * rScale, 150 * rScale), Color.White);
+
+            spriteBatch.DrawString(font, "LVL UP IN: " + (main.rowsRequired - main.rowsCleared).ToString() + " ROWS", new Vector2(260 * rScale, 160 * rScale), Color.White);
+
 
             spriteBatch.End();
             

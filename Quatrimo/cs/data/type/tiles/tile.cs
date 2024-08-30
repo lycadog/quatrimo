@@ -107,7 +107,7 @@ public class tile
     }
     public void tick() //runs after every turn
     {
-        Debug.WriteLine($"tick event at {boardPos.x}, {boardPos.y}");
+        //Debug.WriteLine($"tick event at {boardPos.x}, {boardPos.y}");
 
         type.tick(this);
     }

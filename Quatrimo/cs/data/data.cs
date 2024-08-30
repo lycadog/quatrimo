@@ -43,12 +43,19 @@ public static class data
     public static pieceType bBoson;
     public static pieceType bDiamond;
     public static pieceType bBrick;
+    public static pieceType bBarycenter;
+    public static pieceType bBasin;
+    public static pieceType bHammer;
+    public static pieceType bBar;
+    public static pieceType bLonger;
+    public static pieceType bAngle;
 
     public static starterBag classicBag;
     public static starterBag freakyBag;
     public static starterBag bag1;
     public static starterBag bag2;
     public static starterBag bag3;
+    public static starterBag foundryBag;
 
     public static starterBag debugbag;
 
@@ -97,7 +104,7 @@ public static class data
         bCrowbarL = new(2, 5, new tileSet[,] { { common, common, common, common, common }, { null, null, null, null, common } }, new Vector2I(0, 3), 6, "Left Crowbar", deflt, Game1.box);
         bCrowbarR = new(2, 5, new tileSet[,] { { null, null, null, null, common }, { common, common, common, common, common } }, new Vector2I(0, 3), 6, "Right Crowbar", deflt, Game1.box);
         bLongT = new(3, 3, new tileSet[,] { { null, null, common }, { common, common, common }, { null, null, common } }, new Vector2I(1, 1), 5, "Long T Block", deflt, Game1.box_full);
-    
+
         bCaret = new(2, 3, new tileSet[,] { { common, null, common }, { null, common, null } }, new Vector2I(0, 1), 3, "Caret", deflt, Game1.circle);
         bNub = new(1, 1, new tileSet[,] { { common } }, Vector2I.zero, 1, "Nub", deflt, Game1.circle);
         bDipole = new(3, 2, new tileSet[,] { { common, common }, { null, null }, { common, common } }, new Vector2I(1, 1), 4, "Dipole", deflt, Game1.box_full);
@@ -116,6 +123,13 @@ public static class data
         bDiamond = new(3, 3, new tileSet[,] { { null, common, null }, { common, common, common }, { null, common, null } }, new Vector2I(1, 1), 5, "Diamond", deflt, Game1.circle);
         bBrick = new(4, 3, new tileSet[,] { { common, common, common }, { common, common, common }, { common, common, common }, { common, common, common } }, new Vector2I(2, 2), 12, "Brick", deflt, Game1.heavy_full);
 
+        bBarycenter = new(5, 2, new tileSet[,] { { common, common }, { common, common }, { null, null }, { common, common }, { common, common } }, new Vector2I(3, 1), 8, "Barycenter", deflt, Game1.heavy);
+        bBasin = new(4, 2, new tileSet[,] { { common, common }, { null, common }, { null, common }, { common, common } }, new Vector2I(2, 2), 6, "Basin", deflt, Game1.box);
+        bHammer = new(4, 3, new tileSet[,] { { null, common, null }, { null, common, null }, { common, common, common }, { common, common, common } }, new Vector2I(1, 1), 8, "Hammer", deflt, Game1.heavy);
+        bBar = new(4, 2, new tileSet[,] { { common, common }, { common, common }, { common, common }, { common, common } }, new Vector2I(2, 1), 8, "Bar", deflt, Game1.block_fuller);
+        bLonger = new(5, 1, new tileSet[,] { { common }, { common }, { common }, { common }, { common } }, new Vector2I(3, 0), 5, "Loong", deflt, Game1.box_solid);
+        bAngle = new(3, 3, new tileSet[,] { { null, common, common }, { common, common, common }, { common, common, common } }, new Vector2I(2, 2), 8, "Angle", deflt, Game1.heavy_full);
+
         classicBag = new starterBag(new pieceType[] { bLong, bSquare, bTBlock, bLBlockR, bLBlockL, bZBlockR, bZBlockL }, "Classic Bag");
         freakyBag = new starterBag(new pieceType[] { bCaret, bNub, bDipole, bSlash, bStump, bHatchetL, bHatchetR, bWedge, bTwig, bTwig, bLong }, "Freaky Bag");
 
@@ -123,8 +137,9 @@ public static class data
         bag2 = new starterBag(new pieceType[] { bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong }, "bag2");
         bag3 = new starterBag(new pieceType[] { bNub, bCaret, bBowl, bStump, bSlash, bStick, bLong, bLepton, bBoson }, "bag3");
 
+        foundryBag = new starterBag(new pieceType[] { bBarycenter, bHammer, bBar, bLong, bAngle, bCorner, bTwig, bSquare }, "Foundry");
 
-        debugbag = new starterBag(new pieceType[] { bSquare }, "debugbag");
+        debugbag = new starterBag(new pieceType[] { bBarycenter }, "debugbag");
 }
 
 

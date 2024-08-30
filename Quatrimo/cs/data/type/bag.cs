@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -30,7 +31,7 @@ public class bag
         {
             if(pieceW.weight != 1)
             {
-                pieceW.weight += 0.15f;
+                pieceW.weight = Math.Min(pieceW.weight + .1f, 1);
             }
         }
 

@@ -22,6 +22,7 @@ public class main
 
 	//board variables
 	public int level = 0;
+	public int rowsRequired = 4;
 	public int rowsCleared = 0;
 	public int enemyCooldown;
 
@@ -36,7 +37,7 @@ public class main
 	public double piecefallTimer = 0;
 	public double placeTimer = 0;
 	public double inputCooldown = 1;
-	public double scoreAnimationTimer = 0;
+	public double scoreAnimationTimer = 400;
 
 	public bool canHold = false;
 
@@ -195,7 +196,8 @@ public class main
 						}
 
 					}
-				}
+                    scoreAnimationTimer = 0;
+                }
 
                 state = gameState.scoreAnim;
                 break;
@@ -204,7 +206,6 @@ public class main
 				if(scoreAnimationTimer > 340) //kinda sucks but good enough
 				{
                     state = gameState.endTurn;
-					scoreAnimationTimer = 0;
                 }
 				scoreAnimationTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
                 //lol
@@ -277,7 +278,12 @@ public class main
     public void recalculateLevel(int rows)
 	{
 		rowsCleared += rows;
-		level = rowsCleared / 10;
+		while(rowsCleared >= rowsRequired)
+		{
+			level += 1;
+			rowsCleared -= rowsRequired;
+			rowsRequired += 2;
+		}
 		Debug.WriteLine("level: " + level);
 		levelTimes = level / 2d + 1d;
 	}
