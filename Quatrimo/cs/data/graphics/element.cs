@@ -22,6 +22,6 @@ public class element
     public void draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
         if (animatable != null) { animatable.update(this, gameTime); } // this may be bad!
-        spriteBatch.Draw(tex, new Rectangle(Game1.res(pos.x*8) + Game1.xOffset, Game1.res(pos.y*8), Game1.res(8), Game1.res(8)), color);
+        spriteBatch.Draw(tex, new Rectangle(pos.x*16, pos.y * 16, 16, 16), color);
     }
 }

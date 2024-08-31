@@ -1,5 +1,5 @@
 ﻿
-public class Vector2I
+public struct Vector2I
 {
     public Vector2I(int x, int y)
     {
