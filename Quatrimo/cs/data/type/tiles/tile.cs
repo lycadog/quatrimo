@@ -6,20 +6,23 @@ using System.Diagnostics;
 
 public class tile
 { //this class needs a general cleanup
-    public tile(boardPiece piece, Vector2I localPos, board board)// IMPORTANT! SPECIFY THE TILE TYPE JUST AFTER CREATION ===
+    public tile(boardPiece piece, Vector2I localPos, board board, tileType type)
     {
         this.piece = piece;
         this.localPos = localPos; //we need a function for newly created tiles to initialize their local position! perhaps when new pieces are added to bag? //i think i did this already
         isPlaced = false;
         this.board = board;
+        this.type = type;
+        sprite = new TileSprite(getTex(), getColor(), boardPos, 0.9f, Vector2.Zero);
     }
     public board board;
     public tileType type { get; set; } //rework how tiletype methods work maybe by adding them here
     public boardPiece piece { get; set; }
-    public Vector2I boardPos { get; set; } 
+    public Vector2I boardPos { get; set; }
     public Vector2I localPos { get; set; } //used for local position relative to the origin of the piece the tile belongs to
     public Vector2I elementPos { get; set; }
     public bool isPlaced { get; set; }
+    public TileSprite sprite { get; set; }
 
 
     //TRUE means invalid move
@@ -139,6 +142,21 @@ public class tile
             element.animatable = new animatable(new List<Texture2D> { tex }, new List<Color>() { piece.color }, false, 0, true, element);
         }
         renderDropPreview();
+    }
+
+    public Texture2D getTex()
+    {
+        Texture2D tex = piece.tex;
+        tex = type.getTexture(tex);
+        return tex;
+    }
+
+    public Color getColor()
+    {
+        Color color = piece.color;
+        //add new code here for tile type color
+        //type.getColor(color);
+        return color;
     }
 
     public void renderPlaced()

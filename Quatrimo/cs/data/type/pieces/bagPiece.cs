@@ -27,8 +27,7 @@ public class bagPiece //used for pieces held in the bag
                 if (this.tiles[x, y] != null) //only process solid tiles!
                 {
                     
-                    tile tile = new tile(piece, new Vector2I(x - origin.x, y - origin.y), board);
-                    tile.type = this.tiles[x, y].getNewInstance(board, tile);
+                    tile tile = new tile(piece, new Vector2I(x - origin.x, y - origin.y), board, this.tiles[x, y].getNewInstance(board, tile));
                     tiles[index] = tile;
                     index++;
                 }}}
