@@ -27,7 +27,7 @@ public class pieceType
 
     public void addToBag(bag bag) //add new piece to player's bag 
     {
-        tileType[,] tiles = new tileType[dimensions.x,dimensions.y];
+        tileTypeold[,] tiles = new tileTypeold[dimensions.x,dimensions.y];
         
         for (int x = 0; x < dimensions.x; x++){
             for (int y = 0; y < dimensions.y; y++){

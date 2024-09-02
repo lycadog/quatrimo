@@ -6,23 +6,21 @@ using System.Diagnostics;
 
 public class tile
 { //this class needs a general cleanup
-    public tile(boardPiece piece, Vector2I localPos, board board, tileType type)
+    public tile(boardPieceold piece, Vector2I localPos, board board, tileTypeold type)
     {
         this.piece = piece;
         this.localPos = localPos; //we need a function for newly created tiles to initialize their local position! perhaps when new pieces are added to bag? //i think i did this already
         isPlaced = false;
         this.board = board;
         this.type = type;
-        sprite = new TileSprite(getTex(), getColor(), boardPos, 0.9f, Vector2.Zero);
     }
     public board board;
-    public tileType type { get; set; } //rework how tiletype methods work maybe by adding them here
-    public boardPiece piece { get; set; }
+    public tileTypeold type { get; set; } //rework how tiletype methods work maybe by adding them here
+    public boardPieceold piece { get; set; }
     public Vector2I boardPos { get; set; }
     public Vector2I localPos { get; set; } //used for local position relative to the origin of the piece the tile belongs to
     public Vector2I elementPos { get; set; }
     public bool isPlaced { get; set; }
-    public TileSprite sprite { get; set; }
 
 
     //TRUE means invalid move
@@ -56,24 +54,18 @@ public class tile
     }
     public void collideFalling() //runs when this falling tile collides with another tile ***WORRY ABOUT THESE 2 METHODS LATER***
     {
-        Debug.WriteLine($"collideFalling event at {boardPos.x}, {boardPos.y}");
-
         type.collideFalling(this);
     }
     public void boardCollideFalling() //runs when this falling tile collides with the bottom of the board 
     {
-        Debug.WriteLine($"boardCollideFalling event at {boardPos.x}, {boardPos.y}");
-
         type.boardCollide(this);
     }
     public void collideGround() //runs when this placed tile collides with a falling tile ***WORRY ABOUT THESE 2 METHODS LATER***
     {
-        Debug.WriteLine($"collideGround event at {boardPos.x}, {boardPos.y}");
-
         type.collideGround(this);
     }
 
-    public void place() //places the tile on the board properly **** SOMETHING STRANGE happening here, the first tile is placed properly but the rest lag (are 1 tile up briefly), may result in issues
+    public void place() //places the tile on the board properly **** SOMETHING STRANGE happening here, the first tile is placed properly but the rest lag (are 1 tile up briefly), may result in issues //old concern, probably fine
     {
         Debug.WriteLine($"place event at {boardPos.x}, {boardPos.y}");
 
@@ -110,8 +102,6 @@ public class tile
     }
     public void tick() //runs after every turn
     {
-        //Debug.WriteLine($"tick event at {boardPos.x}, {boardPos.y}");
-
         type.tick(this);
     }
 
@@ -124,8 +114,8 @@ public class tile
     public void remove(board board) //used to remove a tile
     {
         board.tiles[boardPos.x, boardPos.y] = null;
-        board.elements[elementPos.x, elementPos.y, 3].tex = Game1.empty;
-        board.elements[elementPos.x, elementPos.y, 3].color = Color.White;
+        board.elementsold[elementPos.x, elementPos.y, 3].tex = Game1.empty;
+        board.elementsold[elementPos.x, elementPos.y, 3].color = Color.White;
         isPlaced = false;
     }
 
@@ -136,7 +126,7 @@ public class tile
             Texture2D tex = piece.tex;
             tex = type.getTexture(tex);
 
-            element element = board.elements[elementPos.x, elementPos.y, 4];
+            elementold element = board.elementsold[elementPos.x, elementPos.y, 4];
             element.tex = tex;
             element.color = piece.color;
             element.animatable = new animatable(new List<Texture2D> { tex }, new List<Color>() { piece.color }, false, 0, true, element);
@@ -164,7 +154,7 @@ public class tile
         Texture2D tex = piece.tex;
         tex = type.getTexture(tex);
 
-        element element = board.elements[elementPos.x, elementPos.y, 3];
+        elementold element = board.elementsold[elementPos.x, elementPos.y, 3];
         element.tex = tex;
         element.color = piece.color;
         element.animatable = null;
@@ -174,7 +164,7 @@ public class tile
     {
         Vector2I dropPos = board.convertToElementPos( new Vector2I(boardPos.x, boardPos.y + piece.dropOffset));
         //Debug.WriteLine("BULLSHIT PIECE DROP POS: " + dropPos.x + ", " + dropPos.y + " ==============================");
-        element element = board.elements[dropPos.x, dropPos.y, 2];
+        elementold element = board.elementsold[dropPos.x, dropPos.y, 2];
         element.animatable = new animatable(new List<Texture2D> { Game1.full25 }, new List<Color>() { Color.LightGray }, false, 0, false, element);
         
 

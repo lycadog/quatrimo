@@ -13,16 +13,17 @@ namespace Quatrimo
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-        private RenderTarget2D renderTarget;
+        private RenderTarget2D sceneTarget;
+        private RenderTarget2D textTarget;
         public Matrix matrix;
         main main;
 
-        static float rScale = 1;
-        static int resX = 704;
-        static int resY = 396;
-        static int xOffset = 0;
-        static readonly int baseX = 704;
-        static readonly int baseY = 396;
+        static float scale = 2;
+        static float tScale = 1;
+        static readonly Vector2I baseRes = new Vector2I(360, 202);
+        static readonly Vector2I textRes = new Vector2I(720, 404);
+        static Vector2I res = new Vector2I(720, 404);
+        static int frameOffset = 0;
 
         public static Texture2D empty;
         public static Texture2D full;
@@ -79,8 +80,8 @@ namespace Quatrimo
 
             graphics = new GraphicsDeviceManager(this);
 
-            graphics.PreferredBackBufferWidth = baseX;
-            graphics.PreferredBackBufferHeight = baseY;
+            graphics.PreferredBackBufferWidth = textRes.x;
+            graphics.PreferredBackBufferHeight = textRes.y;
             
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -92,10 +93,15 @@ namespace Quatrimo
             data.dataInit();
             base.Initialize();
 
-            renderTarget = new RenderTarget2D(
+            sceneTarget = new RenderTarget2D(
                 GraphicsDevice,
-                GraphicsDevice.PresentationParameters.BackBufferWidth,
-                GraphicsDevice.PresentationParameters.BackBufferHeight,
+                baseRes.x, baseRes.y,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+            textTarget = new RenderTarget2D(
+                GraphicsDevice,
+                textRes.x, textRes.y,
                 false,
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
@@ -158,7 +164,6 @@ namespace Quatrimo
 
             data.dataInitContent();
             main = new main(new bag(data.bag2));
-            main.board.initializeElements();
             // TODO: use this.Content to load your game content here
         }
 
@@ -168,42 +173,52 @@ namespace Quatrimo
                 Exit();
 
             keybind.updateKeybinds(data.keys, gameTime);
-            main.coreGameLoop(gameTime);
+            //main.coreGameLoop(gameTime);
 
             // TODO: Add your update logic here
             
             base.Update(gameTime);
         }
+        //GraphicsDevice.Clear(new Color(new Vector3(0.0f, 0.02f, 0.06f)));
 
         protected override void Draw(GameTime gameTime)
         {
             DisplayMode display = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 
-
-            GraphicsDevice.SetRenderTarget(renderTarget);
+            GraphicsDevice.SetRenderTarget(sceneTarget);
             GraphicsDevice.Clear(new Color(new Vector3(0.0f, 0.02f, 0.06f)));
 
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
+                
+            spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, baseRes.y), null, new Color(new Vector3(0.01f, 0.00f, 0.02f)), 0, Vector2.Zero, SpriteEffects.None, 0f);
+            spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, baseRes.y), null, new Color(new Vector3(0.02f, 0.01f, 0.12f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
+            //spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, baseRes.y), null, new Color(new Vector3(0.02f, 1.0f, 0.12f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
 
-            spriteBatch.Draw(bg, new Rectangle(0, 0, baseX, baseY), null, new Color(new Vector3(0.01f, 0.00f, 0.02f)), 0, Vector2.Zero, SpriteEffects.None, 0f);
-            spriteBatch.Draw(bg, new Rectangle(0, 0, baseX, baseY), null, new Color(new Vector3(0.02f, 0.01f, 0.12f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(bg, new Rectangle(0, 0, baseX, baseY), null, new Color(new Vector3(0.02f, 1.0f, 0.12f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
+            element.draw(spriteBatch, gameTime);
 
+            main.board.draw(spriteBatch, gameTime);
             //main.board.drawElements(spriteBatch, gameTime);
-            /*spriteBatch.DrawString(font, "SCORE: " + main.totalScore.ToString(), new Vector2(260, 130), Color.White);
-            spriteBatch.DrawString(font, "LVL: " + main.level.ToString(), new Vector2(260, 140), Color.White);
-            spriteBatch.DrawString(font, "X: " + main.levelTimes.ToString(), new Vector2(260, 150), Color.White);
-            spriteBatch.DrawString(font, "LVL UP IN: " + (main.rowsRequired - main.rowsCleared).ToString() + " ROWS", new Vector2(260, 160), Color.White);*/
-
             spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
-            GraphicsDevice.Clear(new Color(new Vector3(0.0f, 0.02f, 0.06f)));
+            
+            GraphicsDevice.SetRenderTarget(textTarget);
+            GraphicsDevice.Clear(Color.Transparent);
 
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            spriteBatch.Draw(renderTarget, new Rectangle(xOffset, 0, (int)(baseX*rScale), (int)(baseY * rScale)), Color.White);
+            spriteBatch.DrawString(font, "SCORE: " + main.totalScore.ToString(), new Vector2(260, 130), Color.White);
+            spriteBatch.DrawString(font, "LVL: " + main.level.ToString(), new Vector2(260, 140), Color.White);
+            spriteBatch.DrawString(font, "X: " + main.levelTimes.ToString(), new Vector2(260, 150), Color.White);
+            spriteBatch.DrawString(font, "LVL UP IN: " + (main.rowsRequired - main.rowsCleared).ToString() + " ROWS", new Vector2(260, 160), Color.White);
             spriteBatch.End();
 
+            GraphicsDevice.SetRenderTarget(null);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+            spriteBatch.Draw(sceneTarget, new Rectangle(frameOffset, 0, res.x, res.y), Color.White);
+            spriteBatch.Draw(textTarget, new Rectangle(frameOffset, 0, res.x, res.y), Color.White);
+            spriteBatch.End();
+            
 
             // TODO: Add your drawing code here
 
@@ -219,12 +234,13 @@ namespace Quatrimo
             //calculate the frame width by using the height and applying 16:9 ratio
 
             //REWORK to add Integer Scaling to get rid of improper pixelling and gridlines
-            resY = Window.ClientBounds.Height; //REWORK this later to use the lower dimension to calculate the greater dimension, to account for aspect ratios lower than 16:9
-            resX = (int)Math.Round ( resY * 1.77777777778);
-            xOffset = Math.Max((Window.ClientBounds.Width - resX)/2, 0);
-            rScale = resY / (float)baseY;
-
-            Debug.WriteLine(rScale + ",  OFFSET:" + xOffset);
+            res.y = Window.ClientBounds.Height; //REWORK this later to use the lower dimension to calculate the greater dimension, to account for aspect ratios lower than 16:9
+            res.x = (int)Math.Round ( res.y * 1.77777777778);
+            frameOffset = Math.Max((Window.ClientBounds.Width - res.x)/2, 0);
+            scale = res.y / (float)baseRes.y;
+            tScale = scale / 2;
+            
+            Debug.WriteLine(scale + ",  OFFSET:" + frameOffset);
 
             //need code to get the resolution scaling
             //recalculate scaling

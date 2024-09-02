@@ -25,7 +25,7 @@ public class bag
     public List<bagPiece> pieces;
     public string name { get; set; }
 
-    public boardPiece getPiece(board board)
+    public boardPieceold getPiece(board board)
     {
         foreach(bagPiece pieceW in pieces)
         {

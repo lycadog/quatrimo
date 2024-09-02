@@ -1,7 +1,8 @@
 ﻿
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-public class basicTile : tileType
+public class basicTile : tileTypeold
 {
     public tile tile;
     public board board;
@@ -12,7 +13,7 @@ public class basicTile : tileType
         this.board = board;
     }
 
-    public override tileType getNewInstance(board board, tile tile)
+    public override tileTypeold getNewInstance(board board)
     {
         return new basicTile(tile, board);
     }
@@ -67,5 +68,10 @@ public class basicTile : tileType
 
     public override void tick(tile tile)
     {
+    }
+
+    public override Color getColor(Color color)
+    {
+        throw new System.NotImplementedException();
     }
 }

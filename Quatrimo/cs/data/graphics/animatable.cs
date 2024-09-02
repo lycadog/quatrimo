@@ -18,7 +18,7 @@ public class animatable
 
     public double time = 0;
     public double hangTime;
-    public animatable(List<Texture2D> sequence, List<Color> colors, bool loops, double hangTime, bool overwrite, element element)
+    public animatable(List<Texture2D> sequence, List<Color> colors, bool loops, double hangTime, bool overwrite, elementold element)
     {
         this.sequence = sequence;
         this.colors = colors;
@@ -29,7 +29,7 @@ public class animatable
     }
 
     //ISSUE: on low frame rates piece falling animation hangs too long!
-    public void update(element element, GameTime gameTime)
+    public void update(elementold element, GameTime gameTime)
     {
 
         if (time > hangTime) //if enough time has passed, advance the sequence
@@ -58,7 +58,7 @@ public class animatable
 
     }
 
-    public void endSequence(element element)
+    public void endSequence(elementold element)
     {
         element.animatable = null;
         element.tex = Game1.empty; //this may need to be changed later! 

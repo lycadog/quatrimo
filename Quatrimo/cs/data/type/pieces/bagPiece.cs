@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 public class bagPiece //used for pieces held in the bag
 { //nest this in board piece maybe?
-    public bagPiece(tileType[,] tiles, Vector2I dimensions, Vector2I origin, int tileCount, string name, rarity rarity, Color color, Texture2D tex)
+    public bagPiece(baseBlockType[,] blocks, Vector2I dimensions, Vector2I origin, int tileCount, string name, rarity rarity, Color color, Texture2D tex)
     {
-        this.tiles = tiles;
+        this.blocks = blocks;
         this.dimensions = dimensions;
         this.origin = origin;
         this.tileCount = tileCount;
@@ -16,18 +16,18 @@ public class bagPiece //used for pieces held in the bag
         weight = 1;
     }
 
-    public boardPiece getBoardPiece(board board)
+    public boardPieceold getBoardPiece(board board)
     {
         
         tile[] tiles = new tile[tileCount];
-        boardPiece piece = new boardPiece(tiles, dimensions, origin, name, rarity, color, tex, board);
+        boardPieceold piece = new boardPieceold(tiles, dimensions, origin, name, rarity, color, tex, board);
         int index = 0;
         for (int x = 0; x < dimensions.x; x++){
             for(int y = 0; y < dimensions.y; y++){ //process through each tile of the bagPiece and create a real tile for the boardPiece
-                if (this.tiles[x, y] != null) //only process solid tiles!
+                if (this.blocks[x, y] != null) //only process solid tiles!
                 {
                     
-                    tile tile = new tile(piece, new Vector2I(x - origin.x, y - origin.y), board, this.tiles[x, y].getNewInstance(board, tile));
+                    tile tile = new tile(piece, new Vector2I(x - origin.x, y - origin.y), board, this.blocks[x, y].getNewInstance(board));
                     tiles[index] = tile;
                     index++;
                 }}}
@@ -35,7 +35,7 @@ public class bagPiece //used for pieces held in the bag
 
     }
 
-    public tileType[,] tiles { get; set; }
+    public baseBlockType[,] blocks { get; set; }
     public Vector2I dimensions { get; set; }
     public Vector2I origin { get; set; }
     public int tileCount {  get; set; }

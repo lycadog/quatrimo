@@ -41,9 +41,9 @@ public class main
 
 	public bool canHold = false;
 
-	public boardPiece currentPiece;
-	public boardPiece heldPiece = null;
-	public boardPiece nextPiece;
+	public boardPieceold currentPiece;
+	public boardPieceold heldPiece = null;
+	public boardPieceold nextPiece;
 
 	public List<int> updatedRows = new List<int>();
 	public List<int> scorableRows = new List<int>();
@@ -189,7 +189,7 @@ public class main
 						for (int x = 0; x < board.dimensions.x; x++)
 						{
 							Vector2I epos = board.convertToElementPos(x, scorableRows[i]);
-							element element = board.elements[epos.x, epos.y, 3];
+							elementold element = board.elementsold[epos.x, epos.y, 3];
 
 							animatable anim = new animatable(new List<Texture2D> { Game1.full, Game1.full75, Game1.full50, Game1.full25 }, new List<Color> { Color.White }, false, 80, true, element);
 							element.animatable = anim;
@@ -372,7 +372,7 @@ public class main
 			nextPiece = bag.getPiece(board);
 		}
 
-		boardPiece formerlyHeld = heldPiece;
+		boardPieceold formerlyHeld = heldPiece;
 
 		heldPiece = currentPiece;
 		while(heldPiece.rotation != 0)
