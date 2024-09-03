@@ -23,10 +23,10 @@ public class boardPieceold
     public Vector2I dimensions { get; set; }
     public Vector2I rotDimensions { get; set; } //piece dimensions but rotated properly after rotation
     public Vector2I pos { get; set; } //this position might be desynced from the piece's tile's positions due to 0 index array shenanigans, look into later //what
-    public int dropOffset {  get; set; }
-    public Vector2I origin {  get; set; }
+    public int dropOffset { get; set; }
+    public Vector2I origin { get; set; }
     public int rotation { get; set; } //varies from 0-3
-    public bool isPlaced {  get; set; }
+    public bool isPlaced { get; set; }
     public string name { get; set; }
     public Color color { get; set; }
     public Texture2D tex { get; set; }
@@ -51,7 +51,7 @@ public class boardPieceold
         updateTilePosition();
     }
     
-    public bool isRotationValid(int direction)
+    /*public bool isRotationValid(int direction)
     {
         Debug.WriteLine("CHECKING ROTATION");
         foreach(tile tile in tiles)
@@ -64,7 +64,7 @@ public class boardPieceold
 
         }
         return true;
-    }
+    }*/
 
     public void playPiece() //runs when a piece is dropped
     { //dimensions.y -origin.y+1
@@ -96,8 +96,8 @@ public class boardPieceold
     public bool isMoveValid(int xOffset = 0, int yOffset = 0) //returns whether or not a move is valid
     {
         foreach(tile tile in tiles)
-        {            
-            if (tile.checkMoveCollision(xOffset, yOffset))    
+        {
+            if (tile.checkMoveCollision(xOffset, yOffset))
             {
                 return false;
             }

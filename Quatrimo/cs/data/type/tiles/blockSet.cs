@@ -1,15 +1,15 @@
 
-public class tileSet
+public class blockSet
 {
-    public tileSet(tileTypeold[] types, float[] chance)
+    public blockSet(baseBlockType[] types, float[] chance)
     {
         this.types = types;
         this.chance = chance;
     }
 
-    public tileTypeold[] types { get; set; }
+    public baseBlockType[] types { get; set; }
     public float[] chance {  get; set; } //chance of getting the tiletype with the same index in types array, WRITE LARGEST TO SMALLEST
-    public tileTypeold getRandomType() //rework this later to use real weighted chance!!!!!
+    public baseBlockType getRandomType() //rework this later to use real weighted chance!!!!!
     {
         float rand = util.rand.NextSingle(); //rework this entire function later
         int index = 0;
@@ -21,9 +21,5 @@ public class tileSet
             }
         }
         return types[index];
-    }
-    public tileTypeold getStarterType(pieceType piece, bag bag)
-    {
-        return null;
     }
 }

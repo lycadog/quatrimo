@@ -71,7 +71,7 @@ public class tile
 
         boardPos = piece.pos.add(localPos); //get proper tile position
 
-        board.tiles[boardPos.x, boardPos.y] = this; //place tile on the board
+        //board.tiles[boardPos.x, boardPos.y] = this; //place tile on the board
         type.place(this);
         renderPlaced();
     }
@@ -113,7 +113,7 @@ public class tile
 
     public void remove(board board) //used to remove a tile
     {
-        board.tiles[boardPos.x, boardPos.y] = null;
+        //board.tiles[boardPos.x, boardPos.y] = null;
         board.elementsold[elementPos.x, elementPos.y, 3].tex = Game1.empty;
         board.elementsold[elementPos.x, elementPos.y, 3].color = Color.White;
         isPlaced = false;

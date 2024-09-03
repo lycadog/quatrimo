@@ -173,7 +173,7 @@ namespace Quatrimo
                 Exit();
 
             keybind.updateKeybinds(data.keys, gameTime);
-            //main.coreGameLoop(gameTime);
+            main.coreGameLoop(gameTime);
 
             // TODO: Add your update logic here
             
@@ -194,10 +194,9 @@ namespace Quatrimo
             spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, baseRes.y), null, new Color(new Vector3(0.02f, 0.01f, 0.12f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
             //spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, baseRes.y), null, new Color(new Vector3(0.02f, 1.0f, 0.12f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
 
+            element element = new element(corey, Color.White, new Vector2I(24, 3), 0.8f);
             element.draw(spriteBatch, gameTime);
-
             main.board.draw(spriteBatch, gameTime);
-            //main.board.drawElements(spriteBatch, gameTime);
             spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);

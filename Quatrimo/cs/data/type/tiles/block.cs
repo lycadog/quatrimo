@@ -1,21 +1,25 @@
 ﻿
 using Microsoft.Xna.Framework;
-using System;
+using Quatrimo;
+using System.Diagnostics;
 
 public class block
 {
     public board board;
-    public block(board board, element element, blockType type, boardPieceold piece, Vector2I localpos)
+    public block(board board, element element, blockType type, boardPiece piece, Vector2I localpos)
     {
         this.board = board;
         this.element = element;
         this.type = type;
         this.piece = piece;
         this.localpos = localpos;
+
+        dropElement = new element(Game1.full25, Color.LightGray, new Vector2I(0, -10), 0.79f);
     }
     public element element { get; set; }
+    public element dropElement { get; set; }
     public blockType type { get; set; }
-    public boardPieceold piece {  get; set; }
+    public boardPiece piece {  get; set; }
     public Vector2I boardpos { get; set; }
     public Vector2I localpos {  get; set; }
     
@@ -25,7 +29,22 @@ public class block
     public void play()
     {
         updatePos();
+        updateSpritePos();
         board.sprites.Add(element);
+        board.sprites.Add(dropElement);
+        Debug.WriteLine(boardpos.x + ", " + boardpos.y);
+    }
+
+    /// <summary>
+    /// Used to move PLACED PIECES only
+    /// </summary>
+    /// <param name="xoffset"></param>
+    /// <param name="yoffset"></param>
+    public void movePlaced(int xoffset, int yoffset)
+    {
+        board.blocks[boardpos.x, boardpos.y] = null;
+        board.blocks[boardpos.x + xoffset, boardpos.y + yoffset] = this;
+        element.offsetEPos(new Vector2I(xoffset, yoffset));
     }
 
     /// <summary>
@@ -35,9 +54,19 @@ public class block
     /// <param name="direction"></param>
     public void rotate(int direction)
     {
-        localpos =  new Vector2I(localpos.y * -direction, localpos.x * direction);
+        localpos = getRotatePos(direction);
         type.rotate(direction);
         element.rot += MathHelper.ToRadians(90 * direction);
+    }
+
+    /// <summary>
+    /// Returns the local position after a rotation operation in the specificed direction
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    public Vector2I getRotatePos(int direction)
+    {
+        return new Vector2I(localpos.y * -direction, localpos.x * direction);
     }
 
     /// <summary>
@@ -46,7 +75,9 @@ public class block
     public void place()
     {
         board.blocks[boardpos.x, boardpos.y] = this;
+        element.depth = .75f;
         type.place();
+        board.sprites.Remove(dropElement);
     }
 
     /// <summary>
@@ -54,8 +85,19 @@ public class block
     /// </summary>
     public void updatePos()
     {
-        boardpos = piece.pos.add(localpos);
-        element.elementPos = element.boardPos2ElementPos(boardpos);
+        boardpos = localpos.add(piece.pos);
+            
+    }
+
+    public void updateSpritePos()
+    {
+        if(boardpos.y > 7)
+        {
+            element.updateEPos(element.boardPos2ElementPos(boardpos));
+        }
+        else { element.updateEPos(new Vector2I(0, -5)); }
+        dropElement.updateEPos(element.boardPos2ElementPos(new Vector2I(boardpos.x, boardpos.y + piece.dropOffset)));
+
     }
 
     /// <summary>
@@ -72,6 +114,7 @@ public class block
     public void removeFalling()
     {
         board.sprites.Remove(element);
+        board.sprites.Remove(dropElement);
     }
 
     /// <summary>
@@ -85,11 +128,12 @@ public class block
     }
    
     /// <summary>
-    /// Score block
+    /// Score and remove block
     /// </summary>
     public void score()
     {
         type.score();
+        removePlaced();
     }
     
     /// <summary>
@@ -109,10 +153,9 @@ public class block
     /// <param name="xOffset"></param>
     /// <param name="yOffset"></param>
     /// <returns></returns>
-    public bool collidesFalling(int xOffset, int yOffset) 
+    public bool collidesFalling(int xOffset, int yOffset)
     {
         Vector2I checkPos = new Vector2I(boardpos.x + xOffset, boardpos.y + yOffset);
-
         if (checkPos.x < 0) { return true; }
         if (checkPos.x >= board.dimensions.x) { return true; } //if the tile is outside the board dimensions return true (invalid move)
         if (checkPos.y < 0) { return true; }
@@ -120,6 +163,18 @@ public class block
 
         block block = board.blocks[checkPos.x, checkPos.y];
         if(block == null) { return false; }
+        return type.collidesFalling(block);
+    }
+
+    public bool collidesFalling(Vector2I checkPos)
+    {
+        if (checkPos.x < 0) { return true; }
+        if (checkPos.x >= board.dimensions.x) { return true; } //if the tile is outside the board dimensions return true (invalid move)
+        if (checkPos.y < 0) { return true; }
+        if (checkPos.y >= board.dimensions.y) { return true; }
+
+        block block = board.blocks[checkPos.x, checkPos.y];
+        if (block == null) { return false; }
         return type.collidesFalling(block);
     }
 

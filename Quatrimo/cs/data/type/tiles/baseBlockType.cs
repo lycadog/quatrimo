@@ -8,5 +8,5 @@ public abstract class baseBlockType
     /// returns associated type to use for boardPieces
     /// </summary>
     /// <returns></returns>
-    public abstract blockType getType();
+    public abstract blockType getType(board board);
 }

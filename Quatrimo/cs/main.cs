@@ -41,9 +41,9 @@ public class main
 
 	public bool canHold = false;
 
-	public boardPieceold currentPiece;
-	public boardPieceold heldPiece = null;
-	public boardPieceold nextPiece;
+	public boardPiece currentPiece;
+	public boardPiece heldPiece = null;
+	public boardPiece nextPiece;
 
 	public List<int> updatedRows = new List<int>();
 	public List<int> scorableRows = new List<int>();
@@ -117,7 +117,7 @@ public class main
 				if(pieceWaitTimer >= 5000 || data.slamKey.keyDown)
 				{
 					//START piece fall
-					currentPiece.playPiece();
+					currentPiece.play();
 					canHold = true;
 					state = gameState.midTurn; break;
 				}
@@ -130,26 +130,24 @@ public class main
 				//PROCESS INPUT here
 
 				parseInput(gameTime);
-				Debug.WriteLine("========= POSITION: " + currentPiece.pos.x + currentPiece.pos.y);
                 //FALL & PLACE PIECE
                 if (piecefallTimer >= 600)
 				{
 
-                    if (currentPiece.shouldPlace()){
+                    if ( currentPiece.collidesFalling(0, 1) ){
                         if (placeTimer >= 1000){
 
-                            currentPiece.placePiece();
+							currentPiece.place();
 							state = gameState.scoreStep;
                         }}
 
                     else{
-                        currentPiece.moveFallingPiece(0, 1);
+                        currentPiece.move(0, 1);
 						piecefallTimer = 0;
 						placeTimer = 0;
                     }
                 }
 
-                currentPiece.renderFalling();
                 //increment timers
                 piecefallTimer += gameTime.ElapsedGameTime.Milliseconds;
 				placeTimer += gameTime.ElapsedGameTime.Milliseconds;
@@ -159,9 +157,9 @@ public class main
             case gameState.scoreStep:
 				//check for scorable lines, tally up score, increase level & multiplier
 
-				foreach(tile tile in currentPiece.tiles) //grab every tile's Y level
+				foreach(block block in currentPiece.blocks) //grab every tile's Y level
 				{
-					updatedRows.Add(tile.boardPos.y);
+					updatedRows.Add(block.boardpos.y);
 				}
 				
 				updatedRows = updatedRows.Distinct().ToList(); //remove duplicate entries
@@ -176,10 +174,11 @@ public class main
 				{
 					foreach(int y in scorableRows) //process through rows
 					{
-						tile tile = board.tiles[x, y];
-						turnScore += tile.score();
-						turnMultiplier += tile.type.getMultiplier(tile);
-					}
+						block block = board.blocks[x, y];
+						turnScore += block.getScore();
+						turnMultiplier += block.type.multiplier;
+
+                    }
 				}
 
 				if (scorableRows.Count > 0) //jank, handles scoring animations - put into a method?
@@ -214,9 +213,9 @@ public class main
 
 			case gameState.endTurn:
 
-				foreach(tile tile in board.tiles){ //tick every tile
-					if(tile != null){
-						tile.tick();}} //going to need to rework ticking tiles a bit to handling tick events that add score
+				foreach(block block in board.blocks){ //tick every tile
+					if(block != null){
+                        block.tick();}} //going to need to rework ticking tiles a bit to handling tick events that add score
 
 
 
@@ -292,17 +291,17 @@ public class main
 	{
         if ((data.leftKey.keyDown || data.leftKey.timeHeld > 200) && inputCooldown > 40)
         {
-			if (currentPiece.isMoveValid(-1))
+			if (!currentPiece.collidesFalling(-1,0))
 			{
-				currentPiece.moveFallingPiece(-1, 0);
+				currentPiece.move(-1, 0);
 				inputCooldown = 0;
 			}
         }
 		else if((data.rightKey.keyDown || data.rightKey.timeHeld > 200) && inputCooldown > 40)
 		{
-			if (currentPiece.isMoveValid(1))
+			if (!currentPiece.collidesFalling(1, 0))
 			{
-				currentPiece.moveFallingPiece(1, 0);
+				currentPiece.move(1, 0);
                 inputCooldown = 0;
             }
         }
@@ -318,23 +317,23 @@ public class main
 
 		if (data.leftRotateKey.keyDown)
 		{
-            if (currentPiece.isRotationValid(-1))
+            if (currentPiece.canRotate(-1))
             {
-                currentPiece.rotatePiece(-1);
+                currentPiece.rotate(-1);
             }
         }
 		else if (data.rightRotateKey.keyDown)
 		{
-            if (currentPiece.isRotationValid(1))
+            if (currentPiece.canRotate(1))
             {
-                currentPiece.rotatePiece(1);
+                currentPiece.rotate(1);
             }
         }
 
 		if (data.slamKey.keyDown)
 		{
-			currentPiece.moveFallingPiece(0, currentPiece.dropOffset);
-			currentPiece.placePiece();
+			currentPiece.move(0, currentPiece.dropOffset);
+			currentPiece.place();
 			state = gameState.scoreStep;
 		}
 
@@ -357,7 +356,7 @@ public class main
 	{
 		for(int x = 0; x < board.dimensions.x; x++)
 		{
-			if (board.tiles[x, y] == null) return false; //if any tile is empty, return false
+			if (board.blocks[x, y] == null) return false; //if any tile is empty, return false
 			else { continue; } //if the tile isn't empty, keep looping
 		}
 		return true; //if no tiles return empty, this will run and return true
@@ -372,16 +371,17 @@ public class main
 			nextPiece = bag.getPiece(board);
 		}
 
-		boardPieceold formerlyHeld = heldPiece;
+		boardPiece formerlyHeld = heldPiece;
 
 		heldPiece = currentPiece;
 		while(heldPiece.rotation != 0)
 		{
-			heldPiece.rotatePiece(1);
+			heldPiece.rotate(1);
 		}
 
+		currentPiece.removeFalling();
 		currentPiece = formerlyHeld;
-		currentPiece.playPiece();
+		currentPiece.play();
 		canHold = false;
     }
 

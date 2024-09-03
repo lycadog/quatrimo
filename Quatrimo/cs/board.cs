@@ -8,7 +8,6 @@ using System.Linq;
 public class board
 {
     public block[,] blocks;
-	public tile[,] tiles;
     public List<spriteObject> sprites = new List<spriteObject> { };
 	public elementold[,,] elementsold;
 	public Vector2I dimensions;
@@ -20,7 +19,7 @@ public class board
     public board(Vector2I dim)
     {
         dimensions = dim;
-		tiles = new tile[dimensions.x, dimensions.y];
+		blocks = new block[dimensions.x, dimensions.y];
         offset = new Vector2I((eDimensions.x - dimensions.x) / 2 - 1, 3);
         createBoardElements();
     }
@@ -135,34 +134,19 @@ public class board
                 for(int x = 0; x < dimensions.x; x++)
                 {
                     //Debug.WriteLine("===== LOWERING POS: " + x + ", " + y);
-                    tile tile = tiles[x, y];
-                    if(tile != null)
+                    block block = blocks[x, y];
+                    if(block != null)
                     {
-                        elementold element = elementsold[tile.elementPos.x, tile.elementPos.y, 3];
+                        block.movePlaced(0, 1);
 
-                        element.tex = Game1.empty;
-                        element.color = Color.White;
-
-                        tiles[x, y + 1] = tile;
-
-                        tile.elementPos = tile.elementPos.add(new Vector2I(0, 1));
-                        tile.boardPos = tile.boardPos.add(new Vector2I(0, 1));
-
-                        tiles[x, y] = null;
-
-                        movedTiles.Add(tile);
                     }
                 }
             }
         }
 
-        foreach(tile tile in movedTiles)
-        {
-            tile.renderPlaced();
-        }
     }
 
-    public bool isPositionValid(Vector2I pos, bool shouldCollide) //checks if a tile is occupied or otherwise outside of the board
+    /*public bool isPositionValid(Vector2I pos, bool shouldCollide) //checks if a tile is occupied or otherwise outside of the board
 	{ //shouldCollide refers to colliding with other tiles
 
         //if the tile is outside the board dimensions return false (invalid)
@@ -175,6 +159,6 @@ public class board
 
         //if (tiles[pos.X, pos.Y] != null) { return false; }
 		return tiles[pos.x, pos.y] == null;
-	}
+	}*/
 
 }

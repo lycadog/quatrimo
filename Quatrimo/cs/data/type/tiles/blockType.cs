@@ -4,17 +4,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 public abstract class blockType
 {   //needs some updating after block rework
-    public blockType(block baseBlock, board board)
+    public blockType(board board)
     {
-        this.baseBlock = baseBlock;
         this.board = board;
     }
     public block baseBlock { get; set; }
     public board board { get; set; }
-    public abstract Texture2D tex { get; }
-    public abstract Color color { get; }
-    public abstract long scoreValue { get; set; }
-    public abstract long multiplier { get; set; }
+    public abstract long scoreValue { get; }
+    public abstract long multiplier { get; }
+    public abstract Texture2D getTex(boardPiece piece);
+    public abstract Color getColor(boardPiece piece);
 
     public virtual void rotate(int direction) { }
 
@@ -45,12 +44,12 @@ public abstract class blockType
     /// Runs when on a falling block when it collides with a placed block
     /// Will run right before block is placed
     /// </summary>
-    public abstract void collidedFalling(Vector2I collisionPos);
+    public virtual void collidedFalling(Vector2I collisionPos) { }
 
     /// <summary>
     /// Runs on a placed block when it collides with a falling block
     /// </summary>
-    public abstract void collidedPlaced(block fallingBlock);
+    public virtual void collidedPlaced(block fallingBlock) { }
 
     /// <summary>
     /// Runs on a falling block when it tries to place on an already placed block, runs AFTER placedBlockClipped
@@ -65,6 +64,6 @@ public abstract class blockType
     /// Runs on a placed block when a falling block tries to place on its position, runs before placed
     /// </summary>
     /// <param name="fallingBlock"></param>
-    public abstract void placedBlockClipped(block fallingBlock);
+    public virtual void placedBlockClipped(block fallingBlock) { }
 
 }

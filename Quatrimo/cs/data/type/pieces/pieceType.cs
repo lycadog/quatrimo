@@ -5,21 +5,21 @@ using System.Diagnostics;
 
 public class pieceType
 {
-    public pieceType(int xSize, int ySize, tileSet[,] tiles, Vector2I origin, int tileCount, string name, colorSet color, Texture2D tex) 
+    public pieceType(int xSize, int ySize, blockSet[,] blocks, Vector2I origin, int blockCount, string name, colorSet color, Texture2D tex) 
     {
         dimensions = new Vector2I(xSize, ySize);
-        tileSet = tiles;
+        blockSet = blocks;
         this.origin = origin;
-        this.tileCount = tileCount;
+        this.blockCount = blockCount;
         this.name = name;
         this.color = color;
         this.tex = tex;
         Debug.WriteLine("RAAAH PIECETYPE TEX NULL: " + tex == null);
     }
-    public tileSet[,] tileSet { get; set; }
+    public blockSet[,] blockSet { get; set; }
     public Vector2I dimensions { get; set; }
     public Vector2I origin {  get; set; }
-    public int tileCount {  get; set; }
+    public int blockCount {  get; set; }
     public string name { get; set; }
     public rarity rarity { get; set; }
     public colorSet color { get; set; } //properly define and use colorsets
@@ -27,16 +27,16 @@ public class pieceType
 
     public void addToBag(bag bag) //add new piece to player's bag 
     {
-        tileTypeold[,] tiles = new tileTypeold[dimensions.x,dimensions.y];
+        baseBlockType[,] blocks = new baseBlockType[dimensions.x,dimensions.y];
         
         for (int x = 0; x < dimensions.x; x++){
             for (int y = 0; y < dimensions.y; y++){
-                Debug.WriteLine(x + "," + y);
-                if (tileSet[x, y] != null){ //get the tiletype from each tileset
-                    tiles[x, y] = tileSet[x, y].getRandomType();
+
+                if (blockSet[x, y] != null){ //get the blocktype from each blockset
+                    blocks[x, y] = blockSet[x, y].getRandomType();
                 }
             }}
-        bagPiece piece = new bagPiece(tiles, dimensions, origin, tileCount, name, rarity, color.getRandomColor(), tex); //create new piece
+        bagPiece piece = new bagPiece(blocks, dimensions, origin, blockCount, name, rarity, color.getRandomColor(), tex); //create new piece
 
         bag.pieces.Add(piece); //add new piece to player's bag
         Debug.WriteLine("piece " + piece.name + " added!");

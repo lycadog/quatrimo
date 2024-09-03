@@ -17,15 +17,22 @@ public class element : spriteObject
         pos = elementPos2WorldPos(epos);
     }
 
-    /// <summary>
-    /// Updates position and element position
-    /// </summary>
-    /// <param name="newPos"></param>
     public void updateEPos(Vector2I newPos)
     {
         elementPos = newPos;
         pos = elementPos2WorldPos(newPos);
     }
+
+    /// <summary>
+    /// Updates position and element position using an offset
+    /// </summary>
+    /// <param name="offset"></param>
+    public void offsetEPos(Vector2I offset)
+    {
+        elementPos.add(offset);
+        pos = elementPos2WorldPos(elementPos);
+    }
+
 
     /// <summary>
     /// Updates element position and world position using world position as input
@@ -64,6 +71,6 @@ public class element : spriteObject
     /// <returns></returns>
     public static Vector2I boardPos2ElementPos(Vector2I bpos)
     {
-        return new Vector2I(board.offset.x + bpos.x + 1, 3 + bpos.y);
+        return new Vector2I(board.offset.x + bpos.x + 1, bpos.y - 5);
     }
 }
