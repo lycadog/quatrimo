@@ -47,6 +47,7 @@ public class main
 
 	public List<int> updatedRows = new List<int>();
 	public List<int> scorableRows = new List<int>();
+	public List<block> scoredBlocks = new List<block>();
 
     public main(bag bag)
     {
@@ -134,7 +135,7 @@ public class main
                 if (piecefallTimer >= 600)
 				{
 
-                    if ( currentPiece.collidesFalling(0, 1) ){
+                    if (currentPiece.collidesFalling(0, 1) ){
                         if (placeTimer >= 1000){
 
 							currentPiece.place();
@@ -177,9 +178,16 @@ public class main
 						block block = board.blocks[x, y];
 						turnScore += block.getScore();
 						turnMultiplier += block.type.multiplier;
-
+						block.piece.mod.bScore(block);
+						scoredBlocks.Add(block);
                     }
 				}
+
+				foreach(block block in scoredBlocks)
+				{
+					block.removePlaced();
+				}
+				scoredBlocks.Clear();
 
 				if (scorableRows.Count > 0) //jank, handles scoring animations - put into a method?
 				{
@@ -187,11 +195,11 @@ public class main
 					{
 						for (int x = 0; x < board.dimensions.x; x++)
 						{
-							Vector2I epos = board.convertToElementPos(x, scorableRows[i]);
-							elementold element = board.elementsold[epos.x, epos.y, 3];
+							//Vector2I epos = board.convertToElementPos(x, scorableRows[i]);
+							//elementold element = board.elementsold[epos.x, epos.y, 3];
 
-							animatable anim = new animatable(new List<Texture2D> { Game1.full, Game1.full75, Game1.full50, Game1.full25 }, new List<Color> { Color.White }, false, 80, true, element);
-							element.animatable = anim;
+							//animatable anim = new animatable(new List<Texture2D> { Game1.full, Game1.full75, Game1.full50, Game1.full25 }, new List<Color> { Color.White }, false, 80, true, element);
+							//element.animatable = anim;
 						}
 
 					}
@@ -215,8 +223,7 @@ public class main
 
 				foreach(block block in board.blocks){ //tick every tile
 					if(block != null){
-                        block.tick();}} //going to need to rework ticking tiles a bit to handling tick events that add score
-
+                        block.piece.mod.bTick(block);}} //going to need to rework ticking tiles a bit to handling tick events that add score
 
 
 				//final score operation
@@ -364,7 +371,6 @@ public class main
 
 	public void holdPiece()
 	{
-		Debug.WriteLine("IM GAY AH HELLL");
 		if(heldPiece == null)
 		{
 			heldPiece = nextPiece;

@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 public class element : spriteObject
 {
@@ -29,7 +30,7 @@ public class element : spriteObject
     /// <param name="offset"></param>
     public void offsetEPos(Vector2I offset)
     {
-        elementPos.add(offset);
+        elementPos = elementPos.add(offset);
         pos = elementPos2WorldPos(elementPos);
     }
 

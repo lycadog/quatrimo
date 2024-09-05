@@ -7,10 +7,11 @@ public class boardPiece
 {
     public board board;
 
-    public boardPiece(board board, block[] blocks, Vector2I dimensions, Vector2I origin, string name, Texture2D tex, Color color)
+    public boardPiece(board board, block[] blocks, pieceMod mod, Vector2I dimensions, Vector2I origin, string name, Texture2D tex, Color color)
     {
         this.board = board;
         this.blocks = blocks;
+        this.mod = mod;
         this.dimensions = dimensions;
         this.origin = origin;
         this.name = name;
@@ -19,6 +20,7 @@ public class boardPiece
     }
 
     public block[] blocks { get; set; }
+    public pieceMod mod {  get; set; }
     public Vector2I dimensions { get; set; }
     public Vector2I pos { get; set; }
     public Vector2I origin { get; set; }
@@ -33,8 +35,7 @@ public class boardPiece
         pos = new Vector2I(5, 9 - (dimensions.y / 2));
         foreach(block block in blocks)
         {
-            block.play();
-            
+            mod.bPlay(block);
         }
         updatePos();
     }
@@ -53,11 +54,7 @@ public class boardPiece
     /// <returns></returns>
     public bool collidesFalling(int xOffset, int yOffset)
     {
-        foreach (block block in blocks)
-        {
-            if (block.collidesFalling(xOffset, yOffset)) { return true; }
-        }
-        return false;
+        return mod.pCollidesFalling(xOffset, yOffset);
     }
 
     /// <summary>
@@ -92,7 +89,7 @@ public class boardPiece
         foreach(block block in blocks)
         {
             Vector2I rotPos = new Vector2I(block.getRotatePos(direction).x + pos.x, block.getRotatePos(direction).y + pos.y);
-            if(block.collidesFalling(rotPos))
+            if(mod.bCollidesFalling(block,rotPos))
             {
                 return false;
             }
@@ -102,10 +99,7 @@ public class boardPiece
 
     public void place()
     {
-        foreach(block block in blocks)
-        {
-            block.place();
-        }
+        mod.pPlace();
     }
 
     public void removeFalling()

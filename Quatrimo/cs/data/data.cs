@@ -139,7 +139,7 @@ public static class data
 
         foundryBag = new starterBag(new pieceType[] { bBarycenter, bHammer, bBar, bLong, bAngle, bCorner, bTwig, bSquare }, "Foundry");
 
-        debugbag = new starterBag(new pieceType[] { bBarycenter }, "debugbag");
+        debugbag = new starterBag(new pieceType[] { bLong }, "debugbag");
 }
 
 

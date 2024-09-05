@@ -42,8 +42,6 @@ public class bag
             float rand = util.rand.NextSingle();
             index = util.rand.Next(0, pieces.Count);
 
-            Debug.WriteLine(pieces.Count + ", " + index);
-
             piece = pieces[index];
             if (rand < piece.weight)
             {

@@ -105,45 +105,62 @@ public class board
 
     }
 
-    public Vector2I convertToElementPos(int x, int y)
-    {
-        return new Vector2I(x + offset.x + 1, y - 6 + 1);
-    }
-
-    public Vector2I convertToElementPos(Vector2I pos)
-    {
-        return new Vector2I(pos.x + offset.x + 1, pos.y-6 + 1);
-    }
-
     public void lowerRows(List<int> scoredRows)
     {
         int length = scoredRows.Count;
-        List<tile> movedTiles = new List<tile>();
         int[] rows = new int[length];
 
-        for (int l = 0; l < length; l++) //sort scoredRows by descending
+        for (int l = 0; l < length; l++)//sort scoredRows by ascending
         {
             rows[l] = scoredRows.Min();
             scoredRows.Remove(scoredRows.Min());
         }
 
-        for (int i = 0; i < length; i++)
+        for(int i = 0; i < length; i++) 
         {
-            for (int y = rows[i]-1; y > 0; y--)
+            for(int y = rows[i]-1; y >= 0; y--)
             {
-                for(int x = 0; x < dimensions.x; x++)
+                for(int x = 0; x < dimensions.x; x++)//iterate through rows above the scored row, bringing each block down
                 {
-                    //Debug.WriteLine("===== LOWERING POS: " + x + ", " + y);
                     block block = blocks[x, y];
                     if(block != null)
                     {
                         block.movePlaced(0, 1);
-
                     }
                 }
             }
         }
+    }
 
+
+
+    public void lowerRowsold(List<int> scoredRows)
+    {
+        int length = scoredRows.Count;
+        int[] rows = new int[length];
+
+        for (int l = 0; l < length; l++) 
+        {
+
+            rows[l] = scoredRows.Max();
+            scoredRows.Remove(scoredRows.Max());
+        }
+
+        for (int i = 0; i < length; i++)
+        {
+            Debug.WriteLine("AAAAAAAAAAAAAAA");
+            for (int y = rows[i]-1; y >= 0; y--)
+            {
+                for(int x = 0; x < dimensions.x; x++)
+                {
+                    block block = blocks[x, y];
+                    if(block != null)
+                    {
+                        block.movePlaced(0, 1);
+                    }
+                }
+            }
+        }
     }
 
     /*public bool isPositionValid(Vector2I pos, bool shouldCollide) //checks if a tile is occupied or otherwise outside of the board

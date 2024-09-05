@@ -25,7 +25,9 @@ public class bagPiece //used for pieces held in the bag
     {
         
         block[] blocks = new block[blockCount];
-        boardPiece piece = new boardPiece(board, blocks, dimensions, origin, name, tex, color);
+        pieceMod mod = new basicMod();
+        boardPiece piece = new boardPiece(board, blocks, mod, dimensions, origin, name, tex, color);
+        mod.piece = piece;
         int index = 0;
         for (int x = 0; x < dimensions.x; x++){
             for(int y = 0; y < dimensions.y; y++){ //process through each block of the bagPiece and create a real block for the boardPiece

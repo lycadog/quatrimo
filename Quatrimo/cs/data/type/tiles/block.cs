@@ -32,7 +32,6 @@ public class block
         updateSpritePos();
         board.sprites.Add(element);
         board.sprites.Add(dropElement);
-        Debug.WriteLine(boardpos.x + ", " + boardpos.y);
     }
 
     /// <summary>
@@ -44,6 +43,7 @@ public class block
     {
         board.blocks[boardpos.x, boardpos.y] = null;
         board.blocks[boardpos.x + xoffset, boardpos.y + yoffset] = this;
+        boardpos = new Vector2I(boardpos.x + xoffset, boardpos.y + yoffset);
         element.offsetEPos(new Vector2I(xoffset, yoffset));
     }
 
@@ -86,7 +86,6 @@ public class block
     public void updatePos()
     {
         boardpos = localpos.add(piece.pos);
-            
     }
 
     public void updateSpritePos()
@@ -97,7 +96,6 @@ public class block
         }
         else { element.updateEPos(new Vector2I(0, -5)); }
         dropElement.updateEPos(element.boardPos2ElementPos(new Vector2I(boardpos.x, boardpos.y + piece.dropOffset)));
-
     }
 
     /// <summary>
@@ -128,12 +126,11 @@ public class block
     }
    
     /// <summary>
-    /// Score and remove block
+    /// Score block, remove later
     /// </summary>
     public void score()
     {
         type.score();
-        removePlaced();
     }
     
     /// <summary>

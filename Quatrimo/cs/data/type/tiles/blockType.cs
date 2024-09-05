@@ -30,7 +30,7 @@ public abstract class blockType
     /// <returns></returns>
     public virtual bool collidesFalling(block placedBlock)
     {
-        return placedBlock.collidesPlaced(baseBlock);
+        return placedBlock.piece.mod.bCollidesPlaced(placedBlock, baseBlock);
     }
 
     /// <summary>
