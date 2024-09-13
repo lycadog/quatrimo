@@ -1,10 +1,8 @@
 ﻿
-using System.Diagnostics;
-using static System.Reflection.Metadata.BlobBuilder;
-
 public abstract class pieceMod
 {
     public abstract boardPiece piece { get; set; }
+    public abstract pieceMod getNew(boardPiece piece);
 
 
     // ======== PIECE METHODS ========
@@ -12,7 +10,7 @@ public abstract class pieceMod
     {
         foreach (block block in piece.blocks)
         {
-            if (block.collidesFalling(xOffset, yOffset)) { return true; }
+            if (bCollidesFalling(block, xOffset, yOffset)) { return true; }
         }
         return false;
     }
@@ -25,14 +23,29 @@ public abstract class pieceMod
         }
     }
 
+    public virtual void pUpdatePos()
+    {
+        piece.updatePos();
+    }
+
     // ======== BLOCK METHODS ========
 
     /// <summary>
-    /// Play the falling block into the board
+    /// Play the falling block into the board, put extra piecemod graphics into board sprites
     /// </summary>
+    /// 
     public virtual void bPlay(block block)
     {
         block.play();
+    }
+
+    /// <summary>
+    /// Create custom elements needed for block
+    /// </summary>
+    /// <param name="block"></param>
+    public virtual void bGraphicsInit(block block)
+    {
+        block.graphicsInit();
     }
 
     /// <summary>
@@ -40,6 +53,15 @@ public abstract class pieceMod
     /// </summary>
     public virtual void bPlace(block block)
     {
+        block clippedblock = block.board.blocks[block.boardpos.x, block.boardpos.y];
+        if (clippedblock != null)
+        {
+            clippedblock.piece.mod.bPlacedBlockClipped(clippedblock, block);
+            if (block.board.blocks[block.boardpos.x, block.boardpos.y] != null)
+            {
+                block.piece.mod.bFallingBlockClipped(block, clippedblock);
+            }
+        }
         block.place();
     }
 
@@ -59,12 +81,18 @@ public abstract class pieceMod
         block.score();
     }
 
-    public virtual bool bCollidesFalling(block block, int xOffset, int yOffset)
+    public bool bCollidesFalling(block block, int xOffset, int yOffset)
     {
-        return block.collidesFalling(xOffset, yOffset);
+        Vector2I checkPos = new Vector2I(block.boardpos.x + xOffset, block.boardpos.y + yOffset);
+        return bCollidesFalling(block, checkPos);
     }
     public virtual bool bCollidesFalling(block block, Vector2I checkPos)
     {
+        if (checkPos.x < 0) { return true; }
+        if (checkPos.x >= piece.board.dimensions.x) { return true; } //if the tile is outside the board dimensions return true (invalid move)
+        if (checkPos.y < 0) { return true; }
+        if (checkPos.y >= piece.board.dimensions.y) { return true; }
+
         return block.collidesFalling(checkPos);
     }
 

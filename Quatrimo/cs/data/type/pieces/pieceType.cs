@@ -5,10 +5,11 @@ using System.Diagnostics;
 
 public class pieceType
 {
-    public pieceType(int xSize, int ySize, blockSet[,] blocks, Vector2I origin, int blockCount, string name, colorSet color, Texture2D tex) 
+    public pieceType(int xSize, int ySize, wSet<blockType>[,] blocks, wSet<pieceMod> mod, Vector2I origin, int blockCount, string name, colorSet color, Texture2D tex) 
     {
         dimensions = new Vector2I(xSize, ySize);
         blockSet = blocks;
+        this.mod = mod;
         this.origin = origin;
         this.blockCount = blockCount;
         this.name = name;
@@ -16,7 +17,8 @@ public class pieceType
         this.tex = tex;
         Debug.WriteLine("RAAAH PIECETYPE TEX NULL: " + tex == null);
     }
-    public blockSet[,] blockSet { get; set; }
+    public wSet<blockType>[,] blockSet { get; set; }
+    public wSet<pieceMod> mod { get; set; }
     public Vector2I dimensions { get; set; }
     public Vector2I origin {  get; set; }
     public int blockCount {  get; set; }
@@ -27,16 +29,16 @@ public class pieceType
 
     public void addToBag(bag bag) //add new piece to player's bag 
     {
-        baseBlockType[,] blocks = new baseBlockType[dimensions.x,dimensions.y];
+        blockType[,] blocks = new blockType[dimensions.x,dimensions.y];
         
         for (int x = 0; x < dimensions.x; x++){
             for (int y = 0; y < dimensions.y; y++){
 
                 if (blockSet[x, y] != null){ //get the blocktype from each blockset
-                    blocks[x, y] = blockSet[x, y].getRandomType();
+                    blocks[x, y] = blockSet[x, y].getRandom();
                 }
             }}
-        bagPiece piece = new bagPiece(blocks, dimensions, origin, blockCount, name, rarity, color.getRandomColor(), tex); //create new piece
+        bagPiece piece = new bagPiece(blocks, mod.getRandom(), dimensions, origin, blockCount, name, rarity, color.getRandomColor(), tex); //create new piece
 
         bag.pieces.Add(piece); //add new piece to player's bag
         Debug.WriteLine("piece " + piece.name + " added!");

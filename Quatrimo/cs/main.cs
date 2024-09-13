@@ -52,47 +52,55 @@ public class main
     public main(bag bag)
     {
         this.bag = bag;
+		encounterStart();
+    }
 
+	public void encounterStart()
+	{
         board = new board(new Vector2I(12, 28));
 
         heldPiece = null;
         nextPiece = bag.getPiece(board);
 
         level = 0;
+		levelTimes = 1;
         totalScore = 0;
+		rowsRequired = 4;
+		rowsCleared = 0;
         state = gameState.turnStart;
     }
-
 
     public void coreGameLoop(GameTime gameTime)
     {
 
-        //gamesteps:
-        //ROUND START is ran from a method instead before coreGameLoop is called
+		//gamesteps:
+		//ROUND START is ran from a method instead before coreGameLoop is called
 
-        //TURN START: RUNS ONCE
-        //grab new piece and update piece previews
+		//TURN START: RUNS ONCE
+		//grab new piece and update piece previews
 
-        //PIECE WAIT: LOOPS
-        //wait briefly until input or a timer ends to turn to MIDTURN
+		//PIECE WAIT: LOOPS
+		//wait briefly until input or a timer ends to turn to MIDTURN
 
-        //MID TURN: LOOPS
-        //process input & move piece
-        //update graphics on move
-        //move piece down & place properly
+		//MID TURN: LOOPS
+		//process input & move piece
+		//update graphics on move
+		//move piece down & place properly
 
-        //SCORE STEP: RUNS ONCE
-        //process score
-        //save scored rows
+		//SCORE STEP: RUNS ONCE
+		//process score
+		//save scored rows
 
-        //SCORE ANIM: LOOPS
-        //runs end of turn animations like score
+		//SCORE ANIM: LOOPS
+		//runs end of turn animations like score
 
-        //END TURN: RUNS ONCE
-        //ticks tiles
+		//END TURN: RUNS ONCE
+		//ticks tiles
 		//finalizes score
-        //lowers rows
-        //ends encounter
+		//lowers rows
+		//ends encounter
+
+		parseInput();
 
         switch (state)
 		{ //will need graphics update code
@@ -104,6 +112,7 @@ public class main
 
                 currentPiece = nextPiece; //grab next piece
 				nextPiece = bag.getPiece(board);
+				board.nextbox.update(nextPiece);
 				Debug.WriteLine($"playing {currentPiece.name}");
 				//update piece preview
 
@@ -130,7 +139,7 @@ public class main
             case gameState.midTurn:
 				//PROCESS INPUT here
 
-				parseInput(gameTime);
+				parseTurnInput(gameTime);
                 //FALL & PLACE PIECE
                 if (piecefallTimer >= 600)
 				{
@@ -267,20 +276,6 @@ public class main
     }
 
 
-	public void startEncounter(bag bag) //add code to initialize board graphics properly
-	{ //add code for enemy eventually
-		board = new board(new Vector2I(12, 22));
-		this.bag = bag;
-		
-		heldPiece = null;
-		nextPiece = bag.getPiece(board);
-
-		level = 0;
-		totalScore = 0;
-		state = gameState.turnStart;
-
-    }
-
     public void recalculateLevel(int rows)
 	{
 		rowsCleared += rows;
@@ -294,7 +289,7 @@ public class main
 		levelTimes = level / 2d + 1d;
 	}
 
-	public void parseInput(GameTime gameTime)
+	public void parseTurnInput(GameTime gameTime)
 	{
         if ((data.leftKey.keyDown || data.leftKey.timeHeld > 200) && inputCooldown > 40)
         {
@@ -352,13 +347,14 @@ public class main
 		inputCooldown += gameTime.ElapsedGameTime.TotalMilliseconds;
     }
 
-	public void resetVariables()
+	public void parseInput()
 	{
-		totalScore = 0;
-		level = 0;
-		levelTimes = 1;
+		if (data.restartKey.keyDown)
+		{
+			encounterStart();
+		}
 	}
-	
+
 	public bool isRowScoreable(int y)
 	{
 		for(int x = 0; x < board.dimensions.x; x++)
@@ -384,6 +380,8 @@ public class main
 		{
 			heldPiece.rotate(1);
 		}
+
+		board.holdbox.update(heldPiece);
 
 		currentPiece.removeFalling();
 		currentPiece = formerlyHeld;

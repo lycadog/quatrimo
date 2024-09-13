@@ -14,7 +14,7 @@ public class element : spriteObject
         elementPos = epos;
         this.depth = depth;
         this.effect = effect;
-        this.origin = new Vector2(4, 4);
+        origin = new Vector2(4, 4);
         pos = elementPos2WorldPos(epos);
     }
 
@@ -62,7 +62,7 @@ public class element : spriteObject
     /// <returns></returns>
     public static Vector2I elementPos2WorldPos(Vector2I epos)
     {
-        return new Vector2I(epos.x * 8, epos.y * 8);
+        return new Vector2I(epos.x * 8, epos.y * 8 + 4);
     }
 
     /// <summary>

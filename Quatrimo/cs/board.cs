@@ -9,10 +9,11 @@ public class board
 {
     public block[,] blocks;
     public List<spriteObject> sprites = new List<spriteObject> { };
-	public elementold[,,] elementsold;
 	public Vector2I dimensions;
 	public static readonly Vector2I eDimensions = new Vector2I(45, 25); //element dimensions
 	public static Vector2I offset;
+    public pieceBox nextbox;
+    public pieceBox holdbox;
 
     public static readonly int boardy = 22;
 
@@ -43,6 +44,11 @@ public class board
     /// </summary>
 	public void createBoardElements()
 	{
+        nextbox = new pieceBox(new Vector2I(72, 152), Game1.nextBox);
+        holdbox = new pieceBox(new Vector2I(72, 102), Game1.holdBox);
+        sprites.Add(nextbox);
+        sprites.Add(holdbox);
+
         sprites.Add(new element(Game1.borderDL, Color.White, new Vector2I(1, 0), 0.9f)); //top bar
         sprites.Add(new element(Game1.borderDR, Color.White, new Vector2I(43, 0), 0.9f));
 

@@ -1,17 +1,17 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Diagnostics;
 
 public class boardPiece
 {
     public board board;
 
-    public boardPiece(board board, block[] blocks, pieceMod mod, Vector2I dimensions, Vector2I origin, string name, Texture2D tex, Color color)
+    public boardPiece(board board, block[] blocks, Vector2I dimensions, Vector2I origin, string name, Texture2D tex, Color color)
     {
         this.board = board;
         this.blocks = blocks;
-        this.mod = mod;
         this.dimensions = dimensions;
         this.origin = origin;
         this.name = name;
@@ -37,13 +37,13 @@ public class boardPiece
         {
             mod.bPlay(block);
         }
-        updatePos();
+        mod.pUpdatePos();
     }
 
     public void move(int xOffset, int yOffset)
     {
         pos  = new Vector2I(pos.x + xOffset, pos.y + yOffset); 
-        updatePos();
+        mod.pUpdatePos();
     }
 
     /// <summary>
@@ -63,6 +63,11 @@ public class boardPiece
     /// <param name="direction"></param>
     public void rotate(int direction)
     {
+        if(direction != 1 && direction != -1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(direction), $"Rotation direction MUST be 1 or -1, received {direction} instead");
+        }
+
         rotation += direction;
         if (rotation > 3) //if rotation is out of the range 0 to 3, snap it back in range
         {
@@ -76,7 +81,7 @@ public class boardPiece
         {
             block.rotate(direction);
         }
-        updatePos();
+        mod.pUpdatePos();
     }
 
     /// <summary>

@@ -15,6 +15,7 @@ namespace Quatrimo
         private SpriteBatch spriteBatch;
         private RenderTarget2D sceneTarget;
         private RenderTarget2D textTarget;
+
         public Matrix matrix;
         main main;
 
@@ -65,6 +66,9 @@ namespace Quatrimo
         public static Texture2D heavy_fuller;
         public static Texture2D alloy1;
         public static Texture2D alloy2;
+
+        public static Texture2D nextBox;
+        public static Texture2D holdBox;
 
         public static Texture2D corey;
 
@@ -150,6 +154,9 @@ namespace Quatrimo
 
             corey = Content.Load<Texture2D>("png/Corey");
 
+            nextBox = Content.Load<Texture2D>("ui/nextbox");
+            holdBox = Content.Load<Texture2D>("ui/holdbox");
+
             bg = Content.Load<Texture2D>("png/bgTop");
             bgBot = Content.Load<Texture2D>("png/bgBottom");
 
@@ -163,7 +170,7 @@ namespace Quatrimo
             nameO = Content.Load<Texture2D>("misc/nameO");
 
             data.dataInitContent();
-            main = new main(new bag(data.debugbag));
+            main = new main(new bag(data.bag3));
             // TODO: use this.Content to load your game content here
         }
 
@@ -194,8 +201,6 @@ namespace Quatrimo
             spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, baseRes.y), null, new Color(new Vector3(0.02f, 0.01f, 0.12f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
             //spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, baseRes.y), null, new Color(new Vector3(0.02f, 1.0f, 0.12f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
 
-            element element = new element(corey, Color.White, new Vector2I(24, 3), 0.8f);
-            element.draw(spriteBatch, gameTime);
             main.board.draw(spriteBatch, gameTime);
             spriteBatch.End();
 
@@ -205,10 +210,10 @@ namespace Quatrimo
             GraphicsDevice.Clear(Color.Transparent);
 
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            spriteBatch.DrawString(font, "SCORE: " + main.totalScore.ToString(), new Vector2(260, 130), Color.White);
-            spriteBatch.DrawString(font, "LVL: " + main.level.ToString(), new Vector2(260, 140), Color.White);
-            spriteBatch.DrawString(font, "X: " + main.levelTimes.ToString(), new Vector2(260, 150), Color.White);
-            spriteBatch.DrawString(font, "LVL UP IN: " + (main.rowsRequired - main.rowsCleared).ToString() + " ROWS", new Vector2(260, 160), Color.White);
+            spriteBatch.DrawString(font, "SCORE: " + main.totalScore.ToString(), new Vector2(480, 300), Color.White);
+            spriteBatch.DrawString(font, "LVL: " + main.level.ToString(), new Vector2(480, 320), Color.White);
+            spriteBatch.DrawString(font, "X: " + main.levelTimes.ToString(), new Vector2(480, 340), Color.White);
+            spriteBatch.DrawString(font, "LVL UP IN: " + (main.rowsRequired - main.rowsCleared).ToString() + " ROWS", new Vector2(480, 360), Color.White);
             spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);

@@ -3,9 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 public class bagPiece //used for pieces held in the bag
 { //nest this in board piece maybe?
-    public bagPiece(baseBlockType[,] blocks, Vector2I dimensions, Vector2I origin, int blockCount, string name, rarity rarity, Color color, Texture2D tex)
+    public bagPiece(blockType[,] blocks, pieceMod mod, Vector2I dimensions, Vector2I origin, int blockCount, string name, rarity rarity, Color color, Texture2D tex)
     {
         this.blocks = blocks;
+        this.mod = mod;
         this.dimensions = dimensions;
         this.origin = origin;
         this.blockCount = blockCount;
@@ -23,29 +24,26 @@ public class bagPiece //used for pieces held in the bag
     /// <returns></returns>
     public boardPiece getBoardPiece(board board)
     {
-        
         block[] blocks = new block[blockCount];
-        pieceMod mod = new basicMod();
-        boardPiece piece = new boardPiece(board, blocks, mod, dimensions, origin, name, tex, color);
-        mod.piece = piece;
+        boardPiece piece = new boardPiece(board, blocks, dimensions, origin, name, tex, color);
+        piece.mod = mod.getNew(piece);
         int index = 0;
         for (int x = 0; x < dimensions.x; x++){
             for(int y = 0; y < dimensions.y; y++){ //process through each block of the bagPiece and create a real block for the boardPiece
                 if (this.blocks[x, y] != null) //only process solid blocks!
                 {
-                    blockType type = this.blocks[x, y].getType(board); //create our new type
+                    blockType type = this.blocks[x, y].getNewObject(board); //create our new type
 
-                    element element = new element(type.getTex(piece), type.getColor(piece), new Vector2I(0, -5), 0.8f); //create new sprite element
                         
-                    block block = new block(board, element, type, piece, new Vector2I(x - origin.x , y - origin.y)); //create new block
+                    block block = new block(board, type, piece, new Vector2I(x - origin.x , y - origin.y)); //create new block
                     blocks[index] = block;
                     index++;
                 }}}
         return piece;
-
     }
 
-    public baseBlockType[,] blocks { get; set; }
+    public blockType[,] blocks { get; set; }
+    public pieceMod mod { get; set; }
     public Vector2I dimensions { get; set; }
     public Vector2I origin { get; set; }
     public int blockCount {  get; set; }

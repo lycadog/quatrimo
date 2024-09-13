@@ -18,6 +18,7 @@ public class animatable
 
     public double time = 0;
     public double hangTime;
+    /*
     public animatable(List<Texture2D> sequence, List<Color> colors, bool loops, double hangTime, bool overwrite, elementold element)
     {
         this.sequence = sequence;
@@ -64,5 +65,5 @@ public class animatable
         element.tex = Game1.empty; //this may need to be changed later! 
         element.color = Color.White;
     }
-
+    */
 }

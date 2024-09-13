@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 public abstract class blockType
-{   //needs some updating after block rework
+{
     public blockType(board board)
     {
         this.board = board;
@@ -22,6 +22,7 @@ public abstract class blockType
     public virtual void score() { }
     public virtual void removePlaced() { }
 
+    public abstract blockType getNewObject(board board);
 
     /// <summary>
     /// Returns if the current falling block will collide with the placed block at checkpos position

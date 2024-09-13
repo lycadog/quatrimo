@@ -21,6 +21,11 @@ public class basicBlock : blockType
         return piece.color;
     }
 
+    public override blockType getNewObject(board board)
+    {
+        return new basicBlock(board);
+    }
+
     public override Texture2D getTex(boardPiece piece)
     {
         return piece.tex;

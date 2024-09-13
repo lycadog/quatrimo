@@ -6,15 +6,13 @@ using System.Diagnostics;
 public class block
 {
     public board board;
-    public block(board board, element element, blockType type, boardPiece piece, Vector2I localpos)
+    public block(board board, blockType type, boardPiece piece, Vector2I localpos)
     {
         this.board = board;
-        this.element = element;
         this.type = type;
         this.piece = piece;
         this.localpos = localpos;
-
-        dropElement = new element(Game1.full25, Color.LightGray, new Vector2I(0, -10), 0.79f);
+        piece.mod.bGraphicsInit(this);
     }
     public element element { get; set; }
     public element dropElement { get; set; }
@@ -32,6 +30,12 @@ public class block
         updateSpritePos();
         board.sprites.Add(element);
         board.sprites.Add(dropElement);
+    }
+
+    public void graphicsInit()
+    {
+        element = new element(type.getTex(piece), type.getColor(piece), new Vector2I(0, -5), 0.8f); //create new sprite element
+        dropElement = new element(Game1.full25, Color.LightGray, new Vector2I(0, -10), 0.79f);
     }
 
     /// <summary>
@@ -143,6 +147,14 @@ public class block
     }
 
 
+    public spriteObject createPreview()
+    {
+        spriteObject sprite = new spriteObject(new Vector2I(4, 4));
+        sprite.depth = .93f;
+        sprite.tex = Game1.full; sprite.color = element.color;
+        return sprite;
+    }
+
     /// <summary>
     /// Returns whether the current falling tile will collide with the offset position
     /// True = Collision
@@ -150,26 +162,9 @@ public class block
     /// <param name="xOffset"></param>
     /// <param name="yOffset"></param>
     /// <returns></returns>
-    public bool collidesFalling(int xOffset, int yOffset)
-    {
-        Vector2I checkPos = new Vector2I(boardpos.x + xOffset, boardpos.y + yOffset);
-        if (checkPos.x < 0) { return true; }
-        if (checkPos.x >= board.dimensions.x) { return true; } //if the tile is outside the board dimensions return true (invalid move)
-        if (checkPos.y < 0) { return true; }
-        if (checkPos.y >= board.dimensions.y) { return true; }
-
-        block block = board.blocks[checkPos.x, checkPos.y];
-        if(block == null) { return false; }
-        return type.collidesFalling(block);
-    }
 
     public bool collidesFalling(Vector2I checkPos)
     {
-        if (checkPos.x < 0) { return true; }
-        if (checkPos.x >= board.dimensions.x) { return true; } //if the tile is outside the board dimensions return true (invalid move)
-        if (checkPos.y < 0) { return true; }
-        if (checkPos.y >= board.dimensions.y) { return true; }
-
         block block = board.blocks[checkPos.x, checkPos.y];
         if (block == null) { return false; }
         return type.collidesFalling(block);
