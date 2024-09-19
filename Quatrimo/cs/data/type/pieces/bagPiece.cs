@@ -43,7 +43,6 @@ public class bagPiece //used for pieces held in the bag
     }
 
     public blockType[,] blocks { get; set; }
-    public pieceMod mod { get; set; }
     public Vector2I dimensions { get; set; }
     public Vector2I origin { get; set; }
     public int blockCount {  get; set; }

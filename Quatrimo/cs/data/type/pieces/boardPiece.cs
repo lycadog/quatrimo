@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Diagnostics;
 
 public class boardPiece
 {
@@ -20,7 +19,6 @@ public class boardPiece
     }
 
     public block[] blocks { get; set; }
-    public pieceMod mod {  get; set; }
     public Vector2I dimensions { get; set; }
     public Vector2I pos { get; set; }
     public Vector2I origin { get; set; }
@@ -30,20 +28,29 @@ public class boardPiece
     public Texture2D tex { get; set; }
     public Color color { get; set; }
 
-    public void play()
+    /// <summary>
+    /// Creates the block and overridesnecessary delegates, MAKE SURE TO OVERRIDE for new piece types
+    /// </summary>
+    /// <param name="block"></param>
+    public virtual void createBlock(block block)
+    {
+        
+    }
+
+    public virtual void play()
     {
         pos = new Vector2I(5, 9 - (dimensions.y / 2));
         foreach(block block in blocks)
         {
-            mod.bPlay(block);
+            block.play(block);
         }
-        mod.pUpdatePos();
+        updatePos();
     }
 
-    public void move(int xOffset, int yOffset)
+    public virtual void move(int xOffset, int yOffset)
     {
-        pos  = new Vector2I(pos.x + xOffset, pos.y + yOffset); 
-        mod.pUpdatePos();
+        pos = new Vector2I(pos.x + xOffset, pos.y + yOffset);
+        updatePos();
     }
 
     /// <summary>
@@ -52,16 +59,21 @@ public class boardPiece
     /// <param name="xOffset"></param>
     /// <param name="yOffset"></param>
     /// <returns></returns>
-    public bool collidesFalling(int xOffset, int yOffset)
+    public virtual bool collidesFalling(int xOffset, int yOffset)
     {
-        return mod.pCollidesFalling(xOffset, yOffset);
+        Vector2I offset = new Vector2I(xOffset, yOffset);
+        foreach (block block in blocks)
+        {
+            if (block.collidesFalling(offset, block)) { return true; }
+        }
+        return false;
     }
 
     /// <summary>
     /// Rotates the piece in the specified direction
     /// </summary>
     /// <param name="direction"></param>
-    public void rotate(int direction)
+    public virtual void rotate(int direction)
     {
         if(direction != 1 && direction != -1)
         {
@@ -79,9 +91,9 @@ public class boardPiece
         }
         foreach (block block in blocks)
         {
-            block.rotate(direction);
+            block.rotate(direction, block);
         }
-        mod.pUpdatePos();
+        updatePos();
     }
 
     /// <summary>
@@ -89,12 +101,12 @@ public class boardPiece
     /// </summary>
     /// <param name="direction"></param>
     /// <returns></returns>
-    public bool canRotate(int direction)
+    public virtual bool canRotate(int direction)
     {
         foreach(block block in blocks)
         {
-            Vector2I rotPos = new Vector2I(block.getRotatePos(direction).x + pos.x, block.getRotatePos(direction).y + pos.y);
-            if(mod.bCollidesFalling(block,rotPos))
+            Vector2I rotPos = new Vector2I(block.getRotatePos(direction, block).x + pos.x, block.getRotatePos(direction, block).y + pos.y);
+            if (block.collidesFalling(rotPos, block))
             {
                 return false;
             }
@@ -102,30 +114,33 @@ public class boardPiece
         return true;
     }
 
-    public void place()
+    public virtual void place()
     {
-        mod.pPlace();
+        foreach(block block in blocks)
+        {
+            block.place(block);
+        }
     }
 
-    public void removeFalling()
+    public virtual void removeFalling()
     {
-        foreach(block block in blocks) { block.removeFalling(); }
+        foreach(block block in blocks) { block.removeFalling(block); }
     }
 
-    public void updatePos()
+    public virtual void updatePos()
     {
         foreach (block block in blocks)
         {
-            block.updatePos();
+            block.updatePos(block);
         }
         updateDropPos();
         foreach (block block in blocks)
         {
-            block.updateSpritePos();
+            block.updateSpritePos(block);
         }
     }
 
-    public void updateDropPos()
+    public virtual void updateDropPos()
     {
         int y = 0;
         while (true)
