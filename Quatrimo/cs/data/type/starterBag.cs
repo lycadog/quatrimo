@@ -1,15 +1,18 @@
 using System;
 
-public class starterBag
+namespace Quatrimo
 {
-    public starterBag(pieceType[] pieces, string name)
+    public class starterBag
     {
-        this.pieces = pieces;
-        this.name = name;
+        public starterBag(pieceType[] pieces, string name)
+        {
+            this.pieces = pieces;
+            this.name = name;
+        }
+
+        public pieceType[] pieces;
+        public string name;
+
+
     }
-
-    public pieceType[] pieces;
-    public string name;
-
-    
 }

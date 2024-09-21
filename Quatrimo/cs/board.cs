@@ -131,57 +131,11 @@ public class board
                     block block = blocks[x, y];
                     if(block != null)
                     {
-                        block.movePlaced(0, 1);
+                        block.movePlaced(new Vector2I(0,1), block);
                     }
                 }
             }
         }
     }
-
-
-
-    public void lowerRowsold(List<int> scoredRows)
-    {
-        int length = scoredRows.Count;
-        int[] rows = new int[length];
-
-        for (int l = 0; l < length; l++) 
-        {
-
-            rows[l] = scoredRows.Max();
-            scoredRows.Remove(scoredRows.Max());
-        }
-
-        for (int i = 0; i < length; i++)
-        {
-            Debug.WriteLine("AAAAAAAAAAAAAAA");
-            for (int y = rows[i]-1; y >= 0; y--)
-            {
-                for(int x = 0; x < dimensions.x; x++)
-                {
-                    block block = blocks[x, y];
-                    if(block != null)
-                    {
-                        block.movePlaced(0, 1);
-                    }
-                }
-            }
-        }
-    }
-
-    /*public bool isPositionValid(Vector2I pos, bool shouldCollide) //checks if a tile is occupied or otherwise outside of the board
-	{ //shouldCollide refers to colliding with other tiles
-
-        //if the tile is outside the board dimensions return false (invalid)
-        if (pos.x < 0) { return false; }
-        if (pos.x >= dimensions.x) { return false; }
-        if (pos.y < 0) { return false; }
-        if (pos.y >= dimensions.y) { return false; }
-        Debug.WriteLine($"{pos.x}, {pos.y} IS VALID: {tiles[pos.x,pos.y] == null} =============");
-		
-
-        //if (tiles[pos.X, pos.Y] != null) { return false; }
-		return tiles[pos.x, pos.y] == null;
-	}*/
 
 }
