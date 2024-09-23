@@ -2,13 +2,15 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using MonoGame.Extended.Graphics;
 using MonoGame.Extended.ViewportAdapters;
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Quatrimo
-{ //REWORK entire graphics system using matrix offset and scaling !!!!!
-    //use different spritebatch.draw overload to include more settings like layerdepth and rotation!!!!!
+{
+    //我的鸡巴
     public class Game1 : Game
     {
         private GraphicsDeviceManager graphics;
@@ -16,64 +18,62 @@ namespace Quatrimo
         private RenderTarget2D sceneTarget;
         private RenderTarget2D textTarget;
 
-        public Matrix matrix;
         main main;
 
         static float scale = 2;
         static float tScale = 1;
-        static readonly Vector2I baseRes = new Vector2I(360, 202);
+        static readonly Vector2I baseRes = new Vector2I(450, 253);
         static readonly Vector2I textRes = new Vector2I(720, 404);
         static Vector2I res = new Vector2I(720, 404);
         static int frameOffset = 0;
 
-        public static Texture2D empty;
-        public static Texture2D full;
-        public static Texture2D full75;
-        public static Texture2D full50;
-        public static Texture2D full25;
+        public static bool isPaused;
 
-        public static Texture2D borderUL;
-        public static Texture2D borderUR;
-        public static Texture2D borderDL;
-        public static Texture2D borderDR;
-        public static Texture2D borderU;
-        public static Texture2D borderD;
-        public static Texture2D borderL;
-        public static Texture2D borderR;
-        public static Texture2D nameQ;
-        public static Texture2D nameU;
-        public static Texture2D nameA;
-        public static Texture2D nameT;
-        public static Texture2D nameR;
-        public static Texture2D nameI;
-        public static Texture2D nameM;
-        public static Texture2D nameO;
+        public static Texture2DAtlas atlas;
 
-        public static Texture2D box;
-        public static Texture2D box_full;
-        public static Texture2D box_solid;
-        public static Texture2D circle;
-        public static Texture2D circle_full;
-        public static Texture2D circle_solid;
-        public static Texture2D round;
-        public static Texture2D round_full;
-        public static Texture2D round_solid;
-        public static Texture2D block;
-        public static Texture2D block_full;
-        public static Texture2D block_fuller;
-        public static Texture2D heavy;
-        public static Texture2D heavy_full;
-        public static Texture2D heavy_fuller;
-        public static Texture2D alloy1;
-        public static Texture2D alloy2;
+        public static Texture2DRegion empty;
+        public static Texture2DRegion full;
+        public static Texture2DRegion full75;
+        public static Texture2DRegion full50;
+        public static Texture2DRegion full25;
+        public static Texture2DRegion dropmark;
 
+        public static Texture2DRegion borderUL;
+        public static Texture2DRegion borderUR;
+        public static Texture2DRegion borderDL;
+        public static Texture2DRegion borderDR;
+        public static Texture2DRegion borderU;
+        public static Texture2DRegion borderD;
+        public static Texture2DRegion borderL;
+        public static Texture2DRegion borderR;
+        public static Texture2DRegion nameQ; public static Texture2DRegion nameU; public static Texture2DRegion nameA;
+        public static Texture2DRegion nameT; public static Texture2DRegion nameR; public static Texture2DRegion nameI;
+        public static Texture2DRegion nameM; public static Texture2DRegion nameO;
+
+        public static Texture2DRegion box; public static Texture2DRegion boxdetail; public static Texture2DRegion boxdetail2;
+        public static Texture2DRegion boxdetail3; public static Texture2DRegion boxsolid;
+        public static Texture2DRegion round; public static Texture2DRegion rounddetail; public static Texture2DRegion rounddetail2;
+        public static Texture2DRegion rounddetail3; public static Texture2DRegion roundsolid;
+        public static Texture2DRegion circle; public static Texture2DRegion circledetail; public static Texture2DRegion circledetail2;
+        public static Texture2DRegion circledetail3; public static Texture2DRegion circlesolid;
+
+        public static Texture2DRegion block;
+        public static Texture2DRegion block_full;
+        public static Texture2DRegion block_fuller;
+        public static Texture2DRegion heavy;
+        public static Texture2DRegion heavy_full;
+        public static Texture2DRegion heavy_fuller;
+        public static Texture2DRegion alloy1;
+        public static Texture2DRegion alloy2;
+
+        public static Texture2D none;
+        public static Texture2D solid;
         public static Texture2D nextBox;
         public static Texture2D holdBox;
-
+        public static Texture2D pausedtext;
         public static Texture2D corey;
 
         Texture2D bg;
-        Texture2D bgBot;
 
         public static SpriteFont font;
 
@@ -117,70 +117,89 @@ namespace Quatrimo
 
             font = Content.Load<SpriteFont>("fonts/ToshibaSat");
 
-            empty = Content.Load<Texture2D>("empty");
-            full = Content.Load<Texture2D>("full");
-            full75 = Content.Load<Texture2D>("75");
-            full50 = Content.Load<Texture2D>("50");
-            full25 = Content.Load<Texture2D>("25");
+            Texture2D atlasTex = Content.Load<Texture2D>("png/atlas");
+            atlas = Texture2DAtlas.Create("atlas", atlasTex, 10, 10);
 
-            borderUL = Content.Load<Texture2D>("png/borderUL");
-            borderUR = Content.Load<Texture2D>("png/borderUR");
-            borderDL = Content.Load<Texture2D>("png/borderDL");
-            borderDR = Content.Load<Texture2D>("png/borderDR");
-            borderU = Content.Load<Texture2D>("png/borderU");
-            borderD = Content.Load<Texture2D>("png/borderD");
-            borderL = Content.Load<Texture2D>("png/borderL");
-            borderR = Content.Load<Texture2D>("png/borderR");
 
-            box = Content.Load<Texture2D>("block/box");
-            box_full = Content.Load<Texture2D>("block/box_full");
-            box_solid = Content.Load<Texture2D>("block/box_solid");
-            circle = Content.Load<Texture2D>("block/circle");
-            circle_full = Content.Load<Texture2D>("block/circle_full");
-            circle_solid = Content.Load<Texture2D>("block/circle_solid");
-            round = Content.Load<Texture2D>("block/round");
-            round_full = Content.Load<Texture2D>("block/round_full");
-            round_solid = Content.Load<Texture2D>("block/round_solid");
-            block = Content.Load<Texture2D>("block/block");
-            block_full = Content.Load<Texture2D>("block/block_full");
-            block_fuller = Content.Load<Texture2D>("block/block_fuller");
+            empty = atlas[0];
+            full = atlas[12];
+            full75 = atlas[13];
+            full50 = atlas[14];
+            full25 = atlas[15];
+            dropmark = atlas[9];
 
-            heavy = Content.Load<Texture2D>("block/heavy");
-            heavy_full = Content.Load<Texture2D>("block/heavy_full");
-            heavy_fuller = Content.Load<Texture2D>("block/heavy_fuller");
+            borderUL = atlas[1];
+            borderUR = atlas[3];
+            borderDL = atlas[6];
+            borderDR = atlas[8];
+            borderU = atlas[2];
+            borderD = atlas[7];
+            borderL = atlas[4];
+            borderR = atlas[5];
 
-            alloy1 = Content.Load<Texture2D>("block/alloy1");
-            alloy2 = Content.Load<Texture2D>("block/alloy2");
+            box = atlas[36];
+            boxdetail = atlas[37];
+            boxdetail2 = atlas[38];
+            boxdetail3 = atlas[39];
+            boxsolid = atlas[40];
+            round = atlas[48];
+            rounddetail = atlas[49];
+            rounddetail2 = atlas[50];
+            rounddetail3 = atlas[51];
+            roundsolid = atlas[52];
+            circle = atlas[60];
+            circledetail = atlas[61];
+            circledetail2 = atlas[62];
+            circledetail3 = atlas[63];
+            circlesolid = atlas[64];
+
+            none = Content.Load<Texture2D>("empty");
+            solid = Content.Load<Texture2D>("full");
 
             corey = Content.Load<Texture2D>("png/Corey");
-
             nextBox = Content.Load<Texture2D>("ui/nextbox");
             holdBox = Content.Load<Texture2D>("ui/holdbox");
+            pausedtext = Content.Load<Texture2D>("ui/paused");
 
             bg = Content.Load<Texture2D>("png/bgTop");
-            bgBot = Content.Load<Texture2D>("png/bgBottom");
 
-            nameQ = Content.Load<Texture2D>("misc/nameQ");
-            nameU = Content.Load<Texture2D>("misc/nameU");
-            nameA = Content.Load<Texture2D>("misc/nameA");
-            nameT = Content.Load<Texture2D>("misc/nameT");
-            nameR = Content.Load<Texture2D>("misc/nameR");
-            nameI = Content.Load<Texture2D>("misc/nameI");
-            nameM = Content.Load<Texture2D>("misc/nameM");
-            nameO = Content.Load<Texture2D>("misc/nameO");
+            nameQ = atlas[24];
+            nameU = atlas[25];
+            nameA = atlas[26];
+            nameT = atlas[27];
+            nameR = atlas[28];
+            nameI = atlas[29];
+            nameM = atlas[30];
+            nameO = atlas[31];
 
             data.dataInitContent();
-            main = new main(new bag(data.bag3));
+            main = new main(new bag(data.bag2));
+            animFrame frame1 = new animFrame(new element(full, Color.White, new Vector2I(10, 5)), 200);
+            animFrame frame2 = new animFrame(new element(full75, Color.White, new Vector2I(10, 5)), 200);
+            animFrame frame3 = new animFrame(new element(full50, Color.White, new Vector2I(10, 5)), 200);
+            animFrame frame4 = new animFrame(new element(full25, Color.White, new Vector2I(10, 5)), 200);
+
+
+            animSprite anim = new animSprite([frame1, frame2, frame3, frame4], true);
+            main.board.sprites.Add(anim);
             // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            //    Exit();
 
             keybind.updateKeybinds(data.keys, gameTime);
-            main.coreGameLoop(gameTime);
+
+            if (data.pauseKey.keyDown)
+            {
+                if (isPaused) { isPaused = false; main.board.sprites.Remove(main.board.pauseText); }
+                else { isPaused = true; main.board.sprites.Add(main.board.pauseText); }
+            }
+            if (isPaused) { gameTime.ElapsedGameTime = new TimeSpan(0); }
+            else { main.coreGameLoop(gameTime); }
+            
 
             // TODO: Add your update logic here
             
@@ -190,6 +209,8 @@ namespace Quatrimo
 
         protected override void Draw(GameTime gameTime)
         {
+            if (isPaused) { gameTime.ElapsedGameTime = new TimeSpan(0); }
+
             DisplayMode display = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 
             GraphicsDevice.SetRenderTarget(sceneTarget);

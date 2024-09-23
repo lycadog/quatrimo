@@ -1,8 +1,8 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
+using MonoGame.Extended.Graphics;
+
 namespace Quatrimo
 {
     public class block
@@ -18,7 +18,7 @@ namespace Quatrimo
         public boardPiece piece { get; set; }
         public Vector2I boardpos { get; set; }
         public Vector2I localpos { get; set; }
-        public Texture2D tex { get; set; }
+        public Texture2DRegion tex { get; set; }
         public Color color { get; set; }
 
         public void linkDelegates()
@@ -38,7 +38,7 @@ namespace Quatrimo
             collidedPlaced = new blockVoidD(collidedPlacedF);
             movePlaced = new coordinateD(movePlacedF);
 
-            placedBlockClipped = new blockVoidD(placedBlockClippedF);
+            placedBlockClipped = new blockBoolD(placedBlockClippedF);
             fallingBlockClipped = new blockVoidD(fallingBlockClippedF);
 
             collidesFalling = new coordinateBoolD(collidesFallingF);
@@ -113,7 +113,7 @@ namespace Quatrimo
         /// <summary>
         /// Runs on a placed block has a falling block attempt placement on its position, runs before fallingBlockClipped
         /// </summary>
-        public blockVoidD placedBlockClipped;
+        public blockBoolD placedBlockClipped;
 
         /// <summary>
         /// Runs when a falling block attempts to place on top of a placed block, runs AFTER placedBlockClipped
@@ -179,7 +179,7 @@ namespace Quatrimo
         protected virtual void graphicsInit(block block)
         {
             element = new element(tex, color, new Vector2I(0, -5), 0.8f); //create new sprite element
-            dropElement = new element(Game1.full25, Color.LightGray, new Vector2I(0, -10), 0.79f);
+            dropElement = new element(Game1.dropmark, Color.LightGray, new Vector2I(0, -10), 0.79f);
         }
 
 
@@ -205,6 +205,15 @@ namespace Quatrimo
 
         protected virtual void placeF(block block)
         {
+            block clipped = board.blocks[boardpos.x, boardpos.y];
+            if (clipped != null)
+            {
+                if (!clipped.placedBlockClipped(block, clipped))
+                {
+                    block.fallingBlockClipped(clipped, block);
+                    return;
+                }
+            }
             board.blocks[boardpos.x, boardpos.y] = this;
             element.depth = .75f;
             board.sprites.Remove(dropElement);
@@ -260,9 +269,11 @@ namespace Quatrimo
 
         protected virtual spriteObject createPreviewF(block block)
         {
-            spriteObject sprite = new spriteObject(new Vector2I(4, 4));
+            spriteObject sprite = new spriteObject();
+            sprite.size = new Vector2I(5, 5);
             sprite.depth = .93f;
-            sprite.tex = Game1.full; sprite.color = element.color;
+            sprite.tex = Game1.solid; sprite.color = element.color;
+            
             return sprite;
         }
 
@@ -296,16 +307,16 @@ namespace Quatrimo
         /// <param name="block"></param>
         protected virtual void fallingBlockClippedF(block placedBlock, block block)
         {
-            block.removePlaced(block);
+            block.removeFalling(block);
         }
 
         /// <summary>
-        /// Runs on a placed block when a falling block tries to place on its position, runs before placed
+        /// Runs on a placed block when a falling block tries to place on its position; Returns if the placed block will remove itself or not
         /// </summary>
         /// <param name="fallingBlock"></param>
-        protected virtual void placedBlockClippedF(block fallingBlock, block block)
+        protected virtual bool placedBlockClippedF(block fallingBlock, block block)
         {
-
+            return false;
         }
 
     }

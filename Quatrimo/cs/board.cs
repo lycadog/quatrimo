@@ -2,7 +2,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quatrimo;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 public class board
@@ -14,6 +13,7 @@ public class board
 	public static Vector2I offset;
     public pieceBox nextbox;
     public pieceBox holdbox;
+    public spriteObject pauseText = new spriteObject();
 
     public static readonly int boardy = 22;
 
@@ -34,7 +34,7 @@ public class board
     {
         foreach(var sprite in sprites)
         {
-            sprite.draw(spriteBatch, gameTime);
+            sprite.draw(spriteBatch, gameTime, this);
         }
     }
 
@@ -44,8 +44,12 @@ public class board
     /// </summary>
 	public void createBoardElements()
 	{
-        nextbox = new pieceBox(new Vector2I(72, 152), Game1.nextBox);
-        holdbox = new pieceBox(new Vector2I(72, 102), Game1.holdBox);
+        nextbox = new pieceBox(new Vector2I(90, 190), Game1.nextBox);
+        holdbox = new pieceBox(new Vector2I(90, 130), Game1.holdBox);
+        pauseText.tex = Game1.pausedtext;
+        pauseText.depth = 1;
+        pauseText.size = new Vector2I(120, 40);
+        pauseText.pos = new Vector2I(155, 100);
         sprites.Add(nextbox);
         sprites.Add(holdbox);
 
@@ -89,8 +93,9 @@ public class board
             sprites.Add(new element(Game1.borderR, Color.White, new Vector2I(offset.x + dimensions.x+1, y + 3), 0.9f));
         }
 
-        var sprite = new spriteObject(element.elementPos2WorldPos(new Vector2I(14, 22))); //create black box behind board
-        sprite.tex = Game1.full;
+        var sprite = new spriteObject(); //create black box behind board
+        sprite.size = element.elementPos2WorldPos(new Vector2I(14, 22));
+        sprite.tex = Game1.solid;
         sprite.color = Color.Black;
         sprite.pos = element.elementPos2WorldPos(new Vector2I(offset.x, 2));
         sprite.depth = 0.05f;

@@ -1,12 +1,13 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Graphics;
 using System.Diagnostics;
 
 namespace Quatrimo
 {
     public class bagPiece //used for pieces held in the bag
     { //nest this in board piece maybe?
-        public bagPiece(baseblock[] blocks, basePiece mod, Vector2I dimensions, Vector2I origin, int blockCount, string name, rarity rarity, Color color, Texture2D tex)
+        public bagPiece(baseblock[] blocks, basePiece mod, Vector2I dimensions, Vector2I origin, int blockCount, string name, rarity rarity, Color color, Texture2DRegion tex)
         {
             this.blocks = blocks;
             this.mod = mod;
@@ -61,7 +62,7 @@ namespace Quatrimo
         public float weight { get; set; }
         public string name { get; set; }
         public Color color { get; set; }
-        public Texture2D tex { get; set; }
+        public Texture2DRegion tex { get; set; }
         public rarity rarity { get; set; }
     }
 }

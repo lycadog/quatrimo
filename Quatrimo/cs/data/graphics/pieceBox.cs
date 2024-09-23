@@ -6,10 +6,11 @@ namespace Quatrimo
 {
     public class pieceBox : spriteObject
     {
-        public pieceBox(Vector2I pos, Texture2D tex) : base(new Vector2I(40, 40))
+        public pieceBox(Vector2I pos, Texture2D tex) : base()
         {
             this.pos = pos;
             this.tex = tex;
+            this.size = new Vector2I(50, 50);
             depth = .925f;
             blocks = new spriteObject[0];
         }
@@ -26,18 +27,18 @@ namespace Quatrimo
                 spriteObject sprite = block.createPreview(block);
                 blocks[i] = sprite;
 
-                Vector2I offset = new Vector2I(20 + (block.localpos.x * 4), 16 + (block.localpos.y * 4));
+                Vector2I offset = new Vector2I((block.localpos.x * 5) + 25, (block.localpos.y * 5) + 25);
 
                 sprite.pos = pos.add(offset);
             }
         }
 
-        public override void draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public override void draw(SpriteBatch spriteBatch, GameTime gameTime, board board)
         {
-            base.draw(spriteBatch, gameTime);
+            base.draw(spriteBatch, gameTime, board);
             foreach (spriteObject sprite in blocks)
             {
-                sprite.draw(spriteBatch, gameTime);
+                sprite.draw(spriteBatch, gameTime, board);
             }
         }
     }

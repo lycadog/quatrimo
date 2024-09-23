@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Graphics;
 using System;
-using System.Diagnostics;
 
 namespace Quatrimo
 {
@@ -9,7 +8,7 @@ namespace Quatrimo
     {
         public board board;
 
-        public void setData(board board, block[] blocks, Vector2I dimensions, Vector2I origin, string name, Texture2D tex, Color color)
+        public void setData(board board, block[] blocks, Vector2I dimensions, Vector2I origin, string name, Texture2DRegion tex, Color color)
         {
             this.board = board;
             this.blocks = blocks;
@@ -27,7 +26,7 @@ namespace Quatrimo
         public int rotation { get; set; } = 0; //0 - 3
         public int dropOffset { get; set; }
         public string name { get; set; }
-        public Texture2D tex { get; set; }
+        public Texture2DRegion tex { get; set; }
         public Color color { get; set; }
 
         /// <summary>
@@ -75,7 +74,7 @@ namespace Quatrimo
         /// <summary>
         /// Rotates the piece in the specified direction
         /// </summary>
-        /// <param name="direction"></param>
+        /// <param name="direction">Direction to rotate in, must be 1 or -1</param>
         public virtual void rotate(int direction)
         {
             if (direction != 1 && direction != -1)
@@ -102,7 +101,7 @@ namespace Quatrimo
         /// <summary>
         /// Returns if the piece is able to rotate in the specified direction
         /// </summary>
-        /// <param name="direction"></param>
+        /// <param name="direction">Direction to rotate in, must be 1 or -1</param>
         /// <returns></returns>
         public virtual bool canRotate(int direction)
         {

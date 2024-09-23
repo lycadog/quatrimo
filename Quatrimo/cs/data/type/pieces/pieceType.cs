@@ -1,12 +1,13 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Graphics;
 using System.Diagnostics;
 
 namespace Quatrimo
 {
     public class pieceType
     {
-        public pieceType(int xSize, int ySize, baseblock[,] blocks, wSet<basePiece> mod, Vector2I origin, int blockCount, string name, colorSet color, Texture2D tex)
+        public pieceType(int xSize, int ySize, baseblock[,] blocks, wSet<basePiece> mod, Vector2I origin, int blockCount, string name, colorSet color, Texture2DRegion tex)
         {
             dimensions = new Vector2I(xSize, ySize);
             blockSet = blocks;
@@ -18,7 +19,7 @@ namespace Quatrimo
             this.tex = tex;
         }
 
-        public pieceType(int xSize, int ySize, wSet<baseblockType>[,] blocks, wSet<basePiece> mod, Vector2I origin, int blockCount, string name, colorSet color, Texture2D tex)
+        public pieceType(int xSize, int ySize, wSet<baseblockType>[,] blocks, wSet<basePiece> mod, Vector2I origin, int blockCount, string name, colorSet color, Texture2DRegion tex)
         {
             dimensions = new Vector2I(xSize, ySize);
             this.mod = mod;
@@ -50,7 +51,7 @@ namespace Quatrimo
         public string name { get; set; }
         public rarity rarity { get; set; }
         public colorSet colorSet { get; set; } //properly define and use colorsets
-        public Texture2D tex { get; set; }
+        public Texture2DRegion tex { get; set; }
 
         public void addToBag(bag bag) //add new piece to player's bag
         {

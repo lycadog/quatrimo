@@ -1,12 +1,12 @@
 ﻿
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Graphics;
 
 namespace Quatrimo
 {
     public class baseblock
     {
-        public baseblock(wSet<baseblockType> blocks, Texture2D tex = null, Color color = new Color(), bool isColored = false)
+        public baseblock(wSet<baseblockType> blocks, Texture2DRegion tex = null, Color color = new Color(), bool isColored = false)
         {
             this.blocks = blocks;
             this.tex = tex;
@@ -20,7 +20,7 @@ namespace Quatrimo
         }
 
         public Vector2I localpos { get; set; }
-        public Texture2D tex { get; set; }
+        public Texture2DRegion tex { get; set; }
         public Color color { get; set; }
         public bool isColored { get; set; }
 

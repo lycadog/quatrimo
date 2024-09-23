@@ -5,6 +5,7 @@ namespace Quatrimo
     public static class data
     {
         static readonly wSet<basePiece> noMod = new([new basicBasePiece()], [100]);
+        static readonly wSet<basePiece> spectral = new([new baseSpectralPiece()], [100]);
 
         static readonly wSet<baseblockType> basic = new([new baseBasicBlock()], [100]);
 
@@ -72,6 +73,7 @@ namespace Quatrimo
         public static keybind rightRotateKey;
         public static keybind holdKey;
         public static keybind restartKey;
+        public static keybind pauseKey;
 
         public static void dataInit()
         {
@@ -84,8 +86,8 @@ namespace Quatrimo
             rightRotateKey = new keybind(Microsoft.Xna.Framework.Input.Keys.E, Microsoft.Xna.Framework.Input.Keys.None);
             holdKey = new keybind(Microsoft.Xna.Framework.Input.Keys.F, Microsoft.Xna.Framework.Input.Keys.None);
             restartKey = new keybind(Microsoft.Xna.Framework.Input.Keys.R, Microsoft.Xna.Framework.Input.Keys.None);
-
-            keys = [leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey, holdKey, restartKey];
+            pauseKey = new keybind(Microsoft.Xna.Framework.Input.Keys.Escape, Microsoft.Xna.Framework.Input.Keys.None);
+            keys = [leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey, holdKey, restartKey, pauseKey];
         }
 
 
@@ -100,7 +102,7 @@ namespace Quatrimo
             bZBlockR = new(2, 3, new wSet<baseblockType>[,] { { null, basic, basic }, { basic, basic, null } }, noMod, new Vector2I(0, 1), 4, "Right Z Block", deflt, Game1.round);
             bZBlockL = new(2, 3, new wSet<baseblockType>[,] { { basic, basic, null }, { null, basic, basic } }, noMod, new Vector2I(0, 1), 4, "Left Z Block", deflt, Game1.round);
 
-            bSpectralZ = new(2, 3, new wSet<baseblockType>[,] { { basic, basic, null }, { null, basic, basic } }, noMod, new Vector2I(0, 1), 4, "Left Z Block", deflt, Game1.round);
+            bSpectralZ = new(2, 3, new wSet<baseblockType>[,] { { basic, basic, null }, { null, basic, basic } }, spectral, new Vector2I(0, 1), 4, "Left Z Block", deflt, Game1.round);
 
             bWedge = new(2, 2, new wSet<baseblockType>[,] { { basic, basic }, { basic, null } }, noMod, new Vector2I(0, 0), 3, "Wedge", deflt, Game1.box);
             bTwig = new(1, 2, new wSet<baseblockType>[,] { { basic, basic } }, noMod, new Vector2I(0, 1), 2, "Twig", deflt, Game1.round);
@@ -111,11 +113,11 @@ namespace Quatrimo
             bRectangle = new(3, 2, new wSet<baseblockType>[,] { { basic, basic }, { basic, basic }, { basic, basic } }, noMod, new Vector2I(1, 0), 6, "Rectangle", deflt, Game1.box);
             bCrowbarL = new(2, 5, new wSet<baseblockType>[,] { { basic, basic, basic, basic, basic }, { null, null, null, null, basic } }, noMod, new Vector2I(0, 3), 6, "Left Crowbar", deflt, Game1.box);
             bCrowbarR = new(2, 5, new wSet<baseblockType>[,] { { null, null, null, null, basic }, { basic, basic, basic, basic, basic } }, noMod, new Vector2I(0, 3), 6, "Right Crowbar", deflt, Game1.box);
-            bLongT = new(3, 3, new wSet<baseblockType>[,] { { null, null, basic }, { basic, basic, basic }, { null, null, basic } }, noMod, new Vector2I(1, 1), 5, "Long T Block", deflt, Game1.box_full);
+            bLongT = new(3, 3, new wSet<baseblockType>[,] { { null, null, basic }, { basic, basic, basic }, { null, null, basic } }, noMod, new Vector2I(1, 1), 5, "Long T Block", deflt, Game1.boxdetail);
 
             bCaret = new(2, 3, new wSet<baseblockType>[,] { { basic, null, basic }, { null, basic, null } }, noMod, new Vector2I(0, 1), 3, "Caret", deflt, Game1.circle);
             bNub = new(1, 1, new wSet<baseblockType>[,] { { basic } }, noMod, Vector2I.zero, 1, "Nub", deflt, Game1.circle);
-            bDipole = new(3, 2, new wSet<baseblockType>[,] { { basic, basic }, { null, null }, { basic, basic } }, noMod, new Vector2I(1, 1), 4, "Dipole", deflt, Game1.box_full);
+            bDipole = new(3, 2, new wSet<baseblockType>[,] { { basic, basic }, { null, null }, { basic, basic } }, noMod, new Vector2I(1, 1), 4, "Dipole", deflt, Game1.boxdetail);
             bSlash = new(2, 2, new wSet<baseblockType>[,] { { basic, null }, { null, basic } }, noMod, Vector2I.zero, 2, "Slash", deflt, Game1.circle);
             bStump = new(4, 2, new wSet<baseblockType>[,] { { basic, null }, { basic, basic }, { basic, basic }, { basic, null } }, noMod, new Vector2I(1, 1), 6, "Stump", deflt, Game1.circle);
             bHatchetL = new(4, 2, new wSet<baseblockType>[,] { { basic, basic }, { basic, basic }, { null, basic }, { null, basic } }, noMod, new Vector2I(2, 0), 6, "Left Hatchet", deflt, Game1.box);
@@ -126,7 +128,7 @@ namespace Quatrimo
             bPickL = new(4, 2, new wSet<baseblockType>[,] { { basic, null }, { basic, basic }, { basic, null }, { basic, null } }, noMod, new Vector2I(2, 0), 5, "Left Pick", deflt, Game1.box);
             bPickR = new(4, 2, new wSet<baseblockType>[,] { { basic, null }, { basic, null }, { basic, basic }, { basic, null } }, noMod, new Vector2I(2, 0), 5, "Right Pick", deflt, Game1.box);
             bLepton = new(3, 1, new wSet<baseblockType>[,] { { basic }, { null }, { basic } }, noMod, new Vector2I(1, 0), 2, "Lepton", deflt, Game1.circle);
-            bBoson = new(3, 3, new wSet<baseblockType>[,] { { basic, basic, null }, { basic, basic, null }, { null, null, basic } }, noMod, new Vector2I(1, 1), 5, "Boson", deflt, Game1.circle_full);
+            bBoson = new(3, 3, new wSet<baseblockType>[,] { { basic, basic, null }, { basic, basic, null }, { null, null, basic } }, noMod, new Vector2I(1, 1), 5, "Boson", deflt, Game1.circledetail);
 
             bDiamond = new(3, 3, new wSet<baseblockType>[,] { { null, basic, null }, { basic, basic, basic }, { null, basic, null } }, noMod, new Vector2I(1, 1), 5, "Diamond", deflt, Game1.circle);
             bBrick = new(4, 3, new wSet<baseblockType>[,] { { basic, basic, basic }, { basic, basic, basic }, { basic, basic, basic }, { basic, basic, basic } }, noMod, new Vector2I(2, 2), 12, "Brick", deflt, Game1.heavy_full);
@@ -135,14 +137,14 @@ namespace Quatrimo
             bBasin = new(4, 2, new wSet<baseblockType>[,] { { basic, basic }, { null, basic }, { null, basic }, { basic, basic } }, noMod, new Vector2I(2, 2), 6, "Basin", deflt, Game1.box);
             bHammer = new(4, 3, new wSet<baseblockType>[,] { { null, basic, null }, { null, basic, null }, { basic, basic, basic }, { basic, basic, basic } }, noMod, new Vector2I(1, 1), 8, "Hammer", deflt, Game1.heavy);
             bBar = new(4, 2, new wSet<baseblockType>[,] { { basic, basic }, { basic, basic }, { basic, basic }, { basic, basic } }, noMod, new Vector2I(2, 1), 8, "Bar", deflt, Game1.block_fuller);
-            bLonger = new(5, 1, new wSet<baseblockType>[,] { { basic }, { basic }, { basic }, { basic }, { basic } }, noMod, new Vector2I(3, 0), 5, "Loong", deflt, Game1.box_solid);
+            bLonger = new(5, 1, new wSet<baseblockType>[,] { { basic }, { basic }, { basic }, { basic }, { basic } }, noMod, new Vector2I(3, 0), 5, "Loong", deflt, Game1.boxsolid);
             bAngle = new(3, 3, new wSet<baseblockType>[,] { { null, basic, basic }, { basic, basic, basic }, { basic, basic, basic } }, noMod, new Vector2I(2, 2), 8, "Angle", deflt, Game1.heavy_full);
 
             classicBag = new starterBag([bLong, bSquare, bTBlock, bLBlockR, bLBlockL, bZBlockR, bZBlockL], "Classic Bag");
 
             bag1 = new starterBag([bCorner, bSquare, bWedge, bStick, bRectangle, bPickL, bPickR, bLong], "bag1");
-            bag2 = new starterBag([bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong], "bag2");
-            bag3 = new starterBag([bNub, bCaret, bBowl, bStump, bSlash, bTwig, bLong, bLepton, bBoson, bSpectralZ], "bag3");
+            bag2 = new starterBag([bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong, bSpectralZ], "bag2");
+            bag3 = new starterBag([bNub, bCaret, bBowl, bStump, bSlash, bTwig, bLong, bLepton, bBoson], "bag3");
 
             foundryBag = new starterBag([bBarycenter, bHammer, bBar, bLong, bAngle, bCorner, bTwig, bSquare], "Foundry");
 
