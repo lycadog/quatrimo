@@ -161,7 +161,7 @@ namespace Quatrimo
             holdBox = Content.Load<Texture2D>("ui/holdbox");
             pausedtext = Content.Load<Texture2D>("ui/paused");
 
-            bg = Content.Load<Texture2D>("png/bgTop");
+            bg = Content.Load<Texture2D>("misc/bg");
 
             nameQ = atlas[24];
             nameU = atlas[25];
@@ -174,14 +174,13 @@ namespace Quatrimo
 
             data.dataInitContent();
             main = new main(new bag(data.bag2));
-            animFrame frame1 = new animFrame(new element(full, Color.White, new Vector2I(10, 5)), 200);
-            animFrame frame2 = new animFrame(new element(full75, Color.White, new Vector2I(10, 5)), 200);
-            animFrame frame3 = new animFrame(new element(full50, Color.White, new Vector2I(10, 5)), 200);
-            animFrame frame4 = new animFrame(new element(full25, Color.White, new Vector2I(10, 5)), 200);
+            regionSprite sprite = new regionSprite();
+            sprite.tex = nameQ;
+            sprite.color = Color.Magenta;
+            sprite.pos = new Vector2I(100, 240);
+            sprite.depth = 1f;  
 
-
-            animSprite anim = new animSprite([frame1, frame2, frame3, frame4], true);
-            main.board.sprites.Add(anim);
+            main.board.sprites.Add(new movingSprite(sprite, new Vector2(50, -200f), new Vector2(0, 100f)));
             // TODO: use this.Content to load your game content here
         }
 
@@ -218,9 +217,8 @@ namespace Quatrimo
 
             spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
                 
-            spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, baseRes.y), null, new Color(new Vector3(0.01f, 0.00f, 0.02f)), 0, Vector2.Zero, SpriteEffects.None, 0f);
-            spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, baseRes.y), null, new Color(new Vector3(0.02f, 0.01f, 0.12f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
-            //spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, baseRes.y), null, new Color(new Vector3(0.02f, 1.0f, 0.12f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, 256), null, new Color(new Vector3(0.02f, 0.0f, 0.01f)), 0, Vector2.Zero, SpriteEffects.None, 0f);
+            spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, 256), null, new Color(new Vector3(0.01f, 0.00f, 0.16f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
 
             main.board.draw(spriteBatch, gameTime);
             spriteBatch.End();
@@ -265,14 +263,13 @@ namespace Quatrimo
             scale = res.y / (float)baseRes.y;
             tScale = scale / 2;
             
-            Debug.WriteLine(scale + ",  OFFSET:" + frameOffset);
+            Debug.WriteLine("Resolution changed! SCALE: " + scale + ",  OFFSET:" + frameOffset);
 
             //need code to get the resolution scaling
             //recalculate scaling
             //graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
             //graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
             //graphics.ApplyChanges();
-            Debug.WriteLine("IM GAY");
         }
 
     }

@@ -81,6 +81,18 @@
 /processorParam:TextureFormat=Color
 /build:full.png
 
+#begin misc/bg.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:misc/bg.png
+
 #begin png/atlas.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -92,18 +104,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:png/atlas.png
-
-#begin png/bgTop.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:png/bgTop.png
 
 #begin png/Corey.png
 /importer:TextureImporter

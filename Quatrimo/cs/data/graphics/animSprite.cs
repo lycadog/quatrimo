@@ -31,10 +31,7 @@ namespace Quatrimo
                     { frame = 0; }
                   
                     else { board.sprites.Remove(this); return;  } }
-            }
-           
-         
-            Debug.WriteLine("RENDERING FRAME " + frame);
+            }         
             sequence[frame].sprite.draw(spriteBatch, gameTime, board);
         }
     }

@@ -2,12 +2,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Quatrimo;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 public class board
 {
     public block[,] blocks;
-    public List<spriteObject> sprites = new List<spriteObject> { };
+    public List<drawable> sprites = new List<drawable> { };
 	public Vector2I dimensions;
 	public static readonly Vector2I eDimensions = new Vector2I(45, 25); //element dimensions
 	public static Vector2I offset;
@@ -120,11 +121,10 @@ public class board
     {
         int length = scoredRows.Count;
         int[] rows = new int[length];
-
         for (int l = 0; l < length; l++)//sort scoredRows by ascending
         {
             rows[l] = scoredRows.Min();
-            scoredRows.Remove(scoredRows.Min());
+            scoredRows.Remove(rows[l]);
         }
 
         for(int i = 0; i < length; i++) 

@@ -19,7 +19,7 @@ namespace Quatrimo
 
 
             name = bag.name;
-            Debug.WriteLine($"bag {name} made");
+            Debug.WriteLine($"Created bag {name}");
         }
 
         public List<bagPiece> pieces;

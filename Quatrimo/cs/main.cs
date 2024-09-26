@@ -37,10 +37,12 @@ namespace Quatrimo
 		public double pieceWaitTimer = 0;
 		public double piecefallTimer = 0;
 		public double placeTimer = 0;
-		public double inputCooldown = 1;
+		public double moveCooldown = 1;
+		public double fastfallTimer = 0;
 		public double scoreAnimationTimer = 400;
 
 		public bool canHold = false;
+		public bool fastfallReset = false;
 
 		public boardPiece currentPiece;
 		public boardPiece heldPiece = null;
@@ -114,7 +116,7 @@ namespace Quatrimo
 					currentPiece = nextPiece; //grab next piece
 					nextPiece = bag.getPiece(board);
 					board.nextbox.update(nextPiece);
-					Debug.WriteLine($"playing {currentPiece.name}");
+					Debug.WriteLine($"[gamestate.turnStart] Now playing {currentPiece.name}");
 					//update piece preview
 
 					piecefallTimer = -600; //set timers to negative to give more reaction time when a piece is first placed
@@ -140,7 +142,6 @@ namespace Quatrimo
 				case gameState.midTurn:
 					//PROCESS INPUT here
 
-					parseTurnInput(gameTime);
 					//FALL & PLACE PIECE
 					if (piecefallTimer >= 600)
 					{
@@ -152,19 +153,21 @@ namespace Quatrimo
 
 								currentPiece.place();
 								state = gameState.scoreStep;
+								break;
 							}
 						}
-
 						else
 						{
 							currentPiece.move(0, 1);
 							piecefallTimer = 0;
 							placeTimer = 0;
+							break;
 						}
 					}
+                    parseTurnInput(gameTime);
 
-					//increment timers
-					piecefallTimer += gameTime.ElapsedGameTime.Milliseconds;
+                    //increment timers
+                    piecefallTimer += gameTime.ElapsedGameTime.Milliseconds;
 					placeTimer += gameTime.ElapsedGameTime.Milliseconds;
 					break;
 
@@ -198,68 +201,51 @@ namespace Quatrimo
 						}
 					}
 
-					foreach (block block in scoredBlocks)
-					{
-						block.removePlaced(block);
-					}
-					scoredBlocks.Clear();
-
-					if (scorableRows.Count > 0) //jank, handles scoring animations - put into a method?
-					{
-						for (int i = 0; i < scorableRows.Count; i++)
-						{
-							for (int x = 0; x < board.dimensions.x; x++)
-							{
-								//Vector2I epos = board.convertToElementPos(x, scorableRows[i]);
-								//elementold element = board.elementsold[epos.x, epos.y, 3];
-
-								//animatable anim = new animatable(new List<Texture2D> { Game1.full, Game1.full75, Game1.full50, Game1.full25 }, new List<Color> { Color.White }, false, 80, true, element);
-								//element.animatable = anim;
-							}
-
-						}
-						scoreAnimationTimer = 0;
-					}
 
 					state = gameState.scoreAnim;
 					break;
 
 				case gameState.scoreAnim:
-
-					if (scoreAnimationTimer > 340) //kinda sucks but good enough
-					{
-						state = gameState.endTurn;
-					}
-					scoreAnimationTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+	
+					state = gameState.endTurn;
+					
 					//lol
 					//add animations later
 					break;
 
 				case gameState.endTurn:
+					
+					byte scoredRowCount = (byte)scorableRows.Count;
 
-					foreach (block block in board.blocks)
+                    foreach (block block in scoredBlocks)
+                    {
+                        block.removePlaced(block);
+                    }
+                    scoredBlocks.Clear();
+
+                    board.lowerRows(scorableRows); //lower rows
+
+                    foreach (block block in board.blocks)
 					{ //tick every non null tile
 						block?.tick.Invoke(block);
 					}
 
 					//final score operation
-					if (scorableRows.Count > 0) //get level multiplier and row bonus
+					if (scoredRowCount > 0) //get level multiplier and row bonus
 					{
-						turnScore += (scorableRows.Count - 1) * 10; //increase by 10 for every extra row scored
+						turnScore += (scoredRowCount - 1) * 10; //increase by 10 for every extra row scored
 						turnScore *= turnMultiplier;
 
-						if (scorableRows.Count == 3)
+						if (scoredRowCount == 3)
 						{
 							turnScore = (long)(turnScore * (levelTimes / 4));
 						}
-						else if (scorableRows.Count >= 4)
+						else if (scoredRowCount >= 4)
 						{
 							turnScore = (long)(turnScore * levelTimes);
 						}
-						recalculateLevel(scorableRows.Count);
+						recalculateLevel(scoredRowCount);
 					}
-
-					board.lowerRows(scorableRows); //lower rows
 
 
 					totalScore += turnScore;
@@ -298,30 +284,40 @@ namespace Quatrimo
 
 		public void parseTurnInput(GameTime gameTime)
 		{
-			if ((data.leftKey.keyDown || data.leftKey.timeHeld > 200) && inputCooldown > 40)
+			//for movement keys, when key holds: do action once, wait until timeheld, then move often
+			if ((data.leftKey.keyDown || data.leftKey.timeHeld > 120) && moveCooldown > 20)
 			{
 				if (!currentPiece.collidesFalling(-1, 0))
 				{
 					currentPiece.move(-1, 0);
-					inputCooldown = 0;
+					moveCooldown = 0;
 				}
 			}
-			else if ((data.rightKey.keyDown || data.rightKey.timeHeld > 200) && inputCooldown > 40)
+			else if ((data.rightKey.keyDown || data.rightKey.timeHeld > 120) && moveCooldown > 20)
 			{
 				if (!currentPiece.collidesFalling(1, 0))
 				{
 					currentPiece.move(1, 0);
-					inputCooldown = 0;
+					moveCooldown = 0;
 				}
 			}
 
-			if (data.downKey.keyHeld)
+			if (data.downKey.timeHeld > 16 )
 			{
-				piecefallTimer += gameTime.ElapsedGameTime.TotalMilliseconds * 8;
+				piecefallTimer += 600;
+				fastfallReset = true;
+				data.downKey.timeHeld = 0; //might cause issues - use a seperate timer instead if so
 			}
-			else if (data.upKey.keyHeld)
+			else if(data.downKey.keyUp && fastfallReset)
 			{
-				piecefallTimer -= gameTime.ElapsedGameTime.TotalMilliseconds * 0.2;
+				piecefallTimer = 0;
+				placeTimer = 0;
+			}
+			
+			
+			if (data.upKey.keyHeld)
+			{
+				//piecefallTimer -= gameTime.ElapsedGameTime.TotalMilliseconds * 0.2;
 			}
 
 			if (data.leftRotateKey.keyDown)
@@ -351,7 +347,7 @@ namespace Quatrimo
 				holdPiece();
 			}
 
-			inputCooldown += gameTime.ElapsedGameTime.TotalMilliseconds;
+			moveCooldown += gameTime.ElapsedGameTime.TotalMilliseconds;
 		}
 
 		public void parseInput()

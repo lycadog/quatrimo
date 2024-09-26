@@ -43,7 +43,6 @@ namespace Quatrimo
                 block.color = blocks[i].color;
                 piece.initializeBlock(block);
                 block.createGFX(block);
-                Debug.WriteLine(block.tex);
 
                 newBlocks[i] = block;
 

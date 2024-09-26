@@ -3,12 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quatrimo
 {
-    public class spriteObject
+    public class spriteObject : drawable
     {
         public Texture2D tex = Game1.none;
         public Color color = Color.White;
         public Vector2I pos = Vector2I.zero;
-        public Vector2I size = Vector2I.zero;
+        public Vector2I size = new Vector2I(10,10);
         public float depth = 0;
 
         public float rot = 0;
@@ -19,7 +19,7 @@ namespace Quatrimo
         /// Draws the sprite to the provided spritebatch
         /// </summary>
         /// <param name="spriteBatch">Spritebatch to draw to</param>
-        public virtual void draw(SpriteBatch spriteBatch, GameTime gameTime, board board)
+        public override void draw(SpriteBatch spriteBatch, GameTime gameTime, board board)
         {
             spriteBatch.Draw(tex, new Rectangle(pos.x, pos.y, size.x, size.y), null, color, rot, origin, effect, depth);
         }

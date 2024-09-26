@@ -91,7 +91,7 @@ namespace Quatrimo
             bagPiece piece = new bagPiece(blocks, mod.getRandom(), dimensions, origin, blockCount, name, rarity, colorSet.getRandomColor(), tex); //create new piece
 
             bag.pieces.Add(piece); //add new piece to player's bag
-            Debug.WriteLine("piece " + piece.name + " added!");
+            Debug.WriteLine("Piece " + piece.name + " added to bag");
         }
     }
 }
