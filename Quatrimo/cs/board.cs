@@ -8,7 +8,8 @@ using System.Linq;
 public class board
 {
     public block[,] blocks;
-    public List<drawable> sprites = new List<drawable> { };
+    public List<drawable> sprites = [];
+    public List<drawable> staleSprites = [];
 	public Vector2I dimensions;
 	public static readonly Vector2I eDimensions = new Vector2I(45, 25); //element dimensions
 	public static Vector2I offset;
@@ -37,6 +38,12 @@ public class board
         {
             sprite.draw(spriteBatch, gameTime, this);
         }
+
+        foreach(var staleSprite in staleSprites)
+        {
+            sprites.Remove(staleSprite);
+        }
+        staleSprites.Clear();
     }
 
 

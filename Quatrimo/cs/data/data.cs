@@ -138,13 +138,13 @@ namespace Quatrimo
             bHammer = new(4, 3, new wSet<baseblockType>[,] { { null, basic, null }, { null, basic, null }, { basic, basic, basic }, { basic, basic, basic } }, noMod, new Vector2I(1, 1), 8, "Hammer", deflt, Game1.heavy);
             bBar = new(4, 2, new wSet<baseblockType>[,] { { basic, basic }, { basic, basic }, { basic, basic }, { basic, basic } }, noMod, new Vector2I(2, 1), 8, "Bar", deflt, Game1.block_fuller);
             bLonger = new(5, 1, new wSet<baseblockType>[,] { { basic }, { basic }, { basic }, { basic }, { basic } }, noMod, new Vector2I(3, 0), 5, "Loong", deflt, Game1.boxsolid);
-            bAngle = new(3, 3, new wSet<baseblockType>[,] { { null, basic, basic }, { basic, basic, basic }, { basic, basic, basic } }, noMod, new Vector2I(2, 2), 8, "Angle", deflt, Game1.heavy_full);
+            bAngle = new(3, 3, new wSet<baseblockType>[,] { { null, basic, basic }, { basic, basic, basic }, { basic, basic, basic } }, noMod, new Vector2I(2, 2), 8, "Angle", deflt, Game1.box);
 
             classicBag = new starterBag([bLong, bSquare, bTBlock, bLBlockR, bLBlockL, bZBlockR, bZBlockL], "Classic Bag");
 
             bag1 = new starterBag([bCorner, bSquare, bWedge, bStick, bRectangle, bPickL, bPickR, bLong], "bag1");
-            bag2 = new starterBag([bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong, bSpectralZ], "bag2");
-            bag3 = new starterBag([bNub, bCaret, bBowl, bStump, bSlash, bTwig, bLong, bLepton, bBoson], "bag3");
+            bag2 = new starterBag([bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong], "bag2");
+            bag3 = new starterBag([bNub, bCaret, bBowl, bStump, bSlash, bTwig, bLong, bLepton], "bag3");
 
             foundryBag = new starterBag([bBarycenter, bHammer, bBar, bLong, bAngle, bCorner, bTwig, bSquare], "Foundry");
 

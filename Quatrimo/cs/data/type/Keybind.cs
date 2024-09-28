@@ -7,10 +7,21 @@ public class keybind
 
     public Keys key1 { get; set; }
     public Keys key2 { get; set; } 
+    
+    /// <summary>
+    /// If they key has just been pressed this frame
+    /// </summary>
+    public bool keyDown = false;
 
-    public bool keyDown = false; //key is just pressed
-    public bool keyUp = false; //key is just released
-    public bool keyHeld = false; //key is held
+    /// <summary>
+    /// If the key has just been released this frame
+    /// </summary>
+    public bool keyUp = false;
+
+    /// <summary>
+    /// If the key is pressed this frame
+    /// </summary>
+    public bool keyHeld = false;
     public double timeHeld = 0;
 
     public keybind(Keys key1, Keys key2)

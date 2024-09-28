@@ -173,15 +173,14 @@ namespace Quatrimo
             nameO = atlas[31];
 
             data.dataInitContent();
-            main = new main(new bag(data.bag2));
+            main = new main(new bag(data.bag1));
             regionSprite sprite = new regionSprite();
             sprite.tex = nameQ;
             sprite.color = Color.Magenta;
-            sprite.pos = new Vector2I(100, 240);
+            sprite.pos = new Vector2I(208, 240);
             sprite.depth = 1f;  
 
-            main.board.sprites.Add(new movingSprite(sprite, new Vector2(50, -200f), new Vector2(0, 100f)));
-            // TODO: use this.Content to load your game content here
+            main.board.sprites.Add(new movingSprite(sprite, new Vector2(0, -200f), new Vector2(0, 100f)));
         }
 
         protected override void Update(GameTime gameTime)
