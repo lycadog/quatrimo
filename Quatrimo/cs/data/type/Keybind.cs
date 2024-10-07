@@ -1,12 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
 
 public class keybind
 {
 
     public Keys key1 { get; set; }
-    public Keys key2 { get; set; } 
+    public Keys key2 { get; set; }
     
     /// <summary>
     /// If they key has just been pressed this frame

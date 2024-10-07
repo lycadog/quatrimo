@@ -229,10 +229,10 @@ namespace Quatrimo
         {
             if (boardpos.y > 7)
             {
-                element.updateEPos(element.boardPos2ElementPos(boardpos));
+                element.setEPos(element.boardPos2ElementPos(boardpos));
             }
-            else { element.updateEPos(new Vector2I(0, -5)); }
-            dropElement.updateEPos(element.boardPos2ElementPos(new Vector2I(boardpos.x, boardpos.y + piece.dropOffset)));
+            else { element.setEPos(new Vector2I(0, -5)); }
+            dropElement.setEPos(element.boardPos2ElementPos(new Vector2I(boardpos.x, boardpos.y + piece.dropOffset)));
         }
 
         protected virtual void tickF(block block)

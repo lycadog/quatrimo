@@ -69,6 +69,13 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/ToshibaSat.spritefont
 
+#begin fonts/ToshibaSatSmall.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/ToshibaSatSmall.spritefont
+
 #begin full.png
 /importer:TextureImporter
 /processor:TextureProcessor

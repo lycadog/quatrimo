@@ -48,6 +48,15 @@ namespace Quatrimo
                 {
                     scoredPieceBlocks.Add(block);
                 }
+                else
+                {
+                    element sprite1 = new element(Game1.boxsolid, Color.White, element.boardPos2ElementPos(block.boardpos), 0.85f);
+                    animFrame frame1 = new animFrame(sprite1, 200);
+                    animSprite anim = new animSprite([frame1]);
+
+                    main.board.sprites.Add(anim);
+                }
+
             }
 
             scoreCompletion = new Vector2[main.scorableRows.Count];
@@ -137,6 +146,7 @@ namespace Quatrimo
                 if(counter == scoreCompletion.Length)
                 {
                     animState = scoreWaitForFinish;
+                    processedVectors.Clear();
                 }
                 timer = 0;
             }
@@ -147,17 +157,40 @@ namespace Quatrimo
         //IF ALL ANIMATIONS ARE DONE, PROGRESS TO END STATE AND CLEAR ANIMATIONS
         public void scoreWaitForFinish(GameTime gameTime)
         {
+            bool completed = true;
             foreach(var anim in animatons)
             {
-                if(!anim.ended) { break; }
-                processedVectors.Clear();
-                animState = end;
+                if(!anim.ended) { completed = false; }
+            }
+
+            if (completed)
+            {
+                animState = none;
             }
         }
 
         public void highlightPlacedPiece(GameTime gameTime) //change later to briefly flash the newly placed piece white
         {
-            animState = none;
+            foreach(var block in main.currentPiece.blocks)
+            {
+                element sprite1 = new element(Game1.boxsolid, Color.White, element.boardPos2ElementPos(block.boardpos), 0.85f);
+                animFrame frame1 = new animFrame(sprite1, 200);
+                animSprite anim = new animSprite([frame1]);
+
+                main.board.sprites.Add(anim);
+            }
+            timer = 100;
+            animState = timedWait;
+        }
+
+        public void timedWait(GameTime gameTime)
+        {
+            timer -= gameTime.ElapsedGameTime.TotalMilliseconds;
+            if(timer <= 0)
+            {
+                animState = none;
+            }
+
         }
 
         public void end(GameTime gameTime) { animatons.Clear(); animState = none; }

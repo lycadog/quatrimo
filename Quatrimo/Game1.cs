@@ -15,19 +15,16 @@ namespace Quatrimo
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-        private RenderTarget2D sceneTarget;
-        private RenderTarget2D textTarget;
+        public RenderTarget2D sceneTarget;
+        public RenderTarget2D textTarget;
 
-        main main;
+        stateManager stateManager;
 
         static float scale = 2;
-        static float tScale = 1;
-        static readonly Vector2I baseRes = new Vector2I(450, 253);
-        static readonly Vector2I textRes = new Vector2I(720, 404);
-        static Vector2I res = new Vector2I(720, 404);
-        static int frameOffset = 0;
-
-        public static bool isPaused;
+        public static readonly Vector2I baseRes = new Vector2I(480, 270);
+        public static readonly Vector2I textRes = new Vector2I(960, 540);
+        public static Vector2I res = new Vector2I(960, 540);
+        public static int frameOffset = 0;
 
         public static Texture2DAtlas atlas;
 
@@ -73,9 +70,11 @@ namespace Quatrimo
         public static Texture2D pausedtext;
         public static Texture2D corey;
 
-        Texture2D bg;
+        public static Texture2D bg;
 
+        public static SpriteFont fontSmall;
         public static SpriteFont font;
+
 
         public Game1()
         {
@@ -115,6 +114,7 @@ namespace Quatrimo
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            fontSmall = Content.Load<SpriteFont>("fonts/ToshibaSatSmall");
             font = Content.Load<SpriteFont>("fonts/ToshibaSat");
 
             Texture2D atlasTex = Content.Load<Texture2D>("png/atlas");
@@ -173,14 +173,15 @@ namespace Quatrimo
             nameO = atlas[31];
 
             data.dataInitContent();
-            main = new main(new bag(data.bag1));
+            stateManager = new stateManager(this);
+            stateManager.startEncounter();
             regionSprite sprite = new regionSprite();
             sprite.tex = nameQ;
             sprite.color = Color.Magenta;
-            sprite.pos = new Vector2I(208, 240);
+            sprite.pos = new Vector2I(240, 240);
             sprite.depth = 1f;  
 
-            main.board.sprites.Add(new movingSprite(sprite, new Vector2(0, -200f), new Vector2(0, 100f)));
+            stateManager.main.board.sprites.Add(new movingSprite(sprite, new Vector2(0, -200f), new Vector2(0, 100f)));
         }
 
         protected override void Update(GameTime gameTime)
@@ -188,61 +189,19 @@ namespace Quatrimo
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             //    Exit();
 
-            keybind.updateKeybinds(data.keys, gameTime);
-
-            if (data.pauseKey.keyDown)
-            {
-                if (isPaused) { isPaused = false; main.board.sprites.Remove(main.board.pauseText); }
-                else { isPaused = true; main.board.sprites.Add(main.board.pauseText); }
-            }
-            if (isPaused) { gameTime.ElapsedGameTime = new TimeSpan(0); }
-            else { main.coreGameLoop(gameTime); }
+            stateManager.keyUpdate(gameTime);
+            stateManager.update(gameTime);
             
-
-            // TODO: Add your update logic here
             
             base.Update(gameTime);
         }
-        //GraphicsDevice.Clear(new Color(new Vector3(0.0f, 0.02f, 0.06f)));
 
         protected override void Draw(GameTime gameTime)
         {
-            if (isPaused) { gameTime.ElapsedGameTime = new TimeSpan(0); }
-
             DisplayMode display = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 
-            GraphicsDevice.SetRenderTarget(sceneTarget);
-            GraphicsDevice.Clear(new Color(new Vector3(0.0f, 0.02f, 0.06f)));
-
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
-                
-            spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, 256), null, new Color(new Vector3(0.02f, 0.0f, 0.01f)), 0, Vector2.Zero, SpriteEffects.None, 0f);
-            spriteBatch.Draw(bg, new Rectangle(0, 0, baseRes.x, 256), null, new Color(new Vector3(0.01f, 0.00f, 0.16f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
-
-            main.board.draw(spriteBatch, gameTime);
-            spriteBatch.End();
-
-            GraphicsDevice.SetRenderTarget(null);
+            stateManager.draw(graphics, spriteBatch, gameTime);
             
-            GraphicsDevice.SetRenderTarget(textTarget);
-            GraphicsDevice.Clear(Color.Transparent);
-
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            spriteBatch.DrawString(font, "SCORE: " + main.totalScore.ToString(), new Vector2(480, 300), Color.White);
-            spriteBatch.DrawString(font, "LVL: " + main.level.ToString(), new Vector2(480, 320), Color.White);
-            spriteBatch.DrawString(font, "X: " + main.levelTimes.ToString(), new Vector2(480, 340), Color.White);
-            spriteBatch.DrawString(font, "LVL UP IN: " + (main.rowsRequired - main.rowsCleared).ToString() + " ROWS", new Vector2(480, 360), Color.White);
-            spriteBatch.End();
-
-            GraphicsDevice.SetRenderTarget(null);
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-
-            spriteBatch.Draw(sceneTarget, new Rectangle(frameOffset, 0, res.x, res.y), Color.White);
-            spriteBatch.Draw(textTarget, new Rectangle(frameOffset, 0, res.x, res.y), Color.White);
-            spriteBatch.End();
-            
-
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
@@ -260,7 +219,6 @@ namespace Quatrimo
             res.x = (int)Math.Round ( res.y * 1.77777777778);
             frameOffset = Math.Max((Window.ClientBounds.Width - res.x)/2, 0);
             scale = res.y / (float)baseRes.y;
-            tScale = scale / 2;
             
             Debug.WriteLine("Resolution changed! SCALE: " + scale + ",  OFFSET:" + frameOffset);
 

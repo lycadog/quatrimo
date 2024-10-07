@@ -15,7 +15,7 @@ namespace Quatrimo
 
 		//this class and board needs a complete rewrite
 
-		public static gameState state;
+		public gameState state;
 
 		public board board;
 		public animHandler animHandler;
@@ -43,10 +43,7 @@ namespace Quatrimo
 		public short rightMoveCooldown = 0;
 		public short fastfallCooldown = 0;
 
-		public double scoreAnimationTimer = 400;
-
 		public bool canHold = false;
-		public bool fastfallReset = false;
 
 		public boardPiece currentPiece;
 		public boardPiece heldPiece = null;
@@ -108,18 +105,16 @@ namespace Quatrimo
 			//lowers rows
 			//ends encounter
 
-			parseInput();
-
 			switch (state)
-			{ //will need graphics update code
-
+			{
 				// ================ TURN START ================
 				case gameState.turnStart:
 
 					pieceWaitTimer = 0;
 
-					currentPiece = nextPiece; //grab next piece
-					nextPiece = bag.getPiece(board);
+                    //put this all in one method later, main.drawPiece(); or something, updates all next boxes
+                    currentPiece = nextPiece; //grab next piece
+					nextPiece = bag.getPiece(board); 
 					board.nextbox.update(nextPiece);
 					Debug.WriteLine($"[gamestate.turnStart] Now playing {currentPiece.name}");
 					//update piece preview
@@ -209,7 +204,7 @@ namespace Quatrimo
                     if (scorableRows.Count > 0)
                     {
                         animHandler.animState = animHandler.scoreAnimStart;
-                    }
+                    } else { animHandler.animState = animHandler.highlightPlacedPiece; }
 
                     state = gameState.scoreAnim;
 					break;
@@ -304,7 +299,7 @@ namespace Quatrimo
 		public void parseTurnInput(GameTime gameTime)
 		{
 			//for movement keys, when key holds: do action once, wait until timeheld, then move often
-			if ((data.leftKey.keyDown || data.leftKey.timeHeld > 120) && leftMoveCooldown > 30)
+			if ((data.leftKey.keyDown || data.leftKey.timeHeld > 130) && leftMoveCooldown > 30)
 			{
 				if (!currentPiece.collidesFalling(-1, 0))
 				{
@@ -312,7 +307,7 @@ namespace Quatrimo
 					leftMoveCooldown = 0;
 				}
 			}
-			else if ((data.rightKey.keyDown || data.rightKey.timeHeld > 120) && rightMoveCooldown > 30)
+			else if ((data.rightKey.keyDown || data.rightKey.timeHeld > 130) && rightMoveCooldown > 30)
 			{
 				if (!currentPiece.collidesFalling(1, 0))
 				{
@@ -370,14 +365,6 @@ namespace Quatrimo
 			fastfallCooldown += (short)gameTime.ElapsedGameTime.TotalMilliseconds;
         }
 
-        public void parseInput()
-		{
-			if (data.restartKey.keyDown)
-			{
-				encounterStart();
-			}
-		}
-
 		public bool isRowScoreable(int y)
 		{
 			for (int x = 0; x < board.dimensions.x; x++)
@@ -392,11 +379,12 @@ namespace Quatrimo
 		{
 			if (heldPiece == null)
 			{
-				heldPiece = nextPiece;
+				heldPiece = nextPiece; //put this all in one method later, main.drawPiece(); or something, updates all next boxes
 				nextPiece = bag.getPiece(board);
-			}
+                board.nextbox.update(nextPiece);
+            }
 
-			boardPiece formerlyHeld = heldPiece;
+            boardPiece formerlyHeld = heldPiece;
 
 			heldPiece = currentPiece;
 			while (heldPiece.rotation != 0)

@@ -18,12 +18,14 @@ namespace Quatrimo
             this.effect = effect;
             origin = new Vector2(5, 5);
             pos = elementPos2WorldPos(epos);
+            updatePos();
         }
 
-        public void updateEPos(Vector2I newPos)
+        public void setEPos(Vector2I newPos)
         {
             elementPos = newPos;
             pos = elementPos2WorldPos(newPos);
+            updatePos();
         }
 
         /// <summary>
@@ -34,6 +36,12 @@ namespace Quatrimo
         {
             elementPos = elementPos.add(offset);
             pos = elementPos2WorldPos(elementPos);
+            updatePos();
+        }
+
+        protected void updatePos()
+        {
+            pos = pos.add(new Vector2I(5, 5));
         }
 
 
@@ -64,7 +72,7 @@ namespace Quatrimo
         /// <returns></returns>
         public static Vector2I elementPos2WorldPos(Vector2I epos)
         {
-            return new Vector2I(epos.x * eSize, epos.y * eSize + 4);
+            return new Vector2I(epos.x * eSize, epos.y * eSize);
         }
 
         /// <summary>
@@ -74,7 +82,7 @@ namespace Quatrimo
         /// <returns></returns>
         public static Vector2I boardPos2ElementPos(Vector2I bpos)
         {
-            return new Vector2I(board.offset.x + bpos.x + 1, bpos.y - 5);
+            return new Vector2I(board.offset.x + bpos.x + 1, bpos.y - 4);
         }
     }
 }

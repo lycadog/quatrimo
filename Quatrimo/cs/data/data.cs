@@ -62,7 +62,8 @@ namespace Quatrimo
 
         public static starterBag debugbag;
 
-        public static keybind[] keys;
+        public static keybind[] boardKeys;
+        public static keybind[] debugKeys;
 
         public static keybind leftKey;
         public static keybind rightKey;
@@ -74,7 +75,14 @@ namespace Quatrimo
         public static keybind holdKey;
         public static keybind restartKey;
         public static keybind pauseKey;
+        public static keybind toggleDebugKey;
 
+        public static keybind debugMode1;
+        public static keybind debugMode2;
+        public static keybind debugMode3;
+
+        public static keybind debugKey1;
+        public static keybind debugKey2;
         public static void dataInit()
         {
             leftKey = new keybind(Microsoft.Xna.Framework.Input.Keys.Left, Microsoft.Xna.Framework.Input.Keys.A);
@@ -87,7 +95,18 @@ namespace Quatrimo
             holdKey = new keybind(Microsoft.Xna.Framework.Input.Keys.F, Microsoft.Xna.Framework.Input.Keys.None);
             restartKey = new keybind(Microsoft.Xna.Framework.Input.Keys.R, Microsoft.Xna.Framework.Input.Keys.None);
             pauseKey = new keybind(Microsoft.Xna.Framework.Input.Keys.Escape, Microsoft.Xna.Framework.Input.Keys.None);
-            keys = [leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey, holdKey, restartKey, pauseKey];
+            toggleDebugKey = new keybind(Microsoft.Xna.Framework.Input.Keys.OemTilde, Microsoft.Xna.Framework.Input.Keys.None);
+            boardKeys = [leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey, holdKey, restartKey, pauseKey, toggleDebugKey];
+
+            debugMode1 = new keybind(Microsoft.Xna.Framework.Input.Keys.F1, Microsoft.Xna.Framework.Input.Keys.None);
+            debugMode2 = new keybind(Microsoft.Xna.Framework.Input.Keys.F2, Microsoft.Xna.Framework.Input.Keys.None);
+            debugMode3 = new keybind(Microsoft.Xna.Framework.Input.Keys.F3, Microsoft.Xna.Framework.Input.Keys.None);
+
+            debugKey1 = new keybind(Microsoft.Xna.Framework.Input.Keys.OemComma, Microsoft.Xna.Framework.Input.Keys.None);
+            debugKey2 = new keybind(Microsoft.Xna.Framework.Input.Keys.OemPeriod, Microsoft.Xna.Framework.Input.Keys.None);
+
+            debugKeys = [debugMode1, debugMode2, debugMode3, debugKey1, debugKey2];
+
         }
 
 

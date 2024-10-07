@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Diagnostics;
 
 namespace Quatrimo
 {
@@ -9,7 +8,7 @@ namespace Quatrimo
     {
         public animFrame[] sequence;
         public int frame = 0;
-        public double counter = 0;
+        public double timer = 0;
         public bool loops;
 
         public bool ended = false;
@@ -23,10 +22,10 @@ namespace Quatrimo
 
         public override void draw(SpriteBatch spriteBatch, GameTime gameTime, board board)
         {
-            counter += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (counter > sequence[frame].hangTime)
+            timer += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (timer > sequence[frame].hangTime)
             {
-                counter = 0;
+                timer = 0;
                 if(frame < sequence.Length-1) { frame += 1; }
                 else {
                     if (loops) 
