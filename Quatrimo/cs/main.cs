@@ -216,15 +216,9 @@ namespace Quatrimo
 						animHandler.animState.Invoke(gameTime);
 						break;
 					}
-					else
-					{
-
-					}
 
                     state = gameState.endTurn;
-					
-					//lol
-					//add animations later
+
 					break;
 
 				case gameState.endTurn:

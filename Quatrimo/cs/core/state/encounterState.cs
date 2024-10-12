@@ -1,15 +1,32 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Quatrimo
 {
     public class encounterState : gameState
     {
-
+        protected stateManager.gameDelegate updates;
         public encounterState(stateManager manager) : base(manager)
         {
+        }
+
+        public void pause()
+        {
+            updates = manager.updateD;
+            manager.updateD = pausedUpdate;
+
+            manager.paused = true;
+            manager.main.board.sprites.Add( manager.main.board.pauseText );
+        }
+
+        public void unpause()
+        {
+            manager.updateD = updates;
+
+            manager.paused = false;
+            manager.main.board.sprites.Remove(manager.main.board.pauseText);
         }
 
         public override void setState()
@@ -54,9 +71,7 @@ namespace Quatrimo
 
             if (data.pauseKey.keyDown)
             {
-                manager.paused = true;
-                manager.main.board.sprites.Add(manager.main.board.pauseText);
-                //updateDel.setTemporaryState(encounterPaused);
+                pause();
             }
 
             if (data.restartKey.keyDown)
@@ -75,6 +90,14 @@ namespace Quatrimo
                     manager.debugMode = false;
                     manager.removeState<debugState>();
                 }
+            }
+        }
+
+        protected void pausedUpdate(GameTime gameTime)
+        {
+            if (data.pauseKey.keyDown)
+            {
+                unpause();
             }
         }
 
