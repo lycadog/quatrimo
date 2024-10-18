@@ -9,6 +9,7 @@ using System.Linq;
 public class board
 {
     public block[,] blocks;
+
     public List<drawable> sprites = [];
     public List<drawable> staleSprites = [];
 	public Vector2I dimensions;
@@ -110,7 +111,6 @@ public class board
         sprite.depth = 0.05f;
         sprites.Add(sprite);
 
-		//rewrite these two for blocks to be more efficient ie. place "full" during board border gen and in the loop below
         short counter = 0;
         Color[] colors = [new Color(new Vector3(0.04f, 0.04f, 0.04f)), new Color(new Vector3(0.06f, 0.06f, 0.06f))];
         for (int x = 0; x < dimensions.x; x++) //generate board square background
@@ -131,10 +131,10 @@ public class board
     }
 
 
-    public void lowerRows(List<int> scoredRows)
+    public void lowerRows(List<short> scoredRows)
     {
-        int length = scoredRows.Count;
-        int[] rows = new int[length];
+        short length = (short)scoredRows.Count;
+        short[] rows = new short[length];
         for (int l = 0; l < length; l++)//sort scoredRows by ascending
         {
             rows[l] = scoredRows.Min();

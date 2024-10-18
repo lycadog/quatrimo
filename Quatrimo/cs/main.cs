@@ -23,10 +23,10 @@ namespace Quatrimo
 		public bag bag;
 
 		//board variables
-		public int level = 0;
-		public int rowsRequired = 4;
-		public int rowsCleared = 0;
-		public int enemyCooldown;
+		public short level = 0;
+		public short rowsRequired = 4;
+		public short rowsCleared = 0;
+		public short turnRowsCleared = 0;
 
 		public long turnScore = 0;
 		public long totalScore = 0;
@@ -49,8 +49,8 @@ namespace Quatrimo
 		public boardPiece heldPiece = null;
 		public boardPiece nextPiece;
 
-		public List<int> updatedRows = new List<int>();
-		public List<int> scorableRows = new List<int>();
+		public List<short> updatedRows = new List<short>();
+		public List<short> scorableRows = new List<short>();
 		public List<block> scoredBlocks = new List<block>();
 
 		public main(bag bag)
@@ -78,39 +78,58 @@ namespace Quatrimo
 		public void coreGameLoop(GameTime gameTime)
 		{
 
-			//gamesteps:
-			//ROUND START is ran from a method instead before coreGameLoop is called
+            //gamesteps:
+            //ROUND START is ran from a method instead before coreGameLoop is called
 
-			//TURN START: RUNS ONCE
-			//grab new piece and update piece previews
+            //TURN START: RUNS ONCE
+            //grab new piece and update piece previews
 
-			//PIECE WAIT: LOOPS
-			//wait briefly until input or a timer ends to turn to MIDTURN
+            //PIECE WAIT: LOOPS
+            //wait briefly until input or a timer ends to turn to MIDTURN
 
-			//MID TURN: LOOPS
-			//process input & move piece
-			//update graphics on move
-			//move piece down & place properly
+            //MID TURN: LOOPS
+            //process input & move piece
+            //update graphics on move
+            //move piece down & place properly
 
-			//SCORE STEP: RUNS ONCE
-			//process score
-			//save scored rows
+            //SCORE STEP: RUNS ONCE
+            //process score
+            //save scored rows
 
-			//SCORE ANIM: LOOPS
-			//runs end of turn animations like score
+            //SCORE ANIM: LOOPS
+            //runs end of turn animations like score
 
-			//END TURN: RUNS ONCE
-			//ticks tiles
-			//finalizes score
-			//lowers rows
-			//ends encounter
+            //END TURN: RUNS ONCE
+            //ticks tiles
+            //finalizes score
+            //lowers rows
+            //ends encounter
 
-			switch (state)
+
+
+            //GAMESTEP REVAMP
+
+            // ====== SCORE PROCESSING method ======
+            //tallies up the total value of the scored blocks, counts scored rows, and lowers the board accoardingly
+            //requires distinction between scoring individual blocks vs scoring whole rows, since some effects only score a few blocks
+            //needs to run score animations for specific blocks and rows scored
+            // ====== when does it run? check VVV ======
+            //runs after piece placing during score step
+            //runs again if any block ticks update the board
+
+            // ====== new endTurn state functionality ======
+            //uses the new values from the score processing method
+            //all rows scored, whether through the piece or through block events or whatnot are tallied up
+            //all level multiplication and such happens here at the very end
+
+
+            switch (state)
 			{
 				// ================ TURN START ================
 				case gameState.turnStart:
 
 					pieceWaitTimer = 0;
+					turnRowsCleared = 0;
 
                     //put this all in one method later, main.drawPiece(); or something, updates all next boxes
                     currentPiece = nextPiece; //grab next piece
@@ -173,35 +192,42 @@ namespace Quatrimo
 
 				// ================ SCORE STEP ================
 				case gameState.scoreStep:
-					//check for scorable lines, tally up score, increase level & multiplier
+                    //check for scorable lines, tally up score, increase level & multiplier
 
-					foreach (block block in currentPiece.blocks) //grab every tile's Y level
+
+                    // ====== PLACED PIECE SCORE STEP ======
+                    foreach (block block in currentPiece.blocks) //grab every tile's Y level
 					{
-						updatedRows.Add(block.boardpos.y);
+						updatedRows.Add((short)block.boardpos.y);
 					}
 
 					updatedRows = updatedRows.Distinct().ToList(); //remove duplicate entries
 
 					foreach (int i in updatedRows)
 					{
-						if (isRowScoreable(i)) { scorableRows.Add(i); } //check rows, add rows that are full to the list
+						if (isRowScoreable(i)) { //check rows, add rows that are scored to the list
+							scorableRows.Add((short)i);
+							turnRowsCleared += 1;
+						} 
 					}
-
 
 					for (int x = 0; x < board.dimensions.x; x++) //process score of every tile in every scored row
 					{
 						foreach (int y in scorableRows) //process through rows
 						{
 							block block = board.blocks[x, y];
-							turnScore += block.getScore(block);
-							turnMultiplier += block.getTimes(block);
+							if(block != null)
+							{
+                                turnScore += block.getScore(block);
+                                turnMultiplier += block.getTimes(block);
 
-							block.score(block);
-							scoredBlocks.Add(block);
+                                block.score(block);
+                                scoredBlocks.Add(block);
+                            }
 						}
 					}
 
-                    if (scorableRows.Count > 0)
+                    if (turnRowsCleared > 0)
                     {
                         animHandler.animState = animHandler.scoreAnimStart;
                     } else { animHandler.animState = animHandler.highlightPlacedPiece; }
@@ -217,13 +243,52 @@ namespace Quatrimo
 						break;
 					}
 
-                    state = gameState.endTurn;
+                    state = gameState.tickStep;
+
+					break;
+
+				case gameState.tickStep:
+					
+
+
+					
 
 					break;
 
 				case gameState.endTurn:
 					
-					byte scoredRowCount = (byte)scorableRows.Count;
+					if(turnRowsCleared > 0)
+					{
+						turnScore += (turnRowsCleared - 1) * 10;
+						turnScore *= turnMultiplier;
+
+						if(turnRowsCleared == 3)
+						{
+							turnScore = (long)(turnScore * (levelTimes / 4));
+						}
+						else if(turnRowsCleared >= 4)
+						{
+							turnScore = (long)(turnScore * levelTimes);
+						}
+						recalculateLevel(turnRowsCleared);
+					}
+
+                    totalScore += turnScore;
+                    turnScore = 0;
+					turnRowsCleared = 0;
+
+                    updatedRows.Clear();
+                    scorableRows.Clear();
+
+                    Debug.WriteLine($"Current score: {totalScore}");
+                    if (totalScore >= scoreRequired) //if the player has enough score to beat the encounter, end the encounter
+                    {
+                        Debug.WriteLine("ROUND ENDED!!!!!");
+                        //end encounter
+                    }
+
+
+                    /*short scoredRowCount = (short)scorableRows.Count;
 
                     foreach (block block in scoredBlocks)
                     {
@@ -267,20 +332,24 @@ namespace Quatrimo
 					{
 						Debug.WriteLine("ROUND ENDED!!!!!");
 						//end encounter
-					}
+					}*/
 
-					state = gameState.turnStart;
+                    state = gameState.turnStart;
 
 					break;
 			}
 
 		}
 
+		public void processUpdatedRows()
+		{
 
-		public void recalculateLevel(int rows)
+		}
+
+		public void recalculateLevel(short rows)
 		{
 			rowsCleared += rows;
-			while (rowsCleared >= rowsRequired)
+			while (rowsCleared >= rowsRequired) //loop the level check incase the player levels up multiple times at once
 			{
 				level += 1;
 				rowsCleared -= rowsRequired;
@@ -399,9 +468,10 @@ namespace Quatrimo
 			turnStart, //once at the start of the turn
 			pieceWait, //waiting briefly before dropping piece
 			midTurn, //handling piece falling and collision
-			scoreStep, //processing score
+			scoreStep, //processing score, lowering rows
 			scoreAnim, //running score animations
-			endTurn //finalizing score, lowering rows & ending encounter
+			tickStep,
+			endTurn //ticking blocks, running scoreStep again if the board is updated, finalizing score, & ending encounter
 		}
 	}
 }

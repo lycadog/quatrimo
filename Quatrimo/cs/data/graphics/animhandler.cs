@@ -44,7 +44,7 @@ namespace Quatrimo
             List<block> scoredPieceBlocks = new List<block>();
             foreach(block block in main.currentPiece.blocks) //process through all the scored piece's blocks
             {
-                if (main.scorableRows.Contains(block.boardpos.y)) //save blocks that have scored
+                if (main.scorableRows.Contains((byte)block.boardpos.y)) //save blocks that have scored
                 {
                     scoredPieceBlocks.Add(block);
                 }

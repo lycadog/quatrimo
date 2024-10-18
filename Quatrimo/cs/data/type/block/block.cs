@@ -8,7 +8,6 @@ namespace Quatrimo
     public class block
     {
         public board board;
-
         public block()
         {
             linkDelegates();
@@ -156,7 +155,7 @@ namespace Quatrimo
         /// </summary>
         public scoreD getTimes;
 
-        //really really sucks but whatever
+        //really really messy but whatever
         public delegate void blockD(block block);
         public delegate void coordinateD(Vector2I pos, block block);
         public delegate bool coordinateBoolD(Vector2I pos, block block);
