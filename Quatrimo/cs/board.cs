@@ -9,6 +9,7 @@ using System.Linq;
 public class board
 {
     public block[,] blocks;
+    public animHandler animHandler;
 
     public List<drawable> sprites = [];
     public List<drawable> staleSprites = [];
@@ -21,8 +22,9 @@ public class board
 
     public static readonly int boardy = 22;
 
-    public board(Vector2I dim)
+    public board(Vector2I dim, animHandler animHandler)
     {
+        this.animHandler = animHandler;
         dimensions = dim;
 		blocks = new block[dimensions.x, dimensions.y];
         offset = new Vector2I((eDimensions.x - dimensions.x) / 2 - 1, 4);
@@ -131,15 +133,9 @@ public class board
     }
 
 
-    public void lowerRows(List<short> scoredRows)
+    public void lowerRows(List<short> rows)
     {
-        short length = (short)scoredRows.Count;
-        short[] rows = new short[length];
-        for (int l = 0; l < length; l++)//sort scoredRows by ascending
-        {
-            rows[l] = scoredRows.Min();
-            scoredRows.Remove(rows[l]);
-        }
+        short length = (short)rows.Count;
 
         for(int i = 0; i < length; i++) 
         {

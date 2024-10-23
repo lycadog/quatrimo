@@ -9,16 +9,15 @@ using System.Numerics;
 namespace Quatrimo
 {
 	//main is for all things encounters!
-	public class main
-	{ //IDEA: eventlistener base class for our custom objects so they can be processed through by Events
-	  //REWORK the gamestate steps, endState should be split INTO TWO: the first one processes everything and stores it, then the second one animates it and finalizes it
-
+	public class mainOLD
+	{
 		//this class and board needs a complete rewrite
 
-		public gameState state;
+		public gameState stateOld;
 
 		public board board;
 		public animHandler animHandler;
+		public boardState state;
 
 		public bag bag;
 
@@ -53,7 +52,7 @@ namespace Quatrimo
 		public List<short> scorableRows = new List<short>();
 		public List<block> scoredBlocks = new List<block>();
 
-		public main(bag bag)
+		public mainOLD(bag bag)
 		{
 			this.bag = bag;
 			encounterStart();
@@ -61,8 +60,8 @@ namespace Quatrimo
 
 		public void encounterStart()
 		{
-			board = new board(new Vector2I(12, 28));
-			animHandler = new animHandler(this);
+            animHandler = new animHandler(this);
+            board = new board(new Vector2I(12, 28), animHandler);
 
 			heldPiece = null;
 			nextPiece = bag.getPiece(board);
@@ -72,11 +71,19 @@ namespace Quatrimo
 			totalScore = 0;
 			rowsRequired = 4;
 			rowsCleared = 0;
-			state = gameState.turnStart;
+			turnStartState newState = new turnStartState(this);
+			newState.startState();
 		}
 
 		public void coreGameLoop(GameTime gameTime)
 		{
+            state.update(gameTime);
+        }
+
+		public void coreGameLoopOLD(GameTime gameTime)
+		{
+
+			
 
             //gamesteps:
             //ROUND START is ran from a method instead before coreGameLoop is called
@@ -122,8 +129,8 @@ namespace Quatrimo
             //all rows scored, whether through the piece or through block events or whatnot are tallied up
             //all level multiplication and such happens here at the very end
 
-
-            switch (state)
+			
+            switch (stateOld)
 			{
 				// ================ TURN START ================
 				case gameState.turnStart:
@@ -140,7 +147,7 @@ namespace Quatrimo
 
 					piecefallTimer = -600; //set timers to negative to give more reaction time when a piece is first placed
 					placeTimer = -600;
-					state = gameState.pieceWait;
+					stateOld = gameState.pieceWait;
 					break;
 
 				// ================ PIECE WAIT ================
@@ -151,7 +158,7 @@ namespace Quatrimo
 						//START piece fall
 						currentPiece.play();
 						canHold = true;
-						state = gameState.midTurn; break;
+						stateOld = gameState.midTurn; break;
 					}
 
 					pieceWaitTimer += gameTime.ElapsedGameTime.Milliseconds;
@@ -171,7 +178,7 @@ namespace Quatrimo
 							{
 
 								currentPiece.place();
-								state = gameState.scoreStep;
+								stateOld = gameState.scoreStep;
 								break;
 							}
 						}
@@ -232,7 +239,7 @@ namespace Quatrimo
                         animHandler.animState = animHandler.scoreAnimStart;
                     } else { animHandler.animState = animHandler.highlightPlacedPiece; }
 
-                    state = gameState.scoreAnim;
+                    stateOld = gameState.scoreAnim;
 					break;
 
 				case gameState.scoreAnim:
@@ -243,7 +250,7 @@ namespace Quatrimo
 						break;
 					}
 
-                    state = gameState.tickStep;
+                    stateOld = gameState.tickStep;
 
 					break;
 
@@ -334,7 +341,7 @@ namespace Quatrimo
 						//end encounter
 					}*/
 
-                    state = gameState.turnStart;
+                    stateOld = gameState.turnStart;
 
 					break;
 			}
@@ -359,109 +366,7 @@ namespace Quatrimo
 			levelTimes = level / 2d + 1d;
 		}
 
-		public void parseTurnInput(GameTime gameTime)
-		{
-			//for movement keys, when key holds: do action once, wait until timeheld, then move often
-			if ((data.leftKey.keyDown || data.leftKey.timeHeld > 130) && leftMoveCooldown > 30)
-			{
-				if (!currentPiece.collidesFalling(-1, 0))
-				{
-					currentPiece.move(-1, 0);
-					leftMoveCooldown = 0;
-				}
-			}
-			else if ((data.rightKey.keyDown || data.rightKey.timeHeld > 130) && rightMoveCooldown > 30)
-			{
-				if (!currentPiece.collidesFalling(1, 0))
-				{
-					currentPiece.move(1, 0);
-					rightMoveCooldown = 0;
-				}
-			}
-
-			if (data.downKey.keyDown || data.downKey.timeHeld > 40 && fastfallCooldown > 10 )
-			{
-				piecefallTimer += 600;
-				fastfallCooldown = 0;
-			}
-			else if(data.downKey.keyUp)
-			{
-				piecefallTimer = 0;
-				placeTimer = 0;
-			}
-			
-			
-			if (data.upKey.keyHeld)
-			{
-				//piecefallTimer -= gameTime.ElapsedGameTime.TotalMilliseconds * 0.2;
-			}
-
-			if (data.leftRotateKey.keyDown)
-			{
-				if (currentPiece.canRotate(-1))
-				{
-					currentPiece.rotate(-1);
-				}
-			}
-			else if (data.rightRotateKey.keyDown)
-			{
-				if (currentPiece.canRotate(1))
-				{
-					currentPiece.rotate(1);
-				}
-			}
-
-			if (data.slamKey.keyDown)
-			{
-				currentPiece.move(0, currentPiece.dropOffset);
-				currentPiece.place();
-				state = gameState.scoreStep;
-			}
-
-			if (data.holdKey.keyDown && canHold)
-			{
-				holdPiece();
-			}
-
-			leftMoveCooldown += (short)gameTime.ElapsedGameTime.TotalMilliseconds;
-            rightMoveCooldown += (short)gameTime.ElapsedGameTime.TotalMilliseconds;
-			fastfallCooldown += (short)gameTime.ElapsedGameTime.TotalMilliseconds;
-        }
-
-		public bool isRowScoreable(int y)
-		{
-			for (int x = 0; x < board.dimensions.x; x++)
-			{
-				if (board.blocks[x, y] == null) return false; //if any tile is empty, return false
-				else { continue; } //if the tile isn't empty, keep looping
-			}
-			return true; //if no tiles return empty, this will run and return true
-		}
-
-		public void holdPiece()
-		{
-			if (heldPiece == null)
-			{
-				heldPiece = nextPiece; //put this all in one method later, main.drawPiece(); or something, updates all next boxes
-				nextPiece = bag.getPiece(board);
-                board.nextbox.update(nextPiece);
-            }
-
-            boardPiece formerlyHeld = heldPiece;
-
-			heldPiece = currentPiece;
-			while (heldPiece.rotation != 0)
-			{
-				heldPiece.rotate(1);
-			}
-
-			board.holdbox.update(heldPiece);
-
-			currentPiece.removeFalling();
-			currentPiece = formerlyHeld;
-			currentPiece.play();
-			canHold = false;
-		}
+	
 
 		public enum gameState
 		{

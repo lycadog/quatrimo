@@ -53,7 +53,7 @@ namespace Quatrimo
         {
             spriteBatch.DrawString(Game1.font, "DEBUG", new Vector2(450, 20), Color.Yellow);
 
-            spriteBatch.DrawString(Game1.fontSmall, $"gamestate: {manager.main.state}", new Vector2(20, 460), Color.CornflowerBlue);
+            spriteBatch.DrawString(Game1.fontSmall, $"gamestate: {manager.main.stateOld}", new Vector2(20, 460), Color.CornflowerBlue);
             spriteBatch.DrawString(Game1.fontSmall, $"piecefallTimer {manager.main.piecefallTimer}/600", new Vector2(20, 480), Color.LightBlue);
             spriteBatch.DrawString(Game1.fontSmall, $"placeTimer {manager.main.placeTimer}/1000", new Vector2(20, 500), Color.LightBlue);
             spriteBatch.DrawString(Game1.fontSmall, $"pieceWaitTimer {manager.main.pieceWaitTimer}/5000", new Vector2(20, 520), Color.LightBlue);

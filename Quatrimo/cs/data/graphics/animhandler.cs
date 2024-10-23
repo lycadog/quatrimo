@@ -9,7 +9,7 @@ namespace Quatrimo
 {
     public class animHandler
     {
-        main main;
+        encounter main;
         public delegate void animDelegate(GameTime gameTime);
 
         public animDelegate animState;
@@ -28,7 +28,7 @@ namespace Quatrimo
         Vector2[] scoreCompletion;
         List<Vector2I> processedVectors = [];
 
-        public animHandler(main main)
+        public animHandler(encounter main)
         {
             this.main = main;
             animState = none;

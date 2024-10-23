@@ -25,7 +25,7 @@ namespace Quatrimo
             play = new blockD(playF);
             place = new blockD(placeF);
             score = new blockD(scoreF);
-            tick = new blockD(tickF);
+            tick = new tickD(tickF);
             createGFX = new blockD(graphicsInit);
             createPreview = new spriteD(createPreviewF);
             updatePos = new blockD(updatePosF);
@@ -65,9 +65,9 @@ namespace Quatrimo
         public blockD score;
 
         /// <summary>
-        /// Ticks block at the end of a turn
+        /// Ticks block at the end of a turn, returns whether or not it creates an animation that needs to be waited on (to suspend the state)
         /// </summary>
-        public blockD tick;
+        public tickD tick;
 
         /// <summary>
         /// Initialize the graphics needed for the block
@@ -157,6 +157,7 @@ namespace Quatrimo
 
         //really really messy but whatever
         public delegate void blockD(block block);
+        public delegate bool tickD(block block);
         public delegate void coordinateD(Vector2I pos, block block);
         public delegate bool coordinateBoolD(Vector2I pos, block block);
         public delegate void blockVoidD(block otherBlock, block block);
@@ -234,9 +235,9 @@ namespace Quatrimo
             dropElement.setEPos(element.boardPos2ElementPos(new Vector2I(boardpos.x, boardpos.y + piece.dropOffset)));
         }
 
-        protected virtual void tickF(block block)
+        protected virtual bool tickF(block block)
         {
-
+            return false;
         }
 
         protected virtual void removeFallingF(block block)

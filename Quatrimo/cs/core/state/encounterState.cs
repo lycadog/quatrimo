@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
 
 namespace Quatrimo
 {
@@ -67,6 +68,7 @@ namespace Quatrimo
 
         protected void encounterUpdate(GameTime gameTime)
         {
+            Debug.WriteLine(manager.main.state.ToString());
             manager.main.coreGameLoop(gameTime);
 
             if (data.pauseKey.keyDown)
@@ -76,7 +78,7 @@ namespace Quatrimo
 
             if (data.restartKey.keyDown)
             {
-                manager.main = new main(manager.bag);
+                manager.main = new encounter(manager.bag);
             }
 
             if (data.toggleDebugKey.keyDown)
