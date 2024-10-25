@@ -131,7 +131,7 @@ public class board
         }
 
     }
-
+    public void lowerRegion(Rectangle rect) { }
 
     public void lowerRows(List<short> rows)
     {

@@ -19,6 +19,7 @@ namespace Quatrimo
         public Vector2I localpos { get; set; }
         public Texture2DRegion tex { get; set; }
         public Color color { get; set; }
+        public bool scored { get; set; }
 
         public void linkDelegates()
         {
@@ -182,7 +183,6 @@ namespace Quatrimo
             dropElement = new element(Game1.dropmark, Color.LightGray, new Vector2I(0, -10), 0.79f);
         }
 
-
         protected virtual void movePlacedF(Vector2I offset, block block)
         {
             board.blocks[boardpos.x, boardpos.y] = null;
@@ -254,6 +254,7 @@ namespace Quatrimo
 
         protected virtual void scoreF(block block)
         {
+            scored = true;
         }
 
 

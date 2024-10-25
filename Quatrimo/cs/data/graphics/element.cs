@@ -84,5 +84,15 @@ namespace Quatrimo
         {
             return new Vector2I(board.offset.x + bpos.x + 1, bpos.y - 4);
         }
+
+        /// <summary>
+        /// Converts board position to world position
+        /// </summary>
+        /// <param name="bpos"></param>
+        /// <returns></returns>
+        public static Vector2I boardPos2WorldPos(Vector2I bpos)
+        {
+            return elementPos2WorldPos(boardPos2ElementPos(bpos));
+        }
     }
 }

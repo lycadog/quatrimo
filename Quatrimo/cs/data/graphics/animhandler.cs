@@ -13,8 +13,7 @@ namespace Quatrimo
         public delegate void animDelegate(GameTime gameTime);
 
         public animDelegate animState;
-        List<drawable> sprites = [];
-        List<animSprite> animatons = [];
+        public List<animSprite> animatons = [];
 
         double timer = 0;
         short num = 0;
@@ -202,7 +201,7 @@ namespace Quatrimo
             block.removePlaced(block);
         }
 
-        protected animSprite getDecayingAnim(Vector2I boardpos)
+        public static animSprite getDecayingAnim(Vector2I boardpos)
         {
             element sprite1 = new element(Game1.full, Color.White, element.boardPos2ElementPos(boardpos), 0.86f);
             element sprite2 = new element(Game1.full75, Color.White, element.boardPos2ElementPos(boardpos), 0.86f);
@@ -217,7 +216,7 @@ namespace Quatrimo
             animFrame[] sequence = [frame1, frame2, frame3, frame4];
 
             animSprite anim = new animSprite(sequence);
-            animatons.Add(anim);
+            //animatons.Add(anim);
             return anim;
         }
 

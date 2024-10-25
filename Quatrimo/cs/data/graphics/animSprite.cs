@@ -35,5 +35,23 @@ namespace Quatrimo
             }         
             sequence[frame].sprite.draw(spriteBatch, gameTime, board);
         }
+
+        /// <summary>
+        /// Sets the position of every frame
+        /// </summary>
+        /// <param name="pos"></param>
+        public void setPosition(Vector2I pos)
+        {
+            foreach(var frame in sequence)
+            {
+                if(frame.sprite is element)
+                {
+                    element e = (element)frame.sprite;
+                    e.updateWPos(pos);
+                    break;
+                }
+                frame.sprite.pos = pos;
+            }
+        }
     }
 }

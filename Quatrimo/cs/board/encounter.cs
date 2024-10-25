@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Quatrimo
 {
@@ -24,6 +25,8 @@ namespace Quatrimo
         public boardPiece currentPiece;
         public boardPiece heldPiece = null;
         public boardPiece nextPiece;
+
+        public List<scoreOperation> scoreQueue = [];
 
         public encounter(bag bag)
         {
