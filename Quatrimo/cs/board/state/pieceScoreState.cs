@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace Quatrimo
 {
@@ -12,17 +13,36 @@ namespace Quatrimo
 
         public override void startState()
         {
-            main.state = this;
+            encounter.state = this;
             //RECORD updated rows
             //check updated rows for scorability
             //save scorable rows
             //score every block of those rows, adding up their score
             //set up the animationHandler to animate row decay
             //skip to animSuspendState with nextState as blockTickScoreState
+            foreach (block block in encounter.currentPiece.blocks)
+            {
+                encounter.board.updatedRows.Add(block.boardpos.y); //record the height of every block of the recently placed piece
+            }
+
+            updatedRows = updatedRows.Distinct().ToList(); //remove duplicate entries
+
+            foreach (int i in updatedRows)
+            {
+                if (isRowScoreable(i))
+                { //check rows, add rows that are scored to the queue
+                    encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(i, encounter.currentPiece));
+                }
+            }
+
+            //PROCESS SCORE QUEUE AFTER HERE BLABLA
+
+
+
 
 
             // ====== PLACED PIECE SCORE STEP ======
-            foreach (block block in main.currentPiece.blocks)
+            foreach (block block in encounter.currentPiece.blocks)
             {
                 updatedRows.Add( block.boardpos.y ); //record the height of every block of the recently placed piece
             }
@@ -32,48 +52,67 @@ namespace Quatrimo
             foreach (int i in updatedRows)
             {
                 if (isRowScoreable(i))
-                { //check rows, add rows that are scored to the list
-                    main.scorableRows.Add((short)i);
-                    main.turnRowsCleared += 1;
+                { //check rows, add rows that are scored to the queue
+                    encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(i, encounter.currentPiece));
+                    encounter.turnRowsCleared += 1;
                 }
             }
 
 
             
-            for (int x = 0; x < main.board.dimensions.x; x++) //process score of every tile in every scored row
+            for (int x = 0; x < encounter.board.dimensions.x; x++) //process score of every tile in every scored row
             {
-                foreach (int y in main.scorableRows) //process through rows
+                foreach (int y in encounter.scorableRows) //process through rows
                 {
-                    block block = main.board.blocks[x, y];
+                    block block = encounter.board.blocks[x, y];
                     if (block != null)
                     {
-                        main.turnScore += block.getScore(block);
-                        main.turnMultiplier += block.getTimes(block);
+                        encounter.turnScore += block.getScore(block);
+                        encounter.turnMultiplier += block.getTimes(block);
 
                         block.score(block);
-                        main.scoredBlocks.Add(block);
+                        encounter.scoredBlocks.Add(block);
                     }
                 }
             }
 
             //SETUP ANIMATION STUFF HERE LATER
 
-            blockTickScoreState stateAfterNext = new blockTickScoreState(main);
-            animSuspendState newState = new animSuspendState(main, stateAfterNext);
+            blockTickScoreState stateAfterNext = new blockTickScoreState(encounter);
+            animSuspendState newState = new animSuspendState(encounter, stateAfterNext);
             newState.startState();
 
         }
 
-        public bool isRowScoreable(int y)
+        /// <summary>
+        /// Processes updated rows into the scorequeue, piece param is optional
+        /// </summary>
+        /// <param name="piece"></param>
+        protected void checkUpdatedRows(boardPiece piece = null)
         {
-            for (int x = 0; x < main.board.dimensions.x; x++)
+            foreach (int i in updatedRows)
             {
-                if (main.board.blocks[x, y] == null) return false; //if any tile is empty, return false
+                if (isRowScoreable(i))
+                {
+                    if(piece == null) //if the row is not scored by a piece, start the score animation from the edges
+                    {
+                        //start score animation from the edges, as no piece is specified
+                        break;
+                    }
+                    encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(i, encounter.currentPiece));
+                }
+            }
+        }
+
+        protected bool isRowScoreable(int y)
+        {
+            for (int x = 0; x < encounter.board.dimensions.x; x++)
+            {
+                if (encounter.board.blocks[x, y] == null) return false; //if any tile is empty, return false
                 else { continue; } //if the tile isn't empty, keep looping
             }
             return true; //if no tiles return empty, this will run and return true
         }
-
 
     }
 }

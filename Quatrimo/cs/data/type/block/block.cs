@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
 
 namespace Quatrimo
@@ -12,6 +11,8 @@ namespace Quatrimo
         {
             linkDelegates();
         }
+        public scoreOperation scoreOperation = new emptyScoreOperation();
+        public scoreOperation tickOperation = new emptyScoreOperation();
         public element element { get; set; }
         public element dropElement { get; set; }
         public boardPiece piece { get; set; }
@@ -32,7 +33,8 @@ namespace Quatrimo
             updatePos = new blockD(updatePosF);
             updateSpritePos = new blockD(updateSpritePosF);
             removeFalling = new blockD(removeFallingF);
-            removePlaced = new blockD(removePlacedF);
+            removeGFX = new blockD(removeGFXF);
+            removeFromBoard = new blockD(removeFromBoardF);
 
             collidedFalling = new coordinateD(collidedFallingF);
             collidedPlaced = new blockVoidD(collidedPlacedF);
@@ -96,9 +98,14 @@ namespace Quatrimo
         public blockD removeFalling;
 
         /// <summary>
+        /// Hide the block's sprites
+        /// </summary>
+        public blockD removeGFX;
+
+        /// <summary>
         /// Remove the placed block from the board
         /// </summary>
-        public blockD removePlaced;
+        public blockD removeFromBoard;
 
         /// <summary>
         /// Run collided while falling event
@@ -198,7 +205,7 @@ namespace Quatrimo
             element.rot += MathHelper.ToRadians(90 * direction);
         }
 
-        protected Vector2I getRotatePosF(int direction, block block)
+        protected Vector2I getRotatePosF(int direction, block block) //direction is 1 or -1
         {
             return new Vector2I(localpos.y * -direction, localpos.x * direction);
         }
@@ -246,11 +253,17 @@ namespace Quatrimo
             board.sprites.Remove(dropElement);
         }
 
-        protected virtual void removePlacedF(block block)
+        protected virtual void removeGFXF(block block)
         {
-            board.blocks[boardpos.x, boardpos.y] = null;
             board.sprites.Remove(element);
         }
+
+        protected virtual void removeFromBoardF(block block)
+        {
+            board.blocks[boardpos.x, boardpos.y] = null;
+        }
+
+        
 
         protected virtual void scoreF(block block)
         {

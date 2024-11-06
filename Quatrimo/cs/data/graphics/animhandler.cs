@@ -13,7 +13,7 @@ namespace Quatrimo
         public delegate void animDelegate(GameTime gameTime);
 
         public animDelegate animState;
-        public List<animSprite> animatons = [];
+        public List<animation> animations = [];
 
         double timer = 0;
         short num = 0;
@@ -83,7 +83,7 @@ namespace Quatrimo
                     }
 
                     main.board.sprites.Add(getDecayingAnim(block.boardpos));
-                    block.removePlaced(block);
+                    block.removeFromBoard(block);
                 }
             }
 
@@ -144,7 +144,7 @@ namespace Quatrimo
                 }
                 if(counter == scoreCompletion.Length)
                 {
-                    animState = scoreWaitForFinish;
+                    animState = waitForAnimations;
                     processedVectors.Clear();
                 }
                 timer = 0;
@@ -154,12 +154,12 @@ namespace Quatrimo
         }
 
         //IF ALL ANIMATIONS ARE DONE, PROGRESS TO END STATE AND CLEAR ANIMATIONS
-        public void scoreWaitForFinish(GameTime gameTime)
+        public void waitForAnimations(GameTime gameTime)
         {
             bool completed = true;
-            foreach(var anim in animatons)
+            foreach(var anim in animations)
             {
-                if(!anim.ended) { completed = false; }
+                if(!anim.completed) { completed = false; }
             }
 
             if (completed)
@@ -192,13 +192,13 @@ namespace Quatrimo
 
         }
 
-        public void end(GameTime gameTime) { animatons.Clear(); animState = none; }
+        public void end(GameTime gameTime) { animations.Clear(); animState = none; }
         public void none(GameTime gameTime) { }
 
         protected void decayBlock(block block)
         {
             main.board.sprites.Add(getDecayingAnim(block.boardpos));
-            block.removePlaced(block);
+            block.removeFromBoard(block);
         }
 
         public static animSprite getDecayingAnim(Vector2I boardpos)
@@ -208,7 +208,7 @@ namespace Quatrimo
             element sprite3 = new element(Game1.full50, Color.White, element.boardPos2ElementPos(boardpos), 0.86f);
             element sprite4 = new element(Game1.full25, Color.White, element.boardPos2ElementPos(boardpos), 0.86f);
 
-            animFrame frame1 = new animFrame(sprite1, 50);
+            animFrame frame1 = new animFrame(sprite1, 100);
             animFrame frame2 = new animFrame(sprite2, 50);
             animFrame frame3 = new animFrame(sprite3, 50);
             animFrame frame4 = new animFrame(sprite4, 50);

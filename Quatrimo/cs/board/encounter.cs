@@ -27,6 +27,7 @@ namespace Quatrimo
         public boardPiece nextPiece;
 
         public List<scoreOperation> scoreQueue = [];
+        public List<block> scoredBlocks = [];
 
         public encounter(bag bag)
         {

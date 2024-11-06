@@ -15,7 +15,7 @@ namespace Quatrimo
 
         public override void startState()
         {
-            main.state = this;
+            encounter.state = this;
             update = tick;
 
             if (interrupted)
@@ -26,14 +26,14 @@ namespace Quatrimo
             
 
             //LOWER rows cleared from pieceScoreState IMMEDIATELY if applicable
-            if(main.scorableRows.Count > 0)
+            if(encounter.scorableRows.Count > 0)
             {
-                main.scorableRows.Sort();
-                main.board.lowerRows(main.scorableRows);
+                encounter.scorableRows.Sort();
+                encounter.board.lowerRows(encounter.scorableRows);
             }
             
             
-            foreach(block block in main.board.blocks)
+            foreach(block block in encounter.board.blocks)
             {
                 if(block != null)
                 {

@@ -19,7 +19,7 @@ namespace Quatrimo
 
         public override void startState()
         {
-            main.state = this;
+            encounter.state = this;
             update = tick;
         }
 
@@ -28,14 +28,14 @@ namespace Quatrimo
             if (piecefallTimer >= 600)
             {
 
-                if (main.currentPiece.collidesFalling(0, 1))
+                if (encounter.currentPiece.collidesFalling(0, 1))
                 {
                     if (placeTimer >= 1000)
                     {
 
-                        main.currentPiece.place();
+                        encounter.currentPiece.place();
 
-                        pieceScoreState newState = new pieceScoreState(main);
+                        pieceScoreState newState = new pieceScoreState(encounter);
                         newState.startState();
 
                         return;
@@ -43,7 +43,7 @@ namespace Quatrimo
                 }
                 else
                 {
-                    main.currentPiece.move(0, 1);
+                    encounter.currentPiece.move(0, 1);
                     piecefallTimer = 0;
                     placeTimer = 0;
                     return;
@@ -62,17 +62,17 @@ namespace Quatrimo
             //for movement keys, when key holds: do action once, wait until timeheld, then move often
             if ((data.leftKey.keyDown || data.leftKey.timeHeld > 130) && leftMoveCooldown > 30)
             {
-                if (!main.currentPiece.collidesFalling(-1, 0))
+                if (!encounter.currentPiece.collidesFalling(-1, 0))
                 {
-                    main.currentPiece.move(-1, 0);
+                    encounter.currentPiece.move(-1, 0);
                     leftMoveCooldown = 0;
                 }
             }
             else if ((data.rightKey.keyDown || data.rightKey.timeHeld > 130) && rightMoveCooldown > 30)
             {
-                if (!main.currentPiece.collidesFalling(1, 0))
+                if (!encounter.currentPiece.collidesFalling(1, 0))
                 {
-                    main.currentPiece.move(1, 0);
+                    encounter.currentPiece.move(1, 0);
                     rightMoveCooldown = 0;
                 }
             }
@@ -96,23 +96,23 @@ namespace Quatrimo
 
             if (data.leftRotateKey.keyDown)
             {
-                if (main.currentPiece.canRotate(-1))
+                if (encounter.currentPiece.canRotate(-1))
                 {
-                    main.currentPiece.rotate(-1);
+                    encounter.currentPiece.rotate(-1);
                 }
             }
             else if (data.rightRotateKey.keyDown)
             {
-                if (main.currentPiece.canRotate(1))
+                if (encounter.currentPiece.canRotate(1))
                 {
-                    main.currentPiece.rotate(1);
+                    encounter.currentPiece.rotate(1);
                 }
             }
 
             if (data.slamKey.keyDown)
             {
-                main.currentPiece.move(0, main.currentPiece.dropOffset);
-                main.currentPiece.place();
+                encounter.currentPiece.move(0, encounter.currentPiece.dropOffset);
+                encounter.currentPiece.place();
                 //SKIP AHEAD TO SCORE STATE
             }
 
@@ -128,26 +128,26 @@ namespace Quatrimo
 
         public void holdPiece()
         {
-            if (main.heldPiece == null)
+            if (encounter.heldPiece == null)
             {
-                main.heldPiece = main.nextPiece; //put this all in one method later, main.drawPiece(); or something, updates all next boxes
-                main.nextPiece = main.bag.getPiece(main.board);
-                main.board.nextbox.update(main.nextPiece);
+                encounter.heldPiece = encounter.nextPiece; //put this all in one method later, main.drawPiece(); or something, updates all next boxes
+                encounter.nextPiece = encounter.bag.getPiece(encounter.board);
+                encounter.board.nextbox.update(encounter.nextPiece);
             }
 
-            boardPiece formerlyHeld = main.heldPiece;
+            boardPiece formerlyHeld = encounter.heldPiece;
 
-            main.heldPiece = main.currentPiece;
-            while (main.heldPiece.rotation != 0)
+            encounter.heldPiece = encounter.currentPiece;
+            while (encounter.heldPiece.rotation != 0)
             {
-                main.heldPiece.rotate(1);
+                encounter.heldPiece.rotate(1);
             }
 
-            main.board.holdbox.update(main.heldPiece);
+            encounter.board.holdbox.update(encounter.heldPiece);
 
-            main.currentPiece.removeFalling();
-            main.currentPiece = formerlyHeld;
-            main.currentPiece.play();
+            encounter.currentPiece.removeFalling();
+            encounter.currentPiece = formerlyHeld;
+            encounter.currentPiece.play();
             canHold = false;
         }
 

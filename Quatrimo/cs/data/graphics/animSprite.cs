@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quatrimo
 {
-    public class animSprite : spriteObject
+    public class animSprite : animation
     {
         public animFrame[] sequence;
         public int frame = 0;
@@ -52,6 +52,18 @@ namespace Quatrimo
                 }
                 frame.sprite.pos = pos;
             }
+        }
+
+        public void returnValues(out animFrame[] sequence, out bool loops, out int frame)
+        {
+            sequence = this.sequence;
+            loops = this.loops;
+            frame = this.frame;
+        }
+
+        public override void terminate()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

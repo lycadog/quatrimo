@@ -4,11 +4,11 @@ namespace Quatrimo
 {
     public abstract class boardState
     {
-        public encounter main;
+        public encounter encounter;
 
-        protected boardState(encounter main)
+        protected boardState(encounter encounter)
         {
-            this.main = main;
+            this.encounter = encounter;
         }
 
         public delegate void updateDelegate(GameTime gameTime);

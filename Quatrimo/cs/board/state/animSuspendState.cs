@@ -4,28 +4,30 @@ namespace Quatrimo
 {
     public class animSuspendState : boardState
     {
-        protected boardState nextState;
+        protected boardState suspendedState;
+        protected animHandler.animDelegate suspendedAnimState;
 
-        public animSuspendState(encounter main, boardState nextState) : base(main)
+        public animSuspendState(encounter main, boardState suspendedState, animHandler.animDelegate suspendedAnimState) : base(main)
         {
-            this.nextState = nextState;
+            this.suspendedState = suspendedState;
+            this.suspendedAnimState = suspendedAnimState;
         }
 
         public override void startState()
         {
-            main.state = this;
+            encounter.state = this;
             update = tick;
         }
 
         protected void tick(GameTime gameTime)
         {
-            if(main.animHandler.animState == main.animHandler.none)
+            if(encounter.animHandler.animState == encounter.animHandler.none)
             {
-                main.state = nextState;
-                nextState.startState();
+                encounter.state = suspendedState;
+                encounter.animHandler.animState = suspendedAnimState;
                 return;
             }
-            main.animHandler.animState.Invoke(gameTime);
+            encounter.animHandler.animState.Invoke(gameTime);
         }
     }
 }

@@ -10,16 +10,16 @@ namespace Quatrimo
 
         public override void startState()
         {
-            main.state = this;
-            main.turnRowsCleared = 0;
+            encounter.state = this;
+            encounter.turnRowsCleared = 0;
 
-            main.currentPiece = main.nextPiece; //grab next piece
-            main.nextPiece = main.bag.getPiece(main.board);
-            main.board.nextbox.update(main.nextPiece);
-            Debug.WriteLine($"[gamestate.turnStart] Now playing {main.currentPiece.name}");
+            encounter.currentPiece = encounter.nextPiece; //grab next piece
+            encounter.nextPiece = encounter.bag.getPiece(encounter.board);
+            encounter.board.nextbox.update(encounter.nextPiece);
+            Debug.WriteLine($"[gamestate.turnStart] Now playing {encounter.currentPiece.name}");
             //update piece preview
 
-            preplayWaitingState newState = new preplayWaitingState(main);
+            preplayWaitingState newState = new preplayWaitingState(encounter);
             newState.startState();
         }
 

@@ -13,7 +13,7 @@ namespace Quatrimo
 
         public override void startState()
         {
-            main.state = this;
+            encounter.state = this;
             update = tick;
         }
 
@@ -22,11 +22,11 @@ namespace Quatrimo
             if (pieceWaitTimer >= 5000 || data.slamKey.keyDown)
             {
                 //START piece fall
-                main.currentPiece.play();
-                main.canHold = true;
+                encounter.currentPiece.play();
+                encounter.canHold = true;
 
-                midPiecefallState newState = new midPiecefallState(main);
-                main.state = newState;
+                midPiecefallState newState = new midPiecefallState(encounter);
+                encounter.state = newState;
                 newState.startState();
             }
 
