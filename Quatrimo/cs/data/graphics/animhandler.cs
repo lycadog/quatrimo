@@ -107,14 +107,12 @@ namespace Quatrimo
 
                 for(int i = 0; i < scorePositions.Length; i++)
                 {
-                    Debug.WriteLine($"MAIN VECTOR: L{scorePositions[i].X}, R{scorePositions[i].Y}, Y{scorePositions[i].Z}");
                     if(scorePositions[i].X > 0)
                     {
                         scorePositions[i].X--;
                         Vector2I vector = new Vector2I((int)scorePositions[i].X, (int)scorePositions[i].Z);
                         if (!processedVectors.Contains(vector))
                         {
-                            Debug.WriteLine("VECTOR LEFT: " + vector.x + ", " + vector.y);
                             decayBlock(main.board.blocks[vector.x, vector.y]);
                             processedVectors.Add(vector);
                         }
@@ -128,7 +126,6 @@ namespace Quatrimo
                         Vector2I vector = new Vector2I((int)scorePositions[i].Y, (int)scorePositions[i].Z);
                         if (!processedVectors.Contains(vector))
                         {
-                            Debug.WriteLine("VECTOR RIGHT: " + vector.x + ", " + vector.y);
                             decayBlock(main.board.blocks[vector.x, vector.y]);
                             processedVectors.Add(vector);
                         }

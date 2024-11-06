@@ -34,13 +34,25 @@ namespace Quatrimo
                     encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(i, encounter.currentPiece));
                 }
             }
-
             //PROCESS SCORE QUEUE AFTER HERE BLABLA
+            processQueue();
+
+            //score queue should start the animations for every row, then we wait for the animation to finish
+            //the animation stores each block along the animation in the scoredBlocks list
+            //after finishing animation, process through scoredBlocks and actually score everything, then lower accordingly
+
+            encounter.animHandler.animState = encounter.animHandler.waitForAnimations;
+
+            //end the current state to wait for animations to play
+            //skip to blockTickScoreState after, which finishes up the anim
+            blockTickScoreState stateAfterNext = new blockTickScoreState(encounter);
+            animSuspendState newState = new animSuspendState(encounter, stateAfterNext);
+            newState.startState();
 
 
 
 
-
+            /*
             // ====== PLACED PIECE SCORE STEP ======
             foreach (block block in encounter.currentPiece.blocks)
             {
@@ -81,7 +93,16 @@ namespace Quatrimo
             blockTickScoreState stateAfterNext = new blockTickScoreState(encounter);
             animSuspendState newState = new animSuspendState(encounter, stateAfterNext);
             newState.startState();
+            */
+        }
 
+        protected void processQueue()
+        {
+            foreach(var scoreOp in encounter.scoreQueue)
+            {
+                scoreOp.execute(encounter);
+            }
+            encounter.scoreQueue.Clear();
         }
 
         /// <summary>
@@ -90,16 +111,17 @@ namespace Quatrimo
         /// <param name="piece"></param>
         protected void checkUpdatedRows(boardPiece piece = null)
         {
-            foreach (int i in updatedRows)
+            foreach (int y in updatedRows)
             {
-                if (isRowScoreable(i))
+                if (isRowScoreable(y))
                 {
                     if(piece == null) //if the row is not scored by a piece, start the score animation from the edges
                     {
+                        encounter.scoreQueue.Add(scoreRow.queueNonpieceRow(y, encounter.board));
                         //start score animation from the edges, as no piece is specified
                         break;
                     }
-                    encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(i, encounter.currentPiece));
+                    encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(y, encounter.currentPiece));
                 }
             }
         }

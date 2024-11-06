@@ -20,7 +20,9 @@ namespace Quatrimo
         public Vector2I localpos { get; set; }
         public Texture2DRegion tex { get; set; }
         public Color color { get; set; }
-        public bool scored { get; set; }
+        public bool scoredAnim { get; set; } //if the block has had the scoring animation run over it
+        public bool scored { get; set; } //if the block has been actually scored
+        public bool ticked { get; set; }
 
         public void linkDelegates()
         {

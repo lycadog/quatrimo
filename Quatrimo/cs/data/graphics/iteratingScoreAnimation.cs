@@ -9,8 +9,8 @@ namespace Quatrimo
         board board;
         animHandler animHandler;
 
-        int y;                          //the row being scored
-        int[] positions = [2];          //the positions of the left and right iterator
+        int y;                  //the row being scored
+        int[] positions = [2];  //the positions of the left and right iterator
 
         animSprite decayAnim = animHandler.getDecayingAnim(Vector2I.zero);
 
@@ -71,7 +71,7 @@ namespace Quatrimo
             {
                 encounter.scoredBlocks.Add(block);
                 block.removeGFX(block);
-                block.scored = true;
+                block.scoredAnim = true;
                 //MARK BLOCK AS SCORED SOMEHOW, MAYBE INTERRUPT THE ANIM TO SCORE THEM
 
                 decayAnim.returnValues(out animFrame[] sequence, out _, out _);
@@ -85,5 +85,7 @@ namespace Quatrimo
 
 
         }
+
+
     }
 }

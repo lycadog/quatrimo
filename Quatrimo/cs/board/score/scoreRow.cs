@@ -19,7 +19,17 @@ namespace Quatrimo
         public override void execute(encounter encounter)
         {
             //NEXT DAY CODING: FIGURE OUT WHAT THE HELL TO PUT HERE ====================
-            throw new System.NotImplementedException();
+            //also figure out how to properly suspend animhandler state for animSuspendState
+            iteratingScoreAnimation leftIterator = new iteratingScoreAnimation(encounter, encounter.animHandler, y, [leftBounds.x, leftBounds.y]);
+            iteratingScoreAnimation rightIterator = new iteratingScoreAnimation(encounter, encounter.animHandler, y, [rightBounds.x, rightBounds.y]);
+            
+            encounter.board.sprites.Add(leftIterator);
+            encounter.board.sprites.Add(rightIterator);
+            
+            encounter.animHandler.animations.Add(leftIterator);
+            encounter.animHandler.animations.Add(rightIterator);
+
+            encounter.turnRowsCleared += 1;
         }
 
 

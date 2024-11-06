@@ -6,11 +6,12 @@ namespace Quatrimo
     {
         protected boardState suspendedState;
         protected animHandler.animDelegate suspendedAnimState;
+        bool restartSuspendedState;
 
-        public animSuspendState(encounter main, boardState suspendedState, animHandler.animDelegate suspendedAnimState) : base(main)
+        public animSuspendState(encounter main, boardState suspendedState, bool restartSuspendedState = false) : base(main)
         {
             this.suspendedState = suspendedState;
-            this.suspendedAnimState = suspendedAnimState;
+            this.restartSuspendedState = restartSuspendedState;
         }
 
         public override void startState()
@@ -24,7 +25,7 @@ namespace Quatrimo
             if(encounter.animHandler.animState == encounter.animHandler.none)
             {
                 encounter.state = suspendedState;
-                encounter.animHandler.animState = suspendedAnimState;
+                if (restartSuspendedState) { encounter.state.startState(); }
                 return;
             }
             encounter.animHandler.animState.Invoke(gameTime);

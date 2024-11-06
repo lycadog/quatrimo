@@ -6,24 +6,49 @@ namespace Quatrimo
     public class blockTickScoreState : pieceScoreState
     {
         short index = 0;
-        List<block> blocks = new List<block>();
+        List<block> untickedBlocks = new List<block>();
         bool interrupted;
-        public blockTickScoreState(encounter main, bool interrupted = false) : base(main)
+        public blockTickScoreState(encounter main) : base(main)
         {
-            this.interrupted = interrupted;
         }
 
+        //finalize pieceScoreState's operations
         public override void startState()
         {
             encounter.state = this;
             update = tick;
-
-            if (interrupted)
+            
+            while(index < encounter.scoredBlocks.Count)
             {
+                block block = encounter.scoredBlocks[index];
+                index++;
 
-                return;
+                if (block.scored)
+                {
+                    continue; //skip over scored blocks
+                }
+
+                block.score(block);
+                block.scoreOperation.execute(encounter);
+
+                if (block.scoreOperation.interrupt(encounter)) //if the score operation has an interrupt, suspend the state
+                { 
+                    encounter.animHandler.animState = encounter.animHandler.waitForAnimations;
+                    animSuspendState newState = new animSuspendState(encounter, this, true);
+                    newState.startState();
+                    return; //interrupt the stateStart
+                }
             }
             
+            //LOWER all scored blocks
+
+            //SORT the tickable block list to tick the blocks in order of left -> right, top -> bottom
+            //use our sort function i made
+
+            //tick through the unticked block list in the state UPDATE/TICK function,
+            //interrupting the state to wait for animations where applicable
+
+
 
             //LOWER rows cleared from pieceScoreState IMMEDIATELY if applicable
             if(encounter.scorableRows.Count > 0)
@@ -37,7 +62,7 @@ namespace Quatrimo
             {
                 if(block != null)
                 {
-                    blocks.Add(block);
+                    untickedBlocks.Add(block);
                 }
             }
 
@@ -45,13 +70,34 @@ namespace Quatrimo
 
         protected void tick(GameTime gameTime)
         {
-            for(; index < blocks.Count; index++)
+            for(; index < untickedBlocks.Count; index++)
             {
                 //tick the block and interrupt the loop if the tick returns true for an interrupt
-                if (blocks[index].tick(blocks[index]))
+                if (untickedBlocks[index].tick(untickedBlocks[index]))
                 {
 
                     
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Sort blocks into the unticked block list, going left -> right and top -> bottom
+        /// </summary>
+        void sortTickableBlocks()
+        {
+            untickedBlocks.Clear();
+            for(int x = 0; x < encounter.board.dimensions.x; x++)
+            {
+                for(int y = 24; y >= 0; y--) {
+                    {
+                        block block = encounter.board.blocks[x, y];
+                        if (block != null && !block.ticked)
+                        {
+                            untickedBlocks.Add(block);
+                        }
+                    } 
                 }
             }
         }
