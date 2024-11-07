@@ -149,6 +149,8 @@ namespace Quatrimo
                 blocks[x, y + 1] = null;
             }
         }
+
+
         public void lowerRows(List<short> rows)
         {
             short length = (short)rows.Count;

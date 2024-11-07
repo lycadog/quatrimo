@@ -70,7 +70,7 @@ namespace Quatrimo
             if(block.scored)
             {
                 encounter.scoredBlocks.Add(block);
-                block.removeGFX(block);
+                block.hideGFX(block);
                 block.scoredAnim = true;
                 //MARK BLOCK AS SCORED SOMEHOW, MAYBE INTERRUPT THE ANIM TO SCORE THEM
 

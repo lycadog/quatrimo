@@ -19,7 +19,7 @@ namespace Quatrimo
             manager.updateD = pausedUpdate;
 
             manager.paused = true;
-            manager.main.board.sprites.Add( manager.main.board.pauseText );
+            manager.encounter.board.sprites.Add( manager.encounter.board.pauseText );
         }
 
         public void unpause()
@@ -27,7 +27,7 @@ namespace Quatrimo
             manager.updateD = updates;
 
             manager.paused = false;
-            manager.main.board.sprites.Remove(manager.main.board.pauseText);
+            manager.encounter.board.sprites.Remove(manager.encounter.board.pauseText);
         }
 
         public override void setState()
@@ -68,8 +68,7 @@ namespace Quatrimo
 
         protected void encounterUpdate(GameTime gameTime)
         {
-            Debug.WriteLine(manager.main.state.ToString());
-            manager.main.coreGameLoop(gameTime);
+            manager.encounter.update(gameTime);
 
             if (data.pauseKey.keyDown)
             {
@@ -78,7 +77,7 @@ namespace Quatrimo
 
             if (data.restartKey.keyDown)
             {
-                manager.main = new encounter(manager.bag);
+                manager.encounter = new encounter(manager.bag);
             }
 
             if (data.toggleDebugKey.keyDown)
@@ -108,15 +107,15 @@ namespace Quatrimo
             spriteBatch.Draw(Game1.bg, new Rectangle(0, 0, Game1.baseRes.x, Game1.baseRes.y), null, new Color(new Vector3(0.02f, 0.0f, 0.01f)), 0, Vector2.Zero, SpriteEffects.None, 0f);
             spriteBatch.Draw(Game1.bg, new Rectangle(0, 0, Game1.baseRes.x, Game1.baseRes.y), null, new Color(new Vector3(0.01f, 0.00f, 0.16f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
 
-            manager.main.board.draw(spriteBatch, gameTime);
+            manager.encounter.board.draw(spriteBatch, gameTime);
         }
 
         protected void drawBoardText(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.DrawString(Game1.fontSmall, "SCORE: " + manager.main.totalScore.ToString(), new Vector2(680, 300), Color.White);
-            spriteBatch.DrawString(Game1.fontSmall, "LVL: " + manager.main.level.ToString(), new Vector2(680, 320), Color.White);
-            spriteBatch.DrawString(Game1.fontSmall, "X: " + manager.main.levelTimes.ToString(), new Vector2(680, 340), Color.White);
-            spriteBatch.DrawString(Game1.fontSmall, "LVL UP IN: " + (manager.main.rowsRequired - manager.main.rowsCleared).ToString() + " ROWS", new Vector2(680, 360), Color.White);
+            spriteBatch.DrawString(Game1.fontSmall, "SCORE: " + manager.encounter.totalScore.ToString(), new Vector2(680, 300), Color.White);
+            spriteBatch.DrawString(Game1.fontSmall, "LVL: " + manager.encounter.level.ToString(), new Vector2(680, 320), Color.White);
+            spriteBatch.DrawString(Game1.fontSmall, "X: " + manager.encounter.levelTimes.ToString(), new Vector2(680, 340), Color.White);
+            spriteBatch.DrawString(Game1.fontSmall, "LVL UP IN: " + (manager.encounter.rowsRequired - manager.encounter.rowsCleared).ToString() + " ROWS", new Vector2(680, 360), Color.White);
         }
     }
 }

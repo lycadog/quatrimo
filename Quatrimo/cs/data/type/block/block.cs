@@ -22,6 +22,7 @@ namespace Quatrimo
         public Color color { get; set; }
         public bool scoredAnim { get; set; } //if the block has had the scoring animation run over it
         public bool scored { get; set; } //if the block has been actually scored
+        public bool removedFromBoard { get; set; } //if the block has been removed from the board and should be filled in
         public bool ticked { get; set; }
 
         public void linkDelegates()
@@ -35,7 +36,7 @@ namespace Quatrimo
             updatePos = new blockD(updatePosF);
             updateSpritePos = new blockD(updateSpritePosF);
             removeFalling = new blockD(removeFallingF);
-            removeGFX = new blockD(removeGFXF);
+            hideGFX = new blockD(removeGFXF);
             removeFromBoard = new blockD(removeFromBoardF);
 
             collidedFalling = new coordinateD(collidedFallingF);
@@ -102,7 +103,7 @@ namespace Quatrimo
         /// <summary>
         /// Hide the block's sprites
         /// </summary>
-        public blockD removeGFX;
+        public blockD hideGFX;
 
         /// <summary>
         /// Remove the placed block from the board

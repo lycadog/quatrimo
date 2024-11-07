@@ -181,7 +181,7 @@ namespace Quatrimo
             sprite.pos = new Vector2I(240, 240);
             sprite.depth = 1f;  
 
-            stateManager.main.board.sprites.Add(new movingSprite(sprite, new Vector2(0, -200f), new Vector2(0, 100f)));
+            stateManager.encounter.board.sprites.Add(new movingSprite(sprite, new Vector2(0, -200f), new Vector2(0, 100f)));
         }
 
         protected override void Update(GameTime gameTime)

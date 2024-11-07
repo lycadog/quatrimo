@@ -23,7 +23,6 @@ namespace Quatrimo
             {
                 //START piece fall
                 encounter.currentPiece.play();
-                encounter.canHold = true;
 
                 midPiecefallState newState = new midPiecefallState(encounter);
                 encounter.state = newState;

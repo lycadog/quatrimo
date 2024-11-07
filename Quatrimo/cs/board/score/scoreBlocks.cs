@@ -6,8 +6,6 @@ namespace Quatrimo
     {
         List<block> blocks;
         animSprite scoreAnim = animHandler.getDecayingAnim(Vector2I.zero);
-
-        List<block> scoredBlocks = [];
         
         public override void execute(encounter encounter)
         {
@@ -21,7 +19,7 @@ namespace Quatrimo
                     anim.setPosition(element.boardPos2WorldPos(block.boardpos));
                     encounter.animHandler.animations.Add(anim);
 
-                    scoredBlocks.Add(block);
+                    encounter.scoredBlocks.Add(block);
                 }
             }
         }

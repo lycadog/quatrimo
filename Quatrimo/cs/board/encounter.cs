@@ -44,7 +44,7 @@ namespace Quatrimo
 
         public void update(GameTime gameTime)
         {
-            state.update(gameTime);
+             state.update(gameTime);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
 
@@ -22,7 +23,8 @@ namespace Quatrimo
             //skip to animSuspendState with nextState as blockTickScoreState
             foreach (block block in encounter.currentPiece.blocks)
             {
-                encounter.board.updatedRows.Add(block.boardpos.y); //record the height of every block of the recently placed piece
+                Debug.Write(" ==== PLACED BLOCK Y: " + block.boardpos.y);
+                updatedRows.Add(block.boardpos.y); //record the height of every block of the recently placed piece
             }
 
             updatedRows = updatedRows.Distinct().ToList(); //remove duplicate entries
@@ -46,54 +48,9 @@ namespace Quatrimo
             //end the current state to wait for animations to play
             //skip to blockTickScoreState after, which finishes up the anim
             blockTickScoreState stateAfterNext = new blockTickScoreState(encounter);
-            animSuspendState newState = new animSuspendState(encounter, stateAfterNext);
+            animSuspendState newState = new animSuspendState(encounter, stateAfterNext, true);
             newState.startState();
 
-
-
-
-            /*
-            // ====== PLACED PIECE SCORE STEP ======
-            foreach (block block in encounter.currentPiece.blocks)
-            {
-                updatedRows.Add( block.boardpos.y ); //record the height of every block of the recently placed piece
-            }
-
-            updatedRows = updatedRows.Distinct().ToList(); //remove duplicate entries
-
-            foreach (int i in updatedRows)
-            {
-                if (isRowScoreable(i))
-                { //check rows, add rows that are scored to the queue
-                    encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(i, encounter.currentPiece));
-                    encounter.turnRowsCleared += 1;
-                }
-            }
-
-
-            
-            for (int x = 0; x < encounter.board.dimensions.x; x++) //process score of every tile in every scored row
-            {
-                foreach (int y in encounter.scorableRows) //process through rows
-                {
-                    block block = encounter.board.blocks[x, y];
-                    if (block != null)
-                    {
-                        encounter.turnScore += block.getScore(block);
-                        encounter.turnMultiplier += block.getTimes(block);
-
-                        block.score(block);
-                        encounter.scoredBlocks.Add(block);
-                    }
-                }
-            }
-
-            //SETUP ANIMATION STUFF HERE LATER
-
-            blockTickScoreState stateAfterNext = new blockTickScoreState(encounter);
-            animSuspendState newState = new animSuspendState(encounter, stateAfterNext);
-            newState.startState();
-            */
         }
 
         protected void processQueue()

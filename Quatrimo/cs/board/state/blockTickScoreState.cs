@@ -5,9 +5,9 @@ namespace Quatrimo
 {
     public class blockTickScoreState : pieceScoreState
     {
-        short index = 0;
+        short scoreIndex = 0;
+        short tickIndex = 0;
         List<block> untickedBlocks = new List<block>();
-        bool interrupted;
         public blockTickScoreState(encounter main) : base(main)
         {
         }
@@ -18,71 +18,93 @@ namespace Quatrimo
             encounter.state = this;
             update = tick;
             
-            while(index < encounter.scoredBlocks.Count)
+            while(scoreIndex < encounter.scoredBlocks.Count)
             {
-                block block = encounter.scoredBlocks[index];
-                index++;
+                block block = encounter.scoredBlocks[scoreIndex];
+                scoreIndex++;
 
                 if (block.scored)
                 {
                     continue; //skip over scored blocks
                 }
 
+                block.removeFromBoard(block); //remove and score block
+
                 block.score(block);
+                block.scored = true;
                 block.scoreOperation.execute(encounter);
 
                 if (block.scoreOperation.interrupt(encounter)) //if the score operation has an interrupt, suspend the state
-                { 
-                    encounter.animHandler.animState = encounter.animHandler.waitForAnimations;
-                    animSuspendState newState = new animSuspendState(encounter, this, true);
-                    newState.startState();
+                {
+                    interruptState();
                     return; //interrupt the stateStart
                 }
             }
 
-            
-            
-            //LOWER all scored blocks
+            //maybe merge this foreach into the while loop
+            foreach(var block in encounter.scoredBlocks) //lower all scored blocks and process their score
+            {
+                //if the block is empty (has been removed) then lower blocks above to fill it in
+                if (block.removedFromBoard) { encounter.board.lowerBlock(block); }
+                encounter.turnScore += block.getScore(block);
+                encounter.turnMultiplier += block.getTimes(block);
+
+                encounter.scoredBlocks.Clear(); //we are done with all of these, so they go byebye!
+            }
+
+            scoreIndex = 0;
 
             //SORT the tickable block list to tick the blocks in order of left -> right, top -> bottom
-            //use our sort function i made
+            sortTickableBlocks();
 
-            //tick through the unticked block list in the state UPDATE/TICK function,
-            //interrupting the state to wait for animations where applicable
+            //piece score state has been finalized
 
-
-
-            //LOWER rows cleared from pieceScoreState IMMEDIATELY if applicable
-            if(encounter.scorableRows.Count > 0)
-            {
-                encounter.scorableRows.Sort();
-                encounter.board.lowerRows(encounter.scorableRows);
-            }
-            
-            
-            foreach(block block in encounter.board.blocks)
-            {
-                if(block != null)
-                {
-                    untickedBlocks.Add(block);
-                }
-            }
 
         }
 
         protected void tick(GameTime gameTime)
         {
-            for(; index < untickedBlocks.Count; index++)
+            //tick through the unticked block list
+            //interrupting the state to wait for animations where applicable
+
+            //the while loop should tick everything in one go, UNLESS it is interrupted
+            //then the state will run startState() again, processing anything scored
+            while (tickIndex < untickedBlocks.Count)
             {
-                //tick the block and interrupt the loop if the tick returns true for an interrupt
-                if (untickedBlocks[index].tick(untickedBlocks[index]))
+                block block = untickedBlocks[tickIndex];
+                tickIndex++;
+
+                if (block.ticked) //skip over ticked blocks
                 {
-
-                    
+                    continue;
                 }
-            }
-        }
 
+
+                block.tick(block);
+                block.ticked = true;
+                block.tickOperation.execute(encounter);
+
+                if (block.tickOperation.interrupt(encounter))
+                {
+                    interruptState();
+                    return; //interrupt
+                }
+
+            }
+
+            //END OF STATE HERE
+
+            endTurnState newState = new endTurnState(encounter);
+            encounter.state = newState;
+            newState.startState();
+        }
+        
+        void interruptState()
+        {
+            encounter.animHandler.animState = encounter.animHandler.waitForAnimations;
+            animSuspendState newState = new animSuspendState(encounter, this, true);
+            newState.startState();
+        }
 
         /// <summary>
         /// Sort blocks into the unticked block list, going left -> right and top -> bottom

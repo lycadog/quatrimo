@@ -113,6 +113,10 @@ namespace Quatrimo
             {
                 encounter.currentPiece.move(0, encounter.currentPiece.dropOffset);
                 encounter.currentPiece.place();
+
+                pieceScoreState newState = new pieceScoreState(encounter);
+                newState.startState();
+                return;
                 //SKIP AHEAD TO SCORE STATE
             }
 

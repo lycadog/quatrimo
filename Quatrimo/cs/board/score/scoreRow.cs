@@ -45,9 +45,13 @@ namespace Quatrimo
             {
                 if (block.boardpos.y == y)
                 {
+                    //algorithm needs to find the bounding points for the left and right iterator
+                    //simply find the outermost side, and the innermost side if applicable, for both left and right sides
+                    
                     //find score animation initialization algorithm later
                 }
             }
+            return null;
         }
 
         public static scoreRow queueNonpieceRow(int y, board board)

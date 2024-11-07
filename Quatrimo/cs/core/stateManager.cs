@@ -12,7 +12,7 @@ namespace Quatrimo
         public List<gameState> state = [];
         public Stack<List<gameState>> stateStack = new();
 
-        public encounter main;
+        public encounter encounter;
 
         public bag bag;
         public bool paused = false;
@@ -91,8 +91,8 @@ namespace Quatrimo
             encounterState newState = new encounterState(this);
             newState.addState();
 
-            bag = new bag(data.bag3);
-            main = new encounter(bag);
+            bag = new bag(data.bag2);
+            encounter = new encounter(bag);
         }
         
 

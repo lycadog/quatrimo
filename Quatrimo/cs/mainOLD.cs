@@ -11,6 +11,7 @@ namespace Quatrimo
 	//main is for all things encounters!
 	public class mainOLD
 	{
+		/*
 		//this class and board needs a complete rewrite
 
 		public gameState stateOld;
@@ -339,7 +340,7 @@ namespace Quatrimo
 					{
 						Debug.WriteLine("ROUND ENDED!!!!!");
 						//end encounter
-					}*/
+					}
 
                     stateOld = gameState.turnStart;
 
@@ -377,6 +378,6 @@ namespace Quatrimo
 			scoreAnim, //running score animations
 			tickStep,
 			endTurn //ticking blocks, running scoreStep again if the board is updated, finalizing score, & ending encounter
-		}
+		}*/
 	}
 }

@@ -12,6 +12,11 @@ namespace Quatrimo
         public override void startState()
         {
             encounter.state = this;
+
+            recalculateLevel(encounter.turnRowsCleared);
+
+
+
             turnStartState newState = new turnStartState(encounter);
             newState.startState();
         }

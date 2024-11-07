@@ -38,7 +38,7 @@ namespace Quatrimo
         /// </summary>
         public void scoreAnimStart(GameTime gameTime)
         {
-            timer = 0;
+            /*timer = 0;
             
             List<block> scoredPieceBlocks = new List<block>();
             foreach(block block in main.currentPiece.blocks) //process through all the scored piece's blocks
@@ -91,7 +91,7 @@ namespace Quatrimo
             
             animState = score;
             
-
+            */
         }
 
 
@@ -101,7 +101,7 @@ namespace Quatrimo
         /// <param name="gameTime"></param>
         public void score(GameTime gameTime)
         {
-
+            /*
             if(timer >= 25)
             {
 
@@ -147,7 +147,7 @@ namespace Quatrimo
                 timer = 0;
             }
 
-            timer += gameTime.ElapsedGameTime.TotalMilliseconds;
+            timer += gameTime.ElapsedGameTime.TotalMilliseconds;*/
         }
 
         //IF ALL ANIMATIONS ARE DONE, PROGRESS TO END STATE AND CLEAR ANIMATIONS
@@ -161,7 +161,7 @@ namespace Quatrimo
 
             if (completed)
             {
-                animState = none;
+                animState = end;
             }
         }
 
