@@ -8,14 +8,12 @@ namespace Quatrimo
         public abstract void execute(encounter encounter);
 
         /// <summary>
-        /// Interrupts the current board state, instead sets it to wait for animations to end - returns if the block tick loop should end or not
+        /// Returns whether or not the block should interrupt encounter state to wait for animations upon scoring
         /// </summary>
         /// <param name="encounter"></param>
         /// <returns></returns>
         public virtual bool interrupt(encounter encounter)
         {
-            encounter.state = new animSuspendState(encounter, encounter.state);
-            encounter.animHandler.animState = encounter.animHandler.waitForAnimations;
             return true;
         }
     }

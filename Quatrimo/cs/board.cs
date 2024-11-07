@@ -133,8 +133,22 @@ namespace Quatrimo
             }
 
         }
-        public void lowerRegion(Rectangle rect) { }
 
+        /// <summary>
+        /// Lowers rows to fill the empty space left behind by the specified scored block
+        /// </summary>
+        /// <param name="block"></param>
+        public void lowerBlock(block block)
+        {
+            int x = block.boardpos.x;
+            for(int y = block.boardpos.y; y < dimensions.y; y++)
+            {
+                block loweredBlock = blocks[x, y + 1];
+                blocks[x, y] = loweredBlock;
+                loweredBlock.boardpos = loweredBlock.boardpos.add(new Vector2I(0, -1));
+                blocks[x, y + 1] = null;
+            }
+        }
         public void lowerRows(List<short> rows)
         {
             short length = (short)rows.Count;

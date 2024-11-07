@@ -39,6 +39,8 @@ namespace Quatrimo
                     return; //interrupt the stateStart
                 }
             }
+
+            
             
             //LOWER all scored blocks
 
