@@ -11,8 +11,6 @@ namespace Quatrimo
         public double timer = 0;
         public bool loops;
 
-        public bool ended = false;
-
         public animSprite(animFrame[] sequence, bool loops = false, int frame = 0)
         {
             this.sequence = sequence;
@@ -31,7 +29,7 @@ namespace Quatrimo
                     if (loops) 
                     { frame = 0; }
                   
-                    else { board.staleSprites.Add(this); ended = true; return; } }
+                    else { board.staleSprites.Add(this); completed = true; return; } }
             }         
             sequence[frame].sprite.draw(spriteBatch, gameTime, board);
         }

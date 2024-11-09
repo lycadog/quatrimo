@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 namespace Quatrimo
 {
@@ -15,7 +16,7 @@ namespace Quatrimo
         animSprite decayAnim = animHandler.getDecayingAnim(Vector2I.zero);
 
         double timer = 0;
-        bool animFinished;
+        bool animFinished = false;
 
         public iteratingScoreAnimation(encounter encounter, animHandler animHandler, int y, int[] positions)
         {
@@ -28,22 +29,22 @@ namespace Quatrimo
 
         public override void draw(SpriteBatch spriteBatch, GameTime gameTime, board board)
         {
+            timer += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (timer < 25) { return; }
+                
             animFinished = true;
+    
+            iterateDirection(0, -1);               
+            iterateDirection(1, 1);
 
-            if(timer > 25)
-            {
-                iterateDirection(0, -1);
-                iterateDirection(1, 1);
-
-                timer = 0;
-            }
-
+            timer = 0;
+    
             if (animFinished)
             {
                 completed = true;
+                board.staleSprites.Add(this);
             }
-
-            timer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
         }
 
@@ -67,25 +68,26 @@ namespace Quatrimo
 
             block block = board.blocks[pos, y];
 
-            if(block.scored)
+            if(block == null) { return; }
+
+            if(!block.scoredAnim)
             {
+                
                 encounter.scoredBlocks.Add(block);
+
                 block.hideGFX(block);
                 block.scoredAnim = true;
-                //MARK BLOCK AS SCORED SOMEHOW, MAYBE INTERRUPT THE ANIM TO SCORE THEM
 
                 decayAnim.returnValues(out animFrame[] sequence, out _, out _);
-                animSprite sprite = new animSprite(sequence);
-                sprite.setPosition(element.boardPos2WorldPos(new Vector2I(pos, y)));
+                animSprite spriteold = new animSprite(sequence);
+                spriteold.setPosition(element.boardPos2WorldPos(new Vector2I(pos, y)));
 
-                board.sprites.Add(sprite);
+                animSprite sprite = animHandler.getDecayingAnim(new Vector2I(pos,y));
+
+                board.queuedSprites.Add(sprite);
                 animHandler.animations.Add(sprite);
                 
             }
-
-
         }
-
-
     }
 }

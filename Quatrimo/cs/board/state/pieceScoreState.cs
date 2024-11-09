@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -7,7 +8,8 @@ namespace Quatrimo
 {
     public class pieceScoreState : boardState
     {
-        public List<int> updatedRows = new List<int>();
+        public List<int> updatedRows = [];
+        public List<int> scoredRows = [];
         public pieceScoreState(encounter main) : base(main)
         {
         }
@@ -15,15 +17,15 @@ namespace Quatrimo
         public override void startState()
         {
             encounter.state = this;
+
             //RECORD updated rows
             //check updated rows for scorability
             //save scorable rows
-            //score every block of those rows, adding up their score
             //set up the animationHandler to animate row decay
             //skip to animSuspendState with nextState as blockTickScoreState
+
             foreach (block block in encounter.currentPiece.blocks)
             {
-                Debug.Write(" ==== PLACED BLOCK Y: " + block.boardpos.y);
                 updatedRows.Add(block.boardpos.y); //record the height of every block of the recently placed piece
             }
 
@@ -34,9 +36,31 @@ namespace Quatrimo
                 if (isRowScoreable(i))
                 { //check rows, add rows that are scored to the queue
                     encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(i, encounter.currentPiece));
+                    scoredRows.Add(i);
                 }
             }
-            //PROCESS SCORE QUEUE AFTER HERE BLABLA
+
+            //very messy for loops in here
+            foreach (block block in encounter.currentPiece.blocks)
+            {
+                if (scoredRows.Contains(block.boardpos.y))
+                {
+                    animSprite sprite = animHandler.getDecayingAnim(block.boardpos);
+                    encounter.board.sprites.Add(sprite);
+
+                    block.hideGFX(block);
+                    block.scoredAnim = true;
+                    encounter.scoredBlocks.Add(block);
+                }
+                else
+                {
+                    element e = new element(Game1.boxsolid, Color.White, element.boardPos2ElementPos(block.boardpos), 0.85f);
+                    animSprite anim = new animSprite([new animFrame(e, 200)]);
+                    encounter.board.sprites.Add(anim);
+                }
+            }
+
+            scoredRows.Clear();
             processQueue();
 
             //score queue should start the animations for every row, then we wait for the animation to finish

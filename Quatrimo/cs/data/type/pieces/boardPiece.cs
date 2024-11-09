@@ -30,7 +30,7 @@ namespace Quatrimo
         public Color color { get; set; }
 
         /// <summary>
-        /// Creates the block and overridesnecessary delegates, MAKE SURE TO OVERRIDE for new piece types
+        /// Creates the block and overrides necessary delegates, MAKE SURE TO OVERRIDE for new piece types
         /// </summary>
         /// <param name="block"></param>
         public virtual void initializeBlock(block block)

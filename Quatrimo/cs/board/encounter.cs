@@ -18,9 +18,10 @@ namespace Quatrimo
         public short turnRowsCleared = 0;
 
         public long totalScore = 0;
-        public double levelTimes = 1;
         public long turnScore = 0;
-        public long turnMultiplier = 1;
+
+        public double levelTimes = 1;
+        public double turnMultiplier = 1;
 
         public boardPiece currentPiece;
         public boardPiece heldPiece = null;

@@ -1,4 +1,5 @@
 ﻿using MonoGame.Extended.ViewportAdapters;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace Quatrimo
@@ -18,18 +19,18 @@ namespace Quatrimo
 
         public override void execute(encounter encounter)
         {
-            //NEXT DAY CODING: FIGURE OUT WHAT THE HELL TO PUT HERE ====================
             //also figure out how to properly suspend animhandler state for animSuspendState
             iteratingScoreAnimation leftIterator = new iteratingScoreAnimation(encounter, encounter.animHandler, y, [leftBounds.x, leftBounds.y]);
             iteratingScoreAnimation rightIterator = new iteratingScoreAnimation(encounter, encounter.animHandler, y, [rightBounds.x, rightBounds.y]);
             
-            encounter.board.sprites.Add(leftIterator);
-            encounter.board.sprites.Add(rightIterator);
+            encounter.board.queuedSprites.Add(leftIterator);
+            encounter.board.queuedSprites.Add(rightIterator);
             
             encounter.animHandler.animations.Add(leftIterator);
             encounter.animHandler.animations.Add(rightIterator);
 
             encounter.turnRowsCleared += 1;
+            Debug.WriteLine("row executed");
         }
 
 
@@ -51,7 +52,7 @@ namespace Quatrimo
                     //find score animation initialization algorithm later
                 }
             }
-            return null;
+            return new scoreRow(y, new Vector2I(-1, -1), new Vector2I(12, 12));
         }
 
         public static scoreRow queueNonpieceRow(int y, board board)

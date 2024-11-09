@@ -150,7 +150,7 @@ namespace Quatrimo
             bBoson = new(3, 3, new wSet<baseblockType>[,] { { basic, basic, null }, { basic, basic, null }, { null, null, basic } }, noMod, new Vector2I(1, 1), 5, "Boson", deflt, Game1.circledetail);
 
             bDiamond = new(3, 3, new wSet<baseblockType>[,] { { null, basic, null }, { basic, basic, basic }, { null, basic, null } }, noMod, new Vector2I(1, 1), 5, "Diamond", deflt, Game1.circle);
-            bBrick = new(4, 3, new wSet<baseblockType>[,] { { basic, basic, basic }, { basic, basic, basic }, { basic, basic, basic }, { basic, basic, basic } }, noMod, new Vector2I(2, 2), 12, "Brick", deflt, Game1.heavy_full);
+            bBrick = new(4, 3, new wSet<baseblockType>[,] { { basic, basic, basic }, { basic, basic, basic }, { basic, basic, basic }, { basic, basic, basic } }, noMod, new Vector2I(2, 2), 12, "Brick", deflt, Game1.box);
 
             bBarycenter = new(5, 2, new wSet<baseblockType>[,] { { basic, basic }, { basic, basic }, { null, null }, { basic, basic }, { basic, basic } }, noMod, new Vector2I(3, 1), 8, "Barycenter", deflt, Game1.heavy);
             bBasin = new(4, 2, new wSet<baseblockType>[,] { { basic, basic }, { null, basic }, { null, basic }, { basic, basic } }, noMod, new Vector2I(2, 2), 6, "Basin", deflt, Game1.box);
@@ -167,7 +167,7 @@ namespace Quatrimo
 
             foundryBag = new starterBag([bBarycenter, bHammer, bBar, bLong, bAngle, bCorner, bTwig, bSquare], "Foundry");
 
-            debugbag = new starterBag([bLong], "debugbag");
+            debugbag = new starterBag([bBrick], "debugbag");
 
         }
     }

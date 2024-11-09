@@ -5,22 +5,26 @@ namespace Quatrimo
     public class scoreBlocks : scoreOperation
     {
         List<block> blocks;
+        block[] emptyBlocks;
         animSprite scoreAnim = animHandler.getDecayingAnim(Vector2I.zero);
         
         public override void execute(encounter encounter)
         {
             foreach(var block in blocks)
             {
-                if (!block.scored)
+                if (block.scored)
                 {
-                    block.score(block);
-
-                    animSprite anim = new animSprite(scoreAnim.sequence);
-                    anim.setPosition(element.boardPos2WorldPos(block.boardpos));
-                    encounter.animHandler.animations.Add(anim);
-
-                    encounter.scoredBlocks.Add(block);
+                    continue;
                 }
+                                    
+                block.score(block);
+
+                animSprite anim = new animSprite(scoreAnim.sequence);
+                anim.setPosition(element.boardPos2WorldPos(block.boardpos));                
+                encounter.animHandler.animations.Add(anim);
+
+                encounter.scoredBlocks.Add(block);
+                
             }
         }
         //add new scoreOperation functionality for setting blocks as updated !!!!!
@@ -32,7 +36,7 @@ namespace Quatrimo
         //score operations are used for queueing up scored things
         //the piece score step will queue up and get rid of everything at once, then begin animhandler drawing and waiting on the animations
         //block ticks will be able to use these to interrupt the current state - add another method for that later!
-        
+
         //the scoreOperation interrupt method should be ran AFTER the execute method on block ticks - execute sets up the animation, the interrupt suspends the state and waits for the animation to finish
         //after this our future lowering rows queue will be ran - it should only have the one operation queued up though
 

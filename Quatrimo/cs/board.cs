@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Quatrimo
 {
@@ -14,6 +15,7 @@ namespace Quatrimo
         public List<Vector2I> queuedLowerBlocks = []; //empty scored blocks queued to be filled by lowering blocks above, no duplicates allowed
 
         public List<drawable> sprites = [];
+        public List<drawable> queuedSprites = [];
         public List<drawable> staleSprites = [];
         public Vector2I dimensions;
         public static readonly Vector2I eDimensions = new Vector2I(48, 27); //element dimensions
@@ -40,6 +42,12 @@ namespace Quatrimo
         /// <param name="gameTime"></param>
         public void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            foreach(var sprite in queuedSprites)
+            {
+                sprites.Add(sprite);
+            }
+            queuedSprites.Clear();
+
             foreach (var sprite in sprites)
             {
                 sprite.draw(spriteBatch, gameTime, this);
@@ -141,12 +149,20 @@ namespace Quatrimo
         public void lowerBlock(block block)
         {
             int x = block.boardpos.x;
-            for(int y = block.boardpos.y; y < dimensions.y; y++)
+            block.removeFromBoard(block);
+
+            for (int y = block.boardpos.y-1; y > 1; y--)
             {
-                block loweredBlock = blocks[x, y + 1];
-                blocks[x, y] = loweredBlock;
-                loweredBlock.boardpos = loweredBlock.boardpos.add(new Vector2I(0, -1));
-                blocks[x, y + 1] = null;
+
+                block loweredBlock = blocks[x, y];
+
+                if(loweredBlock == null) { continue; }
+
+                blocks[x, y+1] = loweredBlock;
+                loweredBlock.boardpos = loweredBlock.boardpos.add(new Vector2I(0, 1));
+                loweredBlock.updateSpritePos(loweredBlock);
+                blocks[x, y] = null;
+                
             }
         }
 

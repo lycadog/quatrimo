@@ -6,7 +6,6 @@ namespace Quatrimo
     {
 
         public abstract void execute(encounter encounter);
-
         /// <summary>
         /// Returns whether or not the block should interrupt encounter state to wait for animations upon scoring
         /// </summary>

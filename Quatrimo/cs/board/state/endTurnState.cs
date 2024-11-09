@@ -13,9 +13,30 @@ namespace Quatrimo
         {
             encounter.state = this;
 
+            double levelTimes = 1;
+            if(encounter.turnRowsCleared > 0)
+            {
+                encounter.turnScore += 10 * (encounter.turnRowsCleared - 1);
+
+                if(encounter.turnRowsCleared == 3)
+                {
+                    levelTimes = (encounter.levelTimes / 2);
+                } else if (encounter.turnRowsCleared >= 4)
+                {
+                    levelTimes = encounter.levelTimes;
+                }
+            }
+
+            double score = encounter.turnScore * encounter.turnMultiplier * levelTimes;
+
+
+            encounter.totalScore += (long)score; //save the total score
+
+            encounter.turnScore = 0; //reset turn variables
+            encounter.turnMultiplier = 1;
+            encounter.turnRowsCleared = 0;
+
             recalculateLevel(encounter.turnRowsCleared);
-
-
 
             turnStartState newState = new turnStartState(encounter);
             newState.startState();

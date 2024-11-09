@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Quatrimo
 {
@@ -17,9 +18,13 @@ namespace Quatrimo
         {
             encounter.state = this;
             update = tick;
-            
-            while(scoreIndex < encounter.scoredBlocks.Count)
+
+
+            Debug.WriteLine($"block tick start: SCOREDBLOCKS COUNT: {encounter.scoredBlocks.Count}");
+
+            while (scoreIndex < encounter.scoredBlocks.Count)
             {
+
                 block block = encounter.scoredBlocks[scoreIndex];
                 scoreIndex++;
 
@@ -28,7 +33,8 @@ namespace Quatrimo
                     continue; //skip over scored blocks
                 }
 
-                block.removeFromBoard(block); //remove and score block
+                //score block and flag for removal
+                block.markedForRemoval = true;
 
                 block.score(block);
                 block.scored = true;
@@ -36,21 +42,23 @@ namespace Quatrimo
 
                 if (block.scoreOperation.interrupt(encounter)) //if the score operation has an interrupt, suspend the state
                 {
+                    Debug.WriteLine($"STATE HAS BEEN INTERRUPTED");
+
                     interruptState();
                     return; //interrupt the stateStart
                 }
             }
 
             //maybe merge this foreach into the while loop
-            foreach(var block in encounter.scoredBlocks) //lower all scored blocks and process their score
+            foreach (var block in encounter.scoredBlocks) //lower all scored blocks and process their score
             {
                 //if the block is empty (has been removed) then lower blocks above to fill it in
-                if (block.removedFromBoard) { encounter.board.lowerBlock(block); }
+                if (block.markedForRemoval) { encounter.board.lowerBlock(block); }
                 encounter.turnScore += block.getScore(block);
                 encounter.turnMultiplier += block.getTimes(block);
 
-                encounter.scoredBlocks.Clear(); //we are done with all of these, so they go byebye!
             }
+            encounter.scoredBlocks.Clear(); //we are done with all of these, so they go byebye!
 
             scoreIndex = 0;
 
@@ -58,6 +66,7 @@ namespace Quatrimo
             sortTickableBlocks();
 
             //piece score state has been finalized
+
 
 
         }

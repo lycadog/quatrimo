@@ -22,7 +22,7 @@ namespace Quatrimo
         public Color color { get; set; }
         public bool scoredAnim { get; set; } //if the block has had the scoring animation run over it
         public bool scored { get; set; } //if the block has been actually scored
-        public bool removedFromBoard { get; set; } //if the block has been removed from the board and should be filled in
+        public bool markedForRemoval { get; set; } //if the block has been removed from the board and should be filled in
         public bool ticked { get; set; }
 
         public void linkDelegates()
@@ -258,7 +258,7 @@ namespace Quatrimo
 
         protected virtual void removeGFXF(block block)
         {
-            board.sprites.Remove(element);
+            board.staleSprites.Add(element);
         }
 
         protected virtual void removeFromBoardF(block block)

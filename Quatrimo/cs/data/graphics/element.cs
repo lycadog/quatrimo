@@ -92,7 +92,7 @@ namespace Quatrimo
         /// <returns></returns>
         public static Vector2I boardPos2WorldPos(Vector2I bpos)
         {
-            return elementPos2WorldPos(boardPos2ElementPos(bpos));
+            return new Vector2I((board.offset.x + bpos.x + 1) * eSize, (bpos.y - 4) * eSize);
         }
     }
 }
