@@ -54,14 +54,8 @@ namespace Quatrimo
         public static Texture2DRegion circle; public static Texture2DRegion circledetail; public static Texture2DRegion circledetail2;
         public static Texture2DRegion circledetail3; public static Texture2DRegion circlesolid;
 
-        public static Texture2DRegion block;
-        public static Texture2DRegion block_full;
-        public static Texture2DRegion block_fuller;
-        public static Texture2DRegion heavy;
-        public static Texture2DRegion heavy_full;
-        public static Texture2DRegion heavy_fuller;
-        public static Texture2DRegion alloy1;
-        public static Texture2DRegion alloy2;
+        public static Texture2DRegion shuriken;
+        public static Texture2DRegion bomb;
 
         public static Texture2D none;
         public static Texture2D solid;
@@ -152,6 +146,9 @@ namespace Quatrimo
             circledetail2 = atlas[62];
             circledetail3 = atlas[63];
             circlesolid = atlas[64];
+
+            bomb = atlas[123];
+            
 
             none = Content.Load<Texture2D>("empty");
             solid = Content.Load<Texture2D>("full");

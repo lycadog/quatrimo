@@ -5,25 +5,34 @@ namespace Quatrimo
     public class scoreBlocks : scoreOperation
     {
         List<block> blocks;
-        block[] emptyBlocks;
+        board board;
         animSprite scoreAnim = animHandler.getDecayingAnim(Vector2I.zero);
-        
+
+        public scoreBlocks(List<Vector2I> blocks, board board)
+        {
+            addBlocks(blocks);
+            this.board = board;
+        }
+
+        protected void addBlocks(List<Vector2I> blocks)
+        {
+            foreach (var pos in blocks)
+            {
+                if (pos.x > 0 | pos.x <= board.dimensions.x) { continue; } //skip if position is out of bounds
+                if(pos.y > 0 | pos.y <= board.dimensions.x) { continue; } // ^^^
+
+                this.blocks.Add(board.blocks[pos.x, pos.y]); //add non-out of bounds blocks to the list
+            }
+        }
+
         public override void execute(encounter encounter)
         {
             foreach(var block in blocks)
             {
-                if (block.scored)
-                {
-                    continue;
-                }
-                                    
-                block.score(block);
+                if (block.scoredAnim) { continue; }
 
-                animSprite anim = new animSprite(scoreAnim.sequence);
-                anim.setPosition(element.boardPos2WorldPos(block.boardpos));                
-                encounter.animHandler.animations.Add(anim);
+                block.animateScore(encounter, null, );
 
-                encounter.scoredBlocks.Add(block);
                 
             }
         }

@@ -1,7 +1,8 @@
 ﻿
 namespace Quatrimo
 {
-    public class bombBlock : block
+    public class emptyBlock : block
     {
+
     }
 }

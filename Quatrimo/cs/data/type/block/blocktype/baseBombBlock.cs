@@ -1,11 +1,11 @@
 ﻿
 namespace Quatrimo
 {
-    public class baseBasicBlock : baseblockType
+    public class baseBombBlock : baseblockType
     {
         public override block getNew()
         {
-            return new block();
+            return new bombBlock();
         }
     }
 }

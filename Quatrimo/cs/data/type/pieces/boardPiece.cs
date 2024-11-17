@@ -8,6 +8,16 @@ namespace Quatrimo
     {
         public board board;
 
+        /// <summary>
+        /// this is basically just our constructor
+        /// </summary>
+        /// <param name="board"></param>
+        /// <param name="blocks"></param>
+        /// <param name="dimensions"></param>
+        /// <param name="origin"></param>
+        /// <param name="name"></param>
+        /// <param name="tex"></param>
+        /// <param name="color"></param>
         public void setData(board board, block[] blocks, Vector2I dimensions, Vector2I origin, string name, Texture2DRegion tex, Color color)
         {
             this.board = board;
@@ -30,7 +40,7 @@ namespace Quatrimo
         public Color color { get; set; }
 
         /// <summary>
-        /// Creates the block and overrides necessary delegates, MAKE SURE TO OVERRIDE for new piece types
+        /// Overrides necessary delegates on new block, MAKE SURE TO OVERRIDE for new piece types
         /// </summary>
         /// <param name="block"></param>
         public virtual void initializeBlock(block block)

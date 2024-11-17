@@ -14,11 +14,18 @@ namespace Quatrimo
         }
 
         //finalize pieceScoreState's operations
-        public override void startState()
+        public override void startState() //process through all scored blocks
         {
             encounter.state = this;
             update = tick;
 
+            //index shenanigans making me mad
+            //new concept: for the scoredBlocks list, instead get rid of blocks when they're scored and add them to a
+            //seperate list, so they can be lowered later
+
+            //when score operations add new blocks they can use insert and increase the index by 1 each block added, starting at 0
+            //this way we can just add stuff to the start, real simple - and it'll stay in order depending on which is scored
+            //this requires no index shenanigans in animStart block method or in here - easy!
 
             Debug.WriteLine($"block tick start: SCOREDBLOCKS COUNT: {encounter.scoredBlocks.Count}");
 
@@ -33,10 +40,7 @@ namespace Quatrimo
                     continue; //skip over scored blocks
                 }
 
-                //score block and flag for removal
-                block.markedForRemoval = true;
-
-                block.score(block);
+                block.score(block); //score block and flag for removal
                 block.scored = true;
                 block.scoreOperation.execute(encounter);
 
@@ -98,10 +102,14 @@ namespace Quatrimo
                     interruptState();
                     return; //interrupt
                 }
-
             }
 
             //END OF STATE HERE
+
+            foreach(var block in untickedBlocks)
+            {
+                block.ticked = false;
+            }
 
             endTurnState newState = new endTurnState(encounter);
             encounter.state = newState;
@@ -123,7 +131,7 @@ namespace Quatrimo
             untickedBlocks.Clear();
             for(int x = 0; x < encounter.board.dimensions.x; x++)
             {
-                for(int y = 24; y >= 0; y--) {
+                for(int y = 0; y < 26; y++) {
                     {
                         block block = encounter.board.blocks[x, y];
                         if (block != null && !block.ticked)

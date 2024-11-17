@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Graphics;
+using System.Reflection.Metadata;
 
 namespace Quatrimo
 {
@@ -20,17 +21,18 @@ namespace Quatrimo
         public Vector2I localpos { get; set; }
         public Texture2DRegion tex { get; set; }
         public Color color { get; set; }
-        public bool scoredAnim { get; set; } //if the block has had the scoring animation run over it
-        public bool scored { get; set; } //if the block has been actually scored
-        public bool markedForRemoval { get; set; } //if the block has been removed from the board and should be filled in
-        public bool ticked { get; set; }
+
+        public bool scoredAnim = false;         //if the block has had the scoring animation run over it
+        public bool scored = false;             //if the block has been actually scored
+        public bool markedForRemoval = false;   //if the block has been removed from the board and should be filled in
+        public bool ticked = false;             //ticked by blockTickScoreState
 
         public void linkDelegates()
         {
             play = new blockD(playF);
             place = new blockD(placeF);
             score = new blockD(scoreF);
-            tick = new tickD(tickF);
+            tick = new blockD(tickF);
             createGFX = new blockD(graphicsInit);
             createPreview = new spriteD(createPreviewF);
             updatePos = new blockD(updatePosF);
@@ -55,6 +57,34 @@ namespace Quatrimo
             getScore = new scoreD(getScoreF);
             getTimes = new scoreD(getMultF);
         }
+
+        // =|||||||= [ NONDELEGATE METHODS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+        /// <summary>
+        /// Adds the block to the scored block list and renders the score animation on top of it
+        /// </summary>
+        /// <param name="encounter"></param>
+        /// <param name="anim"></param>
+        public virtual void animateScore(encounter encounter, animation anim, int index = -1) //TODO: add support for overriding the default anim
+        {
+            if(index < 0) { encounter.scoredBlocks.Add(this); }
+            else { encounter.scoredBlocks.Insert(index, this); }
+
+            hideGFX(this);
+            scoredAnim = true;
+
+            animSprite sprite = animHandler.getDecayingAnim(new Vector2I(boardpos.x, boardpos.y));
+
+            board.queuedSprites.Add(sprite);
+            encounter.animHandler.animations.Add(sprite);
+        }
+
+
+
+
+        // =|||||||= [ DELEGATE DECLARATIONS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
         /// <summary>
         /// Play the falling block into the board
         /// </summary>
@@ -73,7 +103,7 @@ namespace Quatrimo
         /// <summary>
         /// Ticks block at the end of a turn, returns whether or not it creates an animation that needs to be waited on (to suspend the state)
         /// </summary>
-        public tickD tick;
+        public blockD tick;
 
         /// <summary>
         /// Initialize the graphics needed for the block
@@ -179,6 +209,8 @@ namespace Quatrimo
         public delegate long scoreD(block block);
 
 
+        // =|||||||= [ DELEGATE-WRAPPED METHODS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
         protected virtual void playF(block block)
         {
             updatePos(this);
@@ -245,9 +277,9 @@ namespace Quatrimo
             dropElement.setEPos(element.boardPos2ElementPos(new Vector2I(boardpos.x, boardpos.y + piece.dropOffset)));
         }
 
-        protected virtual bool tickF(block block)
+        protected virtual void tickF(block block)
         {
-            return false;
+
         }
 
         protected virtual void removeFallingF(block block)
@@ -266,11 +298,10 @@ namespace Quatrimo
             board.blocks[boardpos.x, boardpos.y] = null;
         }
 
-        
-
         protected virtual void scoreF(block block)
         {
             scored = true;
+            markedForRemoval = true;
         }
 
 

@@ -58,35 +58,16 @@ namespace Quatrimo
             int pos = positions[index] + offset;
             positions[index] = pos;
 
-            if (pos < 0 || pos >= board.dimensions.x)
-            {
-                //iterator has completed
-                return;
-            }
-
-            animFinished = false;
+            if (pos < 0 || pos >= board.dimensions.x) { return; } //return if iterator has completed
+            animFinished = false; //flag anim as not completed, since iterator is not done
 
             block block = board.blocks[pos, y];
 
-            if(block == null) { return; }
+            if(block == null) { return; } //remove later
 
             if(!block.scoredAnim)
             {
-                
-                encounter.scoredBlocks.Add(block);
-
-                block.hideGFX(block);
-                block.scoredAnim = true;
-
-                decayAnim.returnValues(out animFrame[] sequence, out _, out _);
-                animSprite spriteold = new animSprite(sequence);
-                spriteold.setPosition(element.boardPos2WorldPos(new Vector2I(pos, y)));
-
-                animSprite sprite = animHandler.getDecayingAnim(new Vector2I(pos,y));
-
-                board.queuedSprites.Add(sprite);
-                animHandler.animations.Add(sprite);
-                
+                block.animateScore(encounter, null); //TODO: change anim later so we can override it from the default
             }
         }
     }
