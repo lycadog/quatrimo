@@ -91,7 +91,7 @@ namespace Quatrimo
             encounterState newState = new encounterState(this);
             newState.addState();
 
-            bag = new bag(data.debugbag);
+            bag = new bag(data.bag2);
             encounter = new encounter(bag);
         }
         

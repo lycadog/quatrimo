@@ -25,15 +25,16 @@ namespace Quatrimo
             }
         }
 
+        //scored blocks add their blocks to the start of the list, contrary to scored rows
         public override void execute(encounter encounter)
         {
+            int counter = 0;
             foreach(var block in blocks)
             {
                 if (block.scoredAnim) { continue; }
 
-                block.animateScore(encounter, null, );
-
-                
+                block.animateScore(encounter, null, counter);
+                counter++;
             }
         }
         //add new scoreOperation functionality for setting blocks as updated !!!!!

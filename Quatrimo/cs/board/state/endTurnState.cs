@@ -32,11 +32,12 @@ namespace Quatrimo
 
             encounter.totalScore += (long)score; //save the total score
 
+            recalculateLevel(encounter.turnRowsCleared);
+
             encounter.turnScore = 0; //reset turn variables
             encounter.turnMultiplier = 1;
             encounter.turnRowsCleared = 0;
 
-            recalculateLevel(encounter.turnRowsCleared);
 
             turnStartState newState = new turnStartState(encounter);
             newState.startState();

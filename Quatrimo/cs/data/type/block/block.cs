@@ -22,6 +22,9 @@ namespace Quatrimo
         public Texture2DRegion tex { get; set; }
         public Color color { get; set; }
 
+        public long scoreValue = 1;
+        public double multiplier = 0;
+
         public bool scoredAnim = false;         //if the block has had the scoring animation run over it
         public bool scored = false;             //if the block has been actually scored
         public bool markedForRemoval = false;   //if the block has been removed from the board and should be filled in
@@ -55,7 +58,7 @@ namespace Quatrimo
             getRotatePos = new rotationVectorD(getRotatePosF);
 
             getScore = new scoreD(getScoreF);
-            getTimes = new scoreD(getMultF);
+            getTimes = new multD(getMultF);
         }
 
         // =|||||||= [ NONDELEGATE METHODS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -194,7 +197,7 @@ namespace Quatrimo
         /// <summary>
         /// Gets the multiplier the block will add to the current score operation
         /// </summary>
-        public scoreD getTimes;
+        public multD getTimes;
 
         //really really messy but whatever
         public delegate void blockD(block block);
@@ -207,6 +210,7 @@ namespace Quatrimo
         public delegate Vector2I rotationVectorD(int direction, block block);
         public delegate spriteObject spriteD(block block);
         public delegate long scoreD(block block);
+        public delegate double multD(block block);
 
 
         // =|||||||= [ DELEGATE-WRAPPED METHODS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -307,12 +311,12 @@ namespace Quatrimo
 
         protected virtual long getScoreF(block block)
         {
-            return 1;
+            return scoreValue;
         }
 
-        protected virtual long getMultF(block block)
+        protected virtual double getMultF(block block)
         {
-            return 0;
+            return multiplier;
         }
 
         protected virtual spriteObject createPreviewF(block block)

@@ -38,7 +38,7 @@ namespace Quatrimo
                 board.blocks[boardpos.x, boardpos.y + 1],
                 board.blocks[boardpos.x, boardpos.y - 1]
             ];
-            tickOperation = new scoreBlocks(blocks);
+            //tickOperation = new scoreBlocks(blocks);
         }
     }
 }

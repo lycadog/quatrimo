@@ -6,9 +6,9 @@ namespace Quatrimo
 {
     public class blockTickScoreState : pieceScoreState
     {
-        short scoreIndex = 0;
         short tickIndex = 0;
-        List<block> untickedBlocks = new List<block>();
+        List<block> emptyBlocks = [];
+        List<block> untickedBlocks = [];
         public blockTickScoreState(encounter main) : base(main)
         {
         }
@@ -20,7 +20,7 @@ namespace Quatrimo
             update = tick;
 
             //index shenanigans making me mad
-            //new concept: for the scoredBlocks list, instead get rid of blocks when they're scored and add them to a
+            //new concept: for the scoredBlocks list, instead remove blocks when they're scored and add them to a
             //seperate list, so they can be lowered later
 
             //when score operations add new blocks they can use insert and increase the index by 1 each block added, starting at 0
@@ -29,21 +29,20 @@ namespace Quatrimo
 
             Debug.WriteLine($"block tick start: SCOREDBLOCKS COUNT: {encounter.scoredBlocks.Count}");
 
-            while (scoreIndex < encounter.scoredBlocks.Count)
+            while (encounter.scoredBlocks.Count > 0)
             {
-
-                block block = encounter.scoredBlocks[scoreIndex];
-                scoreIndex++;
+                block block = encounter.scoredBlocks[0];
+                encounter.scoredBlocks.Remove(block);
 
                 if (block.scored)
                 {
                     continue; //skip over scored blocks
                 }
+                emptyBlocks.Add(block);
 
                 block.score(block); //score block and flag for removal
                 block.scored = true;
                 block.scoreOperation.execute(encounter);
-
                 if (block.scoreOperation.interrupt(encounter)) //if the score operation has an interrupt, suspend the state
                 {
                     Debug.WriteLine($"STATE HAS BEEN INTERRUPTED");
@@ -53,18 +52,16 @@ namespace Quatrimo
                 }
             }
 
-            //maybe merge this foreach into the while loop
-            foreach (var block in encounter.scoredBlocks) //lower all scored blocks and process their score
+            //lower all scored blocks and process their score
+            foreach (var block in emptyBlocks) 
             {
                 //if the block is empty (has been removed) then lower blocks above to fill it in
                 if (block.markedForRemoval) { encounter.board.lowerBlock(block); }
+
                 encounter.turnScore += block.getScore(block);
                 encounter.turnMultiplier += block.getTimes(block);
 
             }
-            encounter.scoredBlocks.Clear(); //we are done with all of these, so they go byebye!
-
-            scoreIndex = 0;
 
             //SORT the tickable block list to tick the blocks in order of left -> right, top -> bottom
             sortTickableBlocks();
