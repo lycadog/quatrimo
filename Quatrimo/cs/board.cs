@@ -31,6 +31,15 @@ namespace Quatrimo
             this.animHandler = animHandler;
             dimensions = dim;
             blocks = new block[dimensions.x, dimensions.y];
+            
+            for(int x = 0; x < dimensions.x; x++)
+            {
+                for(int y = 0; y < dimensions.y; y++)
+                {
+                    blocks[x, y] = new emptyBlock(new Vector2I(x, y));
+                }
+            }
+
             offset = new Vector2I((eDimensions.x - dimensions.x) / 2 - 1, 4);
             createBoardElements();
         }
@@ -159,32 +168,13 @@ namespace Quatrimo
                 if(loweredBlock == null) { continue; }
 
                 blocks[x, y+1] = loweredBlock;
-                loweredBlock.boardpos = loweredBlock.boardpos.add(new Vector2I(0, 1));
-                loweredBlock.updateSpritePos(loweredBlock);
-                blocks[x, y] = null;
-                
+                loweredBlock.movePlaced(new Vector2I(0, 1), loweredBlock);                
             }
         }
 
-
-        public void lowerRows(List<short> rows)
+        public void markEmpty(Vector2I pos)
         {
-            short length = (short)rows.Count;
-
-            for (int i = 0; i < length; i++)
-            {
-                for (int y = rows[i] - 1; y >= 0; y--)
-                {
-                    for (int x = 0; x < dimensions.x; x++)//iterate through rows above the scored row, bringing each block down
-                    {
-                        block block = blocks[x, y];
-                        if (block != null)
-                        {
-                            block.movePlaced(new Vector2I(0, 1), block);
-                        }
-                    }
-                }
-            }
+            blocks[pos.x, pos.y] = new emptyBlock(pos);
         }
 
     }

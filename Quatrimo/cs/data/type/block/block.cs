@@ -25,6 +25,8 @@ namespace Quatrimo
         public long scoreValue = 1;
         public double multiplier = 0;
 
+        public bool occupiedForScoring = true;  //whether or not the block can fill rows for scoring - almost all blocks should!
+
         public bool scoredAnim = false;         //if the block has had the scoring animation run over it
         public bool scored = false;             //if the block has been actually scored
         public bool markedForRemoval = false;   //if the block has been removed from the board and should be filled in
@@ -41,8 +43,11 @@ namespace Quatrimo
             updatePos = new blockD(updatePosF);
             updateSpritePos = new blockD(updateSpritePosF);
             removeFalling = new blockD(removeFallingF);
-            hideGFX = new blockD(removeGFXF);
+            hideGFX = new blockD(hideGFXf);
             removeFromBoard = new blockD(removeFromBoardF);
+
+            scoreRemoveGFX = new blockD(scoreRemoveGFXf);
+            removeScored = new blockD(removeScoredF);
 
             collidedFalling = new coordinateD(collidedFallingF);
             collidedPlaced = new blockVoidD(collidedPlacedF);
@@ -65,11 +70,11 @@ namespace Quatrimo
 
 
         /// <summary>
-        /// Adds the block to the scored block list and renders the score animation on top of it
+        /// Adds the block to the scored block list and renders the score animation on top of it; forceAnim is for enabling animations on empty blocks only
         /// </summary>
         /// <param name="encounter"></param>
         /// <param name="anim"></param>
-        public virtual void animateScore(encounter encounter, animation anim, int index = -1) //TODO: add support for overriding the default anim
+        public virtual void animateScore(encounter encounter, animation anim, int index = -1, bool forceAnim = false) //TODO: add support for overriding the default anim
         {
             if(index < 0) { encounter.scoredBlocks.Add(this); }
             else { encounter.scoredBlocks.Insert(index, this); }
@@ -82,6 +87,8 @@ namespace Quatrimo
             board.queuedSprites.Add(sprite);
             encounter.animHandler.animations.Add(sprite);
         }
+
+        
 
 
 
@@ -144,6 +151,16 @@ namespace Quatrimo
         public blockD removeFromBoard;
 
         /// <summary>
+        /// Attempt to remove the gfx for scoring
+        /// </summary>
+        public blockD scoreRemoveGFX;
+
+        /// <summary>
+        /// Attempt to remove the block for scoring
+        /// </summary>
+        public blockD removeScored;
+
+        /// <summary>
         /// Run collided while falling event
         /// </summary>
         public coordinateD collidedFalling;
@@ -202,8 +219,8 @@ namespace Quatrimo
         //really really messy but whatever
         public delegate void blockD(block block);
         public delegate bool tickD(block block);
-        public delegate void coordinateD(Vector2I pos, block block);
-        public delegate bool coordinateBoolD(Vector2I pos, block block);
+        public delegate void coordinateD(Vector2I vector, block block);
+        public delegate bool coordinateBoolD(Vector2I vector, block block);
         public delegate void blockVoidD(block otherBlock, block block);
         public delegate bool blockBoolD(block otherBlock, block block);
         public delegate void rotationD(int direction, block block);
@@ -231,10 +248,11 @@ namespace Quatrimo
 
         protected virtual void movePlacedF(Vector2I offset, block block)
         {
-            board.blocks[boardpos.x, boardpos.y] = null;
+            board.markEmpty(boardpos);
             board.blocks[boardpos.x + offset.x, boardpos.y + offset.y] = this;
+
             boardpos = new Vector2I(boardpos.x + offset.x, boardpos.y + offset.y);
-            element.offsetEPos(new Vector2I(offset.x, offset.y));
+            updateSpritePos(block);
         }
 
 
@@ -252,14 +270,13 @@ namespace Quatrimo
         protected virtual void placeF(block block)
         {
             block clipped = board.blocks[boardpos.x, boardpos.y];
-            if (clipped != null)
+            
+            if (!clipped.placedBlockClipped(block, clipped))
             {
-                if (!clipped.placedBlockClipped(block, clipped))
-                {
-                    block.fallingBlockClipped(clipped, block);
-                    return;
-                }
+                block.fallingBlockClipped(clipped, block);
+                return;
             }
+
             board.blocks[boardpos.x, boardpos.y] = this;
             element.depth = .75f;
             board.sprites.Remove(dropElement);
@@ -268,7 +285,6 @@ namespace Quatrimo
         protected void updatePosF(block block)
         {
             boardpos = localpos.add(piece.pos);
-            //updateSpritePos(block);
         }
 
         protected virtual void updateSpritePosF(block block)
@@ -292,14 +308,20 @@ namespace Quatrimo
             board.sprites.Remove(dropElement);
         }
 
-        protected virtual void removeGFXF(block block)
+        protected virtual void hideGFXf(block block)
         {
             board.staleSprites.Add(element);
         }
 
+        //Used during the score step to attempt gfx removal - if block should not be scored, do not remove gfx
+        protected virtual void scoreRemoveGFXf(block block)
+        {
+            hideGFX(block);
+        }
+
         protected virtual void removeFromBoardF(block block)
         {
-            board.blocks[boardpos.x, boardpos.y] = null;
+            board.markEmpty(boardpos);
         }
 
         protected virtual void scoreF(block block)
@@ -308,6 +330,11 @@ namespace Quatrimo
             markedForRemoval = true;
         }
 
+        //Used during the score step to attempt removal - if block should not be scored, do not run score()
+        protected virtual void removeScoredF(block block)
+        {
+            score(block);
+        }
 
         protected virtual long getScoreF(block block)
         {
@@ -337,11 +364,8 @@ namespace Quatrimo
             if (checkPos.y >= piece.board.dimensions.y) { return true; }
 
             block hitBlock = board.blocks[checkPos.x, checkPos.y];
-            if (hitBlock != null)
-            {
-                return hitBlock.collidesPlaced(block, hitBlock);
-            }
-            return false;
+                   
+            return hitBlock.collidesPlaced(block, hitBlock);
         }
 
         protected virtual bool collidesPlacedF(block falling, block block)

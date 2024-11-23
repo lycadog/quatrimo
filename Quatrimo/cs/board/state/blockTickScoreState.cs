@@ -53,7 +53,7 @@ namespace Quatrimo
             }
 
             //lower all scored blocks and process their score
-            foreach (var block in emptyBlocks) 
+            foreach (var block in emptyBlocks)
             {
                 //if the block is empty (has been removed) then lower blocks above to fill it in
                 if (block.markedForRemoval) { encounter.board.lowerBlock(block); }
@@ -131,7 +131,7 @@ namespace Quatrimo
                 for(int y = 0; y < 26; y++) {
                     {
                         block block = encounter.board.blocks[x, y];
-                        if (block != null && !block.ticked)
+                        if (block is not emptyBlock && !block.ticked) //remove emptyblock check later
                         {
                             untickedBlocks.Add(block);
                         }

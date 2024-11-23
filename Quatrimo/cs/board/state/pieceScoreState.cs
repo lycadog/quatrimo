@@ -14,6 +14,8 @@ namespace Quatrimo
         {
         }
 
+        //rework this state later, we need to split off the updated row checking - use checkUpdatedRows
+        //need support for both rows updated by a placed piece and rows updated by other things like tick events
         public override void startState()
         {
             encounter.state = this;
@@ -48,7 +50,7 @@ namespace Quatrimo
                     animSprite sprite = animHandler.getDecayingAnim(block.boardpos);
                     encounter.board.sprites.Add(sprite);
 
-                    block.hideGFX(block);
+                    block.scoreRemoveGFX(block);
                     block.scoredAnim = true;
                     encounter.scoredBlocks.Add(block);
                 }
@@ -107,14 +109,14 @@ namespace Quatrimo
             }
         }
 
-        protected bool isRowScoreable(int y)
+        protected bool isRowScoreable(int y) //UPDATE THIS LATER to allow for some empty spots with items - like sleight of hand
         {
             for (int x = 0; x < encounter.board.dimensions.x; x++)
             {
-                if (encounter.board.blocks[x, y] == null) return false; //if any tile is empty, return false
-                else { continue; } //if the tile isn't empty, keep looping
+                if (!encounter.board.blocks[x, y].occupiedForScoring) return false; //if any block is empty, return false
+                else { continue; } //if the block isn't empty, keep looping
             }
-            return true; //if no tiles return empty, this will run and return true
+            return true; //if no block return empty, this will run and return true
         }
 
     }
