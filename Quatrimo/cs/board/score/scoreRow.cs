@@ -1,6 +1,8 @@
 ﻿using MonoGame.Extended.ViewportAdapters;
+using System;
 using System.Diagnostics;
 using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Quatrimo
 {
@@ -40,19 +42,61 @@ namespace Quatrimo
         /// <param name="y"></param>
         /// <param name="piece"></param>
         /// <returns></returns>
-        public static scoreRow queueRowFromPiece(int y, boardPiece piece) // ============ DO LATER ==============
+        public static scoreRow queueRowFromPiece(int y, boardPiece piece, board board) // ============ DO LATER ==============
         {
-            foreach (var block in piece.blocks) //find the start points for row score animation for each row !!!!
+            Vector2I left = new Vector2I(0, 0);
+            Vector2I right = new Vector2I(0, -1);
+
+            bool outer = true; //fix bad code later
+            
+            for(int x = 0; x < board.dimensions.x; x++)
             {
-                if (block.boardpos.y == y)
+                Debug.WriteLine(x);
+                if (outer)
                 {
-                    //algorithm needs to find the bounding points for the left and right iterator
-                    //simply find the outermost side, and the innermost side if applicable, for both left and right sides
-                    
-                    //find score animation initialization algorithm later
+                    if (board.blocks[x, y].piece == piece)
+                    {
+                        left.x = x;
+                        outer = false;
+                    }
+                }
+                
+                if(!outer)
+                {
+                    if (board.blocks[x, y].piece != piece)
+                    {
+                        left.y = x - 1;
+                        break;
+                    }
                 }
             }
-            return new scoreRow(y, new Vector2I(-1, -1), new Vector2I(12, 12));
+
+            outer = true;
+
+            for (int x = board.dimensions.x-1; x > -1; x--)
+            {
+                if (outer)
+                {
+                    if (board.blocks[x, y].piece == piece)
+                    {
+                        right.x = x;
+                        outer = false;
+                    } 
+                }
+
+                if(!outer)
+                {
+                    if (board.blocks[x, y].piece != piece)
+                    {
+                        right.y = x + 1;
+                        break;
+                    }
+                }
+            }
+
+            Debug.WriteLine($"VECTORS: L({left.x},{left.y}), R({right.x},{right.y})");
+
+            return new scoreRow(y, left, right);
         }
 
         public static scoreRow queueNonpieceRow(int y, board board)

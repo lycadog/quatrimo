@@ -37,7 +37,7 @@ namespace Quatrimo
             {
                 if (isRowScoreable(i))
                 { //check rows, add rows that are scored to the queue
-                    encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(i, encounter.currentPiece));
+                    encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(i, encounter.currentPiece, encounter.board));
                     scoredRows.Add(i);
                 }
             }
@@ -104,7 +104,7 @@ namespace Quatrimo
                         //start score animation from the edges, as no piece is specified
                         break;
                     }
-                    encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(y, encounter.currentPiece));
+                    encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(y, encounter.currentPiece, encounter.board));
                 }
             }
         }

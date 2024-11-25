@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.BitmapFonts;
 
 namespace Quatrimo
 {
@@ -9,7 +10,7 @@ namespace Quatrimo
         public debugState(stateManager manager) : base(manager)
         {
         }
-
+        double fps = 0;
         public override void addState()
         {
             manager.keyUpdateD += updateDebugKeys;
@@ -53,6 +54,8 @@ namespace Quatrimo
         {
             spriteBatch.DrawString(Game1.font, "DEBUG", new Vector2(450, 20), Color.Yellow);
 
+            
+            //spriteBatch.DrawString(Game1.fontSmall, fps.ToString(), new Vector2(20, 460), Color.CornflowerBlue);
             //spriteBatch.DrawString(Game1.fontSmall, $"gamestate: {manager.encounter.stateOld}", new Vector2(20, 460), Color.CornflowerBlue);
             //spriteBatch.DrawString(Game1.fontSmall, $"piecefallTimer {manager.encounter.piecefallTimer}/600", new Vector2(20, 480), Color.LightBlue);
             //spriteBatch.DrawString(Game1.fontSmall, $"placeTimer {manager.encounter.placeTimer}/1000", new Vector2(20, 500), Color.LightBlue);
