@@ -9,6 +9,7 @@ namespace Quatrimo
 
         static readonly wSet<baseblockType> basic = new([new baseBasicBlock()], [100]);
         static readonly wSet<baseblockType> bomb = new([new baseBombBlock()], [100]);
+        static readonly wSet<baseblockType> cursed = new([new baseCursedBlock()], [100]);
 
 
         //default colors, broad color palette
@@ -85,6 +86,10 @@ namespace Quatrimo
 
         public static keybind debugKey1;
         public static keybind debugKey2;
+        public static keybind debugKey3;
+        public static keybind debugKey4;
+        public static keybind debugKey5;
+
         public static void dataInit()
         {
             leftKey = new keybind(Microsoft.Xna.Framework.Input.Keys.Left, Microsoft.Xna.Framework.Input.Keys.A);
@@ -100,14 +105,17 @@ namespace Quatrimo
             toggleDebugKey = new keybind(Microsoft.Xna.Framework.Input.Keys.OemTilde, Microsoft.Xna.Framework.Input.Keys.None);
             boardKeys = [leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey, holdKey, restartKey, pauseKey, toggleDebugKey];
 
-            debugMode1 = new keybind(Microsoft.Xna.Framework.Input.Keys.F1, Microsoft.Xna.Framework.Input.Keys.None);
-            debugMode2 = new keybind(Microsoft.Xna.Framework.Input.Keys.F2, Microsoft.Xna.Framework.Input.Keys.None);
-            debugMode3 = new keybind(Microsoft.Xna.Framework.Input.Keys.F3, Microsoft.Xna.Framework.Input.Keys.None);
+            debugMode1 = new keybind(Microsoft.Xna.Framework.Input.Keys.OemOpenBrackets, Microsoft.Xna.Framework.Input.Keys.None);
+            debugMode2 = new keybind(Microsoft.Xna.Framework.Input.Keys.OemCloseBrackets, Microsoft.Xna.Framework.Input.Keys.None);
+            debugMode3 = new keybind(Microsoft.Xna.Framework.Input.Keys.OemBackslash, Microsoft.Xna.Framework.Input.Keys.None);
 
-            debugKey1 = new keybind(Microsoft.Xna.Framework.Input.Keys.OemComma, Microsoft.Xna.Framework.Input.Keys.None);
-            debugKey2 = new keybind(Microsoft.Xna.Framework.Input.Keys.OemPeriod, Microsoft.Xna.Framework.Input.Keys.None);
+            debugKey1 = new keybind(Microsoft.Xna.Framework.Input.Keys.F1, Microsoft.Xna.Framework.Input.Keys.None);
+            debugKey2 = new keybind(Microsoft.Xna.Framework.Input.Keys.F2, Microsoft.Xna.Framework.Input.Keys.None);
+            debugKey3 = new keybind(Microsoft.Xna.Framework.Input.Keys.F3, Microsoft.Xna.Framework.Input.Keys.None);
+            debugKey4 = new keybind(Microsoft.Xna.Framework.Input.Keys.F4, Microsoft.Xna.Framework.Input.Keys.None);
+            debugKey5 = new keybind(Microsoft.Xna.Framework.Input.Keys.F5, Microsoft.Xna.Framework.Input.Keys.None);
 
-            debugKeys = [debugMode1, debugMode2, debugMode3, debugKey1, debugKey2];
+            debugKeys = [debugMode1, debugMode2, debugMode3, debugKey1, debugKey2, debugKey3, debugKey4, debugKey5];
 
         }
 
@@ -123,7 +131,7 @@ namespace Quatrimo
             bZBlockR = new(2, 3, new wSet<baseblockType>[,] { { null, basic, basic }, { basic, basic, null } }, noMod, new Vector2I(0, 1), 4, "Right Z Block", deflt, Game1.round);
             bZBlockL = new(2, 3, new wSet<baseblockType>[,] { { basic, basic, null }, { null, basic, basic } }, noMod, new Vector2I(0, 1), 4, "Left Z Block", deflt, Game1.round);
 
-            bTestPiece = new(2, 3, new wSet<baseblockType>[,] { { bomb, bomb, null }, { null, bomb, bomb } }, noMod, new Vector2I(0, 1), 4, "Left Z Block", deflt, Game1.round);
+            bTestPiece = new(2, 3, new wSet<baseblockType>[,] { { cursed, cursed, null }, { null, cursed, cursed } }, noMod, new Vector2I(0, 1), 4, "Left Z Block", deflt, Game1.round);
 
             bWedge = new(2, 2, new wSet<baseblockType>[,] { { basic, basic }, { basic, null } }, noMod, new Vector2I(0, 0), 3, "Wedge", deflt, Game1.box);
             bTwig = new(1, 2, new wSet<baseblockType>[,] { { basic, basic } }, noMod, new Vector2I(0, 1), 2, "Twig", deflt, Game1.round);
@@ -164,7 +172,7 @@ namespace Quatrimo
             classicBag = new starterBag([bLong, bSquare, bTBlock, bLBlockR, bLBlockL, bZBlockR, bZBlockL], "Classic Bag");
 
             bag1 = new starterBag([bCorner, bSquare, bWedge, bStick, bRectangle, bPickL, bPickR, bLong], "bag1");
-            bag2 = new starterBag([bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong], "bag2");
+            bag2 = new starterBag([bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong, bTestPiece], "bag2");
             bag3 = new starterBag([bNub, bCaret, bBowl, bStump, bSlash, bTwig, bLong, bLepton], "bag3");
 
             foundryBag = new starterBag([bBarycenter, bHammer, bBar, bLong, bAngle, bCorner, bTwig, bSquare], "Foundry");

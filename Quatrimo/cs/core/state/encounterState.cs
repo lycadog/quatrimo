@@ -84,7 +84,7 @@ namespace Quatrimo
             {
                 if (!manager.debugMode){
                     manager.debugMode = true; 
-                    new debugState(manager).addState(); 
+                    new debugState(manager).addState();
                 }
                 
                 else { 

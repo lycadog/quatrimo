@@ -10,7 +10,6 @@ namespace Quatrimo
         public debugState(stateManager manager) : base(manager)
         {
         }
-        double fps = 0;
         public override void addState()
         {
             manager.keyUpdateD += updateDebugKeys;
@@ -36,17 +35,23 @@ namespace Quatrimo
             manager.state.Add(this);
         }
 
-
         protected void updateDebugKeys(GameTime gameTime)
         {
             keybind.updateKeybinds(data.debugKeys, gameTime);
         }
         protected void debugUpdate(GameTime gameTime)
         {
-            if (data.debugMode1.keyDown)
+            if(manager.encounter.state is midPiecefallState)
             {
-                //updateDel.setTemporaryState(debugSlowModeUpdate);
-                //keyDel.setTemporaryState(updateDebugKeys);
+                if (data.debugKey1.keyDown)
+                {
+                    manager.encounter.currentPiece.removeFalling();
+                    manager.encounter.currentPiece = manager.encounter.nextPiece;
+                    manager.encounter.currentPiece.play();
+
+                    manager.encounter.nextPiece = manager.encounter.bag.getPiece(manager.encounter.board);
+                    manager.encounter.board.nextbox.update(manager.encounter.nextPiece);
+                }
             }
         }
 

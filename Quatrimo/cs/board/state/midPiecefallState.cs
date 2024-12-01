@@ -32,12 +32,7 @@ namespace Quatrimo
                 {
                     if (placeTimer >= 1000)
                     {
-
-                        encounter.currentPiece.place();
-
-                        pieceScoreState newState = new pieceScoreState(encounter);
-                        newState.startState();
-
+                        placePiece();
                         return;
                     }
                 }
@@ -57,10 +52,23 @@ namespace Quatrimo
             placeTimer += gameTime.ElapsedGameTime.Milliseconds;
         }
 
+        void placePiece()
+        {
+            encounter.currentPiece.place();
+
+            foreach (block block in encounter.currentPiece.blocks)
+            {
+                encounter.updatedRows.Add(block.boardpos.y); //record the height of every block of the placed piece
+            }
+
+            processBoardUpdatesState newState = new processBoardUpdatesState(encounter, encounter.currentPiece);
+            newState.startState();
+        }
+
         public void parseTurnInput(GameTime gameTime)
         {
-            //for movement keys, when key holds: do action once, wait until timeheld, then move often
-            if ((data.leftKey.keyDown || data.leftKey.timeHeld > 130) && leftMoveCooldown > 30)
+            //for movement keys, when key holds: do action once, wait until timeheld, then move rapidly
+            if ((data.leftKey.keyDown || data.leftKey.timeHeld > 140) && leftMoveCooldown > 30)
             {
                 if (!encounter.currentPiece.collidesFalling(-1, 0))
                 {
@@ -68,7 +76,7 @@ namespace Quatrimo
                     leftMoveCooldown = 0;
                 }
             }
-            else if ((data.rightKey.keyDown || data.rightKey.timeHeld > 130) && rightMoveCooldown > 30)
+            else if ((data.rightKey.keyDown || data.rightKey.timeHeld > 140) && rightMoveCooldown > 30)
             {
                 if (!encounter.currentPiece.collidesFalling(1, 0))
                 {
@@ -77,15 +85,15 @@ namespace Quatrimo
                 }
             }
 
-            if (data.downKey.keyDown || data.downKey.timeHeld > 40 && fastfallCooldown > 10)
+            if (data.downKey.keyDown || data.downKey.timeHeld > 50 && fastfallCooldown > 10)
             {
                 piecefallTimer += 600;
                 fastfallCooldown = 0;
             }
             else if (data.downKey.keyUp)
             {
-                piecefallTimer = 0;
-                placeTimer = 0;
+                piecefallTimer = -100;
+                placeTimer = -100;
             }
 
 
@@ -112,12 +120,9 @@ namespace Quatrimo
             if (data.slamKey.keyDown)
             {
                 encounter.currentPiece.move(0, encounter.currentPiece.dropOffset);
-                encounter.currentPiece.place();
 
-                pieceScoreState newState = new pieceScoreState(encounter);
-                newState.startState();
+                placePiece();
                 return;
-                //SKIP AHEAD TO SCORE STATE
             }
 
             if (data.holdKey.keyDown && canHold)

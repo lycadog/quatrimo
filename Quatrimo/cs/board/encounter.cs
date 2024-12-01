@@ -27,7 +27,10 @@ namespace Quatrimo
         public boardPiece heldPiece = null;
         public boardPiece nextPiece;
 
-        public List<scoreOperation> scoreQueue = [];
+        public bool boardUpdated = false;
+
+        public List<int> updatedRows = [];
+        public List<scoreOperation> scoreQueue = []; //move to processBoardUpdatesState
         public List<block> scoredBlocks = [];
 
         public encounter(bag bag)

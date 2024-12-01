@@ -56,6 +56,9 @@ namespace Quatrimo
 
         public static Texture2DRegion shuriken;
         public static Texture2DRegion bomb;
+        public static Texture2DRegion cursedclosed;
+        public static Texture2DRegion cursedopen;
+
 
         public static Texture2D none;
         public static Texture2D solid;
@@ -148,7 +151,9 @@ namespace Quatrimo
             circlesolid = atlas[64];
 
             bomb = atlas[123];
-            
+            cursedclosed = atlas[132];
+            cursedopen = atlas[133];
+
 
             none = Content.Load<Texture2D>("empty");
             solid = Content.Load<Texture2D>("full");

@@ -60,6 +60,7 @@ namespace Quatrimo
             collidesPlaced = new blockBoolD(collidesPlacedF);
 
             rotate = new rotationD(rotateF);
+            rotateGFX = new rotationD(rotateGFXf);
             getRotatePos = new rotationVectorD(getRotatePosF);
 
             getScore = new scoreD(getScoreF);
@@ -79,7 +80,7 @@ namespace Quatrimo
             if(index < 0) { encounter.scoredBlocks.Add(this); }
             else { encounter.scoredBlocks.Insert(index, this); }
 
-            hideGFX(this);
+            scoreRemoveGFX(this);
             scoredAnim = true;
 
             animSprite sprite = animHandler.getDecayingAnim(new Vector2I(boardpos.x, boardpos.y));
@@ -202,6 +203,11 @@ namespace Quatrimo
         public rotationD rotate;
 
         /// <summary>
+        /// Rotates the block's sprites
+        /// </summary>
+        public rotationD rotateGFX;
+
+        /// <summary>
         /// Returns the local position after a rotation operation in the specificed direction
         /// </summary>
         public rotationVectorD getRotatePos;
@@ -259,12 +265,17 @@ namespace Quatrimo
         protected virtual void rotateF(int direction, block block)
         {
             localpos = getRotatePos(direction, this);
-            element.rot += MathHelper.ToRadians(90 * direction);
+            rotateGFX(direction, this);
         }
 
         protected Vector2I getRotatePosF(int direction, block block) //direction is 1 or -1
         {
             return new Vector2I(localpos.y * -direction, localpos.x * direction);
+        }
+
+        protected virtual void rotateGFXf(int direction, block block)
+        {
+            element.rot += MathHelper.ToRadians(90 * direction);
         }
 
         protected virtual void placeF(block block)

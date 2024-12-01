@@ -4,11 +4,11 @@ using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public class blockTickScoreState : pieceScoreState
+    public class blockTickScoreState : boardState
     {
         short tickIndex = 0;
-        List<block> emptyBlocks = [];
-        List<block> untickedBlocks = [];
+        List<block> emptyBlocks = [];   //blocks to be filled in by lowering the column above
+        List<block> untickedBlocks = [];//blocks yet to be ticked
         public blockTickScoreState(encounter main) : base(main)
         {
         }
@@ -18,14 +18,6 @@ namespace Quatrimo
         {
             encounter.state = this;
             update = tick;
-
-            //index shenanigans making me mad
-            //new concept: for the scoredBlocks list, instead remove blocks when they're scored and add them to a
-            //seperate list, so they can be lowered later
-
-            //when score operations add new blocks they can use insert and increase the index by 1 each block added, starting at 0
-            //this way we can just add stuff to the start, real simple - and it'll stay in order depending on which is scored
-            //this requires no index shenanigans in animStart block method or in here - easy!
 
             Debug.WriteLine($"block tick start: SCOREDBLOCKS COUNT: {encounter.scoredBlocks.Count}");
 
@@ -45,7 +37,7 @@ namespace Quatrimo
                 block.scoreOperation.execute(encounter);
                 if (block.scoreOperation.interrupt(encounter)) //if the score operation has an interrupt, suspend the state
                 {
-                    Debug.WriteLine($"STATE HAS BEEN INTERRUPTED");
+                    Debug.WriteLine($"Blocktick state has been interrupted");
 
                     interruptState();
                     return; //interrupt the stateStart
@@ -56,13 +48,21 @@ namespace Quatrimo
             foreach (var block in emptyBlocks)
             {
                 //if the block is empty (has been removed) then lower blocks above to fill it in
-                if (block.markedForRemoval) { encounter.board.lowerBlock(block); }
+                if (block.markedForRemoval) { encounter.board.lowerBlock(block); encounter.boardUpdated = true; }
 
                 encounter.turnScore += block.getScore(block);
                 encounter.turnMultiplier += block.getTimes(block);
-
             }
+            emptyBlocks.Clear();
 
+            if (encounter.boardUpdated)
+            {
+                Debug.WriteLine("board updates processed");
+                var nextState = new processBoardUpdatesState(encounter, null, this);
+                nextState.startState();
+                return;
+                //start updateBoard state
+            }
             //SORT the tickable block list to tick the blocks in order of left -> right, top -> bottom
             sortTickableBlocks();
 
@@ -115,8 +115,9 @@ namespace Quatrimo
         
         void interruptState()
         {
-            encounter.animHandler.animState = encounter.animHandler.waitForAnimations;
-            animSuspendState newState = new animSuspendState(encounter, this, true);
+            //encounter.animHandler.animState = encounter.animHandler.waitForAnimations;
+            //animSuspendState newState = new animSuspendState(encounter, this, true);
+            processBoardUpdatesState newState = new processBoardUpdatesState(encounter);
             newState.startState();
         }
 
@@ -128,7 +129,7 @@ namespace Quatrimo
             untickedBlocks.Clear();
             for(int x = 0; x < encounter.board.dimensions.x; x++)
             {
-                for(int y = 0; y < 26; y++) {
+                for(int y = 0; y < encounter.board.dimensions.y; y++) {
                     {
                         block block = encounter.board.blocks[x, y];
                         if (block is not emptyBlock && !block.ticked) //remove emptyblock check later
