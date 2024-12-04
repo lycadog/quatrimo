@@ -19,7 +19,6 @@
 
         protected override void scoreF(block block)
         {
-            base.scoreF(block);
             scoredAnim = false;
             markedForRemoval = false;
         }

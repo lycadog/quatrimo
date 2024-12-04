@@ -10,11 +10,13 @@ namespace Quatrimo
         readonly boardPiece scoredPiece;
         readonly boardState stateAfterAnim;
         List<int> scoredRows = [];
+        List<int> updatedRows;
 
         //override stateAfterAnim when the blocktick is suspended, to maintain the same state
-        public processBoardUpdatesState(encounter encounter, boardPiece scoredPiece = null, boardState stateAfterAnim = null) : base(encounter)
+        public processBoardUpdatesState(encounter encounter, List<int> updatedRows, boardPiece scoredPiece = null, boardState stateAfterAnim = null) : base(encounter)
         {
             this.scoredPiece = scoredPiece;
+            this.updatedRows = updatedRows;
             if(stateAfterAnim == null) { stateAfterAnim = new blockTickScoreState(encounter); }
             this.stateAfterAnim = stateAfterAnim;
         }
@@ -60,7 +62,7 @@ namespace Quatrimo
 
         void findScoredRows()
         {
-            for(int y = 0; y < encounter.board.dimensions.y; y++)            
+            foreach(int y in updatedRows)
             {
                 if (isRowScoreable(y))
                 {
@@ -69,12 +71,12 @@ namespace Quatrimo
                     if (scoredPiece == null) //if the row is not scored by a piece, start the score animation from the edges
                     { //rework this so the piece check is outside the loop, as it only needs to be checked once
                         encounter.scoreQueue.Add(scoreRow.queueNonpieceRow(y, encounter.board));
-                        break;
+                        continue;
                     }
                     encounter.scoreQueue.Add(scoreRow.queueRowFromPiece(y, encounter.currentPiece, encounter.board));
                 }
+
             }
-            
         }
 
         protected bool isRowScoreable(int y) //UPDATE THIS LATER to allow for some empty spots with items - like sleight of hand

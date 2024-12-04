@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Quatrimo
 {
@@ -8,6 +9,7 @@ namespace Quatrimo
     {
         short tickIndex = 0;
         List<block> emptyBlocks = [];   //blocks to be filled in by lowering the column above
+        List<int> updatedRows = [];
         List<block> untickedBlocks = [];//blocks yet to be ticked
         public blockTickScoreState(encounter main) : base(main)
         {
@@ -33,7 +35,6 @@ namespace Quatrimo
                 emptyBlocks.Add(block);
 
                 block.score(block); //score block and flag for removal
-                block.scored = true;
                 block.scoreOperation.execute(encounter);
                 if (block.scoreOperation.interrupt(encounter)) //if the score operation has an interrupt, suspend the state
                 {
@@ -48,17 +49,23 @@ namespace Quatrimo
             foreach (var block in emptyBlocks)
             {
                 //if the block is empty (has been removed) then lower blocks above to fill it in
-                if (block.markedForRemoval) { encounter.board.lowerBlock(block); encounter.boardUpdated = true; }
-
+                if (block.markedForRemoval) 
+                { 
+                    encounter.board.lowerBlock(block); 
+                    encounter.boardUpdated = true;
+                    updatedRows.Add(block.boardpos.y);
+                    updatedRows.Add(block.boardpos.y-1);
+                }
                 encounter.turnScore += block.getScore(block);
                 encounter.turnMultiplier += block.getTimes(block);
             }
+            updatedRows = updatedRows.Distinct().ToList();
             emptyBlocks.Clear();
 
             if (encounter.boardUpdated)
             {
                 Debug.WriteLine("board updates processed");
-                var nextState = new processBoardUpdatesState(encounter, null, this);
+                var nextState = new processBoardUpdatesState(encounter, updatedRows, null, this);
                 nextState.startState();
                 return;
                 //start updateBoard state
@@ -115,6 +122,8 @@ namespace Quatrimo
         
         void interruptState()
         {
+            //block score events updating the board might mesh poorly with new updatedRows list, fix later
+
             //encounter.animHandler.animState = encounter.animHandler.waitForAnimations;
             //animSuspendState newState = new animSuspendState(encounter, this, true);
             processBoardUpdatesState newState = new processBoardUpdatesState(encounter);

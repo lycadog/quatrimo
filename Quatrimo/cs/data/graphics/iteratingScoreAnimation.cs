@@ -63,8 +63,6 @@ namespace Quatrimo
 
             block block = board.blocks[pos, y];
 
-            if(block == null) { return; } //remove later
-
             if(!block.scoredAnim)
             {
                 block.animateScore(encounter, null); //TODO: change anim later so we can override it from the default
