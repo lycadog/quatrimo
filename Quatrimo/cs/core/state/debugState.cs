@@ -49,7 +49,7 @@ namespace Quatrimo
                     manager.encounter.currentPiece = manager.encounter.nextPiece;
                     manager.encounter.currentPiece.play();
 
-                    manager.encounter.nextPiece = manager.encounter.bag.getPiece(manager.encounter.board);
+                    manager.encounter.nextPiece = manager.encounter.bag.getPiece(manager.encounter);
                     manager.encounter.board.nextbox.update(manager.encounter.nextPiece);
                 }
             }

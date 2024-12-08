@@ -1,27 +1,33 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Quatrimo
 {
     public class scoreBlocks : scoreOperation
     {
-        List<block> blocks;
+        List<block> blocks = [];
         board board;
         animSprite scoreAnim = animHandler.getDecayingAnim(Vector2I.zero);
 
         public scoreBlocks(List<Vector2I> blocks, board board)
         {
-            addBlocks(blocks);
             this.board = board;
+            addBlocks(blocks);
         }
 
-        protected void addBlocks(List<Vector2I> blocks)
+        protected void addBlocks(List<Vector2I> positions)
         {
-            foreach (var pos in blocks)
-            {
-                if (pos.x > 0 | pos.x <= board.dimensions.x) { continue; } //skip if position is out of bounds
-                if(pos.y > 0 | pos.y <= board.dimensions.x) { continue; } // ^^^
 
-                this.blocks.Add(board.blocks[pos.x, pos.y]); //add non-out of bounds blocks to the list
+            foreach (var pos in positions)
+            {
+                Debug.WriteLine($"POS ADDED: {pos.x}, {pos.y}");
+                Debug.WriteLine(board.dimensions.x);
+                Debug.WriteLine(board.dimensions.y);
+                if (pos.x < 0 || pos.x >= board.dimensions.x) { continue; } //skip if position is out of bounds
+                if(pos.y < 0 || pos.y >= board.dimensions.y) { continue; } // ^^^
+                Debug.WriteLine($"VALID POS: {pos.x}, {pos.y}");
+
+                blocks.Add(board.blocks[pos.x, pos.y]); //add non-out of bounds blocks to the list
             }
         }
 
@@ -32,8 +38,8 @@ namespace Quatrimo
             foreach(var block in blocks)
             {
                 if (block.scoredAnim) { continue; }
-
-                block.animateScore(encounter, null, counter);
+                Debug.WriteLine("SCOREBLOCK SCORED");
+                block.animateScore(null, counter);
                 counter++;
             }
         }

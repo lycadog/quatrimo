@@ -26,7 +26,7 @@ namespace Quatrimo
         /// </summary>
         /// <param name="board"></param>
         /// <returns></returns>
-        public boardPiece getBoardPiece(board board)
+        public boardPiece getBoardPiece(encounter encounter)
         {
             block[] newBlocks = new block[blockCount];
 
@@ -35,7 +35,8 @@ namespace Quatrimo
             for(int i = 0; i < blockCount; i++)
             {
                 block block = blocks[i].getBlock();
-                block.board = board;
+                block.encounter = encounter;
+                block.board = encounter.board;
                 block.piece = piece;
                 block.localpos = blocks[i].localpos;
 
@@ -48,7 +49,7 @@ namespace Quatrimo
 
             }
 
-            piece.setData(board, newBlocks, dimensions, origin, name, tex, color);
+            piece.setData(encounter.board, newBlocks, dimensions, origin, name, tex, color);
 
             return piece;
         }

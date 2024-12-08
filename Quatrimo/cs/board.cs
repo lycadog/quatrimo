@@ -8,8 +8,9 @@ namespace Quatrimo
 {
     public class board
     {
+        public encounter encounter;
+
         public block[,] blocks;
-        public animHandler animHandler;
 
         public List<int> updatedRows = []; //each int corresponds to the Y position of a row
         public List<Vector2I> queuedLowerBlocks = []; //empty scored blocks queued to be filled by lowering blocks above, no duplicates allowed
@@ -26,9 +27,9 @@ namespace Quatrimo
 
         public static readonly int boardy = 22;
 
-        public board(Vector2I dim, animHandler animHandler)
+        public board(encounter encounter, Vector2I dim)
         {
-            this.animHandler = animHandler;
+            this.encounter = encounter;
             dimensions = dim;
             blocks = new block[dimensions.x, dimensions.y];
             
@@ -36,7 +37,7 @@ namespace Quatrimo
             {
                 for(int y = 0; y < dimensions.y; y++)
                 {
-                    blocks[x, y] = new emptyBlock(new Vector2I(x, y));
+                    blocks[x, y] = new emptyBlock(encounter, new Vector2I(x, y));
                 }
             }
 
@@ -168,13 +169,13 @@ namespace Quatrimo
                 if(loweredBlock == null) { continue; }
 
                 blocks[x, y+1] = loweredBlock;
-                loweredBlock.movePlaced(new Vector2I(0, 1), loweredBlock);                
+                loweredBlock.movePlaced(new Vector2I(0, 1), loweredBlock);
             }
         }
 
         public void markEmpty(Vector2I pos)
         {
-            blocks[pos.x, pos.y] = new emptyBlock(pos);
+            blocks[pos.x, pos.y] = new emptyBlock(encounter, pos);
         }
 
     }

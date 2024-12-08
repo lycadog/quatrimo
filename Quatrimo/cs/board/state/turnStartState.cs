@@ -12,9 +12,10 @@ namespace Quatrimo
         {
             encounter.state = this;
             encounter.turnRowsCleared = 0;
+            encounter.updatedRows = new bool[encounter.board.dimensions.y];
 
             encounter.currentPiece = encounter.nextPiece; //grab next piece
-            encounter.nextPiece = encounter.bag.getPiece(encounter.board);
+            encounter.nextPiece = encounter.bag.getPiece(encounter);
             encounter.board.nextbox.update(encounter.nextPiece);
             Debug.WriteLine($"[gamestate.turnStart] Now playing {encounter.currentPiece.name}");
             //update piece preview

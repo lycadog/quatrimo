@@ -123,7 +123,7 @@ namespace Quatrimo
             full75 = atlas[13];
             full50 = atlas[14];
             full25 = atlas[15];
-            dropmark = atlas[9];
+            dropmark = atlas[11];
 
             borderUL = atlas[1];
             borderUR = atlas[3];

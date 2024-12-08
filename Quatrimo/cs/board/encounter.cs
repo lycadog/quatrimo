@@ -5,7 +5,6 @@ namespace Quatrimo
 {
     public class encounter
     {
-
         public board board;
         public animHandler animHandler;
         public boardState state;
@@ -28,19 +27,22 @@ namespace Quatrimo
         public boardPiece nextPiece;
 
         public bool boardUpdated = false;
+        public bool[] updatedRows;
 
-        public List<int> updatedRows = [];
+        public List<int> updatedRowsOLD = [];
         public List<scoreOperation> scoreQueue = []; //move to processBoardUpdatesState
+
         public List<block> scoredBlocks = [];
+        public List<block> emptyBlocks = [];
 
         public encounter(bag bag)
         {
             this.bag = bag;
 
             animHandler = new animHandler(this);
-            board = new board(new Vector2I(12, 28), animHandler);
+            board = new board(this, new Vector2I(12, 28));
 
-            nextPiece = bag.getPiece(board);
+            nextPiece = bag.getPiece(this);
 
             turnStartState newState = new turnStartState(this);
             newState.startState();

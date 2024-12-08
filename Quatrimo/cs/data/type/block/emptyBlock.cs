@@ -3,13 +3,14 @@ namespace Quatrimo
 {
     public class emptyBlock : block
     {
-        public emptyBlock(Vector2I boardpos)
+        public emptyBlock(encounter encounter, Vector2I boardpos)
         {
             this.boardpos = boardpos;
+            this.encounter = encounter;
             occupiedForScoring = false;
         }
 
-        public override void animateScore(encounter encounter, animation anim, int index = -1, bool forceAnim = false)
+        public override void animateScore(animation anim, int index = -1, bool forceAnim = false)
         {
             if (index < 0) { encounter.scoredBlocks.Add(this); }
             else { encounter.scoredBlocks.Insert(index, this); }
@@ -40,7 +41,7 @@ namespace Quatrimo
             return 0;
         }
 
-        protected override void graphicsInit(block block)
+        protected override void createGFXf(block block)
         {
         }
 

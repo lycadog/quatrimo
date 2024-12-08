@@ -1,25 +1,23 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Quatrimo
 {
     public class blockTickScoreState : boardState
     {
         short tickIndex = 0;
-        List<block> emptyBlocks = [];   //blocks to be filled in by lowering the column above
-        List<int> updatedRows = [];
         List<block> untickedBlocks = [];//blocks yet to be ticked
         public blockTickScoreState(encounter main) : base(main)
         {
         }
 
-        //finalize pieceScoreState's operations
+        //finalize previous state's operations
         public override void startState() //process through all scored blocks
         {
             encounter.state = this;
             update = tick;
+            interrupted = false;
 
             Debug.WriteLine($"block tick start: SCOREDBLOCKS COUNT: {encounter.scoredBlocks.Count}");
 
@@ -32,41 +30,22 @@ namespace Quatrimo
                 {
                     continue; //skip over scored blocks
                 }
-                emptyBlocks.Add(block);
 
-                block.score(block); //score block and flag for removal
-                block.scoreOperation.execute(encounter);
-                if (block.scoreOperation.interrupt(encounter)) //if the score operation has an interrupt, suspend the state
+                block.finalizeScoring(block);
+                if (interrupted) //if the block score method interrupts the state, suspend it
                 {
-                    Debug.WriteLine($"Blocktick state has been interrupted");
-
+                    Debug.WriteLine("blockTickScoreState: interrupting state due to scoreOperation");
                     interruptState();
                     return; //interrupt the stateStart
                 }
             }
 
-            //lower all scored blocks and process their score
-            foreach (var block in emptyBlocks)
-            {
-                //if the block is empty (has been removed) then lower blocks above to fill it in
-                if (block.markedForRemoval) 
-                { 
-                    encounter.board.lowerBlock(block); 
-                    encounter.boardUpdated = true;
-                    updatedRows.Add(block.boardpos.y);
-                    updatedRows.Add(block.boardpos.y-1);
-                }
-                encounter.turnScore += block.getScore(block);
-                encounter.turnMultiplier += block.getTimes(block);
-            }
-            updatedRows = updatedRows.Distinct().ToList();
-            emptyBlocks.Clear();
+            encounter.emptyBlocks.Clear();
 
             if (encounter.boardUpdated)
             {
-                Debug.WriteLine("board updates processed");
-                var nextState = new processBoardUpdatesState(encounter, updatedRows, null, this);
-                nextState.startState();
+                Debug.WriteLine("blockTickScoreState: interrupting state due to boardupdate");
+                interruptState();
                 return;
                 //start updateBoard state
             }
@@ -74,9 +53,6 @@ namespace Quatrimo
             sortTickableBlocks();
 
             //piece score state has been finalized
-
-
-
         }
 
         protected void tick(GameTime gameTime)
@@ -96,12 +72,10 @@ namespace Quatrimo
                     continue;
                 }
 
+                //Debug.WriteLine($"block {block.boardpos.x}, {block.boardpos.y} ticked");
 
                 block.tick(block);
-                block.ticked = true;
-                block.tickOperation.execute(encounter);
-
-                if (block.tickOperation.interrupt(encounter))
+                if (interrupted)
                 {
                     interruptState();
                     return; //interrupt
@@ -124,10 +98,9 @@ namespace Quatrimo
         {
             //block score events updating the board might mesh poorly with new updatedRows list, fix later
 
-            //encounter.animHandler.animState = encounter.animHandler.waitForAnimations;
-            //animSuspendState newState = new animSuspendState(encounter, this, true);
-            processBoardUpdatesState newState = new processBoardUpdatesState(encounter);
-            newState.startState();
+            processBoardUpdatesState processState = new processBoardUpdatesState(encounter, updatedRows, null, this);
+            animSuspendState animState = new animSuspendState(encounter, processState, true);
+            animState.startState();
         }
 
         /// <summary>

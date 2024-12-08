@@ -25,7 +25,7 @@ namespace Quatrimo
         public List<bagPiece> pieces;
         public string name { get; set; }
 
-        public boardPiece getPiece(board board)
+        public boardPiece getPiece(encounter encounter)
         {
             foreach (bagPiece pieceW in pieces)
             {
@@ -50,7 +50,7 @@ namespace Quatrimo
                 }
             }
 
-            return pieces[index].getBoardPiece(board);
+            return pieces[index].getBoardPiece(encounter);
         }
 
     }

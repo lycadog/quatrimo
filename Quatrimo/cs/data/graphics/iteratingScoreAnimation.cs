@@ -65,7 +65,7 @@ namespace Quatrimo
 
             if(!block.scoredAnim)
             {
-                block.animateScore(encounter, null); //TODO: change anim later so we can override it from the default
+                block.animateScore(null); //TODO: change anim later so we can override it from the default
             }
         }
     }

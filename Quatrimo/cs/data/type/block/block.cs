@@ -1,19 +1,19 @@
 ﻿
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Graphics;
-using System.Reflection.Metadata;
+using System;
 
 namespace Quatrimo
 {
     public class block
     {
+        public encounter encounter;
         public board board;
         public block()
         {
             linkDelegates();
         }
-        public scoreOperation scoreOperation = new emptyScoreOperation();
-        public scoreOperation tickOperation = new emptyScoreOperation();
+
         public element element { get; set; }
         public element dropElement { get; set; }
         public boardPiece piece { get; set; }
@@ -29,42 +29,42 @@ namespace Quatrimo
 
         public bool scoredAnim = false;         //if the block has had the scoring animation run over it
         public bool scored = false;             //if the block has been actually scored
-        public bool markedForRemoval = false;   //if the block has been removed from the board and should be filled in
+        public bool removed = false;   //if the block has been removed from the board and should be filled in
         public bool ticked = false;             //ticked by blockTickScoreState
 
         public void linkDelegates()
         {
-            play = new blockD(playF);
-            place = new blockD(placeF);
-            score = new blockD(scoreF);
-            tick = new blockD(tickF);
-            createGFX = new blockD(graphicsInit);
-            createPreview = new spriteD(createPreviewF);
-            updatePos = new blockD(updatePosF);
-            updateSpritePos = new blockD(updateSpritePosF);
-            removeFalling = new blockD(removeFallingF);
-            hideGFX = new blockD(hideGFXf);
-            removeFromBoard = new blockD(removeFromBoardF);
+            play = new Action<block>(playF);
+            place = new Action<block>(placeF);
+            score = new Action<block>(scoreF);
+            tick = new Action<block>(tickF);
+            createGFX = new Action<block>(createGFXf);
+            createPreview = new Func<block, spriteObject>(createPreviewF);
+            updatePos = new Action<block>(updatePosF);
+            updateSpritePos = new Action<block>(updateSpritePosF);
+            removeFalling = new Action<block>(removeFallingF);
+            hideGFX = new Action<block>(hideGFXf);
+            removeFromBoard = new Action<block>(removeFromBoardF);
 
-            scoreRemoveGFX = new blockD(scoreRemoveGFXf);
-            removeScored = new blockD(removeScoredF);
+            scoreRemoveGFX = new Action<block>(scoreRemoveGFXf);
+            removeScored = new Action<block>(removeScoredF);
 
-            collidedFalling = new coordinateD(collidedFallingF);
-            collidedPlaced = new blockVoidD(collidedPlacedF);
-            movePlaced = new coordinateD(movePlacedF);
+            collidedFalling = new Action<block, block>(collidedFallingF);
+            collidedPlaced = new Action<block, block>(collidedPlacedF);
+            movePlaced = new Action<Vector2I, block>(movePlacedF);
 
-            placedBlockClipped = new blockBoolD(placedBlockClippedF);
-            fallingBlockClipped = new blockVoidD(fallingBlockClippedF);
+            placedBlockClipped = new Func<block, block, bool>(placedBlockClippedF);
+            fallingBlockClipped = new Action<block, block>(fallingBlockClippedF);
 
-            collidesFalling = new coordinateBoolD(collidesFallingF);
-            collidesPlaced = new blockBoolD(collidesPlacedF);
+            collidesFalling = new Func<Vector2I, block, bool>(collidesFallingF);
+            collidesPlaced = new Func<block, block, bool>(collidesPlacedF);
 
-            rotate = new rotationD(rotateF);
-            rotateGFX = new rotationD(rotateGFXf);
-            getRotatePos = new rotationVectorD(getRotatePosF);
+            rotate = new Action<int, block>(rotateF);
+            rotateGFX = new Action<int, block>(rotateGFXf);
+            getRotatePos = new Func<int, block, Vector2I>(getRotatePosF);
 
-            getScore = new scoreD(getScoreF);
-            getTimes = new multD(getMultF);
+            getScore = new Func<block, long>(getScoreF);
+            getTimes = new Func<block, double>(getMultF);
         }
 
         // =|||||||= [ NONDELEGATE METHODS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -75,9 +75,9 @@ namespace Quatrimo
         /// </summary>
         /// <param name="encounter"></param>
         /// <param name="anim"></param>
-        public virtual void animateScore(encounter encounter, animation anim, int index = -1, bool forceAnim = false) //TODO: add support for overriding the default anim
+        public virtual void animateScore(animation anim, int index = -1, bool forceAnim = false) //TODO: add support for overriding the default anim
         {
-            if(index < 0) { encounter.scoredBlocks.Add(this); }
+            if(index == -1) { encounter.scoredBlocks.Add(this); }
             else { encounter.scoredBlocks.Insert(index, this); }
 
             scoreRemoveGFX(this);
@@ -89,155 +89,13 @@ namespace Quatrimo
             encounter.animHandler.animations.Add(sprite);
         }
 
-        
-
-
-
 
         // =|||||||= [ DELEGATE DECLARATIONS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
         /// <summary>
         /// Play the falling block into the board
         /// </summary>
-        public blockD play;
-
-        /// <summary>
-        /// Place block at current board position
-        /// </summary>
-        public blockD place;
-
-        /// <summary>
-        /// Score block, does not remove the block
-        /// </summary>
-        public blockD score;
-
-        /// <summary>
-        /// Ticks block at the end of a turn, returns whether or not it creates an animation that needs to be waited on (to suspend the state)
-        /// </summary>
-        public blockD tick;
-
-        /// <summary>
-        /// Initialize the graphics needed for the block
-        /// </summary>
-        public blockD createGFX;
-
-        /// <summary>
-        /// Initialize the drop preview for the currently falling block
-        /// </summary>
-        public spriteD createPreview;
-
-        /// <summary>
-        /// Update the block's board position
-        /// </summary>
-        public blockD updatePos;
-
-        /// <summary>
-        /// Update the sprites of the block to match its board position
-        /// </summary>
-        public blockD updateSpritePos;
-
-        /// <summary>
-        /// Remove the falling block from play
-        /// </summary>
-        public blockD removeFalling;
-
-        /// <summary>
-        /// Hide the block's sprites
-        /// </summary>
-        public blockD hideGFX;
-
-        /// <summary>
-        /// Remove the placed block from the board
-        /// </summary>
-        public blockD removeFromBoard;
-
-        /// <summary>
-        /// Attempt to remove the gfx for scoring
-        /// </summary>
-        public blockD scoreRemoveGFX;
-
-        /// <summary>
-        /// Attempt to remove the block for scoring
-        /// </summary>
-        public blockD removeScored;
-
-        /// <summary>
-        /// Run collided while falling event
-        /// </summary>
-        public coordinateD collidedFalling;
-
-        /// <summary>
-        /// Run collided while placed event
-        /// </summary>
-        public blockVoidD collidedPlaced;
-
-        /// <summary>
-        /// Runs on a placed block has a falling block attempt placement on its position, runs before fallingBlockClipped
-        /// </summary>
-        public blockBoolD placedBlockClipped;
-
-        /// <summary>
-        /// Runs when a falling block attempts to place on top of a placed block, runs AFTER placedBlockClipped
-        /// </summary>
-        public blockVoidD fallingBlockClipped;
-
-        /// <summary>
-        /// Used to move placed pieces
-        /// </summary>
-        public coordinateD movePlaced;
-
-        /// <summary>
-        /// Checks falling block collision with the specified offset
-        /// </summary>
-        public coordinateBoolD collidesFalling;
-
-        /// <summary>
-        /// Checks if the placed block and falling block should collide
-        /// </summary>
-        public blockBoolD collidesPlaced;
-
-        /// <summary>
-        ///  Rotates the block along the piece's origin by changing the local position
-        /// *** DIRECTION MUST BE -1 OR 1 ***
-        /// </summary>
-        public rotationD rotate;
-
-        /// <summary>
-        /// Rotates the block's sprites
-        /// </summary>
-        public rotationD rotateGFX;
-
-        /// <summary>
-        /// Returns the local position after a rotation operation in the specificed direction
-        /// </summary>
-        public rotationVectorD getRotatePos;
-
-        /// <summary>
-        /// Gets the score value of the block
-        /// </summary>
-        public scoreD getScore;
-
-        /// <summary>
-        /// Gets the multiplier the block will add to the current score operation
-        /// </summary>
-        public multD getTimes;
-
-        //really really messy but whatever
-        public delegate void blockD(block block);
-        public delegate bool tickD(block block);
-        public delegate void coordinateD(Vector2I vector, block block);
-        public delegate bool coordinateBoolD(Vector2I vector, block block);
-        public delegate void blockVoidD(block otherBlock, block block);
-        public delegate bool blockBoolD(block otherBlock, block block);
-        public delegate void rotationD(int direction, block block);
-        public delegate Vector2I rotationVectorD(int direction, block block);
-        public delegate spriteObject spriteD(block block);
-        public delegate long scoreD(block block);
-        public delegate double multD(block block);
-
-
-        // =|||||||= [ DELEGATE-WRAPPED METHODS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
+        public Action<block> play;
         protected virtual void playF(block block)
         {
             updatePos(this);
@@ -246,42 +104,14 @@ namespace Quatrimo
             board.sprites.Add(dropElement);
         }
 
-        protected virtual void graphicsInit(block block)
-        {
-            element = new element(tex, color, new Vector2I(0, -5), 0.8f); //create new sprite element
-            dropElement = new element(Game1.dropmark, Color.LightGray, new Vector2I(0, -10), 0.79f);
-        }
-
-        protected virtual void movePlacedF(Vector2I offset, block block)
-        {
-            board.markEmpty(boardpos);
-            board.blocks[boardpos.x + offset.x, boardpos.y + offset.y] = this;
-
-            boardpos = new Vector2I(boardpos.x + offset.x, boardpos.y + offset.y);
-            updateSpritePos(block);
-        }
-
-
-        protected virtual void rotateF(int direction, block block)
-        {
-            localpos = getRotatePos(direction, this);
-            rotateGFX(direction, this);
-        }
-
-        protected Vector2I getRotatePosF(int direction, block block) //direction is 1 or -1
-        {
-            return new Vector2I(localpos.y * -direction, localpos.x * direction);
-        }
-
-        protected virtual void rotateGFXf(int direction, block block)
-        {
-            element.rot += MathHelper.ToRadians(90 * direction);
-        }
-
+        /// <summary>
+        /// Place block at current board position
+        /// </summary>
+        public Action<block> place;
         protected virtual void placeF(block block)
         {
             block clipped = board.blocks[boardpos.x, boardpos.y];
-            
+
             if (!clipped.placedBlockClipped(block, clipped))
             {
                 block.fallingBlockClipped(clipped, block);
@@ -293,11 +123,79 @@ namespace Quatrimo
             board.sprites.Remove(dropElement);
         }
 
+        //todo: rework block scoring methods for easier use
+        //different methods depending on boardstate and other things like fully removing the block or animating it
+        //need a seperate one for scoring it and getting it outta here.
+        //and a new one for animating but not adding it to be removed later
+
+        /// <summary>
+        /// Called by blockTickState to fully score and remove a block, do NOT call anywhere else
+        /// </summary>
+        public Action<block> finalizeScoring;
+        protected virtual void finalizeScoringF(block block)
+        {
+            score(this);
+            encounter.board.lowerBlock(block);
+        }
+
+        /// <summary>
+        /// Score block, does not remove the block
+        /// </summary>
+        public Action<block> score;
+        protected virtual void scoreF(block block)
+        {
+            scored = true;
+            removed = true; //block will be lowered if true
+            encounter.turnScore += getScore(this);
+            encounter.turnMultiplier += getTimes(this);
+        }
+
+        /// <summary>
+        /// Ticks block at the end of a turn, returns whether or not it creates an animation that needs to be waited on (to suspend the state)
+        /// </summary>
+        public Action<block> tick;
+        protected virtual void tickF(block block)
+        {
+            ticked = true;
+        }
+
+        /// <summary>
+        /// Initialize the graphics needed for the block
+        /// </summary>
+        public Action<block> createGFX;
+        protected virtual void createGFXf(block block)
+        {
+            element = new element(tex, color, new Vector2I(0, -5), 0.8f); //create new sprite element
+            dropElement = new element(Game1.dropmark, Color.LightGray, new Vector2I(0, -10), 0.79f);
+        }
+
+        /// <summary>
+        /// Initialize the drop preview for the currently falling block
+        /// </summary>
+        public Func<block,spriteObject> createPreview;
+        protected virtual spriteObject createPreviewF(block block)
+        {
+            spriteObject sprite = new spriteObject();
+            sprite.size = new Vector2I(5, 5);
+            sprite.depth = .93f;
+            sprite.tex = Game1.solid; sprite.color = element.color;
+
+            return sprite;
+        }
+
+        /// <summary>
+        /// Update the block's board position
+        /// </summary>
+        public Action<block> updatePos;
         protected void updatePosF(block block)
         {
             boardpos = localpos.add(piece.pos);
         }
 
+        /// <summary>
+        /// Update the sprites of the block to match its board position
+        /// </summary>
+        public Action<block> updateSpritePos;
         protected virtual void updateSpritePosF(block block)
         {
             if (boardpos.y > 7)
@@ -308,65 +206,107 @@ namespace Quatrimo
             dropElement.setEPos(element.boardPos2ElementPos(new Vector2I(boardpos.x, boardpos.y + piece.dropOffset)));
         }
 
-        protected virtual void tickF(block block)
-        {
-
-        }
-
+        /// <summary>
+        /// Remove the falling block from play
+        /// </summary>
+        public Action<block> removeFalling;
         protected virtual void removeFallingF(block block)
         {
             board.sprites.Remove(element);
             board.sprites.Remove(dropElement);
         }
 
+        /// <summary>
+        /// Hide the block's sprites
+        /// </summary>
+        public Action<block> hideGFX;
         protected virtual void hideGFXf(block block)
         {
             board.staleSprites.Add(element);
         }
 
+        /// <summary>
+        /// Forcefully remove the placed block from the board - not recommended
+        /// </summary>
+        public Action<block> removeFromBoard;
+        protected virtual void removeFromBoardF(block block)
+        {
+            board.markEmpty(boardpos);
+        }
+
+        /// <summary>
+        /// Attempt to remove the gfx for scoring
+        /// </summary>
+        public Action<block> scoreRemoveGFX;
         //Used during the score step to attempt gfx removal - if block should not be scored, do not remove gfx
         protected virtual void scoreRemoveGFXf(block block)
         {
             hideGFX(block);
         }
 
-        protected virtual void removeFromBoardF(block block)
-        {
-            board.markEmpty(boardpos);
-        }
-
-        protected virtual void scoreF(block block)
-        {
-            scored = true;
-            markedForRemoval = true;
-        }
-
-        //Used during the score step to attempt removal - if block should not be scored, do not run score()
+        /// <summary>
+        /// Attempt to remove the block for scoring
+        /// </summary>
+        public Action<block> removeScored;
+        //Used during the score step to attempt marking for removal - if block should not be scored, do not run score()
+        //might be redundant?
         protected virtual void removeScoredF(block block)
         {
             score(block);
         }
 
-        protected virtual long getScoreF(block block)
+        /// <summary>
+        /// Block collided with another while falling
+        /// </summary>
+        public Action<block, block> collidedFalling;
+        protected virtual void collidedFallingF(block otherblock, block block) { }
+
+        /// <summary>
+        /// Run collided while placed event | T1:otherBlock - T2:block
+        /// </summary>
+        public Action<block, block> collidedPlaced;
+        protected virtual void collidedPlacedF(block fallingBlock, block block) { }
+
+        /// <summary>
+        /// Runs on a placed block has a falling block attempt placement on its position, runs before fallingBlockClipped - returns if the block will remove itself
+        /// </summary>
+        public Func<block, block, bool> placedBlockClipped;
+
+        /// <param name="fallingBlock"></param>
+        protected virtual bool placedBlockClippedF(block fallingBlock, block block)
         {
-            return scoreValue;
+            return false;
         }
 
-        protected virtual double getMultF(block block)
+        /// <summary>
+        /// Runs when a falling block attempts to place on top of a placed block, runs AFTER placedBlockClipped
+        /// </summary>
+        public Action<block, block> fallingBlockClipped;
+        protected virtual void fallingBlockClippedF(block placedBlock, block block)
         {
-            return multiplier;
+            block.removeFalling(block);
         }
 
-        protected virtual spriteObject createPreviewF(block block)
+        /// <summary>
+        /// Used to move placed pieces
+        /// </summary>
+        public Action<Vector2I,block> movePlaced;
+        protected virtual void movePlacedF(Vector2I offset, block block)
         {
-            spriteObject sprite = new spriteObject();
-            sprite.size = new Vector2I(5, 5);
-            sprite.depth = .93f;
-            sprite.tex = Game1.solid; sprite.color = element.color;
-            
-            return sprite;
+            board.markEmpty(boardpos);
+            board.blocks[boardpos.x + offset.x, boardpos.y + offset.y] = this;
+
+            boardpos = new Vector2I(boardpos.x + offset.x, boardpos.y + offset.y);
+            updateSpritePos(block);
+
+            encounter.boardUpdated = true;
+            encounter.updatedRows[boardpos.y] = true;
         }
 
+        /// <summary>
+        /// Checks falling block collision with the specified offset
+        /// </summary>
+        public Func<Vector2I, block, bool> collidesFalling;
         protected virtual bool collidesFallingF(Vector2I checkPos, block block)
         {
             if (checkPos.x < 0) { return true; }
@@ -375,36 +315,66 @@ namespace Quatrimo
             if (checkPos.y >= piece.board.dimensions.y) { return true; }
 
             block hitBlock = board.blocks[checkPos.x, checkPos.y];
-                   
+
             return hitBlock.collidesPlaced(block, hitBlock);
         }
 
+        /// <summary>
+        /// Checks if the placed block and falling block should collide
+        /// </summary>
+        public Func<block, block, bool> collidesPlaced;
         protected virtual bool collidesPlacedF(block falling, block block)
         {
+            falling.collidedFalling(block, falling);
+            block.collidedPlaced(falling, block);
             return true;
         }
 
-        protected virtual void collidedFallingF(Vector2I collisionPos, block block) { }
-
-        protected virtual void collidedPlacedF(block fallingBlock, block block) { }
-
         /// <summary>
-        /// Runs on a falling block when it tries to place on an already placed block, runs AFTER placedBlockClipped
+        ///  Rotates the block along the piece's origin by changing the local position
+        /// *** DIRECTION MUST BE -1 OR 1 ***
         /// </summary>
-        /// <param name="block"></param>
-        protected virtual void fallingBlockClippedF(block placedBlock, block block)
+        public Action<int, block> rotate;
+        protected virtual void rotateF(int direction, block block)
         {
-            block.removeFalling(block);
+            localpos = getRotatePos(direction, this);
+            rotateGFX(direction, this);
         }
 
         /// <summary>
-        /// Runs on a placed block when a falling block tries to place on its position; Returns if the placed block will remove itself or not
+        /// Rotates the block's sprites
         /// </summary>
-        /// <param name="fallingBlock"></param>
-        protected virtual bool placedBlockClippedF(block fallingBlock, block block)
+        public Action<int, block> rotateGFX;
+        protected virtual void rotateGFXf(int direction, block block)
         {
-            return false;
+            element.rot += MathHelper.ToRadians(90 * direction);
         }
 
+        /// <summary>
+        /// Returns the local position after a rotation operation in the specificed direction
+        /// </summary>
+        public Func<int, block, Vector2I> getRotatePos;
+        protected Vector2I getRotatePosF(int direction, block block) //direction is 1 or -1
+        {
+            return new Vector2I(localpos.y * -direction, localpos.x * direction);
+        }
+
+        /// <summary>
+        /// Gets the score value of the block
+        /// </summary>
+        public Func<block, long> getScore;
+        protected virtual long getScoreF(block block)
+        {
+            return scoreValue;
+        }
+
+        /// <summary>
+        /// Gets the multiplier the block will add to the current score operation
+        /// </summary>
+        public Func<block, double> getTimes;
+        protected virtual double getMultF(block block)
+        {
+            return multiplier;
+        }
     }
 }

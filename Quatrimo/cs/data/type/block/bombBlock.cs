@@ -1,44 +1,72 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Quatrimo
 {
     public class bombBlock : block
     {
-        public short timer = 3;
+        public short timer = 4;
 
-        protected override void graphicsInit(block block)
+        public override void animateScore(animation anim, int index = -1, bool forceAnim = false)
         {
-            base.graphicsInit(block);
+            base.animateScore(anim, index, forceAnim);
+            List<Vector2I> blocks = [
+                boardpos.add(new Vector2I(1, 0)),
+                boardpos.add(new Vector2I(-1, 0)),
+                boardpos.add(new Vector2I(0, 1)),
+                boardpos.add(new Vector2I(0, -1)),
+                boardpos.add(new Vector2I(1, 1)),
+                boardpos.add(new Vector2I(-1, 1)),
+                boardpos.add(new Vector2I(1, -1)),
+                boardpos.add(new Vector2I(-1, -1))
+            ];
+            new scoreBlocks(blocks, board).execute(encounter);
+        }
+
+        protected override void createGFXf(block block)
+        {
+            base.createGFXf(block);
             element.tex = Game1.bomb;
+        }
+
+        //bomb sprite looks weird rotated, so disable it
+        protected override void rotateGFXf(int direction, block block)
+        {
         }
 
         protected override void tickF(block block)
         {
-            Debug.WriteLine("BOMB TICKED timer: " + timer);
             timer -= 1;
+            Debug.WriteLine("BOMB TICKED timer: " + timer);
 
             if (timer > 0)
             {
+                regionSprite sprite = new regionSprite();
+                sprite.tex = Game1.nameQ;
+                sprite.color = Color.Magenta;
+                sprite.pos = new Vector2I(240, 240);
+                sprite.depth = 1f;
 
-                //regionSprite sprite = new regionSprite();
-                //sprite.tex = nameQ;
-                //sprite.color = Color.Magenta;
-                //sprite.pos = new Vector2I(240, 240);
-                //sprite.depth = 1f;
-
-                //stateManager.encounter.board.sprites.Add(new movingSprite(sprite, new Vector2(0, -200f), new Vector2(0, 100f)));
+                //board.sprites.Add(new movingSprite(sprite, new Vector2(0, -200f), new Vector2(0, 100f)));
 
                 return;
             }
-
-            List<block> blocks = [
-                board.blocks[boardpos.x + 1, boardpos.y],
-                board.blocks[boardpos.x - 1, boardpos.y],
-                board.blocks[boardpos.x, boardpos.y + 1],
-                board.blocks[boardpos.x, boardpos.y - 1]
+            
+            List<Vector2I> blocks = [
+                boardpos.add(new Vector2I(0, 0)),
+                boardpos.add(new Vector2I(1, 0)),
+                boardpos.add(new Vector2I(-1, 0)),
+                boardpos.add(new Vector2I(0, 1)),
+                boardpos.add(new Vector2I(0, -1)),
+                boardpos.add(new Vector2I(1, 1)),
+                boardpos.add(new Vector2I(-1, 1)),
+                boardpos.add(new Vector2I(1, -1)),
+                boardpos.add(new Vector2I(-1, -1))
             ];
-            //tickOperation = new scoreBlocks(blocks);
+            new scoreBlocks(blocks, board).execute(encounter);
+            encounter.state.interrupted = true;
+            score = base.scoreF;
         }
     }
 }

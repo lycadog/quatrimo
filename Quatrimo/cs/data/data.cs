@@ -56,6 +56,8 @@ namespace Quatrimo
         public static pieceType bAngle;
 
         public static pieceType bTestPiece;
+        public static pieceType bTestPiece2;
+        public static pieceType bTestPiece3;
 
         public static starterBag classicBag;
         public static starterBag bag1;
@@ -132,6 +134,8 @@ namespace Quatrimo
             bZBlockL = new(2, 3, new wSet<baseblockType>[,] { { basic, basic, null }, { null, basic, basic } }, noMod, new Vector2I(0, 1), 4, "Left Z Block", deflt, Game1.round);
 
             bTestPiece = new(2, 3, new wSet<baseblockType>[,] { { cursed, cursed, null }, { null, cursed, cursed } }, noMod, new Vector2I(0, 1), 4, "Left Z Block", deflt, Game1.round);
+            bTestPiece2 = new(1, 2, new wSet<baseblockType>[,] { { bomb, bomb } }, noMod, Vector2I.zero, 2, "DebugPiece2", deflt, Game1.box);
+            bTestPiece3 = new(1, 1, new wSet<baseblockType>[,] { { cursed } }, noMod, Vector2I.zero, 1, "DebugPiece2", deflt, Game1.box);
 
             bWedge = new(2, 2, new wSet<baseblockType>[,] { { basic, basic }, { basic, null } }, noMod, new Vector2I(0, 0), 3, "Wedge", deflt, Game1.box);
             bTwig = new(1, 2, new wSet<baseblockType>[,] { { basic, basic } }, noMod, new Vector2I(0, 1), 2, "Twig", deflt, Game1.round);
@@ -172,12 +176,12 @@ namespace Quatrimo
             classicBag = new starterBag([bLong, bSquare, bTBlock, bLBlockR, bLBlockL, bZBlockR, bZBlockL], "Classic Bag");
 
             bag1 = new starterBag([bCorner, bSquare, bWedge, bStick, bRectangle, bPickL, bPickR, bLong], "bag1");
-            bag2 = new starterBag([bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong, bTestPiece], "bag2");
+            bag2 = new starterBag([bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong, bTestPiece3, bTestPiece2], "bag2");
             bag3 = new starterBag([bNub, bCaret, bBowl, bStump, bSlash, bTwig, bLong, bLepton], "bag3");
 
             foundryBag = new starterBag([bBarycenter, bHammer, bBar, bLong, bAngle, bCorner, bTwig, bSquare], "Foundry");
 
-            debugbag = new starterBag([bTestPiece], "debugbag");
+            debugbag = new starterBag([bTestPiece3], "debugbag");
 
         }
     }

@@ -4,23 +4,23 @@
     { 
         short state = 0; //0 = closed, 1 = open and score buff active, 2 = open with score buff inactive
 
-        public override void animateScore(encounter encounter, animation anim, int index = -1, bool forceAnim = false)
+        public override void animateScore(animation anim, int index = -1, bool forceAnim = false)
         {
-            base.animateScore(encounter, anim, index, forceAnim);
+            base.animateScore(anim, index, forceAnim);
             state = 1;
             element.tex = Game1.cursedopen;
         }
 
-        protected override void graphicsInit(block block)
+        protected override void createGFXf(block block)
         {
-            base.graphicsInit(block);
+            base.createGFXf(block);
             element.tex = Game1.cursedclosed;
         }
 
         protected override void scoreF(block block)
         {
             scoredAnim = false;
-            markedForRemoval = false;
+            removed = false;
         }
 
         protected override void rotateGFXf(int direction, block block)
@@ -33,9 +33,6 @@
 
         protected override void tickF(block block)
         {
-            scoredAnim = false;
-            scored = false;
-
             if(state > 0)
             {
                 scoreValue = 4;

@@ -55,14 +55,8 @@ namespace Quatrimo
         void placePiece()
         {
             encounter.currentPiece.place();
-
-            foreach (block block in encounter.currentPiece.blocks)
-            {
-                encounter.updatedRows.Add(block.boardpos.y); //record the height of every block of the placed piece
-            }
-
-            processBoardUpdatesState newState = new processBoardUpdatesState(encounter, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27],
-                encounter.currentPiece);
+            encounter.updatedRows = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true];
+            processBoardUpdatesState newState = new processBoardUpdatesState(encounter, encounter.currentPiece);
             newState.startState();
         }
 
@@ -141,7 +135,7 @@ namespace Quatrimo
             if (encounter.heldPiece == null)
             {
                 encounter.heldPiece = encounter.nextPiece; //put this all in one method later, main.drawPiece(); or something, updates all next boxes
-                encounter.nextPiece = encounter.bag.getPiece(encounter.board);
+                encounter.nextPiece = encounter.bag.getPiece(encounter);
                 encounter.board.nextbox.update(encounter.nextPiece);
             }
 
