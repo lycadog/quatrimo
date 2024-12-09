@@ -10,6 +10,7 @@ namespace Quatrimo
         static readonly wSet<baseblockType> basic = new([new baseBasicBlock()], [100]);
         static readonly wSet<baseblockType> bomb = new([new baseBombBlock()], [100]);
         static readonly wSet<baseblockType> cursed = new([new baseCursedBlock()], [100]);
+        static readonly wSet<baseblockType> piercing = new([new basePiercingBlock()], [100]);
 
 
         //default colors, broad color palette
@@ -54,6 +55,7 @@ namespace Quatrimo
         public static pieceType bBar;
         public static pieceType bLonger;
         public static pieceType bAngle;
+        public static pieceType bNeedle;
 
         public static pieceType bTestPiece;
         public static pieceType bTestPiece2;
@@ -166,6 +168,8 @@ namespace Quatrimo
             bDiamond = new(3, 3, new wSet<baseblockType>[,] { { null, basic, null }, { basic, basic, basic }, { null, basic, null } }, noMod, new Vector2I(1, 1), 5, "Diamond", deflt, Game1.circle);
             bBrick = new(4, 3, new wSet<baseblockType>[,] { { basic, basic, basic }, { basic, basic, basic }, { basic, basic, basic }, { basic, basic, basic } }, noMod, new Vector2I(2, 2), 12, "Brick", deflt, Game1.box);
 
+            bNeedle = new(3, 4, new wSet<baseblockType>[,] { { null, basic, null, null }, { basic, null, piercing, piercing }, { null, basic, null, null } }, noMod, new Vector2I(1, 1), 5, "Needle", deflt, Game1.box);
+
             bBarycenter = new(5, 2, new wSet<baseblockType>[,] { { basic, basic }, { basic, basic }, { null, null }, { basic, basic }, { basic, basic } }, noMod, new Vector2I(3, 1), 8, "Barycenter", deflt, Game1.box);
             bBasin = new(4, 2, new wSet<baseblockType>[,] { { basic, basic }, { null, basic }, { null, basic }, { basic, basic } }, noMod, new Vector2I(2, 2), 6, "Basin", deflt, Game1.box);
             bHammer = new(4, 3, new wSet<baseblockType>[,] { { null, basic, null }, { null, basic, null }, { basic, basic, basic }, { basic, basic, basic } }, noMod, new Vector2I(1, 1), 8, "Hammer", deflt, Game1.box);
@@ -176,7 +180,7 @@ namespace Quatrimo
             classicBag = new starterBag([bLong, bSquare, bTBlock, bLBlockR, bLBlockL, bZBlockR, bZBlockL], "Classic Bag");
 
             bag1 = new starterBag([bCorner, bSquare, bWedge, bStick, bRectangle, bPickL, bPickR, bLong], "bag1");
-            bag2 = new starterBag([bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong, bTestPiece3, bTestPiece2], "bag2");
+            bag2 = new starterBag([bDipole, bLongT, bHatchetL, bHatchetR, bTwig, bWedge, bHookL, bHookR, bLong, bNeedle], "bag2");
             bag3 = new starterBag([bNub, bCaret, bBowl, bStump, bSlash, bTwig, bLong, bLepton], "bag3");
 
             foundryBag = new starterBag([bBarycenter, bHammer, bBar, bLong, bAngle, bCorner, bTwig, bSquare], "Foundry");

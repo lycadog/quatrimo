@@ -58,6 +58,7 @@ namespace Quatrimo
         public static Texture2DRegion bomb;
         public static Texture2DRegion cursedclosed;
         public static Texture2DRegion cursedopen;
+        public static Texture2DRegion piercing;
 
 
         public static Texture2D none;
@@ -153,7 +154,7 @@ namespace Quatrimo
             bomb = atlas[123];
             cursedclosed = atlas[132];
             cursedopen = atlas[133];
-
+            piercing = atlas[138];
 
             none = Content.Load<Texture2D>("empty");
             solid = Content.Load<Texture2D>("full");

@@ -17,15 +17,25 @@
             return false;
         }
 
-        protected override void fallingBlockClippedF(block placedBlock, block block)
+        protected override void createGFXf(block block)
         {
-            placedBlock.removeScored(placedBlock);
-            if (!placedBlock.removed) { block.removeFalling(block); }
+            base.createGFXf(block);
+            element.tex = Game1.piercing;
+        }
+
+        protected override bool fallingBlockClippedF(block placedBlock, block block)
+        {
+            placedBlock.animateScore(null);
+            placedBlock.score(placedBlock);
+            if (placedBlock.removed) { placedBlock.removeFromBoard(placedBlock); return false; }
+            return true;
         }
 
         protected override bool placedBlockClippedF(block fallingBlock, block block)
         {
-            
+            animateScore(null);
+            score(this);
+            removeFromBoard(this);
             return true;
         }
     }

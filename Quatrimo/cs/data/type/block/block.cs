@@ -48,14 +48,13 @@ namespace Quatrimo
             removeFromBoard = new Action<block>(removeFromBoardF);
 
             scoreRemoveGFX = new Action<block>(scoreRemoveGFXf);
-            removeScored = new Action<block>(removeScoredF);
 
             collidedFalling = new Action<block, block>(collidedFallingF);
             collidedPlaced = new Action<block, block>(collidedPlacedF);
             movePlaced = new Action<Vector2I, block>(movePlacedF);
 
             placedBlockClipped = new Func<block, block, bool>(placedBlockClippedF);
-            fallingBlockClipped = new Action<block, block>(fallingBlockClippedF);
+            fallingBlockClipped = new Func<block, block, bool>(fallingBlockClippedF);
 
             collidesFalling = new Func<Vector2I, block, bool>(collidesFallingF);
             collidesPlaced = new Func<block, block, bool>(collidesPlacedF);
@@ -110,8 +109,7 @@ namespace Quatrimo
 
             if (!clipped.placedBlockClipped(block, clipped))
             {
-                block.fallingBlockClipped(clipped, block);
-                return;
+                if (block.fallingBlockClipped(clipped, block)) { return; }
             }
 
             board.blocks[boardpos.x, boardpos.y] = this;
@@ -145,7 +143,7 @@ namespace Quatrimo
         protected virtual void scoreF(block block)
         {
             scored = true;
-            removed = true; //block will be lowered if true
+            removed = true; //marks if the block is/will be removed
             encounter.turnScore += getScore(this);
             encounter.turnMultiplier += getTimes(this);
         }
@@ -226,7 +224,7 @@ namespace Quatrimo
         }
 
         /// <summary>
-        /// Forcefully remove the placed block from the board - not recommended
+        /// Forcefully remove the placed block from the board, does NOT lower the column above - be careful
         /// </summary>
         public Action<block> removeFromBoard;
         protected virtual void removeFromBoardF(block block)
@@ -242,17 +240,6 @@ namespace Quatrimo
         protected virtual void scoreRemoveGFXf(block block)
         {
             hideGFX(block);
-        }
-
-        /// <summary>
-        /// Attempt to remove the block for scoring
-        /// </summary>
-        public Action<block> removeScored;
-        //Used during the score step to attempt marking for removal - if block should not be scored, do not run score()
-        //might be redundant?
-        protected virtual void removeScoredF(block block)
-        {
-            score(block);
         }
 
         /// <summary>
@@ -279,12 +266,13 @@ namespace Quatrimo
         }
 
         /// <summary>
-        /// Runs when a falling block attempts to place on top of a placed block, runs AFTER placedBlockClipped
+        /// Runs when a falling block attempts to place on top of a placed block, runs AFTER placedBlockClipped - returns if it will remove itself or not
         /// </summary>
-        public Action<block, block> fallingBlockClipped;
-        protected virtual void fallingBlockClippedF(block placedBlock, block block)
+        public Func<block, block, bool> fallingBlockClipped;
+        protected virtual bool fallingBlockClippedF(block placedBlock, block block)
         {
             block.removeFalling(block);
+            return true;
         }
 
         /// <summary>
