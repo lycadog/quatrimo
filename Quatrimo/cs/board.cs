@@ -37,7 +37,7 @@ namespace Quatrimo
             {
                 for(int y = 0; y < dimensions.y; y++)
                 {
-                    blocks[x, y] = new emptyBlock(encounter, new Vector2I(x, y));
+                    blocks[x, y] = new emptyBlock(encounter, this, new Vector2I(x, y));
                 }
             }
 
@@ -175,7 +175,7 @@ namespace Quatrimo
 
         public void markEmpty(Vector2I pos)
         {
-            blocks[pos.x, pos.y] = new emptyBlock(encounter, pos);
+            blocks[pos.x, pos.y] = new emptyBlock(encounter, this, pos);
         }
 
     }

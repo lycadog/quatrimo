@@ -3,10 +3,9 @@
     public class cursedBlock : block
     { 
         short state = 0; //0 = closed, 1 = open and score buff active, 2 = open with score buff inactive
-
-        public override void animateScore(animation anim, int index = -1, bool forceAnim = false)
+        public override void animateScore(animation anim, bool forceAnim = false)
         {
-            base.animateScore(anim, index, forceAnim);
+            base.animateScore(anim, forceAnim);
             state = 1;
             element.tex = Game1.cursedopen;
         }
@@ -15,6 +14,11 @@
         {
             base.createGFXf(block);
             element.tex = Game1.cursedclosed;
+        }
+
+        protected override void finalizeScoringF(block block)
+        {
+            score(this);
         }
 
         protected override void scoreF(block block)
@@ -42,5 +46,6 @@
             scoreValue = 1;
             element.tex = Game1.cursedclosed;
         }
+
     }
 }

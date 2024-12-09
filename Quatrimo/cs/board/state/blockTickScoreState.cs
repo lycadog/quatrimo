@@ -98,7 +98,7 @@ namespace Quatrimo
         {
             //block score events updating the board might mesh poorly with new updatedRows list, fix later
 
-            processBoardUpdatesState processState = new processBoardUpdatesState(encounter, updatedRows, null, this);
+            processBoardUpdatesState processState = new processBoardUpdatesState(encounter, null, this);
             animSuspendState animState = new animSuspendState(encounter, processState, true);
             animState.startState();
         }

@@ -1,26 +1,25 @@
 ﻿
+using System.Diagnostics;
+
 namespace Quatrimo
 {
     public class emptyBlock : block
     {
-        public emptyBlock(encounter encounter, Vector2I boardpos)
+        public emptyBlock(encounter encounter, board board, Vector2I boardpos)
         {
             this.boardpos = boardpos;
             this.encounter = encounter;
+            this.board = board;
             occupiedForScoring = false;
         }
 
-        public override void animateScore(animation anim, int index = -1, bool forceAnim = false)
+        public override void animateScore(animation anim, bool forceAnim = false)
         {
-            if (index < 0) { encounter.scoredBlocks.Add(this); }
-            else { encounter.scoredBlocks.Insert(index, this); }
-
             if (forceAnim)
             {
                 scoredAnim = true;
 
                 animSprite sprite = animHandler.getDecayingAnim(new Vector2I(boardpos.x, boardpos.y));
-
                 board.queuedSprites.Add(sprite);
                 encounter.animHandler.animations.Add(sprite);
             }

@@ -8,9 +8,9 @@ namespace Quatrimo
     {
         public short timer = 4;
 
-        public override void animateScore(animation anim, int index = -1, bool forceAnim = false)
+        public override void animateScore(animation anim, bool forceAnim = false)
         {
-            base.animateScore(anim, index, forceAnim);
+            base.animateScore(anim, forceAnim);
             List<Vector2I> blocks = [
                 boardpos.add(new Vector2I(1, 0)),
                 boardpos.add(new Vector2I(-1, 0)),

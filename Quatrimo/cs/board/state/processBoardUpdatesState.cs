@@ -33,6 +33,7 @@ namespace Quatrimo
                     if (scoredRows.Contains(block.boardpos.y)) //add score decay anim to current piece blocks that are scored
                     {
                         block.animateScore(null);
+                        encounter.scoredBlocks.Add(block);
                     }
                     else //if not scored, then add brief highlight
                     {

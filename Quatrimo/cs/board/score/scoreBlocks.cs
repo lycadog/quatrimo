@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Quatrimo
@@ -39,7 +40,8 @@ namespace Quatrimo
             {
                 if (block.scoredAnim) { continue; }
                 Debug.WriteLine("SCOREBLOCK SCORED");
-                block.animateScore(null, counter);
+                block.animateScore(null, true);
+                encounter.scoredBlocks.Insert(counter, block);
                 counter++;
             }
         }

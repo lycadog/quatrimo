@@ -37,6 +37,7 @@ namespace Quatrimo
             play = new Action<block>(playF);
             place = new Action<block>(placeF);
             score = new Action<block>(scoreF);
+            finalizeScoring = new Action<block>(finalizeScoringF);
             tick = new Action<block>(tickF);
             createGFX = new Action<block>(createGFXf);
             createPreview = new Func<block, spriteObject>(createPreviewF);
@@ -69,17 +70,13 @@ namespace Quatrimo
 
         // =|||||||= [ NONDELEGATE METHODS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-
         /// <summary>
         /// Adds the block to the scored block list and renders the score animation on top of it; forceAnim is for enabling animations on empty blocks only
         /// </summary>
         /// <param name="encounter"></param>
         /// <param name="anim"></param>
-        public virtual void animateScore(animation anim, int index = -1, bool forceAnim = false) //TODO: add support for overriding the default anim
+        public virtual void animateScore(animation anim, bool forceAnim = false) //TODO: add support for overriding the default anim
         {
-            if(index == -1) { encounter.scoredBlocks.Add(this); }
-            else { encounter.scoredBlocks.Insert(index, this); }
-
             scoreRemoveGFX(this);
             scoredAnim = true;
 
@@ -88,7 +85,6 @@ namespace Quatrimo
             board.queuedSprites.Add(sprite);
             encounter.animHandler.animations.Add(sprite);
         }
-
 
         // =|||||||= [ DELEGATE DECLARATIONS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -127,6 +123,10 @@ namespace Quatrimo
         //different methods depending on boardstate and other things like fully removing the block or animating it
         //need a seperate one for scoring it and getting it outta here.
         //and a new one for animating but not adding it to be removed later
+
+        //i think weve pretty much done this now, what next?
+        //piercing blocks!!!!!
+
 
         /// <summary>
         /// Called by blockTickState to fully score and remove a block, do NOT call anywhere else
