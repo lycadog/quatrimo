@@ -1,7 +1,7 @@
 ﻿
 namespace Quatrimo
 {
-    public abstract class basePiece
+    public abstract class basePieceOld
     {
         public abstract boardPiece getPiece();
     }

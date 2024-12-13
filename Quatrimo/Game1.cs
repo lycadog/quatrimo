@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
 using MonoGame.Extended.Graphics;
-using MonoGame.Extended.ViewportAdapters;
 using System;
 using System.Diagnostics;
 using System.Threading;

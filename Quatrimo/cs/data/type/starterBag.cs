@@ -4,13 +4,13 @@ namespace Quatrimo
 {
     public class starterBag
     {
-        public starterBag(pieceType[] pieces, string name)
+        public starterBag(pieceTypeOld[] pieces, string name)
         {
             this.pieces = pieces;
             this.name = name;
         }
 
-        public pieceType[] pieces;
+        public pieceTypeOld[] pieces;
         public string name;
 
 

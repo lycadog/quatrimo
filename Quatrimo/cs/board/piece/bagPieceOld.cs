@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public class bagPiece //used for pieces held in the bag
+    public class bagPieceOld //used for pieces held in the bag
     { //nest this in board piece maybe?
-        public bagPiece(baseblock[] blocks, basePiece mod, Vector2I dimensions, Vector2I origin, int blockCount, string name, rarity rarity, Color color, Texture2DRegion tex)
+        public bagPieceOld(baseblockOld[] blocks, basePieceOld mod, Vector2I dimensions, Vector2I origin, int blockCount, string name, rarity rarity, Color color, Texture2DRegion tex)
         {
             this.blocks = blocks;
             this.mod = mod;
@@ -54,8 +54,8 @@ namespace Quatrimo
             return piece;
         }
 
-        public baseblock[] blocks { get; set; }
-        public basePiece mod { get; set; }
+        public baseblockOld[] blocks { get; set; }
+        public basePieceOld mod { get; set; }
         public Vector2I dimensions { get; set; }
         public Vector2I origin { get; set; }
         public int blockCount { get; set; }

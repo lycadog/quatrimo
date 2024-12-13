@@ -4,9 +4,9 @@ using MonoGame.Extended.Graphics;
 
 namespace Quatrimo
 {
-    public class baseblock
+    public class baseblockOld
     {
-        public baseblock(wSet<baseblockType> blocks, Texture2DRegion tex = null, Color color = new Color(), bool isColored = false)
+        public baseblockOld(wSet<baseblockType> blocks, Texture2DRegion tex = null, Color color = new Color(), bool isColored = false)
         {
             this.blocks = blocks;
             this.tex = tex;

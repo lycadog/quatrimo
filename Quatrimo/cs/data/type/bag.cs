@@ -9,10 +9,10 @@ namespace Quatrimo
     {
         public bag(starterBag bag)
         {
-            pieces = new List<bagPiece>();
+            pieces = new List<bagPieceOld>();
 
 
-            foreach (pieceType piece in bag.pieces)
+            foreach (pieceTypeOld piece in bag.pieces)
             {
                 piece.addToBag(this);
             }
@@ -22,12 +22,12 @@ namespace Quatrimo
             Debug.WriteLine($"Created bag {name}");
         }
 
-        public List<bagPiece> pieces;
+        public List<bagPieceOld> pieces;
         public string name { get; set; }
 
         public boardPiece getPiece(encounter encounter)
         {
-            foreach (bagPiece pieceW in pieces)
+            foreach (bagPieceOld pieceW in pieces)
             {
                 if (pieceW.weight != 1)
                 {
@@ -36,7 +36,7 @@ namespace Quatrimo
             }
 
             int index = 0;
-            bagPiece piece;
+            bagPieceOld piece;
             for (int i = 0; i < 20; i++)
             {
                 float rand = util.rand.NextSingle();

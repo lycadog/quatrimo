@@ -2,7 +2,7 @@
 
 namespace Quatrimo
 {
-    public class basicBasePiece : basePiece
+    public class basicBasePiece : basePieceOld
     {
         public override boardPiece getPiece()
         {

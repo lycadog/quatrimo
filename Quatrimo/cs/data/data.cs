@@ -4,8 +4,8 @@ namespace Quatrimo
 {
     public static class data
     {
-        static readonly wSet<basePiece> noMod = new([new basicBasePiece()], [100]);
-        static readonly wSet<basePiece> spectral = new([new baseSpectralPiece()], [100]);
+        static readonly wSet<basePieceOld> noMod = new([new basicBasePiece()], [100]);
+        static readonly wSet<basePieceOld> spectral = new([new baseSpectralPiece()], [100]);
 
         static readonly wSet<baseblockType> basic = new([new baseBasicBlock()], [100]);
         static readonly wSet<baseblockType> bomb = new([new baseBombBlock()], [100]);
@@ -16,50 +16,50 @@ namespace Quatrimo
         //default colors, broad color palette
         static readonly colorSet deflt = new colorSet([new Color(new Vector3(1, 0.16f, 0.16f)), new Color(new Vector3(1, .396f, .396f)), new Color(new Vector3(1, .325f, .102f)), new Color(new Vector3(.96f, .561f, .427f)), new Color(new Vector3(1, .561f, .102f)), new Color(new Vector3(.969f, .702f, .427f)), new Color(new Vector3(1, .729f, .102f)), new Color(new Vector3(.969f, .804f, .427f)), new Color(new Vector3(.961f, 1, 10.2f)), new Color(new Vector3(.945f, .969f, .427f)), new Color(new Vector3(.71f, 1, .102f)), new Color(new Vector3(.79f, .969f, .427f)), new Color(new Vector3(.243f, .957f, .169f)), new Color(new Vector3(.463f, .992f, .404f)), new Color(new Vector3(.106f, 1, .376f)), new Color(new Vector3(.404f, .992f, .58f)), new Color(new Vector3(.059f, 1, .714f)), new Color(new Vector3(.4f, .969f, .796f)), new Color(new Vector3(.059f, .965f, 1)), new Color(new Vector3(.4f, .945f, .969f)), new Color(new Vector3(.059f, .765f, 1)), new Color(new Vector3(.4f, .824f, .969f)), new Color(new Vector3(.059f, .518f, 1)), new Color(new Vector3(.4f, .675f, .969f)), new Color(new Vector3(.059f, .341f, 1)), new Color(new Vector3(.4f, .569f, .969f)), new Color(new Vector3(.102f, .059f, 1)), new Color(new Vector3(.427f, .4f, .969f)), new Color(new Vector3(36.5f, .059f, 1)), new Color(new Vector3(.584f, .4f, .969f)), new Color(new Vector3(.573f, .059f, 1)), new Color(new Vector3(.71f, .4f, .969f)), new Color(new Vector3(.647f, .059f, 1)), new Color(new Vector3(.753f, .4f, .969f)), new Color(new Vector3(.773f, .059f, 1)), new Color(new Vector3(.831f, .4f, .969f)), new Color(new Vector3(.945f, .059f, 1)), new Color(new Vector3(.933f, .4f, .969f)), new Color(new Vector3(1, .059f, .855f)), new Color(new Vector3(.969f, .4f, .878f)), new Color(new Vector3(1, .059f, .608f)), new Color(new Vector3(.969f, .4f, .729f)), new Color(new Vector3(1, .059f, .431f)), new Color(new Vector3(.969f, .4f, .624f)), new Color(new Vector3(1, .059f, .31f)), new Color(new Vector3(.969f, .4f, .553f))]);
 
-        public static pieceType bLong;
-        public static pieceType bSquare;
-        public static pieceType bTBlock;
-        public static pieceType bLBlockL;
-        public static pieceType bLBlockR;
-        public static pieceType bZBlockL;
-        public static pieceType bZBlockR;
+        public static pieceTypeOld bLong;
+        public static pieceTypeOld bSquare;
+        public static pieceTypeOld bTBlock;
+        public static pieceTypeOld bLBlockL;
+        public static pieceTypeOld bLBlockR;
+        public static pieceTypeOld bZBlockL;
+        public static pieceTypeOld bZBlockR;
 
-        public static pieceType bWedge;
-        public static pieceType bStick;
-        public static pieceType bTwig;
+        public static pieceTypeOld bWedge;
+        public static pieceTypeOld bStick;
+        public static pieceTypeOld bTwig;
 
-        public static pieceType bBowl;
-        public static pieceType bCorner;
-        public static pieceType bRectangle;
-        public static pieceType bCrowbarL;
-        public static pieceType bCrowbarR;
-        public static pieceType bLongT;
-        public static pieceType bCaret;
-        public static pieceType bNub;
-        public static pieceType bDipole;
-        public static pieceType bSlash;
-        public static pieceType bStump;
-        public static pieceType bHatchetL;
-        public static pieceType bHatchetR;
-        public static pieceType bHookL;
-        public static pieceType bHookR;
-        public static pieceType bPickL;
-        public static pieceType bPickR;
-        public static pieceType bLepton;
-        public static pieceType bBoson;
-        public static pieceType bDiamond;
-        public static pieceType bBrick;
-        public static pieceType bBarycenter;
-        public static pieceType bBasin;
-        public static pieceType bHammer;
-        public static pieceType bBar;
-        public static pieceType bLonger;
-        public static pieceType bAngle;
-        public static pieceType bNeedle;
+        public static pieceTypeOld bBowl;
+        public static pieceTypeOld bCorner;
+        public static pieceTypeOld bRectangle;
+        public static pieceTypeOld bCrowbarL;
+        public static pieceTypeOld bCrowbarR;
+        public static pieceTypeOld bLongT;
+        public static pieceTypeOld bCaret;
+        public static pieceTypeOld bNub;
+        public static pieceTypeOld bDipole;
+        public static pieceTypeOld bSlash;
+        public static pieceTypeOld bStump;
+        public static pieceTypeOld bHatchetL;
+        public static pieceTypeOld bHatchetR;
+        public static pieceTypeOld bHookL;
+        public static pieceTypeOld bHookR;
+        public static pieceTypeOld bPickL;
+        public static pieceTypeOld bPickR;
+        public static pieceTypeOld bLepton;
+        public static pieceTypeOld bBoson;
+        public static pieceTypeOld bDiamond;
+        public static pieceTypeOld bBrick;
+        public static pieceTypeOld bBarycenter;
+        public static pieceTypeOld bBasin;
+        public static pieceTypeOld bHammer;
+        public static pieceTypeOld bBar;
+        public static pieceTypeOld bLonger;
+        public static pieceTypeOld bAngle;
+        public static pieceTypeOld bNeedle;
 
-        public static pieceType bTestPiece;
-        public static pieceType bTestPiece2;
-        public static pieceType bTestPiece3;
+        public static pieceTypeOld bTestPiece;
+        public static pieceTypeOld bTestPiece2;
+        public static pieceTypeOld bTestPiece3;
 
         public static starterBag classicBag;
         public static starterBag bag1;

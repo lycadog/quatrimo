@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public class pieceType
+    public class pieceTypeOld
     {
-        public pieceType(int xSize, int ySize, baseblock[,] blocks, wSet<basePiece> mod, Vector2I origin, int blockCount, string name, colorSet color, Texture2DRegion tex)
+        public pieceTypeOld(int xSize, int ySize, baseblockOld[,] blocks, wSet<basePieceOld> mod, Vector2I origin, int blockCount, string name, colorSet color, Texture2DRegion tex)
         {
             dimensions = new Vector2I(xSize, ySize);
             blockSet = blocks;
@@ -19,7 +19,7 @@ namespace Quatrimo
             this.tex = tex;
         }
 
-        public pieceType(int xSize, int ySize, wSet<baseblockType>[,] blocks, wSet<basePiece> mod, Vector2I origin, int blockCount, string name, colorSet color, Texture2DRegion tex)
+        public pieceTypeOld(int xSize, int ySize, wSet<baseblockType>[,] blocks, wSet<basePieceOld> mod, Vector2I origin, int blockCount, string name, colorSet color, Texture2DRegion tex)
         {
             dimensions = new Vector2I(xSize, ySize);
             this.mod = mod;
@@ -29,7 +29,7 @@ namespace Quatrimo
             this.colorSet = color;
             this.tex = tex;
 
-            blockSet = new baseblock[xSize, ySize];
+            blockSet = new baseblockOld[xSize, ySize];
             
             for(int x = 0; x < xSize; x++)
             {
@@ -37,14 +37,14 @@ namespace Quatrimo
                 {
                     if (blocks[x,y] != null)
                     {
-                        blockSet[x,y] = new baseblock(blocks[x, y]);
+                        blockSet[x,y] = new baseblockOld(blocks[x, y]);
                     }
                 }
             }
         }
 
-        public baseblock[,] blockSet { get; set; }
-        public wSet<basePiece> mod { get; set; }
+        public baseblockOld[,] blockSet { get; set; }
+        public wSet<basePieceOld> mod { get; set; }
         public Vector2I dimensions { get; set; }
         public Vector2I origin { get; set; }
         public int blockCount { get; set; }
@@ -55,7 +55,7 @@ namespace Quatrimo
 
         public void addToBag(bag bag) //add new piece to player's bag
         {
-            baseblock[] blocks = new baseblock[blockCount];
+            baseblockOld[] blocks = new baseblockOld[blockCount];
             Color color = colorSet.getRandomColor();
 
             int index = 0;
@@ -68,7 +68,7 @@ namespace Quatrimo
                     if (blockSet[x, y] != null)
                     {
 
-                        baseblock block = blockSet[x, y];
+                        baseblockOld block = blockSet[x, y];
                         block.chosenBlock = block.blocks.getRandom();
 
                         block.localpos = new Vector2I(x - origin.x, y - origin.y);
@@ -88,7 +88,7 @@ namespace Quatrimo
                 }
             }
 
-            bagPiece piece = new bagPiece(blocks, mod.getRandom(), dimensions, origin, blockCount, name, rarity, colorSet.getRandomColor(), tex); //create new piece
+            bagPieceOld piece = new bagPieceOld(blocks, mod.getRandom(), dimensions, origin, blockCount, name, rarity, colorSet.getRandomColor(), tex); //create new piece
 
             bag.pieces.Add(piece); //add new piece to player's bag
             Debug.WriteLine("Piece " + piece.name + " added to bag");
