@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public class bag
+    public class bagOld
     {
-        public bag(starterBag bag)
+        public bagOld(starterBag bag)
         {
             pieces = new List<bagPieceOld>();
 

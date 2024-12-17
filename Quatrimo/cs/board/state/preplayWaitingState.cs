@@ -4,7 +4,6 @@ namespace Quatrimo
 {
     public class preplayWaitingState : boardState
     {
-        public double pieceWaitTimer = 0;
 
         public preplayWaitingState(encounter main) : base(main)
         {
@@ -19,7 +18,7 @@ namespace Quatrimo
 
         protected void tick(GameTime gameTime)
         {
-            if (pieceWaitTimer >= 5000 || data.slamKey.keyDown)
+            if (data.slamKey.keyDown)
             {
                 //START piece fall
                 encounter.currentPiece.play();
@@ -29,7 +28,6 @@ namespace Quatrimo
                 newState.startState();
             }
 
-            pieceWaitTimer += gameTime.ElapsedGameTime.Milliseconds;
         }
 
     }

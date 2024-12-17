@@ -88,7 +88,7 @@ namespace Quatrimo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            data.dataInit();
+            data.initialize();
             base.Initialize();
 
             sceneTarget = new RenderTarget2D(
@@ -172,7 +172,8 @@ namespace Quatrimo
             nameM = atlas[30];
             nameO = atlas[31];
 
-            data.dataInitContent();
+            data.contentInit();
+
             stateManager = new stateManager(this);
             stateManager.startEncounter();
             regionSprite sprite = new regionSprite();

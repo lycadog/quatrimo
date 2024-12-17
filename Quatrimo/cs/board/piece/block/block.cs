@@ -14,6 +14,16 @@ namespace Quatrimo
             linkDelegates();
         }
 
+        public void createBlock(encounter encounter, boardPiece piece, Vector2I localpos, Texture2DRegion tex, Color color)
+        {
+            this.encounter = encounter;
+            board = encounter.board;
+            this.piece = piece;
+            this.localpos = localpos;
+            this.tex = tex;
+            this.color = color;
+        }
+
         public element element { get; set; }
         public element dropElement { get; set; }
         public boardPiece piece { get; set; }

@@ -17,5 +17,13 @@ namespace Quatrimo
             this.tex = tex;
             mod = 0; //set to basic by default
         }
+
+        public bagBlock(Vector2I localpos, int mod, Color color, Texture2DRegion tex)
+        {
+            this.localpos = localpos;
+            this.color = color;
+            this.tex = tex;
+            this.mod = mod;
+        }
     }
 }

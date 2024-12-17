@@ -53,7 +53,7 @@ namespace Quatrimo
         public colorSet colorSet { get; set; } //properly define and use colorsets
         public Texture2DRegion tex { get; set; }
 
-        public void addToBag(bag bag) //add new piece to player's bag
+        public void addToBag(bagOld bag) //add new piece to player's bag
         {
             baseblockOld[] blocks = new baseblockOld[blockCount];
             Color color = colorSet.getRandomColor();

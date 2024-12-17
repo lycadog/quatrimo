@@ -37,12 +37,13 @@ namespace Quatrimo
 
         public encounter(bag bag)
         {
-            this.bag = bag;
-
             animHandler = new animHandler(this);
             board = new board(this, new Vector2I(12, 28));
 
-            nextPiece = bag.getPiece(this);
+            this.bag = bag;
+            bag.encounter = this;
+
+            nextPiece = bag.drawRandomPiece();
 
             turnStartState newState = new turnStartState(this);
             newState.startState();

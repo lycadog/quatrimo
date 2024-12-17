@@ -4,19 +4,20 @@ using MonoGame.Extended.Graphics;
 namespace Quatrimo
 {
     public abstract class pieceType
-    {   //need support for random color
+    {   //need support for random piecemod
         public pieceShape shape;
-        public int pieceMod; //piece mod id
-        public short baseWeight = 6;
+        public objPool<int> pieceMod;
+        public short baseWeight;
 
         public string name;
         public Texture2DRegion tex;
-        public Color color;
+        public Color[] color;
 
-        public pieceType(pieceShape shape, int pieceMod)
+        public pieceType(pieceShape shape, objPool<int> pieceMod, short baseWeight)
         {
             this.shape = shape;
             this.pieceMod = pieceMod;
+            this.baseWeight = baseWeight;
         }
 
         public abstract bagPiece getBagPiece();

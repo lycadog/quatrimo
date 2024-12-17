@@ -135,7 +135,7 @@ namespace Quatrimo
             if (encounter.heldPiece == null)
             {
                 encounter.heldPiece = encounter.nextPiece; //put this all in one method later, main.drawPiece(); or something, updates all next boxes
-                encounter.nextPiece = encounter.bag.getPiece(encounter);
+                encounter.nextPiece = encounter.bag.drawRandomPiece();
                 encounter.board.nextbox.update(encounter.nextPiece);
             }
 

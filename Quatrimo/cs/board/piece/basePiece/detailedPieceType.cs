@@ -1,4 +1,7 @@
 ﻿
+using Microsoft.Xna.Framework;
+using MonoGame.Extended.Graphics;
+
 namespace Quatrimo
 {
     public class detailedPieceType : pieceType
@@ -6,18 +9,28 @@ namespace Quatrimo
         //UP NEXT: integrate random pools for certain values, like block mod and piece color!
         //then, more kinds of pieceTypes
 
-        blockSpecification[] blocks; //blockspecifications to be used, multiple blocks can use the same specification
-        int[] blocksIndex; //blockspecification to use, grabbed from blocks with the value as index
-        public detailedPieceType(pieceShape shape, int pieceMod, blockSpecification[] blocks, int[] blocksIndex) : base(shape, pieceMod)
+        baseBlockSpecification[] blockSpecs; //multiple blocks can use the same specification
+        int[] blocksIndex; //blockspecification to use, grabbed from blocks array with the value as index
+        public detailedPieceType(pieceShape shape, int pieceMod, baseBlockSpecification[] blockSpecs, int[] blocksIndex, string name, Texture2DRegion tex, Color[] color, short baseWeight = 6) : base(shape, pieceMod, baseWeight)
         {
-            this.blocks = blocks;
+            this.blockSpecs = blockSpecs;
             this.blocksIndex = blocksIndex;
+            this.name = name;
+            this.tex = tex;
+            this.color = color;
         }
 
         public override bagPiece getBagPiece()
         {
-            bagBlock[] bagblocks = new bagBlock[shape.count];
+            foreach(var blockspec in blockSpecs)
+            {
+                blockspec.onGetBagPiece();
+            }
+
+            bagBlock[] bagblocks = new bagBlock[shape.blockCount];
             int index = 0;
+            Color _color = color[util.rand.Next(0, color.Length)];
+
             for(int x = 0; x < shape.dimensions.x; x++)
             {
                 for(int y = 0; y < shape.dimensions.y; y++)
@@ -26,8 +39,8 @@ namespace Quatrimo
                     {
                         Vector2I localpos = new Vector2I(x - shape.origin.x, y - shape.origin.y);
 
-                        var block = new bagBlock(localpos, color, tex);
-                        blocks[blocksIndex[index]].overwrite(block); //overwrite block's values with desired blockspecification
+                        var block = new bagBlock(localpos, _color, tex);
+                        blockSpecs[blocksIndex[index]]._overwrite(block); //overwrite block's values with desired blockspecification
 
                         bagblocks[index] = block;
                         index++;
@@ -35,7 +48,7 @@ namespace Quatrimo
                 }
             }
 
-            return new bagPiece(bagblocks, pieceMod, shape.dimensions, shape.origin, name);
+            return new bagPiece(bagblocks, pieceMod.getRandom(), shape.dimensions, shape.origin, name);
         }
     }
 }

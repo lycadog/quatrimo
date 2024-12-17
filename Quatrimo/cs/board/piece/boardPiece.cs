@@ -6,27 +6,14 @@ namespace Quatrimo
 {
     public class boardPiece
     {
-        public board board;
+        encounter encounter;
 
-        /// <summary>
-        /// this is basically just our constructor
-        /// </summary>
-        /// <param name="board"></param>
-        /// <param name="blocks"></param>
-        /// <param name="dimensions"></param>
-        /// <param name="origin"></param>
-        /// <param name="name"></param>
-        /// <param name="tex"></param>
-        /// <param name="color"></param>
-        public void setData(board board, block[] blocks, Vector2I dimensions, Vector2I origin, string name, Texture2DRegion tex, Color color)
+        public boardPiece(encounter encounter, Vector2I dimensions, Vector2I origin, string name)
         {
-            this.board = board;
-            this.blocks = blocks;
+            this.encounter = encounter;
             this.dimensions = dimensions;
             this.origin = origin;
             this.name = name;
-            this.tex = tex;
-            this.color = color;
         }
 
         public block[] blocks { get; set; }
@@ -36,8 +23,6 @@ namespace Quatrimo
         public int rotation { get; set; } = 0; //0 - 3
         public int dropOffset { get; set; }
         public string name { get; set; }
-        public Texture2DRegion tex { get; set; }
-        public Color color { get; set; }
 
         /// <summary>
         /// Overrides necessary delegates on new block, MAKE SURE TO OVERRIDE for new piece types

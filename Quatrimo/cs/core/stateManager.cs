@@ -14,7 +14,6 @@ namespace Quatrimo
 
         public encounter encounter;
 
-        public bag bag;
         public bool paused = false;
         public bool debugMode = false;
 
@@ -94,7 +93,7 @@ namespace Quatrimo
             debugMode = true;
             new debugState(this).addState();
 
-            bag = new bag(data.bag2);
+            bag bag = new bag(); //fill out later
             encounter = new encounter(bag);
         }
         
