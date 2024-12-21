@@ -14,6 +14,8 @@ namespace Quatrimo
             encounter.turnRowsCleared = 0;
             encounter.updatedRows = new bool[encounter.board.dimensions.y];
 
+            encounter.bag.tickBag();
+
             encounter.currentPiece = encounter.nextPiece; //grab next piece
             encounter.nextPiece = encounter.bag.drawRandomPiece();
             encounter.board.nextbox.update(encounter.nextPiece);

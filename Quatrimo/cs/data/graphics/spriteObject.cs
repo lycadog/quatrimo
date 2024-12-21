@@ -5,7 +5,7 @@ namespace Quatrimo
 {
     public class spriteObject : drawable
     {
-        public Texture2D tex = Game1.none;
+        public Texture2D tex = texs.none;
         public Color color = Color.White;
         public Vector2I pos = Vector2I.zero;
         public Vector2I size = new Vector2I(10,10);

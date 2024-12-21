@@ -22,6 +22,7 @@ namespace Quatrimo
             this.localpos = localpos;
             this.tex = tex;
             this.color = color;
+            createGFX(this);
         }
 
         public element element { get; set; }
@@ -174,7 +175,7 @@ namespace Quatrimo
         protected virtual void createGFXf(block block)
         {
             element = new element(tex, color, new Vector2I(0, -5), 0.8f); //create new sprite element
-            dropElement = new element(Game1.dropmark, Color.LightGray, new Vector2I(0, -10), 0.79f);
+            dropElement = new element(texs.dropmark, Color.LightGray, new Vector2I(0, -10), 0.79f);
         }
 
         /// <summary>
@@ -186,7 +187,7 @@ namespace Quatrimo
             spriteObject sprite = new spriteObject();
             sprite.size = new Vector2I(5, 5);
             sprite.depth = .93f;
-            sprite.tex = Game1.solid; sprite.color = element.color;
+            sprite.tex = texs.solid; sprite.color = block.color;
 
             return sprite;
         }
@@ -308,9 +309,9 @@ namespace Quatrimo
         protected virtual bool collidesFallingF(Vector2I checkPos, block block)
         {
             if (checkPos.x < 0) { return true; }
-            if (checkPos.x >= piece.board.dimensions.x) { return true; } //if the tile is outside the board dimensions return true (invalid move)
+            if (checkPos.x >= board.dimensions.x) { return true; } //if the tile is outside the board dimensions return true (invalid move)
             if (checkPos.y < 0) { return true; }
-            if (checkPos.y >= piece.board.dimensions.y) { return true; }
+            if (checkPos.y >= board.dimensions.y) { return true; }
 
             block hitBlock = board.blocks[checkPos.x, checkPos.y];
 

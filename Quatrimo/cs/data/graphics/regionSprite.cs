@@ -8,7 +8,7 @@ namespace Quatrimo
 {
     public class regionSprite : spriteObject
     {
-        public Texture2DRegion tex = Game1.empty;
+        public Texture2DRegion tex = texs.empty;
         public Vector2 scale = Vector2.One;
 
         /// <summary>

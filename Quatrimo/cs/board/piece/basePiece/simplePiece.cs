@@ -15,9 +15,16 @@ namespace Quatrimo
             this.color = color;
         }
 
-        public override bagPiece getBagPiece()
+        public simplePiece(pieceShape shape, objPool<int> pieceMod, int blockmod, Texture2DRegion tex, Color[] color, short baseWeight = 6) : base(shape, pieceMod, baseWeight)
         {
-            Color _color = color[util.rand.Next(0, color.Length)];
+            this.blockmod = blockmod;
+            name = shape.name;
+            this.tex = tex;
+            this.color = color;
+        }
+
+        public override bagPiece getBagPiece(Color _color)
+        {
             bagBlock[] bagblocks = new bagBlock[shape.blockCount];
             int index = 0;
             for (int x = 0; x < shape.dimensions.x; x++)
@@ -36,7 +43,7 @@ namespace Quatrimo
                 }
             }
 
-            return new bagPiece(bagblocks, pieceMod.getRandom(), shape.dimensions, shape.origin, name);
+            return new bagPiece(bagblocks, pieceMod.getRandom(), shape.dimensions, shape.origin, baseWeight, name);
         }
     }
 }

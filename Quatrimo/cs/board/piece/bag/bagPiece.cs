@@ -11,12 +11,13 @@
 
         public objPool<bagPiece>.weightedEntry bagEntry;
 
-        public bagPiece(bagBlock[] blocks, int pieceMod, Vector2I dimensions, Vector2I origin, string name)
+        public bagPiece(bagBlock[] blocks, int pieceMod, Vector2I dimensions, Vector2I origin, int weight, string name)
         {
             this.blocks = blocks;
             this.pieceMod = pieceMod;
             this.dimensions = dimensions;
             this.origin = origin;
+            baseWeight = weight;
             this.name = name;
         }
 
@@ -30,9 +31,9 @@
         }
 
         //Tick relevant piece tags and lower weight
-        public boardPiece drawPiece(board board)
+        public boardPiece drawPiece(encounter encounter)
         {
-            boardPiece piece = getBoardpiece(board);
+            boardPiece piece = getBoardpiece(encounter);
             bagEntry.subtractWeight(3);
             return piece;
         }

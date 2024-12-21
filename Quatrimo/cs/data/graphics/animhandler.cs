@@ -169,7 +169,7 @@ namespace Quatrimo
         {
             foreach(var block in main.currentPiece.blocks)
             {
-                element sprite1 = new element(Game1.boxsolid, Color.White, element.boardPos2ElementPos(block.boardpos), 0.85f);
+                element sprite1 = new element(texs.boxsolid, Color.White, element.boardPos2ElementPos(block.boardpos), 0.85f);
                 animFrame frame1 = new animFrame(sprite1, 200);
                 animSprite anim = new animSprite([frame1]);
 
@@ -200,10 +200,10 @@ namespace Quatrimo
 
         public static animSprite getDecayingAnim(Vector2I boardpos)
         {
-            element sprite1 = new element(Game1.full, Color.White, element.boardPos2ElementPos(boardpos), 0.86f);
-            element sprite2 = new element(Game1.full75, Color.White, element.boardPos2ElementPos(boardpos), 0.86f);
-            element sprite3 = new element(Game1.full50, Color.White, element.boardPos2ElementPos(boardpos), 0.86f);
-            element sprite4 = new element(Game1.full25, Color.White, element.boardPos2ElementPos(boardpos), 0.86f);
+            element sprite1 = new element(texs.full, Color.White, element.boardPos2ElementPos(boardpos), 0.86f);
+            element sprite2 = new element(texs.full75, Color.White, element.boardPos2ElementPos(boardpos), 0.86f);
+            element sprite3 = new element(texs.full50, Color.White, element.boardPos2ElementPos(boardpos), 0.86f);
+            element sprite4 = new element(texs.full25, Color.White, element.boardPos2ElementPos(boardpos), 0.86f);
 
             animFrame frame1 = new animFrame(sprite1, 100);
             animFrame frame2 = new animFrame(sprite2, 50);

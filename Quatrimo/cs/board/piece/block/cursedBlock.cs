@@ -7,13 +7,13 @@
         {
             base.animateScore(anim, forceAnim);
             state = 1;
-            element.tex = Game1.cursedopen;
+            element.tex = texs.cursedopen;
         }
 
         protected override void createGFXf(block block)
         {
             base.createGFXf(block);
-            element.tex = Game1.cursedclosed;
+            element.tex = texs.cursedclosed;
         }
 
         protected override void finalizeScoringF(block block)
@@ -44,7 +44,7 @@
                 return;
             }
             scoreValue = 1;
-            element.tex = Game1.cursedclosed;
+            element.tex = texs.cursedclosed;
         }
 
     }

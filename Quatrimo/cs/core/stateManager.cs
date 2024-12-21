@@ -9,10 +9,10 @@ namespace Quatrimo
     {
         Game1 game;
 
+        public encounter encounter;
+
         public List<gameState> state = [];
         public Stack<List<gameState>> stateStack = new();
-
-        public encounter encounter;
 
         public bool paused = false;
         public bool debugMode = false;
@@ -87,14 +87,14 @@ namespace Quatrimo
 
         public void startEncounter()
         {
-            encounterState newState = new encounterState(this);
+            bag bag = data.bag1.createBag(); //fill out later
+            encounter = new encounter(bag);
+            encounterState newState = new encounterState(this, encounter);
+
             newState.addState();
 
             debugMode = true;
             new debugState(this).addState();
-
-            bag bag = new bag(); //fill out later
-            encounter = new encounter(bag);
         }
         
 

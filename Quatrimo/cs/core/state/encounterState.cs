@@ -7,8 +7,10 @@ namespace Quatrimo
     public class encounterState : gameState
     {
         protected stateManager.gameDelegate updates;
-        public encounterState(stateManager manager) : base(manager)
+        public encounter encounter;
+        public encounterState(stateManager manager, encounter encounter) : base(manager)
         {
+            this.encounter = encounter;
         }
 
         public void pause()
@@ -17,7 +19,7 @@ namespace Quatrimo
             manager.updateD = pausedUpdate;
 
             manager.paused = true;
-            manager.encounter.board.sprites.Add( manager.encounter.board.pauseText );
+            encounter.board.sprites.Add( encounter.board.pauseText );
         }
 
         public void unpause()
@@ -25,7 +27,7 @@ namespace Quatrimo
             manager.updateD = updates;
 
             manager.paused = false;
-            manager.encounter.board.sprites.Remove(manager.encounter.board.pauseText);
+            encounter.board.sprites.Remove(encounter.board.pauseText);
         }
 
         public override void setState()
@@ -66,7 +68,7 @@ namespace Quatrimo
 
         protected void encounterUpdate(GameTime gameTime)
         {
-            manager.encounter.update(gameTime);
+            encounter.update(gameTime);
 
             if (data.pauseKey.keyDown)
             {
@@ -75,7 +77,7 @@ namespace Quatrimo
 
             if (data.restartKey.keyDown)
             {
-                manager.encounter = new encounter(manager.bag);
+                encounter = new encounter(encounter.bag);
             }
 
             if (data.toggleDebugKey.keyDown)
@@ -102,18 +104,18 @@ namespace Quatrimo
 
         protected void drawBoardScene(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.Draw(Game1.bg, new Rectangle(0, 0, Game1.baseRes.x, Game1.baseRes.y), null, new Color(new Vector3(0.02f, 0.0f, 0.01f)), 0, Vector2.Zero, SpriteEffects.None, 0f);
-            spriteBatch.Draw(Game1.bg, new Rectangle(0, 0, Game1.baseRes.x, Game1.baseRes.y), null, new Color(new Vector3(0.01f, 0.00f, 0.16f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(texs.bg, new Rectangle(0, 0, Game1.baseRes.x, Game1.baseRes.y), null, new Color(new Vector3(0.02f, 0.0f, 0.01f)), 0, Vector2.Zero, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texs.bg, new Rectangle(0, 0, Game1.baseRes.x, Game1.baseRes.y), null, new Color(new Vector3(0.01f, 0.00f, 0.16f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
 
-            manager.encounter.board.draw(spriteBatch, gameTime);
+            encounter.board.draw(spriteBatch, gameTime);
         }
 
         protected void drawBoardText(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.DrawString(Game1.fontSmall, "SCORE: " + manager.encounter.totalScore.ToString(), new Vector2(680, 300), Color.White);
-            spriteBatch.DrawString(Game1.fontSmall, "LVL: " + manager.encounter.level.ToString(), new Vector2(680, 320), Color.White);
-            spriteBatch.DrawString(Game1.fontSmall, "X: " + manager.encounter.levelTimes.ToString(), new Vector2(680, 340), Color.White);
-            spriteBatch.DrawString(Game1.fontSmall, "LVL UP IN: " + (manager.encounter.rowsRequired - manager.encounter.rowsCleared).ToString() + " ROWS", new Vector2(680, 360), Color.White);
+            spriteBatch.DrawString(texs.fontSmall, "SCORE: " + encounter.totalScore.ToString(), new Vector2(680, 300), Color.White);
+            spriteBatch.DrawString(texs.fontSmall, "LVL: " + encounter.level.ToString(), new Vector2(680, 320), Color.White);
+            spriteBatch.DrawString(texs.fontSmall, "X: " + encounter.levelTimes.ToString(), new Vector2(680, 340), Color.White);
+            spriteBatch.DrawString(texs.fontSmall, "LVL UP IN: " + (encounter.rowsRequired - encounter.rowsCleared).ToString() + " ROWS", new Vector2(680, 360), Color.White);
         }
     }
 }

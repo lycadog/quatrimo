@@ -3,6 +3,10 @@ namespace Quatrimo
 {
     internal class spectralPiece : boardPiece
     {
+        public spectralPiece(encounter encounter, Vector2I dimensions, Vector2I origin, string name) : base(encounter, dimensions, origin, name)
+        {
+        }
+
         public override void initializeBlock(block block)
         {
             block.collidesFalling = collidesFallingF;

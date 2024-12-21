@@ -6,11 +6,12 @@ namespace Quatrimo
 {
     public class boardPiece
     {
-        encounter encounter;
-
+        public encounter encounter;
+        public board board;
         public boardPiece(encounter encounter, Vector2I dimensions, Vector2I origin, string name)
         {
             this.encounter = encounter;
+            board = encounter.board;
             this.dimensions = dimensions;
             this.origin = origin;
             this.name = name;

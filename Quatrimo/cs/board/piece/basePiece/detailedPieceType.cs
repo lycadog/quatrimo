@@ -6,12 +6,10 @@ namespace Quatrimo
 {
     public class detailedPieceType : pieceType
     {
-        //UP NEXT: integrate random pools for certain values, like block mod and piece color!
-        //then, more kinds of pieceTypes
 
         baseBlockSpecification[] blockSpecs; //multiple blocks can use the same specification
         int[] blocksIndex; //blockspecification to use, grabbed from blocks array with the value as index
-        public detailedPieceType(pieceShape shape, int pieceMod, baseBlockSpecification[] blockSpecs, int[] blocksIndex, string name, Texture2DRegion tex, Color[] color, short baseWeight = 6) : base(shape, pieceMod, baseWeight)
+        public detailedPieceType(pieceShape shape, objPool<int> pieceMod, baseBlockSpecification[] blockSpecs, int[] blocksIndex, string name, Texture2DRegion tex, Color[] color, short baseWeight = 6) : base(shape, pieceMod, baseWeight)
         {
             this.blockSpecs = blockSpecs;
             this.blocksIndex = blocksIndex;
@@ -20,7 +18,16 @@ namespace Quatrimo
             this.color = color;
         }
 
-        public override bagPiece getBagPiece()
+        public detailedPieceType(pieceShape shape, objPool<int> pieceMod, baseBlockSpecification[] blockSpecs, int[] blocksIndex, Texture2DRegion tex, Color[] color, short baseWeight = 6) : base(shape, pieceMod, baseWeight)
+        {
+            this.blockSpecs = blockSpecs;
+            this.blocksIndex = blocksIndex;
+            name = shape.name;
+            this.tex = tex;
+            this.color = color;
+        }
+
+        public override bagPiece getBagPiece(Color _color)
         {
             foreach(var blockspec in blockSpecs)
             {
@@ -29,7 +36,6 @@ namespace Quatrimo
 
             bagBlock[] bagblocks = new bagBlock[shape.blockCount];
             int index = 0;
-            Color _color = color[util.rand.Next(0, color.Length)];
 
             for(int x = 0; x < shape.dimensions.x; x++)
             {
@@ -48,7 +54,7 @@ namespace Quatrimo
                 }
             }
 
-            return new bagPiece(bagblocks, pieceMod.getRandom(), shape.dimensions, shape.origin, name);
+            return new bagPiece(bagblocks, pieceMod.getRandom(), shape.dimensions, shape.origin, baseWeight, name);
         }
     }
 }

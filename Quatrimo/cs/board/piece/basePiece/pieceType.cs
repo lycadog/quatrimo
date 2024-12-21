@@ -4,7 +4,7 @@ using MonoGame.Extended.Graphics;
 namespace Quatrimo
 {
     public abstract class pieceType
-    {   //need support for random piecemod
+    {
         public pieceShape shape;
         public objPool<int> pieceMod;
         public short baseWeight;
@@ -20,6 +20,6 @@ namespace Quatrimo
             this.baseWeight = baseWeight;
         }
 
-        public abstract bagPiece getBagPiece();
+        public abstract bagPiece getBagPiece(Color _color);
     }
 }

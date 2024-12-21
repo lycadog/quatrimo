@@ -6,13 +6,15 @@
         public Vector2I dimensions;
         public Vector2I origin;
         public short blockCount;
+        public string name;
 
-        public pieceShape(bool[,] shape, Vector2I dimensions, Vector2I origin, short count)
+        public pieceShape(bool[,] shape, int originX, int originY, short count, string name)
         {
             this.shape = shape;
-            this.dimensions = dimensions;
-            this.origin = origin;
-            this.blockCount = count;
+            dimensions = new Vector2I(shape.GetLength(0), shape.GetLength(1));
+            origin = new Vector2I(originX, originY);
+            blockCount = count;
+            this.name = name;
         }
     }
 }

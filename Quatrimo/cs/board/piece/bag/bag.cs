@@ -1,4 +1,5 @@
-﻿using MonoGame.Extended.Graphics;
+﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended.Graphics;
 using System.Collections.Generic;
 
 namespace Quatrimo
@@ -7,19 +8,40 @@ namespace Quatrimo
     {
         public encounter encounter;
 
-        List<bagPiece> pieces;
+        List<bagPiece> pieces = [];
         objPool<bagPiece> piecePool;
 
         public Texture2DRegion tex;
         public string name;
 
+        public bag(pieceType[] pieceTypes, string name, Color[] colors)
+        {
+            this.name = name;
+            List<int> usedColors = [];
+            piecePool = new objPool<bagPiece>();
+            foreach(var piece in pieceTypes)
+            {
+                int index = util.rand.Next(0, colors.Length);
+                while (usedColors.Contains(index))
+                {
+                    index = util.rand.Next(0, colors.Length);
+                }
+
+                usedColors.Add(index);
+                bagPiece newPiece = piece.getBagPiece(colors[index]);
+                pieces.Add(newPiece);
+                newPiece.bagEntry = piecePool.addNewEntry(newPiece, newPiece.baseWeight);
+            }
+        }
+
         public bag(pieceType[] pieceTypes, string name)
         {
             this.name = name;
+            piecePool = new objPool<bagPiece>();
 
-            foreach(var piece in pieceTypes)
+            foreach (var piece in pieceTypes)
             {
-                bagPiece newPiece = piece.getBagPiece();
+                bagPiece newPiece = piece.getBagPiece(piece.color[util.rand.Next(0, piece.color.Length)]);
                 pieces.Add(newPiece);
                 newPiece.bagEntry = piecePool.addNewEntry(newPiece, newPiece.baseWeight);
             }

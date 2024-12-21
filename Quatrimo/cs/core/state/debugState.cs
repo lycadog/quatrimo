@@ -57,7 +57,7 @@ namespace Quatrimo
 
         protected void drawDebugText(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.DrawString(Game1.font, "DEBUG", new Vector2(450, 20), Color.Yellow);
+            spriteBatch.DrawString(texs.font, "DEBUG", new Vector2(450, 20), Color.Yellow);
 
             
             //spriteBatch.DrawString(Game1.fontSmall, fps.ToString(), new Vector2(20, 460), Color.CornflowerBlue);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Quatrimo
 {
@@ -10,12 +11,12 @@ namespace Quatrimo
 
         public objPool(T[] values, int[] weights)
         {
-            if(values.Length != weights.Length) 
-            { 
-                throw new ArgumentException($"objPool constructor expects 2 arrays of equal length. Array 1 length: {values.Length}, Array 2 length: {weights.Length}"); 
+            if (values.Length != weights.Length)
+            {
+                throw new ArgumentException($"objPool constructor expects 2 arrays of equal length. Array 1 length: {values.Length}, Array 2 length: {weights.Length}");
             }
-            
-            for(int i = 0; i < values.Length; i++)
+
+            for (int i = 0; i < values.Length; i++)
             {
                 addNewEntry(values[i], weights[i]);
             }
@@ -27,14 +28,22 @@ namespace Quatrimo
             addNewEntry(value);
         }
 
+        //add elements later
+        public objPool() { }
+
         public T getRandom()
         {
-            T obj = pool[util.rand.Next(0, pool.Count)];
+            Debug.WriteLine("POOL SIZE: " + pool.Count);
+            int index = util.rand.Next(0, pool.Count);
+            Debug.WriteLine("INDEX: " + index);
+
+            T obj = pool[index];
             return obj;
         }
 
         public weightedEntry addNewEntry(T entry, int weight = 1)
         {
+            Debug.WriteLine("NEW ENTRY ADDED");
             weightedEntry newEntry = new weightedEntry(this, entry, weight);
             entries.Add(newEntry);
             return newEntry;
@@ -59,18 +68,19 @@ namespace Quatrimo
             {
                 this.parent = parent;
                 this.entry = entry;
-                addWeight(weight);
+                setWeight(weight);
             }
 
             public void addWeight(int value)
             {
                 for(int i = 0; i < value; i++)
                 {
-                    if(weight < 0)
+                    weight += 1;
+                    if (weight > 0)
                     {
                         parent.pool.Add(entry);
                     }
-                    weight += 1;
+                    
                 }
             }
 

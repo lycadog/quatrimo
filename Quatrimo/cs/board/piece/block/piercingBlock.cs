@@ -20,7 +20,7 @@
         protected override void createGFXf(block block)
         {
             base.createGFXf(block);
-            element.tex = Game1.piercing;
+            element.tex = texs.piercing;
         }
 
         protected override bool fallingBlockClippedF(block placedBlock, block block)
