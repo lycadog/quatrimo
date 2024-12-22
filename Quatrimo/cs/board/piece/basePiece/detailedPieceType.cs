@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Graphics;
+using System.Diagnostics;
 
 namespace Quatrimo
 {

@@ -62,6 +62,25 @@ namespace Quatrimo
 
         public void parseTurnInput(GameTime gameTime)
         {
+            if (data.slamKey.keyDown)
+            {
+                encounter.currentPiece.move(0, encounter.currentPiece.dropOffset);
+                placePiece();
+                return;
+            }
+
+            if (data.holdKey.keyDown && canHold)
+            {
+                holdPiece();
+                return;
+            }
+
+            if (data.pieceAbilityKey.keyDown)
+            {
+                encounter.currentPiece.useAbility();
+                return;
+            }
+
             //for movement keys, when key holds: do action once, wait until timeheld, then move rapidly
             if ((data.leftKey.keyDown || data.leftKey.timeHeld > 140) && leftMoveCooldown > 30)
             {
@@ -110,19 +129,6 @@ namespace Quatrimo
                 {
                     encounter.currentPiece.rotate(1);
                 }
-            }
-
-            if (data.slamKey.keyDown)
-            {
-                encounter.currentPiece.move(0, encounter.currentPiece.dropOffset);
-
-                placePiece();
-                return;
-            }
-
-            if (data.holdKey.keyDown && canHold)
-            {
-                holdPiece();
             }
 
             leftMoveCooldown += (int)gameTime.ElapsedGameTime.TotalMilliseconds;

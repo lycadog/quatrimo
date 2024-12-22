@@ -5,7 +5,6 @@ namespace Quatrimo
 {
     public static class data
     {
-        
         public static keybind leftKey = new(Microsoft.Xna.Framework.Input.Keys.Left, Microsoft.Xna.Framework.Input.Keys.A);
         public static keybind rightKey = new(Microsoft.Xna.Framework.Input.Keys.Right, Microsoft.Xna.Framework.Input.Keys.D);
         public static keybind upKey = new(Microsoft.Xna.Framework.Input.Keys.Up, Microsoft.Xna.Framework.Input.Keys.W);
@@ -14,6 +13,7 @@ namespace Quatrimo
         public static keybind leftRotateKey = new(Microsoft.Xna.Framework.Input.Keys.Q, Microsoft.Xna.Framework.Input.Keys.None);
         public static keybind rightRotateKey = new(Microsoft.Xna.Framework.Input.Keys.E, Microsoft.Xna.Framework.Input.Keys.None);
         public static keybind holdKey = new(Microsoft.Xna.Framework.Input.Keys.F, Microsoft.Xna.Framework.Input.Keys.None);
+        public static keybind pieceAbilityKey = new(Microsoft.Xna.Framework.Input.Keys.C, Microsoft.Xna.Framework.Input.Keys.None);
         public static keybind restartKey = new(Microsoft.Xna.Framework.Input.Keys.R, Microsoft.Xna.Framework.Input.Keys.None);
         public static keybind pauseKey = new(Microsoft.Xna.Framework.Input.Keys.Escape, Microsoft.Xna.Framework.Input.Keys.None);
         public static keybind toggleDebugKey = new(Microsoft.Xna.Framework.Input.Keys.OemTilde, Microsoft.Xna.Framework.Input.Keys.None);
@@ -28,7 +28,7 @@ namespace Quatrimo
         public static keybind debugKey4 = new keybind(Microsoft.Xna.Framework.Input.Keys.F4, Microsoft.Xna.Framework.Input.Keys.None);
         public static keybind debugKey5 = new keybind(Microsoft.Xna.Framework.Input.Keys.F5, Microsoft.Xna.Framework.Input.Keys.None);
 
-        public static keybind[] boardKeys = [leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey, holdKey, restartKey, pauseKey, toggleDebugKey];
+        public static keybind[] boardKeys = [leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey, holdKey, pieceAbilityKey, restartKey, pauseKey, toggleDebugKey];
         public static keybind[] debugKeys = [debugMode1, debugMode2, debugMode3, debugKey1, debugKey2, debugKey3, debugKey4, debugKey5];
 
         public static starterLoadout bag1;
@@ -65,6 +65,8 @@ namespace Quatrimo
         public static pieceShape sZPieceL = new(new bool[,] { { false, true }, { true, true }, { true, false } }, 1, 1, 4, "Left Z");
         public static pieceShape sZPieceR = new(new bool[,] { { true, false }, { true, true }, { false, true } }, 1, 1, 4, "Right Z");
 
+        public static pieceShape sFatLine = new(new bool[,] { { true, true }, { true, true }, { true, true }, { true, true } }, 1, 0, 8, "Fat Line");
+
         public static pieceShape sCorner = new(new bool[,] { { true, true, true }, { false, false, true }, { false, false, true } }, 0, 2, 5, "Corner");
         public static pieceShape sRectangle = new(new bool[,] { { true, true }, { true, true }, { true, true } }, 1, 0, 6, "Rectangle");
         public static pieceShape sLeftPick = new(new bool[,] { { true, false }, { true, true }, { true, false }, { true, false } }, 2, 0, 5, "Left Pick");
@@ -95,6 +97,7 @@ namespace Quatrimo
 
             circleLine = new(sLine, basic, 0, texs.circle, bag3Colors);
             circleTwig = new(sTwig, basic, 0, texs.circle, bag3Colors);
+            circleWedge = new(sWedge, basic, 0, texs.circle, bag3Colors);
             circleNub = new(sNub, basic, 0, texs.circle, bag3Colors);
 
             basicCorner = new(sCorner, basic, 0, texs.box, allColors);
@@ -114,18 +117,22 @@ namespace Quatrimo
             basicBoson = new(sBoson, basic, 0, texs.circledetail, bag3Colors);
             basicStump = new(sStump, basic, 0, texs.circle, bag3Colors);
             basicSlash = new(sSlash, basic, 0, texs.circle, bag3Colors);
-            basicLepton = new(sLepton, basic, 0, texs.circle, bag3Colors);
+            basicLepton = new(sLepton, basic, 0, texs.circledetail, bag3Colors);
 
             basicSquare = new(sSquare, basic, 0, texs.box, allColors);
             basicTBlock = new(sTBlock, basic, 0, texs.box, allColors);
             basicLeftL = new(sLeftL, basic, 0, texs.box, allColors);
             basicRightL = new(sRightL, basic, 0, texs.box, allColors);
-            basicZPieceL = new(sZPieceL, basic, 0, texs.box, allColors);
-            basicZPieceR = new(sZPieceR, basic, 0, texs.box, allColors);
+            basicZPieceL = new(sZPieceL, basic, 0, texs.circle, allColors);
+            basicZPieceR = new(sZPieceR, basic, 0, texs.circle, allColors);
 
-            bag1 = new([boxLine, basicCorner, basicLPick, basicRPick, basicRectangle, basicSquare, boxStick], bag1Colors, "bag1");
+
+            splitLine = new(sFatLine, basic, [new blockSpecification(0), new blockSpecification(2)], [0, 1, 0, 1, 0, 1, 0, 1], texs.box, allColors);
+            
+
+            bag1 = new([boxLine, basicCorner, basicLPick, basicRPick, basicRectangle, basicSquare, boxTwig, boxWedge], bag1Colors, "bag1");
             bag2 = new([boxLine, basicDipole, basicBigT, basicLeftHatchet, basicRightHatchet, basicLeftHook, basicRightHook, boxTwig], bag2Colors, "bag2");
-            bag3 = new([circleNub, basicCaret, basicBowl, basicStump, basicSlash, circleTwig, circleLine, basicLepton, basicBoson], bag3Colors, "bag3");
+            bag3 = new([basicZPieceL, basicZPieceR, circleNub, basicCaret, basicStump, basicSlash, circleTwig, circleLine, basicLepton], bag3Colors, "bag3");
         }
 
         public static simplePiece boxLine;
@@ -135,6 +142,7 @@ namespace Quatrimo
 
         public static simplePiece circleLine;
         public static simplePiece circleTwig;
+        public static simplePiece circleWedge;
         public static simplePiece circleNub;
 
         public static simplePiece basicSquare;
@@ -163,6 +171,7 @@ namespace Quatrimo
         public static simplePiece basicLepton;
         public static simplePiece basicBoson;
 
+        public static detailedPieceType splitLine;
         public static void initialize()
         {
 

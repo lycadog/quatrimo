@@ -87,7 +87,7 @@ namespace Quatrimo
 
         public void startEncounter()
         {
-            bag bag = data.bag1.createBag(); //fill out later
+            bag bag = data.bag3.createBag(); //fill out later
             encounter = new encounter(bag);
             encounterState newState = new encounterState(this, encounter);
 

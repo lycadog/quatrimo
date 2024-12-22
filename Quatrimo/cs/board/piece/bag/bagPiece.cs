@@ -52,6 +52,7 @@
             {
                 newBlocks[i] = data.blocks[blocks[i].mod].Invoke();
                 newBlocks[i].createBlock(encounter, piece, blocks[i].localpos, blocks[i].tex, blocks[i].color);
+                piece.initializeBlock(newBlocks[i]);
             }
             piece.blocks = newBlocks;
 

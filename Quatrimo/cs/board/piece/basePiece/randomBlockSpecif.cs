@@ -5,29 +5,26 @@ namespace Quatrimo
     public class randomBlockSpecif : baseBlockSpecification
     {
         objPool<int> modPool;
-        bool shouldReroll;
+        bool rerollOnOverwrite;
 
         public override void overwrite(bagBlock block)
         {
+            if (rerollOnOverwrite) { mod = modPool.getRandom(); }
             _overwrite(block);
         }
 
         public override void onGetBagPiece()
-        {
-            if (shouldReroll)
-            {
-                mod = modPool.getRandom();
-            }
+        {    
+            mod = modPool.getRandom();
         }
 
-        public randomBlockSpecif(objPool<int> modPool, bool rerollOnGetPiece = false)
+        public randomBlockSpecif(objPool<int> modPool, bool rerollOnOverwrite = false)
         {
             this.modPool = modPool;
-            mod = modPool.getRandom();
 
             _overwrite += (bagBlock block) => block.mod = mod;
 
-            shouldReroll = rerollOnGetPiece;
+            this.rerollOnOverwrite = rerollOnOverwrite;
         }
 
         public randomBlockSpecif(objPool<int> modPool, Texture2DRegion tex, bool rerollOnGetPiece = false)
@@ -40,7 +37,7 @@ namespace Quatrimo
             _overwrite += (bagBlock block) => block.mod = mod;
             _overwrite += (bagBlock block) => block.tex = this.tex;
 
-            shouldReroll = rerollOnGetPiece;
+            rerollOnOverwrite = rerollOnGetPiece;
         }
 
     }

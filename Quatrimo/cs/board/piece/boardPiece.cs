@@ -17,13 +17,14 @@ namespace Quatrimo
             this.name = name;
         }
 
-        public block[] blocks { get; set; }
-        public Vector2I dimensions { get; set; }
-        public Vector2I pos { get; set; }
-        public Vector2I origin { get; set; }
-        public int rotation { get; set; } = 0; //0 - 3
-        public int dropOffset { get; set; }
-        public string name { get; set; }
+        public block[] blocks;
+        public Vector2I dimensions;
+        public Vector2I pos;
+        public Vector2I origin;
+        public int rotation = 0; //0 - 3
+        public int dropOffset;
+        public string name;
+        public bool canAbility;
 
         /// <summary>
         /// Overrides necessary delegates on new block, MAKE SURE TO OVERRIDE for new piece types
@@ -48,6 +49,10 @@ namespace Quatrimo
         {
             pos = new Vector2I(pos.x + xOffset, pos.y + yOffset);
             updatePos();
+        }
+
+        public virtual void useAbility()
+        {
         }
 
         /// <summary>
