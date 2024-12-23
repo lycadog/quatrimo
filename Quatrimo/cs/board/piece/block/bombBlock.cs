@@ -12,14 +12,14 @@ namespace Quatrimo
         {
             base.animateScore(anim, forceAnim);
             List<Vector2I> blocks = [
-                boardpos.add(new Vector2I(1, 0)),
-                boardpos.add(new Vector2I(-1, 0)),
-                boardpos.add(new Vector2I(0, 1)),
-                boardpos.add(new Vector2I(0, -1)),
-                boardpos.add(new Vector2I(1, 1)),
-                boardpos.add(new Vector2I(-1, 1)),
-                boardpos.add(new Vector2I(1, -1)),
-                boardpos.add(new Vector2I(-1, -1))
+                boardpos + new Vector2I(1, 0),
+                boardpos + new Vector2I(-1, 0),
+                boardpos + new Vector2I(0, 1),
+                boardpos + new Vector2I(0, -1),
+                boardpos + new Vector2I(1, 1),
+                boardpos + new Vector2I(-1, 1),
+                boardpos + new Vector2I(1, -1),
+                boardpos + new Vector2I(-1, -1)
             ];
             new scoreBlocks(blocks, board).execute(encounter);
         }
@@ -54,15 +54,15 @@ namespace Quatrimo
             }
             
             List<Vector2I> blocks = [
-                boardpos.add(new Vector2I(0, 0)),
-                boardpos.add(new Vector2I(1, 0)),
-                boardpos.add(new Vector2I(-1, 0)),
-                boardpos.add(new Vector2I(0, 1)),
-                boardpos.add(new Vector2I(0, -1)),
-                boardpos.add(new Vector2I(1, 1)),
-                boardpos.add(new Vector2I(-1, 1)),
-                boardpos.add(new Vector2I(1, -1)),
-                boardpos.add(new Vector2I(-1, -1))
+                boardpos + new Vector2I(0, 0),
+                boardpos + new Vector2I(1, 0),
+                boardpos + new Vector2I(-1, 0),
+                boardpos + new Vector2I(0, 1),
+                boardpos + new Vector2I(0, -1),
+                boardpos + new Vector2I(1, 1),
+                boardpos + new Vector2I(-1, 1),
+                boardpos + new Vector2I(1, -1),
+                boardpos + new Vector2I(-1, -1)
             ];
             new scoreBlocks(blocks, board).execute(encounter);
             encounter.state.interrupted = true;

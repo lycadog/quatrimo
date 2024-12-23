@@ -29,7 +29,7 @@ namespace Quatrimo
 
                 Vector2I offset = new Vector2I((block.localpos.x * 5) + 25, (block.localpos.y * 5) + 25);
 
-                sprite.pos = pos.add(offset);
+                sprite.pos = pos + offset;
             }
         }
 

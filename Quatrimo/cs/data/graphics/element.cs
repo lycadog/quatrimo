@@ -21,6 +21,11 @@ namespace Quatrimo
             updatePos();
         }
 
+        public void setEPosFromBoard(Vector2I boardpos)
+        {
+            setEPos(boardPos2ElementPos(boardpos));
+        }
+
         public void setEPos(Vector2I newPos)
         {
             elementPos = newPos;
@@ -34,14 +39,14 @@ namespace Quatrimo
         /// <param name="offset"></param>
         public void offsetEPos(Vector2I offset)
         {
-            elementPos = elementPos.add(offset);
+            elementPos += offset;
             pos = elementPos2WorldPos(elementPos);
             updatePos();
         }
 
-        protected void updatePos()
+        protected void updatePos() //WHY IS THIS HERE?????
         {
-            pos = pos.add(new Vector2I(5, 5));
+            pos += new Vector2I(5, 5);
         }
 
 

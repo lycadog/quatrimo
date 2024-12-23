@@ -12,8 +12,18 @@ public struct Vector2I
     
     public static Vector2I zero = new Vector2I(0, 0);
 
-    public Vector2I add(Vector2I other)
+    public static Vector2I operator+ (Vector2I v1, Vector2I v2)
     {
-        return new Vector2I(x + other.x, y + other.y);
+        return new Vector2I(v1.x + v2.x, v1.y + v2.y);
+    }
+
+    public static Vector2I operator- (Vector2I v1, Vector2I v2)
+    {
+        return new Vector2I(v1.x - v2.x, v1.y - v2.y);
+    }
+
+    public static Vector2I operator* (Vector2I v1, Vector2I v2)
+    {
+        return new Vector2I(v1.x * v2.x, v1.y * v2.y);
     }
 }

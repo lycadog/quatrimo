@@ -198,7 +198,7 @@ namespace Quatrimo
         public Action<block> updatePos;
         protected void updatePosF(block block)
         {
-            boardpos = localpos.add(piece.pos);
+            boardpos = localpos + piece.pos;
         }
 
         /// <summary>
