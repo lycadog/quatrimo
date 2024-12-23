@@ -2,13 +2,12 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 
 namespace Quatrimo
 {
     public class animHandler
     {
+        //fix up this nightmare
         encounter main;
         public delegate void animDelegate(GameTime gameTime);
 
