@@ -62,27 +62,27 @@ namespace Quatrimo
 
         public void parseTurnInput(GameTime gameTime)
         {
-            if (data.slamKey.keyDown)
+            if (keybind.slamKey.keyDown)
             {
                 encounter.currentPiece.move(0, encounter.currentPiece.dropOffset);
                 placePiece();
                 return;
             }
 
-            if (data.holdKey.keyDown && canHold)
+            if (keybind.holdKey.keyDown && canHold)
             {
                 holdPiece();
                 return;
             }
 
-            if (data.pieceAbilityKey.keyDown)
+            if (keybind.pieceAbilityKey.keyDown)
             {
                 encounter.currentPiece.useAbility();
                 return;
             }
 
             //for movement keys, when key holds: do action once, wait until timeheld, then move rapidly
-            if ((data.leftKey.keyDown || data.leftKey.timeHeld > 140) && leftMoveCooldown > 30)
+            if ((keybind.leftKey.keyDown || keybind.leftKey.timeHeld > 140) && leftMoveCooldown > 30)
             {
                 if (!encounter.currentPiece.collidesFalling(-1, 0))
                 {
@@ -90,7 +90,7 @@ namespace Quatrimo
                     leftMoveCooldown = 0;
                 }
             }
-            else if ((data.rightKey.keyDown || data.rightKey.timeHeld > 140) && rightMoveCooldown > 30)
+            else if ((keybind.rightKey.keyDown || keybind.rightKey.timeHeld > 140) && rightMoveCooldown > 30)
             {
                 if (!encounter.currentPiece.collidesFalling(1, 0))
                 {
@@ -99,31 +99,31 @@ namespace Quatrimo
                 }
             }
 
-            if (data.downKey.keyDown || data.downKey.timeHeld > 50 && fastfallCooldown > 10)
+            if (keybind.downKey.keyDown || keybind.downKey.timeHeld > 50 && fastfallCooldown > 10)
             {
                 piecefallTimer += 600;
                 fastfallCooldown = 0;
             }
-            else if (data.downKey.keyUp)
+            else if (keybind.downKey.keyUp)
             {
                 piecefallTimer = -100;
                 placeTimer = -100;
             }
 
 
-            if (data.upKey.keyHeld)
+            if (keybind.upKey.keyHeld)
             {
                 //piecefallTimer -= gameTime.ElapsedGameTime.TotalMilliseconds * 0.2;
             }
 
-            if (data.leftRotateKey.keyDown)
+            if (keybind.leftRotateKey.keyDown)
             {
                 if (encounter.currentPiece.canRotate(-1))
                 {
                     encounter.currentPiece.rotate(-1);
                 }
             }
-            else if (data.rightRotateKey.keyDown)
+            else if (keybind.rightRotateKey.keyDown)
             {
                 if (encounter.currentPiece.canRotate(1))
                 {

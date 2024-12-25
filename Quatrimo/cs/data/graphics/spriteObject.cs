@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace Quatrimo
 {
@@ -19,7 +20,7 @@ namespace Quatrimo
         /// Draws the sprite to the provided spritebatch
         /// </summary>
         /// <param name="spriteBatch">Spritebatch to draw to</param>
-        public override void draw(SpriteBatch spriteBatch, GameTime gameTime, board board)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> list)
         {
             spriteBatch.Draw(tex, new Rectangle(pos.x, pos.y, size.x, size.y), null, color, rot, origin, effect, depth);
         }

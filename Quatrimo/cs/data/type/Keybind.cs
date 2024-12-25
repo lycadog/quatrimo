@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Input;
 
 public class keybind
 {
-
     public Keys key1 { get; set; }
     public Keys key2 { get; set; }
     
@@ -51,5 +50,32 @@ public class keybind
             keybind.updateKey(gameTime);
         }
     }
+
+    public static keybind leftKey = new(Keys.Left, Keys.A);
+    public static keybind rightKey = new(Keys.Right, Keys.D);
+    public static keybind upKey = new(Keys.Up, Keys.W);
+    public static keybind downKey = new(Keys.Down, Keys.S);
+    public static keybind slamKey = new(Keys.Space, Keys.None);
+    public static keybind leftRotateKey = new(Keys.Q, Keys.None);
+    public static keybind rightRotateKey = new(Keys.E, Keys.None);
+    public static keybind holdKey = new(Keys.F, Keys.None);
+    public static keybind pieceAbilityKey = new(Keys.C, Keys.None);
+    public static keybind restartKey = new(Keys.R, Keys.None);
+    public static keybind pauseKey = new(Keys.Escape, Keys.None);
+    public static keybind toggleDebugKey = new(Keys.OemTilde, Keys.None);
+
+    public static keybind debugMode1 = new keybind(Keys.OemOpenBrackets, Keys.None);
+    public static keybind debugMode2 = new keybind(Keys.OemCloseBrackets, Keys.None);
+    public static keybind debugMode3 = new keybind(Keys.OemBackslash, Keys.None);
+
+    public static keybind debugKey1 = new keybind(Keys.F1, Keys.None);
+    public static keybind debugKey2 = new keybind(Keys.F2, Keys.None);
+    public static keybind debugKey3 = new keybind(Keys.F3, Keys.None);
+    public static keybind debugKey4 = new keybind(Keys.F4, Keys.None);
+    public static keybind debugKey5 = new keybind(Keys.F5, Keys.None);
+
+    public static keybind[] boardKeys = [leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey, holdKey, pieceAbilityKey, restartKey, pauseKey, toggleDebugKey];
+    public static keybind[] debugKeys = [debugMode1, debugMode2, debugMode3, debugKey1, debugKey2, debugKey3, debugKey4, debugKey5];
+
 
 }

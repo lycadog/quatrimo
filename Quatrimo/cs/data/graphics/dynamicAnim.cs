@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Quatrimo
 {
@@ -11,7 +12,7 @@ namespace Quatrimo
         protected drawDelegate drawD;
 
 
-        public delegate void drawDelegate(spriteObject sprite, SpriteBatch spriteBatch, GameTime gameTime, board board);
+        public delegate void drawDelegate(spriteObject sprite, SpriteBatch spriteBatch, GameTime gameTime, List<drawable> list);
 
 
         public dynamicAnim(spriteObject sprite, drawDelegate drawMethod)
@@ -21,11 +22,11 @@ namespace Quatrimo
             drawD = drawMethod;
         }
 
-        public override void draw(SpriteBatch spriteBatch, GameTime gameTime, board board)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> list)
         {
-            drawD.Invoke(sprite, spriteBatch, gameTime, board);
+            drawD.Invoke(sprite, spriteBatch, gameTime, list);
             updatePos();
-            sprite.draw(spriteBatch, gameTime, board);
+            sprite.draw(spriteBatch, gameTime, list);
         }
         
         protected void updatePos()

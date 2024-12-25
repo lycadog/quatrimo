@@ -5,32 +5,7 @@ namespace Quatrimo
 {
     public static class data
     {
-        public static keybind leftKey = new(Microsoft.Xna.Framework.Input.Keys.Left, Microsoft.Xna.Framework.Input.Keys.A);
-        public static keybind rightKey = new(Microsoft.Xna.Framework.Input.Keys.Right, Microsoft.Xna.Framework.Input.Keys.D);
-        public static keybind upKey = new(Microsoft.Xna.Framework.Input.Keys.Up, Microsoft.Xna.Framework.Input.Keys.W);
-        public static keybind downKey = new(Microsoft.Xna.Framework.Input.Keys.Down, Microsoft.Xna.Framework.Input.Keys.S);
-        public static keybind slamKey = new(Microsoft.Xna.Framework.Input.Keys.Space, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind leftRotateKey = new(Microsoft.Xna.Framework.Input.Keys.Q, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind rightRotateKey = new(Microsoft.Xna.Framework.Input.Keys.E, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind holdKey = new(Microsoft.Xna.Framework.Input.Keys.F, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind pieceAbilityKey = new(Microsoft.Xna.Framework.Input.Keys.C, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind restartKey = new(Microsoft.Xna.Framework.Input.Keys.R, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind pauseKey = new(Microsoft.Xna.Framework.Input.Keys.Escape, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind toggleDebugKey = new(Microsoft.Xna.Framework.Input.Keys.OemTilde, Microsoft.Xna.Framework.Input.Keys.None);
-
-        public static keybind debugMode1 = new keybind(Microsoft.Xna.Framework.Input.Keys.OemOpenBrackets, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind debugMode2 = new keybind(Microsoft.Xna.Framework.Input.Keys.OemCloseBrackets, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind debugMode3 = new keybind(Microsoft.Xna.Framework.Input.Keys.OemBackslash, Microsoft.Xna.Framework.Input.Keys.None);
-
-        public static keybind debugKey1 = new keybind(Microsoft.Xna.Framework.Input.Keys.F1, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind debugKey2 = new keybind(Microsoft.Xna.Framework.Input.Keys.F2, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind debugKey3 = new keybind(Microsoft.Xna.Framework.Input.Keys.F3, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind debugKey4 = new keybind(Microsoft.Xna.Framework.Input.Keys.F4, Microsoft.Xna.Framework.Input.Keys.None);
-        public static keybind debugKey5 = new keybind(Microsoft.Xna.Framework.Input.Keys.F5, Microsoft.Xna.Framework.Input.Keys.None);
-
-        public static keybind[] boardKeys = [leftKey, rightKey, upKey, downKey, slamKey, leftRotateKey, rightRotateKey, holdKey, pieceAbilityKey, restartKey, pauseKey, toggleDebugKey];
-        public static keybind[] debugKeys = [debugMode1, debugMode2, debugMode3, debugKey1, debugKey2, debugKey3, debugKey4, debugKey5];
-
+        
         public static starterLoadout bag1;
         public static starterLoadout bag2;
         public static starterLoadout bag3;

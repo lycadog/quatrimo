@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 
 namespace Quatrimo
@@ -172,7 +171,7 @@ namespace Quatrimo
                 animFrame frame1 = new animFrame(sprite1, 200);
                 animSprite anim = new animSprite([frame1]);
 
-                main.board.sprites.Add(anim);
+                main.board.spritesOld.Add(anim);
             }
             timer = 100;
             animState = timedWait;
@@ -193,7 +192,7 @@ namespace Quatrimo
 
         protected void decayBlock(block block)
         {
-            main.board.sprites.Add(getDecayingAnim(block.boardpos));
+            main.board.spritesOld.Add(getDecayingAnim(block.boardpos));
             block.removeFromBoard(block);
         }
 

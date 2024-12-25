@@ -19,7 +19,7 @@ namespace Quatrimo
             manager.updateD = pausedUpdate;
 
             manager.paused = true;
-            encounter.board.sprites.Add( encounter.board.pauseText );
+            encounter.board.spritesOld.Add( encounter.board.pauseText );
         }
 
         public void unpause()
@@ -27,7 +27,7 @@ namespace Quatrimo
             manager.updateD = updates;
 
             manager.paused = false;
-            encounter.board.sprites.Remove(encounter.board.pauseText);
+            encounter.board.spritesOld.Remove(encounter.board.pauseText);
         }
 
         public override void setState()

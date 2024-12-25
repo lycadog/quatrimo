@@ -106,8 +106,8 @@ namespace Quatrimo
         {
             updatePos(this);
             updateSpritePos(this);
-            board.sprites.Add(element);
-            board.sprites.Add(dropElement);
+            board.spritesOld.Add(element);
+            board.spritesOld.Add(dropElement);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Quatrimo
 
             board.blocks[boardpos.x, boardpos.y] = this;
             element.depth = .75f;
-            board.sprites.Remove(dropElement);
+            board.spritesOld.Remove(dropElement);
         }
 
         //todo: rework block scoring methods for easier use
@@ -221,8 +221,8 @@ namespace Quatrimo
         public Action<block> removeFalling;
         protected virtual void removeFallingF(block block)
         {
-            board.sprites.Remove(element);
-            board.sprites.Remove(dropElement);
+            board.spritesOld.Remove(element);
+            board.spritesOld.Remove(dropElement);
         }
 
         /// <summary>

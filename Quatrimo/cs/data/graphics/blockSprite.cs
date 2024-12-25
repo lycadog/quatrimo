@@ -33,8 +33,11 @@ namespace Quatrimo
 
         public void move(Vector2I offset)
         {
-            if (elementPos + offset >)
-                offsetEPos(new Vector2I(x, y));
+            //if beyond board boundary: hide block
+            if (elementPos.x + offset.x > board.offset.x){
+
+            }
+            //offsetEPos(new Vector2I(x, y));
         }
     }
 }
