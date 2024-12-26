@@ -8,7 +8,7 @@ namespace Quatrimo
     {
         public short timer = 4;
 
-        public override void animateScore(animation anim, bool forceAnim = false)
+        public override void animateScore(drawable anim, bool forceAnim = false)
         {
             base.animateScore(anim, forceAnim);
             List<Vector2I> blocks = [

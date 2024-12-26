@@ -19,7 +19,7 @@ namespace Quatrimo
             manager.updateD = pausedUpdate;
 
             manager.paused = true;
-            encounter.board.spritesOld.Add( encounter.board.pauseText );
+            encounter.board.sprites.Add( encounter.board.pauseText );
         }
 
         public void unpause()
@@ -27,7 +27,7 @@ namespace Quatrimo
             manager.updateD = updates;
 
             manager.paused = false;
-            encounter.board.spritesOld.Remove(encounter.board.pauseText);
+            encounter.board.sprites.Remove(encounter.board.pauseText);
         }
 
         public override void setState()
@@ -63,24 +63,24 @@ namespace Quatrimo
 
         protected void updateBoardKeys(GameTime gameTime)
         {
-            keybind.updateKeybinds(data.boardKeys, gameTime);
+            keybind.updateKeybinds(keybind.boardKeys, gameTime);
         }
 
         protected void encounterUpdate(GameTime gameTime)
         {
             encounter.update(gameTime);
 
-            if (data.pauseKey.keyDown)
+            if (keybind.pauseKey.keyDown)
             {
                 pause();
             }
 
-            if (data.restartKey.keyDown)
+            if (keybind.restartKey.keyDown)
             {
                 encounter = new encounter(encounter.bag);
             }
 
-            if (data.toggleDebugKey.keyDown)
+            if (keybind.toggleDebugKey.keyDown)
             {
                 if (!manager.debugMode){
                     manager.debugMode = true; 
@@ -96,7 +96,7 @@ namespace Quatrimo
 
         protected void pausedUpdate(GameTime gameTime)
         {
-            if (data.pauseKey.keyDown)
+            if (keybind.pauseKey.keyDown)
             {
                 unpause();
             }

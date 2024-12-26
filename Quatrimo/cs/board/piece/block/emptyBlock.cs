@@ -13,7 +13,7 @@ namespace Quatrimo
             occupiedForScoring = false;
         }
 
-        public override void animateScore(animation anim, bool forceAnim = false)
+        public override void animateScore(drawable anim, bool forceAnim = false)
         {
             if (forceAnim)
             {

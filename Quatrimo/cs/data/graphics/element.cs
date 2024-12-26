@@ -9,7 +9,7 @@ namespace Quatrimo
     {
         public Vector2I elementPos;
         public static readonly int eSize = 10;
-        public element(Texture2DRegion tex, Color color, Vector2I epos, float depth = 0, SpriteEffects effect = SpriteEffects.None) : base()
+        public element(Texture2DRegion tex, Color color, Vector2I epos, float depth = 0, SpriteEffects effect = SpriteEffects.None)
         {
             this.tex = tex;
             this.color = color;

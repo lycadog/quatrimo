@@ -37,13 +37,13 @@ namespace Quatrimo
 
         protected void updateDebugKeys(GameTime gameTime)
         {
-            keybind.updateKeybinds(data.debugKeys, gameTime);
+            keybind.updateKeybinds(keybind.debugKeys, gameTime);
         }
         protected void debugUpdate(GameTime gameTime)
         {
             if(manager.encounter.state is midPiecefallState)
             {
-                if (data.debugKey1.keyDown)
+                if (keybind.debugKey1.keyDown)
                 {
                     manager.encounter.currentPiece.removeFalling();
                     manager.encounter.currentPiece = manager.encounter.nextPiece;

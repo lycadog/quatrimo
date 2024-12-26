@@ -39,7 +39,7 @@ namespace Quatrimo
                     {
                         element e = new element(texs.boxsolid, Color.White, element.boardPos2ElementPos(block.boardpos), 0.85f);
                         animSprite anim = new animSprite([new animFrame(e, 200)]);
-                        encounter.board.spritesOld.Add(anim);
+                        encounter.board.sprites.Add(anim);
                     }
                 }
             }

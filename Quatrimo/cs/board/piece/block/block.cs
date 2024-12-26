@@ -85,7 +85,7 @@ namespace Quatrimo
         /// </summary>
         /// <param name="encounter"></param>
         /// <param name="anim"></param>
-        public virtual void animateScore(animation anim, bool forceAnim = false) //TODO: add support for overriding the default anim
+        public virtual void animateScore(drawable anim, bool forceAnim = false) //TODO: add support for overriding the default anim
         {
             scoreRemoveGFX(this);
             scoredAnim = true;
@@ -93,7 +93,7 @@ namespace Quatrimo
             animSprite sprite = animHandler.getDecayingAnim(new Vector2I(boardpos.x, boardpos.y));
 
             board.queuedSprites.Add(sprite);
-            encounter.animHandler.animations.Add(sprite);
+            //encounter.animHandler.animations.Add(sprite);
         }
 
         // =|||||||= [ DELEGATE DECLARATIONS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -106,8 +106,8 @@ namespace Quatrimo
         {
             updatePos(this);
             updateSpritePos(this);
-            board.spritesOld.Add(element);
-            board.spritesOld.Add(dropElement);
+            board.sprites.Add(element);
+            board.sprites.Add(dropElement);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Quatrimo
 
             board.blocks[boardpos.x, boardpos.y] = this;
             element.depth = .75f;
-            board.spritesOld.Remove(dropElement);
+            board.sprites.Remove(dropElement);
         }
 
         //todo: rework block scoring methods for easier use
@@ -221,8 +221,8 @@ namespace Quatrimo
         public Action<block> removeFalling;
         protected virtual void removeFallingF(block block)
         {
-            board.spritesOld.Remove(element);
-            board.spritesOld.Remove(dropElement);
+            board.sprites.Remove(element);
+            board.sprites.Remove(dropElement);
         }
 
         /// <summary>

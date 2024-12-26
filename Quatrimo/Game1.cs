@@ -70,13 +70,6 @@ namespace Quatrimo
 
             stateManager = new stateManager(this);
             stateManager.startEncounter();
-            regionSprite sprite = new regionSprite();
-            sprite.tex = texs.nameQ;
-            sprite.color = Color.Magenta;
-            sprite.pos = new Vector2I(240, 240);
-            sprite.depth = 1f;  
-
-            //stateManager.encounter.board.sprites.Add(new movingSprite(sprite, new Vector2(0, -200f), new Vector2(0, 100f)));
         }
 
         protected override void Update(GameTime gameTime)

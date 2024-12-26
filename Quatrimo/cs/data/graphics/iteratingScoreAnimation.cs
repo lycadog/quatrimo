@@ -1,10 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public class iteratingScoreAnimation : animation
+    public class iteratingScoreAnimation : drawable
     {
         encounter encounter;
         board board;
@@ -27,30 +28,23 @@ namespace Quatrimo
             this.positions = positions;
         }
 
-        public override void draw(SpriteBatch spriteBatch, GameTime gameTime, board board)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> list)
         {
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if (timer < 25) { return; }
-                
+
             animFinished = true;
-    
-            iterateDirection(0, -1);               
+
+            iterateDirection(0, -1);
             iterateDirection(1, 1);
 
             timer = 0;
-    
+
             if (animFinished)
             {
-                completed = true;
-                board.staleSprites.Add(this);
+                setState(2);
             }
-
-        }
-
-        public override void terminate()
-        {
-            throw new System.NotImplementedException();
         }
 
         void iterateDirection(int index, int offset) //offset is either 1 or -1

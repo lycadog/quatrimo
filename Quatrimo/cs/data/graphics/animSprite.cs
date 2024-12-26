@@ -1,37 +1,40 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace Quatrimo
 {
-    public class animSprite : animation
+    public class animSprite : drawable
     {
         public animFrame[] sequence;
         public int frame = 0;
         public double timer = 0;
         public bool loops;
 
-        public animSprite(animFrame[] sequence, bool loops = false, int frame = 0)
+        public animSprite(animFrame[] sequence, bool loops = false, int frame = 0) : base(0)
         {
             this.sequence = sequence;
             this.loops = loops;
             this.frame = frame;
         }
 
-        public override void draw(SpriteBatch spriteBatch, GameTime gameTime, board board)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> list)
         {
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timer > sequence[frame].hangTime)
             {
                 timer = 0;
-                if(frame < sequence.Length-1) { frame += 1; }
-                else {
-                    if (loops) 
+                if (frame < sequence.Length - 1) { frame += 1; }
+                else
+                {
+                    if (loops)
                     { frame = 0; }
-                  
-                    else { board.staleSprites.Add(this); completed = true; return; } }
-            }         
-            sequence[frame].sprite.draw(spriteBatch, gameTime, board);
+
+                    else { setState(2); return; }
+                }
+            }
+            sequence[frame].sprite.draw(spriteBatch, gameTime, list);
         }
 
         /// <summary>
@@ -52,16 +55,6 @@ namespace Quatrimo
             }
         }
 
-        public void returnValues(out animFrame[] sequence, out bool loops, out int frame)
-        {
-            sequence = this.sequence;
-            loops = this.loops;
-            frame = this.frame;
-        }
-
-        public override void terminate()
-        {
-            throw new System.NotImplementedException();
-        }
+        
     }
 }

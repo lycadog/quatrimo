@@ -18,7 +18,7 @@ namespace Quatrimo
 
         protected void tick(GameTime gameTime)
         {
-            if (data.slamKey.keyDown)
+            if (keybind.slamKey.keyDown)
             {
                 //START piece fall
                 encounter.currentPiece.play();

@@ -11,7 +11,7 @@ namespace Quatrimo
         public delegate void animDelegate(GameTime gameTime);
 
         public animDelegate animState;
-        public List<animation> animations = [];
+        public List<drawable> animations = [];
 
         double timer = 0;
         short num = 0;
@@ -154,7 +154,7 @@ namespace Quatrimo
             bool completed = true;
             foreach(var anim in animations)
             {
-                if(!anim.completed) { completed = false; }
+                if(!anim.stale) { completed = false; }
             }
 
             if (completed)
@@ -171,7 +171,7 @@ namespace Quatrimo
                 animFrame frame1 = new animFrame(sprite1, 200);
                 animSprite anim = new animSprite([frame1]);
 
-                main.board.spritesOld.Add(anim);
+                main.board.sprites.Add(anim);
             }
             timer = 100;
             animState = timedWait;
@@ -192,7 +192,7 @@ namespace Quatrimo
 
         protected void decayBlock(block block)
         {
-            main.board.spritesOld.Add(getDecayingAnim(block.boardpos));
+            main.board.sprites.Add(getDecayingAnim(block.boardpos));
             block.removeFromBoard(block);
         }
 
