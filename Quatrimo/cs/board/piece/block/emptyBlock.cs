@@ -20,7 +20,7 @@ namespace Quatrimo
                 scoredAnim = true;
 
                 animSprite sprite = animHandler.getDecayingAnim(new Vector2I(boardpos.x, boardpos.y));
-                board.queuedSprites.Add(sprite);
+                board.addSprite(sprite);
                 encounter.animHandler.animations.Add(sprite);
             }
         }
@@ -61,7 +61,7 @@ namespace Quatrimo
         {
         }
 
-        protected override void hideGFXf(block block)
+        protected override void removeSpritesF(block block)
         {
         }
     }

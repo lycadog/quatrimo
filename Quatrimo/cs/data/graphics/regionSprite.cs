@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace Quatrimo
@@ -15,9 +16,8 @@ namespace Quatrimo
         /// Draws the sprite to the provided spritebatch
         /// </summary>
         /// <param name="spriteBatch"></param>
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> list)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
         {
-            setState(0);
             SpriteBatchExtensions.Draw(spriteBatch, tex, new Vector2(pos.x, pos.y), color, rot, origin, scale, effect, depth);
         }
 

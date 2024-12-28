@@ -12,7 +12,7 @@ namespace Quatrimo
         {
             encounter.state = this;
             encounter.turnRowsCleared = 0;
-            encounter.updatedRows = new bool[encounter.board.dimensions.y];
+            encounter.updatedRows = new bool[board.dimensions.y];
 
             encounter.bag.tickBag();
 

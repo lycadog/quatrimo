@@ -61,7 +61,7 @@ namespace Quatrimo
 
         void findScoredRows()
         {
-            for(int y = 0; y < encounter.board.dimensions.y; y++)
+            for(int y = 0; y < board.dimensions.y; y++)
             {
                 if (encounter.updatedRows[y])
                 {
@@ -83,7 +83,7 @@ namespace Quatrimo
 
         protected bool isRowScoreable(int y) //UPDATE THIS LATER to allow for some empty spots with items - like sleight of hand
         {
-            for (int x = 0; x < encounter.board.dimensions.x; x++)
+            for (int x = 0; x < board.dimensions.x; x++)
             {
                 if (!encounter.board.blocks[x, y].occupiedForScoring) return false; //if any block is empty, return false
                 else { continue; } //if the block isn't empty, keep looping

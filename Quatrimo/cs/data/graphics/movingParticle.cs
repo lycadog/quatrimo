@@ -26,7 +26,7 @@ namespace Quatrimo
             this.timed = timed;
         }
 
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> list)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> listEditQueue)
         {
             throw new ArgumentException("movingParticle state does not accept basic drawstate 0, please set a different state.");
         }
@@ -53,7 +53,7 @@ namespace Quatrimo
             }
         }
 
-        protected void particleTick(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> list)
+        protected void particleTick(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
         {
             if (timed && timer > lifetime)
             {
@@ -69,7 +69,7 @@ namespace Quatrimo
             sprite.pos = new Vector2I((int)floatpos.X, (int)floatpos.Y);
         }
 
-        protected void basicMovement(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> list)
+        protected void basicMovement(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
         {
             particleTick(spriteBatch, gameTime, list);
             floatpos += new Vector2((float)(velocity.X * gameTime.ElapsedGameTime.TotalSeconds), (float)(velocity.Y * gameTime.ElapsedGameTime.TotalSeconds));
@@ -77,7 +77,7 @@ namespace Quatrimo
             updatePos();
         }
         
-        protected void randomAcceleration(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> list)
+        protected void randomAcceleration(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
         {
             particleTick(spriteBatch, gameTime, list);
             floatpos += velocity;

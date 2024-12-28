@@ -6,6 +6,8 @@ namespace Quatrimo
 {
     public class bombBlock : block
     {
+        //explosions are buggy and often end up on the wrong block
+        //might be issue with boardpos not being up to date when the block explodes?
         public short timer = 4;
 
         public override void animateScore(drawable anim, bool forceAnim = false)
@@ -27,7 +29,7 @@ namespace Quatrimo
         protected override void createGFXf(block block)
         {
             base.createGFXf(block);
-            element.tex = texs.bomb;
+            sprite.tex = texs.bomb;
         }
 
         //bomb sprite looks weird rotated, so disable it

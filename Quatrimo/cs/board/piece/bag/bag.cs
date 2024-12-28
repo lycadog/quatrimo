@@ -22,9 +22,11 @@ namespace Quatrimo
             foreach(var piece in pieceTypes)
             {
                 int index = util.rand.Next(0, colors.Length);
-                while (usedColors.Contains(index))
+                short counter = 0;
+                while (usedColors.Contains(index) && counter < 15)
                 {
                     index = util.rand.Next(0, colors.Length);
+                    counter++;
                 }
 
                 usedColors.Add(index);

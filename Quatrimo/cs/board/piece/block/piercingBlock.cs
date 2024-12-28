@@ -4,23 +4,19 @@
     {
         protected override bool collidesFallingF(Vector2I checkPos, block block)
         {
-            if (checkPos.x < 0) { return true; }
-            if (checkPos.x >= piece.board.dimensions.x) { return true; } //if the tile is outside the board dimensions return true (invalid move)
-            if (checkPos.y < 0) { return true; }
-            if (checkPos.y >= piece.board.dimensions.y) { return true; }
-
-            return false;
+            return isOutOfBounds(checkPos);
         }
 
         protected override bool collidesPlacedF(block falling, block block)
         {
+            base.collidesPlacedF(falling, block);
             return false;
         }
 
         protected override void createGFXf(block block)
         {
             base.createGFXf(block);
-            element.tex = texs.piercing;
+            sprite.tex = texs.piercing;
         }
 
         protected override bool fallingBlockClippedF(block placedBlock, block block)

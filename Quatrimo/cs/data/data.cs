@@ -18,7 +18,8 @@ namespace Quatrimo
         public static Func<block>[] blocks = [
             () => { return new block(); },          //0
             () => { return new cursedBlock(); },    //1
-            () => { return new bombBlock(); }       //2
+            () => { return new bombBlock(); },      //2
+            () => { return new hologramBlock(); }   //3
         ];
 
         public static Func<encounter, Vector2I, Vector2I, string, boardPiece>[] pieces = [
@@ -101,13 +102,14 @@ namespace Quatrimo
             basicZPieceL = new(sZPieceL, basic, 0, texs.circle, allColors);
             basicZPieceR = new(sZPieceR, basic, 0, texs.circle, allColors);
 
+            debugPiece1 = new(sWedge, basic, 2, texs.box, allColors);
+            debugPiece2 = new(sNub, basic, 1, texs.box, allColors);
 
-            splitLine = new(sFatLine, basic, [new blockSpecification(0), new blockSpecification(2)], [0, 1, 0, 1, 0, 1, 0, 1], texs.box, allColors);
-            
+            splitLine = new(sFatLine, basic, [new blockSpecification(0), new blockSpecification(3)], [0, 1, 0, 1, 0, 1, 0, 1], texs.box, allColors);
 
             bag1 = new([boxLine, basicCorner, basicLPick, basicRPick, basicRectangle, basicSquare, boxTwig, boxWedge], bag1Colors, "bag1");
             bag2 = new([boxLine, basicDipole, basicBigT, basicLeftHatchet, basicRightHatchet, basicLeftHook, basicRightHook, boxTwig], bag2Colors, "bag2");
-            bag3 = new([basicZPieceL, basicZPieceR, circleNub, basicCaret, basicStump, basicSlash, circleTwig, circleLine, basicLepton], bag3Colors, "bag3");
+            bag3 = new([basicZPieceL, basicZPieceR, circleNub, basicCaret, basicStump, basicSlash, circleTwig, circleLine, basicLepton, debugPiece2, debugPiece1, splitLine], bag3Colors, "bag3");
         }
 
         public static simplePiece boxLine;
@@ -145,6 +147,10 @@ namespace Quatrimo
         public static simplePiece basicSlash;
         public static simplePiece basicLepton;
         public static simplePiece basicBoson;
+
+        public static simplePiece debugPiece1;
+        public static simplePiece debugPiece2;
+        public static simplePiece debugPiece3;
 
         public static detailedPieceType splitLine;
         public static void initialize()

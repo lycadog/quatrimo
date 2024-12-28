@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace Quatrimo
@@ -34,7 +35,7 @@ namespace Quatrimo
             }
         }
 
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> list)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
         {
             base.drawState(spriteBatch, gameTime, list);
             foreach (spriteObject sprite in blocks)

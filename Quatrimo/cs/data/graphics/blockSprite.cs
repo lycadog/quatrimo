@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
+using System.Diagnostics;
 using System.Linq.Expressions;
 
 namespace Quatrimo
@@ -21,23 +22,27 @@ namespace Quatrimo
             this.offset = offset;
         }
 
-        public void play()
+        public void updatePos()
         {
             setEPosFromBoard(block.boardpos + offset);
         }
 
-        public void move(int x, int y)
+        public void checkOutOfBounds()
         {
-            move(new Vector2I(x, y));
+            if (!isOutsideBoard()) //if block is inside of the board, set to draw
+            {
+                setState(0);
+            }
+            else { setState(1); } //if block is outside of the board, hide sprite
         }
 
-        public void move(Vector2I offset)
+        protected bool isOutsideBoard()
         {
-            //if beyond board boundary: hide block
-            if (elementPos.x + offset.x > board.offset.x){
-
-            }
-            //offsetEPos(new Vector2I(x, y));
+            if (elementPos.x < board.offset.x + 1) { return true; }
+            if (elementPos.x >= board.dimensions.x + board.offset.x + 1) { return true; }
+            if (elementPos.y < 4) { return true; }
+            if (elementPos.y >= board.dimensions.y + 2) { return true; }
+            return false;
         }
     }
 }

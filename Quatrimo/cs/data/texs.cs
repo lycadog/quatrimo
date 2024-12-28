@@ -13,7 +13,9 @@ namespace Quatrimo
         public static Texture2DRegion full75;
         public static Texture2DRegion full50;
         public static Texture2DRegion full25;
-        public static Texture2DRegion dropmark;
+        public static Texture2DRegion dropCorners;
+        public static Texture2DRegion dropCrosshair;
+        public static Texture2DRegion fullDropMark;
 
         public static Texture2DRegion borderUL;
         public static Texture2DRegion borderUR;
@@ -39,7 +41,8 @@ namespace Quatrimo
         public static Texture2DRegion cursedclosed;
         public static Texture2DRegion cursedopen;
         public static Texture2DRegion piercing;
-
+        public static Texture2DRegion hologram1;
+        public static Texture2DRegion hologram2;
 
         public static Texture2D none;
         public static Texture2D solid;
@@ -68,7 +71,9 @@ namespace Quatrimo
             full75 = atlas[13];
             full50 = atlas[14];
             full25 = atlas[15];
-            dropmark = atlas[11];
+            dropCorners = atlas[9];
+            dropCrosshair = atlas[10];
+            fullDropMark = atlas[11];
 
             borderUL = atlas[1];
             borderUR = atlas[3];
@@ -99,6 +104,8 @@ namespace Quatrimo
             cursedclosed = atlas[132];
             cursedopen = atlas[133];
             piercing = atlas[138];
+            hologram1 = atlas[145];
+            hologram2 = atlas[146];
 
             none = Content.Load<Texture2D>("empty");
             solid = Content.Load<Texture2D>("full");

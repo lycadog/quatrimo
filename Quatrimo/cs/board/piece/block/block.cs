@@ -25,13 +25,16 @@ namespace Quatrimo
             createGFX(this);
         }
 
-        public element element { get; set; }
-        public element dropElement { get; set; }
-        public boardPiece piece { get; set; }
-        public Vector2I boardpos { get; set; }
-        public Vector2I localpos { get; set; }
-        public Texture2DRegion tex { get; set; }
-        public Color color { get; set; }
+        public boardPiece piece;
+
+        public Vector2I boardpos;
+        public Vector2I localpos;
+
+        public blockSprite sprite;
+        public blockSprite dropSprite;
+        public blockSprite dropCorners;
+        public Texture2DRegion tex;
+        public Color color;
 
         public long scoreValue = 1;
         public double multiplier = 0;
@@ -55,7 +58,7 @@ namespace Quatrimo
             updatePos = new Action<block>(updatePosF);
             updateSpritePos = new Action<block>(updateSpritePosF);
             removeFalling = new Action<block>(removeFallingF);
-            hideGFX = new Action<block>(hideGFXf);
+            removeSprites = new Action<block>(removeSpritesF);
             removeFromBoard = new Action<block>(removeFromBoardF);
 
             scoreRemoveGFX = new Action<block>(scoreRemoveGFXf);
@@ -92,8 +95,8 @@ namespace Quatrimo
 
             animSprite sprite = animHandler.getDecayingAnim(new Vector2I(boardpos.x, boardpos.y));
 
-            board.queuedSprites.Add(sprite);
-            //encounter.animHandler.animations.Add(sprite);
+            board.addSprite(sprite);
+            encounter.animHandler.animations.Add(sprite);
         }
 
         // =|||||||= [ DELEGATE DECLARATIONS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -105,9 +108,14 @@ namespace Quatrimo
         protected virtual void playF(block block)
         {
             updatePos(this);
-            updateSpritePos(this);
-            board.sprites.Add(element);
-            board.sprites.Add(dropElement);
+
+            sprite.setState(0);
+            dropSprite.setState(0);
+            dropCorners.setState(0);
+
+            board.addSprite(sprite);
+            board.addSprite(dropSprite);
+            board.addSprite(dropCorners);
         }
 
         /// <summary>
@@ -124,18 +132,11 @@ namespace Quatrimo
             }
 
             board.blocks[boardpos.x, boardpos.y] = this;
-            element.depth = .75f;
-            board.sprites.Remove(dropElement);
+
+            sprite.depth = .75f;
+            dropSprite.setState(2);
+            dropCorners.setState(2);
         }
-
-        //todo: rework block scoring methods for easier use
-        //different methods depending on boardstate and other things like fully removing the block or animating it
-        //need a seperate one for scoring it and getting it outta here.
-        //and a new one for animating but not adding it to be removed later
-
-        //i think weve pretty much done this now, what next?
-        //piercing blocks!!!!!
-
 
         /// <summary>
         /// Called by blockTickState to fully score and remove a block, do NOT call anywhere else
@@ -174,8 +175,10 @@ namespace Quatrimo
         public Action<block> createGFX;
         protected virtual void createGFXf(block block)
         {
-            element = new element(tex, color, new Vector2I(0, -5), 0.8f); //create new sprite element
-            dropElement = new element(texs.dropmark, Color.LightGray, new Vector2I(0, -10), 0.79f);
+            sprite = new blockSprite(this, tex, color); //create new sprite element
+
+            dropSprite = new blockSprite(this, texs.dropCrosshair, new Color(180, 180, 220)); //create new sprite element
+            dropCorners = new blockSprite(this, texs.dropCorners, Color.White, 0.81f); //create new sprite element
         }
 
         /// <summary>
@@ -207,12 +210,14 @@ namespace Quatrimo
         public Action<block> updateSpritePos;
         protected virtual void updateSpritePosF(block block)
         {
-            if (boardpos.y > 7)
-            {
-                element.setEPos(element.boardPos2ElementPos(boardpos));
-            }
-            else { element.setEPos(new Vector2I(0, -5)); }
-            dropElement.setEPos(element.boardPos2ElementPos(new Vector2I(boardpos.x, boardpos.y + piece.dropOffset)));
+            sprite.updatePos();
+            sprite.checkOutOfBounds();
+
+            dropSprite.offset = new Vector2I(0,piece.dropOffset);
+            dropCorners.offset = new Vector2I(0, piece.dropOffset);
+
+            dropSprite.updatePos();
+            dropCorners.updatePos();
         }
 
         /// <summary>
@@ -221,17 +226,18 @@ namespace Quatrimo
         public Action<block> removeFalling;
         protected virtual void removeFallingF(block block)
         {
-            board.sprites.Remove(element);
-            board.sprites.Remove(dropElement);
+            removeSprites(block);
         }
 
         /// <summary>
         /// Hide the block's sprites
         /// </summary>
-        public Action<block> hideGFX;
-        protected virtual void hideGFXf(block block)
+        public Action<block> removeSprites;
+        protected virtual void removeSpritesF(block block)
         {
-            board.staleSprites.Add(element);
+            sprite.setState(2);
+            dropSprite.setState(2);
+            dropCorners.setState(2);
         }
 
         /// <summary>
@@ -240,6 +246,7 @@ namespace Quatrimo
         public Action<block> removeFromBoard;
         protected virtual void removeFromBoardF(block block)
         {
+            removeSprites(block);
             board.markEmpty(boardpos);
         }
 
@@ -250,7 +257,7 @@ namespace Quatrimo
         //Used during the score step to attempt gfx removal - if block should not be scored, do not remove gfx
         protected virtual void scoreRemoveGFXf(block block)
         {
-            hideGFX(block);
+            removeSprites(block);
         }
 
         /// <summary>
@@ -308,14 +315,21 @@ namespace Quatrimo
         public Func<Vector2I, block, bool> collidesFalling;
         protected virtual bool collidesFallingF(Vector2I checkPos, block block)
         {
-            if (checkPos.x < 0) { return true; }
-            if (checkPos.x >= board.dimensions.x) { return true; } //if the tile is outside the board dimensions return true (invalid move)
-            if (checkPos.y < 0) { return true; }
-            if (checkPos.y >= board.dimensions.y) { return true; }
+            if (isOutOfBounds(checkPos)) { return true; }
 
             block hitBlock = board.blocks[checkPos.x, checkPos.y];
 
             return hitBlock.collidesPlaced(block, hitBlock);
+        }
+
+        protected virtual bool isOutOfBounds(Vector2I checkPos)
+        {
+            //if the tile is outside the board dimensions return true (invalid move)
+            if (checkPos.x < 0) { return true; }
+            if (checkPos.x >= board.dimensions.x) { return true; }
+            if (checkPos.y < 0) { return true; }
+            if (checkPos.y >= board.dimensions.y) { return true; }
+            else return false;
         }
 
         /// <summary>
@@ -346,7 +360,7 @@ namespace Quatrimo
         public Action<int, block> rotateGFX;
         protected virtual void rotateGFXf(int direction, block block)
         {
-            element.rot += MathHelper.ToRadians(90 * direction);
+            sprite.rot += MathHelper.ToRadians(90 * direction);
         }
 
         /// <summary>

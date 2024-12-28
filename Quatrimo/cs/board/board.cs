@@ -13,10 +13,9 @@ namespace Quatrimo
         public block[,] blocks;
 
         public List<drawable> sprites = [];
+        public Action<List<drawable>> queuedSpriteChanges;
 
-        public List<drawable> queuedSprites = [];
-        public List<drawable> staleSprites = [];
-        public Vector2I dimensions;
+        public static Vector2I dimensions;
         public static readonly Vector2I eDimensions = new Vector2I(48, 27); //element dimensions
         public static Vector2I offset;
         public pieceBox nextbox;
@@ -50,16 +49,19 @@ namespace Quatrimo
         /// <param name="gameTime"></param>
         public void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            foreach(var sprite in sprites)
+            queuedSpriteChanges?.Invoke(sprites);
+            queuedSpriteChanges = null;
+
+            foreach (var sprite in sprites)
             {
-                sprite.draw(spriteBatch, gameTime, sprites);
-            }
-            foreach(var sprite in staleSprites)
-            {
-                sprites.Remove(sprite);
+                sprite.draw(spriteBatch, gameTime, queuedSpriteChanges);
             }
         }
 
+        public void addSprite(drawable sprite)
+        {
+            queuedSpriteChanges += ((List<drawable> list) => { list.Add(sprite); });
+        }
 
         /// <summary>
         /// Creates sprites needed for the board border and background
@@ -140,12 +142,13 @@ namespace Quatrimo
                 counter++;
             }
 
-            for(int i = 0; i < 10; i++)
+            Color[] colrs = [new Color(255, 17, 237), new Color(34, 255, 204), new Color(172, 0, 255)];
+            for(int i = 0; i < 40; i++)
             {
                 var qSprite = new regionSprite
                 {
                     tex = texs.nameQ,
-                    color = new Color(255, 17, 237),
+                    color = colrs[util.rand.Next(0, 3)],
                     pos = new Vector2I(150, 200),
                     depth = 1,
                 };

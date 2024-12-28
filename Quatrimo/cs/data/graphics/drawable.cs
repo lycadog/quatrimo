@@ -7,14 +7,16 @@ namespace Quatrimo
 {
     public abstract class drawable
     {
+        public short state;
         /// <summary>
         /// Run current draw method
         /// </summary>
-        public Action<SpriteBatch, GameTime, List<drawable>> draw;
+        public Action<SpriteBatch, GameTime, Action<List<drawable>>> draw;
         public bool stale = false;
 
         public drawable(short state = 0)
         {
+            this.state = state;
             setState(state);
         }
 
@@ -25,6 +27,7 @@ namespace Quatrimo
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public virtual void setState(short state)
         {   //a bit silly maybe, but it's simple enough and protects the draw delegate
+            state = state;
             switch (state)
             {
                 case 0:
@@ -44,11 +47,15 @@ namespace Quatrimo
             }
         }
 
-        protected abstract void drawState(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> staleList);
-        protected virtual void noDraw(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> staleList) { }
-        protected virtual void staleState(SpriteBatch spriteBatch, GameTime gameTime, List<drawable> staleList)
+        protected abstract void drawState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> listEditQueue);
+        protected virtual void noDraw(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> listEditQueue) { }
+        protected virtual void staleState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> listEditQueue)
         {
-            staleList.Add(this);
+            listEditQueue += (List<drawable> list) => { list.Remove(this); };
+        }
+        public void addSprite(drawable sprite, Action<List<drawable>> listEditQueue)
+        {
+            listEditQueue += (List<drawable> list) => { list.Add(sprite); };
         }
     }
 }

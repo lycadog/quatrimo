@@ -109,9 +109,9 @@ namespace Quatrimo
         void sortTickableBlocks()
         {
             untickedBlocks.Clear();
-            for(int x = 0; x < encounter.board.dimensions.x; x++)
+            for(int x = 0; x < board.dimensions.x; x++)
             {
-                for(int y = 0; y < encounter.board.dimensions.y; y++) {
+                for(int y = 0; y < board.dimensions.y; y++) {
                     {
                         block block = encounter.board.blocks[x, y];
                         if (block is not emptyBlock && !block.ticked) //remove emptyblock check later
