@@ -47,7 +47,7 @@ namespace Quatrimo
                 regionSprite sprite = new regionSprite();
                 sprite.tex = texs.nameQ;
                 sprite.color = Color.Magenta;
-                sprite.pos = new Vector2I(240, 240);
+                sprite.worldPos = new Vector2I(240, 240);
                 sprite.depth = 1f;
 
                 //board.sprites.Add(new movingSprite(sprite, new Vector2(0, -200f), new Vector2(0, 100f)));

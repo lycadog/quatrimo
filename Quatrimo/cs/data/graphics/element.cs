@@ -17,12 +17,12 @@ namespace Quatrimo
             this.depth = depth;
             this.effect = effect;
             origin = new Vector2(5, 5);
-            pos = elementPos2WorldPos(epos);
+            worldPos = elementPos2WorldPos(epos);
         }
 
         public void updateEPos()
         {
-            pos = elementPos2WorldPos(elementPos);
+            worldPos = elementPos2WorldPos(elementPos);
         }
 
         public void setEPosFromBoard(Vector2I boardpos)
@@ -33,7 +33,7 @@ namespace Quatrimo
         public void setEPos(Vector2I newPos)
         {
             elementPos = newPos;
-            pos = elementPos2WorldPos(newPos);
+            worldPos = elementPos2WorldPos(newPos);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Quatrimo
         public void offsetEPos(Vector2I offset)
         {
             elementPos += offset;
-            pos = elementPos2WorldPos(elementPos);
+            worldPos = elementPos2WorldPos(elementPos);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Quatrimo
         /// <param name="newPos"></param>
         public void updateWPos(Vector2I newPos) //recommended to use updateEPos instead
         {
-            pos = newPos;
+            worldPos = newPos;
             elementPos = worldPos2ElementPos(newPos);
         }
 

@@ -20,7 +20,7 @@ namespace Quatrimo
         public static Vector2I offset;
         public pieceBox nextbox;
         public pieceBox holdbox;
-        public spriteObject pauseText = new spriteObject();
+        public sprite pauseText = new sprite();
 
         public static readonly int boardy = 22;
 
@@ -73,7 +73,7 @@ namespace Quatrimo
             pauseText.tex = texs.pausedtext;
             pauseText.depth = 1;
             pauseText.size = new Vector2I(120, 40);
-            pauseText.pos = new Vector2I(180, 100);
+            pauseText.worldPos = new Vector2I(180, 100);
             sprites.Add(nextbox);
             sprites.Add(holdbox);
 
@@ -117,11 +117,11 @@ namespace Quatrimo
                 sprites.Add(new element(texs.borderR, Color.White, new Vector2I(offset.x + dimensions.x + 1, y + offset.y), 0.9f));
             }
 
-            var sprite = new spriteObject(); //create black box behind board
+            var sprite = new sprite(); //create black box behind board
             sprite.size = element.elementPos2WorldPos(new Vector2I(14, 22));
             sprite.tex = texs.solid;
             sprite.color = Color.Black;
-            sprite.pos = element.elementPos2WorldPos(new Vector2I(offset.x, offset.y - 1));
+            sprite.worldPos = element.elementPos2WorldPos(new Vector2I(offset.x, offset.y - 1));
             sprite.depth = 0.05f;
             sprites.Add(sprite);
 
@@ -149,7 +149,7 @@ namespace Quatrimo
                 {
                     tex = texs.nameQ,
                     color = colrs[util.rand.Next(0, 3)],
-                    pos = new Vector2I(150, 200),
+                    worldPos = new Vector2I(150, 200),
                     depth = 1,
                 };
 

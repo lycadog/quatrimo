@@ -89,7 +89,7 @@ namespace Quatrimo
         {
             bag bag = data.bag3.createBag(); //fill out later
             encounter = new encounter(bag);
-            encounterState newState = new encounterState(this, encounter);
+            encounterState newState = new encounterState(this);
 
             newState.addState();
 

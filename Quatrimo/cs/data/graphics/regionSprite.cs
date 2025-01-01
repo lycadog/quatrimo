@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Quatrimo
 {
-    public class regionSprite : spriteObject
+    public class regionSprite : sprite
     {
         public new Texture2DRegion tex = texs.empty;
         public Vector2 scale = Vector2.One;
@@ -18,7 +18,7 @@ namespace Quatrimo
         /// <param name="spriteBatch"></param>
         protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
         {
-            SpriteBatchExtensions.Draw(spriteBatch, tex, new Vector2(pos.x, pos.y), color, rot, origin, scale, effect, depth);
+            SpriteBatchExtensions.Draw(spriteBatch, tex, new Vector2(worldPos.x, worldPos.y), color, rot, origin, scale, effect, depth);
         }
 
     }

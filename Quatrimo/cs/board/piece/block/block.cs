@@ -54,7 +54,7 @@ namespace Quatrimo
             finalizeScoring = new Action<block>(finalizeScoringF);
             tick = new Action<block>(tickF);
             createGFX = new Action<block>(createGFXf);
-            createPreview = new Func<block, spriteObject>(createPreviewF);
+            createPreview = new Func<block, sprite>(createPreviewF);
             updatePos = new Action<block>(updatePosF);
             updateSpritePos = new Action<block>(updateSpritePosF);
             removeFalling = new Action<block>(removeFallingF);
@@ -184,10 +184,10 @@ namespace Quatrimo
         /// <summary>
         /// Initialize the drop preview for the currently falling block
         /// </summary>
-        public Func<block,spriteObject> createPreview;
-        protected virtual spriteObject createPreviewF(block block)
+        public Func<block,sprite> createPreview;
+        protected virtual sprite createPreviewF(block block)
         {
-            spriteObject sprite = new spriteObject();
+            sprite sprite = new sprite();
             sprite.size = new Vector2I(5, 5);
             sprite.depth = .93f;
             sprite.tex = texs.solid; sprite.color = block.color;

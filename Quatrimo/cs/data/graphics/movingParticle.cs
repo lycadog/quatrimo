@@ -7,7 +7,7 @@ namespace Quatrimo
 {
     public class movingParticle : drawable
     {
-        public spriteObject sprite;
+        public sprite sprite;
         public double timer = 0;
         public double lifetime = 0;
         bool timed = true;
@@ -16,7 +16,7 @@ namespace Quatrimo
         protected Vector2 velocity;
         protected Vector2 acceleration;
 
-        public movingParticle(short state, spriteObject sprite, Vector2 floatpos, Vector2 velocity, Vector2 acceleration, double lifetime = 0, bool timed = false) : base(state)
+        public movingParticle(short state, sprite sprite, Vector2 floatpos, Vector2 velocity, Vector2 acceleration, double lifetime = 0, bool timed = false) : base(state)
         {
             this.sprite = sprite;
             this.floatpos = floatpos;
@@ -66,7 +66,7 @@ namespace Quatrimo
 
         protected void updatePos()
         {
-            sprite.pos = new Vector2I((int)floatpos.X, (int)floatpos.Y);
+            sprite.worldPos = new Vector2I((int)floatpos.X, (int)floatpos.Y);
         }
 
         protected void basicMovement(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)

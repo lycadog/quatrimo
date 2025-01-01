@@ -52,7 +52,7 @@ namespace Quatrimo
                     e.updateWPos(pos);
                     break;
                 }
-                frame.sprite.pos = pos;
+                frame.sprite.worldPos = pos;
             }
         }
 

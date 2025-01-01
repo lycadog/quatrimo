@@ -27,7 +27,7 @@ namespace Quatrimo
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public virtual void setState(short state)
         {   //a bit silly maybe, but it's simple enough and protects the draw delegate
-            state = state;
+            this.state = state;
             switch (state)
             {
                 case 0:
