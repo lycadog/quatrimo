@@ -18,6 +18,35 @@ namespace Quatrimo
 
         static readonly int eSize = 10; //global element size
 
+        public sprite(Texture2D tex, Color color, float depth = 0, SpriteEffects effect = SpriteEffects.None)
+        {
+            this.tex = tex;
+            this.color = color;
+            this.depth = depth;
+            this.effect = effect;
+        }
+
+        public sprite(Texture2D tex, Color color, Vector2I boardpos, float depth = 0, SpriteEffects effect = SpriteEffects.None)
+        {
+            this.tex = tex;
+            this.color = color;
+            boardPos = boardpos;
+            this.depth = depth;
+            this.effect = effect;
+        }
+
+        public sprite(Texture2D tex, Vector2I elementPos, Color color, float depth = 0, SpriteEffects effect = SpriteEffects.None)
+        {
+            this.tex = tex;
+            this.color = color;
+            this.elementPos = elementPos;
+            this.depth = depth;
+            this.effect = effect;
+        }
+
+        public sprite() { }
+
+
         protected Vector2I _worldPos = Vector2I.zero;
         public Vector2I worldPos { get { return _worldPos; } set { _worldPos = value; updatePos(); } }
 
@@ -25,7 +54,7 @@ namespace Quatrimo
         public Vector2I elementPos { get { return _elementPos; } set
             {
                 _elementPos = value;
-                _worldPos = new Vector2I(elementPos.x * eSize + 5, elementPos.y * eSize + 5);
+                _worldPos = new Vector2I(elementPos.x * eSize, elementPos.y * eSize);
                 _boardpos = new Vector2I(elementPos.x + board.offset.x + 1, elementPos.y + 4);
                 _floatPos = worldPos;
             } }
@@ -34,8 +63,8 @@ namespace Quatrimo
         public Vector2I boardPos { get { return _boardpos; } set
             {
                 _boardpos = value;
-                _worldPos = new Vector2I((board.offset.x + boardPos.x + 1) * eSize, (boardPos.y - 4) * eSize);
-                _elementPos = new Vector2I(board.offset.x + boardPos.x + 1, boardPos.y - 4);
+                _worldPos = new Vector2I((board.offset.x + boardPos.x + 1) * eSize, (boardPos.y + 3) * eSize);
+                _elementPos = new Vector2I(board.offset.x + boardPos.x + 1, boardPos.y + 3);
                 _floatPos = worldPos;
             } }
 

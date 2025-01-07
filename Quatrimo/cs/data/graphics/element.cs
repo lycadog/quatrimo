@@ -5,7 +5,7 @@ using MonoGame.Extended.Graphics;
 
 namespace Quatrimo
 {
-    public class element : regionSprite
+    public class element : regSprite
     {
         public Vector2I elementPos;
         public static readonly int eSize = 10;

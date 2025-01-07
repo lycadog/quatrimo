@@ -44,7 +44,7 @@ namespace Quatrimo
 
             if (timer > 0)
             {
-                regionSprite sprite = new regionSprite();
+                regSprite sprite = new regSprite();
                 sprite.tex = texs.nameQ;
                 sprite.color = Color.Magenta;
                 sprite.worldPos = new Vector2I(240, 240);
