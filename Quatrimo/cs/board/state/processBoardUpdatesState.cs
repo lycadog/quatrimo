@@ -37,7 +37,7 @@ namespace Quatrimo
                     }
                     else //if not scored, then add brief highlight
                     {
-                        element e = new element(texs.boxsolid, Color.White, element.boardPos2ElementPos(block.boardpos), 0.85f);
+                        regSprite e = new regSprite(texs.boxsolid, Color.White, block.boardpos, 0.85f);
                         animSprite anim = new animSprite([new animFrame(e, 200)]);
                         encounter.board.sprites.Add(anim);
                     }

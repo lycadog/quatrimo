@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Quatrimo
 {
@@ -51,7 +52,7 @@ namespace Quatrimo
         protected virtual void noDraw(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> listEditQueue) { }
         protected virtual void staleState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> listEditQueue)
         {
-            listEditQueue += (List<drawable> list) => { list.Remove(this); };
+            listEditQueue += (List<drawable> list) => { Debug.WriteLine(list.Remove(this)); };
         }
         public void addSprite(drawable sprite, Action<List<drawable>> listEditQueue)
         {

@@ -1,12 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
-using System.Diagnostics;
-using System.Linq.Expressions;
 
 namespace Quatrimo
 {
-    public class blockSprite : element
+    public class blockSprite : regSprite
     {
         public block block;
         public Vector2I offset = Vector2I.zero;
@@ -24,10 +22,11 @@ namespace Quatrimo
 
         public void updatePos()
         {
-            setEPosFromBoard(block.boardpos + offset);
+            boardPos = block.boardpos + offset;
+            checkOutOfBounds();
         }
 
-        public void checkOutOfBounds()
+        protected void checkOutOfBounds()
         {
             if (!isOutsideBoard()) //if block is inside of the board, set to draw
             {

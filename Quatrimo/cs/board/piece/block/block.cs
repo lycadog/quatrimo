@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Graphics;
 using System;
+using System.Diagnostics;
 
 namespace Quatrimo
 {
@@ -211,7 +212,6 @@ namespace Quatrimo
         protected virtual void updateSpritePosF(block block)
         {
             sprite.updatePos();
-            sprite.checkOutOfBounds();
 
             dropSprite.offset = new Vector2I(0,piece.dropOffset);
             dropCorners.offset = new Vector2I(0, piece.dropOffset);

@@ -49,8 +49,11 @@ namespace Quatrimo
         /// <param name="gameTime"></param>
         public void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            //Debug.WriteLine("BEFORE REMOVE: " + sprites.Count);
             queuedSpriteChanges?.Invoke(sprites);
+            if(queuedSpriteChanges != null) { Debug.WriteLine("RAAAAAAAAAAAAAH"); }
             queuedSpriteChanges = null;
+            //Debug.WriteLine("AFTER REMOVE: " + sprites.Count);
 
             foreach (var sprite in sprites)
             {
@@ -94,7 +97,7 @@ namespace Quatrimo
                     sprites.Add(new regSprite(texs.nameO, new Vector2I(27, 0), new Color(172, 0, 255), 0.9f));
                 }
                 else if (i > 19 && i < 28) { continue; }
-                sprites.Add(new element(texs.borderD, Color.White, new Vector2I(i, 0), 0.9f));
+                sprites.Add(new regSprite(texs.borderD, new Vector2I(i, 0), Color.White, 0.9f));
             }
 
             //create board border
@@ -139,7 +142,7 @@ namespace Quatrimo
             }
 
             Color[] colrs = [new Color(255, 17, 237), new Color(34, 255, 204), new Color(172, 0, 255)];
-            for(int i = 0; i < 40; i++)
+            for(int i = 0; i < 200; i++)
             {
                 var qSprite = new regSprite
                 {
@@ -149,7 +152,7 @@ namespace Quatrimo
                     depth = 1,
                 };
 
-                var qJumper = new movingParticle(4, qSprite, new Vector2(240, 135), new Vector2(0, 0), new Vector2(0, 0), 4000, true);
+                var qJumper = new movingParticle(4, qSprite, new Vector2(240, 135), new Vector2(0, 0), new Vector2(0, 0), 3000, true);
                 sprites.Add(qJumper);
             }
             

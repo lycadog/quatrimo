@@ -63,8 +63,8 @@ namespace Quatrimo
         public Vector2I boardPos { get { return _boardpos; } set
             {
                 _boardpos = value;
-                _worldPos = new Vector2I((board.offset.x + boardPos.x + 1) * eSize, (boardPos.y + 3) * eSize);
-                _elementPos = new Vector2I(board.offset.x + boardPos.x + 1, boardPos.y + 3);
+                _worldPos = new Vector2I((board.offset.x + boardPos.x + 1) * eSize, (boardPos.y - 4) * eSize);
+                _elementPos = new Vector2I(board.offset.x + boardPos.x + 1, boardPos.y - 4);
                 _floatPos = worldPos;
             } }
 
