@@ -43,6 +43,8 @@ namespace Quatrimo
         public static Texture2DRegion piercing;
         public static Texture2DRegion hologram1;
         public static Texture2DRegion hologram2;
+        public static Texture2DRegion hologram3;
+        public static Texture2DRegion hologram4;
 
         public static Texture2D none;
         public static Texture2D solid;
@@ -106,6 +108,8 @@ namespace Quatrimo
             piercing = atlas[138];
             hologram1 = atlas[145];
             hologram2 = atlas[146];
+            hologram3 = atlas[147];
+            hologram4 = atlas[148];
 
             none = Content.Load<Texture2D>("empty");
             solid = Content.Load<Texture2D>("full");

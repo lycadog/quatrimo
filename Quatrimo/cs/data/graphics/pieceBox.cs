@@ -35,12 +35,12 @@ namespace Quatrimo
             }
         }
 
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
         {
-            base.drawState(spriteBatch, gameTime, list);
+            base.drawState(spriteBatch, gameTime, ref list);
             foreach (sprite sprite in blocks)
             {
-                sprite.draw(spriteBatch, gameTime, list);
+                sprite.draw(spriteBatch, gameTime, ref list);
             }
         }
     }

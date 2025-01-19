@@ -10,7 +10,7 @@ namespace Quatrimo
         public Vector2I size = new Vector2I(10, 10);
         public float depth = 0;
         public float rot = 0;
-        public Vector2 origin = Vector2.Zero;
+        public Vector2 origin = new Vector2(5, 5);
 
         public Texture2D tex = texs.none;
         public Color color = Color.White;
@@ -44,7 +44,7 @@ namespace Quatrimo
             this.effect = effect;
         }
 
-        public sprite() { }
+        public sprite() { setState(0); }
 
 
         protected Vector2I _worldPos = Vector2I.zero;
@@ -54,7 +54,7 @@ namespace Quatrimo
         public Vector2I elementPos { get { return _elementPos; } set
             {
                 _elementPos = value;
-                _worldPos = new Vector2I(elementPos.x * eSize, elementPos.y * eSize);
+                _worldPos = new Vector2I(elementPos.x * eSize + 5, elementPos.y * eSize + 5);
                 _boardpos = new Vector2I(elementPos.x + board.offset.x + 1, elementPos.y + 4);
                 _floatPos = worldPos;
             } }
@@ -63,7 +63,7 @@ namespace Quatrimo
         public Vector2I boardPos { get { return _boardpos; } set
             {
                 _boardpos = value;
-                _worldPos = new Vector2I((board.offset.x + boardPos.x + 1) * eSize, (boardPos.y - 4) * eSize);
+                _worldPos = new Vector2I((board.offset.x + boardPos.x + 1) * eSize + 5, (boardPos.y - 4) * eSize + 5);
                 _elementPos = new Vector2I(board.offset.x + boardPos.x + 1, boardPos.y - 4);
                 _floatPos = worldPos;
             } }
@@ -80,7 +80,7 @@ namespace Quatrimo
         /// Draws the sprite to the provided spritebatch
         /// </summary>
         /// <param name="spriteBatch">Spritebatch to draw to</param>
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
         {
             spriteBatch.Draw(tex, new Rectangle(worldPos.x, worldPos.y, size.x, size.y), null, color, rot, origin, effect, depth);
         }

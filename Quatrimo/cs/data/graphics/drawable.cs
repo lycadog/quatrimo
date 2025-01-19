@@ -8,16 +8,17 @@ namespace Quatrimo
 {
     public abstract class drawable
     {
+        public delegate void drawDelegate(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue);
+
         public short state;
         /// <summary>
         /// Run current draw method
         /// </summary>
-        public Action<SpriteBatch, GameTime, Action<List<drawable>>> draw;
+        public drawDelegate draw;
         public bool stale = false;
 
         public drawable(short state = 0)
         {
-            this.state = state;
             setState(state);
         }
 
@@ -48,13 +49,13 @@ namespace Quatrimo
             }
         }
 
-        protected abstract void drawState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> listEditQueue);
-        protected virtual void noDraw(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> listEditQueue) { }
-        protected virtual void staleState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> listEditQueue)
+        protected abstract void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue);
+        protected virtual void noDraw(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue) { }
+        protected virtual void staleState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue)
         {
-            listEditQueue += (List<drawable> list) => { Debug.WriteLine(list.Remove(this)); };
+            listEditQueue += (List<drawable> list) => { list.Remove(this); };
         }
-        public void addSprite(drawable sprite, Action<List<drawable>> listEditQueue)
+        public void addSprite(drawable sprite, ref Action<List<drawable>> listEditQueue)
         {
             listEditQueue += (List<drawable> list) => { list.Add(sprite); };
         }

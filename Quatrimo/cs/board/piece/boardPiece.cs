@@ -92,6 +92,7 @@ namespace Quatrimo
             {
                 rotation += 4;
             }
+
             foreach (block block in blocks)
             {
                 block.rotate(direction, block);

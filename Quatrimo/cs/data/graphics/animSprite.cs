@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Quatrimo
 {
@@ -20,7 +21,7 @@ namespace Quatrimo
             this.frame = frame;
         }
 
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
         {
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timer > sequence[frame].hangTime)
@@ -36,7 +37,7 @@ namespace Quatrimo
                 }
             }
             sequence[frame].sprite.worldPos += worldPos;
-            sequence[frame].sprite.draw(spriteBatch, gameTime, list);
+            sequence[frame].sprite.draw(spriteBatch, gameTime, ref list);
             sequence[frame].sprite.worldPos -= worldPos;
         }
         

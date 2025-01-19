@@ -31,7 +31,7 @@ namespace Quatrimo
         public Vector2I boardpos;
         public Vector2I localpos;
 
-        public blockSprite sprite;
+        public blockSprite blockSprite;
         public blockSprite dropSprite;
         public blockSprite dropCorners;
         public Texture2DRegion tex;
@@ -110,11 +110,11 @@ namespace Quatrimo
         {
             updatePos(this);
 
-            sprite.setState(0);
+            blockSprite.setState(0);
             dropSprite.setState(0);
             dropCorners.setState(0);
 
-            board.addSprite(sprite);
+            board.addSprite(blockSprite);
             board.addSprite(dropSprite);
             board.addSprite(dropCorners);
         }
@@ -134,7 +134,7 @@ namespace Quatrimo
 
             board.blocks[boardpos.x, boardpos.y] = this;
 
-            sprite.depth = .75f;
+            blockSprite.sprite.depth = .75f;
             dropSprite.setState(2);
             dropCorners.setState(2);
         }
@@ -176,10 +176,10 @@ namespace Quatrimo
         public Action<block> createGFX;
         protected virtual void createGFXf(block block)
         {
-            sprite = new blockSprite(this, tex, color); //create new sprite element
+            blockSprite = new blockSprite(this, new regSprite(tex, color, 0.8f)); //create new sprite element
 
-            dropSprite = new blockSprite(this, texs.dropCrosshair, new Color(180, 180, 220)); //create new sprite element
-            dropCorners = new blockSprite(this, texs.dropCorners, Color.White, 0.81f); //create new sprite element
+            dropSprite = new blockSprite(this, new regSprite(texs.dropCrosshair, new Color(180, 180, 220), 0.79f)); //create new sprite element
+            dropCorners = new blockSprite(this, new regSprite(texs.dropCorners, Color.White, 0.81f)); //create new sprite element
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace Quatrimo
         public Action<block> updateSpritePos;
         protected virtual void updateSpritePosF(block block)
         {
-            sprite.updatePos();
+            blockSprite.updatePos();
 
             dropSprite.offset = new Vector2I(0,piece.dropOffset);
             dropCorners.offset = new Vector2I(0, piece.dropOffset);
@@ -235,7 +235,7 @@ namespace Quatrimo
         public Action<block> removeSprites;
         protected virtual void removeSpritesF(block block)
         {
-            sprite.setState(2);
+            blockSprite.setState(2);
             dropSprite.setState(2);
             dropCorners.setState(2);
         }
@@ -360,7 +360,7 @@ namespace Quatrimo
         public Action<int, block> rotateGFX;
         protected virtual void rotateGFXf(int direction, block block)
         {
-            sprite.rot += MathHelper.ToRadians(90 * direction);
+            blockSprite.sprite.rot += MathHelper.ToRadians(90 * direction);
         }
 
         /// <summary>

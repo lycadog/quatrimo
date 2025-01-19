@@ -1,28 +1,54 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace Quatrimo
 {
-    public class blockSprite : regSprite
+    //rework to be more open
+    public class blockSprite : drawable
     {
+        public sprite sprite;
         public block block;
+        
         public Vector2I offset = Vector2I.zero;
 
-        public blockSprite(block block, Texture2DRegion tex, Color color, float depth = 0.8f, SpriteEffects effect = SpriteEffects.None) : base(tex, color, new Vector2I(0, -5), depth, effect)
+        public blockSprite(block block, sprite sprite)
         {
             this.block = block;
+            this.sprite = sprite;
         }
 
-        public blockSprite(block block, Vector2I offset, Texture2DRegion tex, Color color, float depth = 0.8f, SpriteEffects effect = SpriteEffects.None) : base(tex, color, new Vector2I(0,-5), depth, effect)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue)
         {
-            this.block = block;
-            this.offset = offset;
+            sprite.draw(spriteBatch, gameTime, ref listEditQueue);
+        }
+
+        /// <summary>
+        /// Set regSprite texture, crashes if sprite isn't a regSprite
+        /// </summary>
+        /// <param name="region"></param>
+        public void setRegTexture(Texture2DRegion region)
+        {
+            ((regSprite)sprite).tex = region;
+        }
+        public void setTexture(Texture2D tex)
+        {
+            sprite.tex = tex;
+        }
+
+        public void setDepthOfAnimation(float depth)
+        {
+            foreach(var animFrame in ((animSprite)sprite).sequence)
+            {
+                animFrame.sprite.depth = depth;
+            }
         }
 
         public void updatePos()
         {
-            boardPos = block.boardpos + offset;
+            sprite.boardPos = block.boardpos + offset;
             checkOutOfBounds();
         }
 
@@ -37,10 +63,10 @@ namespace Quatrimo
 
         protected bool isOutsideBoard()
         {
-            if (elementPos.x < board.offset.x + 1) { return true; }
-            if (elementPos.x >= board.dimensions.x + board.offset.x + 1) { return true; }
-            if (elementPos.y < 4) { return true; }
-            if (elementPos.y >= board.dimensions.y + 2) { return true; }
+            if (sprite.elementPos.x < board.offset.x + 1) { return true; }
+            if (sprite.elementPos.x >= board.dimensions.x + board.offset.x + 1) { return true; }
+            if (sprite.elementPos.y < 4) { return true; }
+            if (sprite.elementPos.y >= board.dimensions.y + 2) { return true; }
             return false;
         }
     }

@@ -45,7 +45,7 @@ namespace Quatrimo
         /// Draws the sprite to the provided spritebatch
         /// </summary>
         /// <param name="spriteBatch"></param>
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
         {
             SpriteBatchExtensions.Draw(spriteBatch, tex, new Vector2(worldPos.x, worldPos.y), color, rot, origin, scale, effect, depth);
         }

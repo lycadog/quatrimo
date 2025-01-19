@@ -29,7 +29,7 @@ namespace Quatrimo
             this.positions = positions;
         }
 
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> listEditQueue)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue)
         {
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
 

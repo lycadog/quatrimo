@@ -8,12 +8,15 @@ namespace Quatrimo
 {
     public class board
     {
+        //messy code using queuedSpriteChanges list in drawable class, requires ref parameters and general messiness
+        //maybe make a new system for that eventually - perhaps it could do sorting as well
+        
         public encounter encounter;
 
         public block[,] blocks;
 
         public List<drawable> sprites = [];
-        public Action<List<drawable>> queuedSpriteChanges;
+        public Action<List<drawable>> queuedSpriteChanges; //REMOVE THIS completely later
 
         public static Vector2I dimensions;
         public static readonly Vector2I eDimensions = new Vector2I(48, 27); //element dimensions
@@ -49,15 +52,12 @@ namespace Quatrimo
         /// <param name="gameTime"></param>
         public void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            //Debug.WriteLine("BEFORE REMOVE: " + sprites.Count);
             queuedSpriteChanges?.Invoke(sprites);
-            if(queuedSpriteChanges != null) { Debug.WriteLine("RAAAAAAAAAAAAAH"); }
             queuedSpriteChanges = null;
-            //Debug.WriteLine("AFTER REMOVE: " + sprites.Count);
 
             foreach (var sprite in sprites)
             {
-                sprite.draw(spriteBatch, gameTime, queuedSpriteChanges);
+                sprite.draw(spriteBatch, gameTime, ref queuedSpriteChanges);
             }
         }
 
@@ -82,6 +82,7 @@ namespace Quatrimo
 
             sprites.Add(new regSprite(texs.borderDL, new Vector2I(1, 0), Color.White, 0.9f)); //top bar
             sprites.Add(new regSprite(texs.borderDR, new Vector2I(46, 0), Color.White, 0.9f));
+
             //new Color(255, 17, 237), new Color(34, 255, 204), new Color(172, 0, 255)
             for (int i = 2; i < eDimensions.x - 2; i++) //create top border
             {
@@ -102,19 +103,19 @@ namespace Quatrimo
 
             //create board border
 
-            sprites.Add(new regSprite(texs.borderUL, Color.White, new Vector2I(-1, 0), 0.9f)); // create corner pieces
-            sprites.Add(new regSprite(texs.borderDL, Color.White, new Vector2I(-1, 21), 0.9f));
-            sprites.Add(new regSprite(texs.borderUR, Color.White, new Vector2I(dimensions.x, 0), 0.9f));
-            sprites.Add(new regSprite(texs.borderDR, Color.White, new Vector2I(dimensions.x, 21), 0.9f));
+            sprites.Add(new regSprite(texs.borderUL, Color.White, new Vector2I(-1, 7), 0.9f)); // create corner pieces
+            sprites.Add(new regSprite(texs.borderDL, Color.White, new Vector2I(-1, 28), 0.9f));
+            sprites.Add(new regSprite(texs.borderUR, Color.White, new Vector2I(dimensions.x, 7), 0.9f));
+            sprites.Add(new regSprite(texs.borderDR, Color.White, new Vector2I(dimensions.x, 28), 0.9f));
 
 
             for (int x = 0; x < dimensions.x; x++) //create top/bottom border
             {
-                sprites.Add(new regSprite(texs.borderU, Color.White, new Vector2I(x, 0), 0.9f));
-                sprites.Add(new regSprite(texs.borderD, Color.White, new Vector2I(x, 21), 0.9f));
+                sprites.Add(new regSprite(texs.borderU, Color.White, new Vector2I(x, 7), 0.9f));
+                sprites.Add(new regSprite(texs.borderD, Color.White, new Vector2I(x, 28), 0.9f));
             }
 
-            for (int y = 1; y < 21; y++) //create left/right border
+            for (int y = 8; y < 28; y++) //create left/right border
             {
                 sprites.Add(new regSprite(texs.borderL, Color.White, new Vector2I(-1, y), 0.9f));
                 sprites.Add(new regSprite(texs.borderR, Color.White, new Vector2I(dimensions.x, y), 0.9f));
@@ -122,15 +123,16 @@ namespace Quatrimo
 
             var sprite = new sprite(texs.solid, new Vector2I(offset.x, offset.y - 1), Color.Black, 0.05f); //create black box behind board
             sprite.size = new Vector2I(140, 220);
+            sprite.origin = Vector2.Zero;
             sprites.Add(sprite);
 
             short counter = 0;
             Color[] colors = [new Color(new Vector3(0.04f, 0.04f, 0.04f)), new Color(new Vector3(0.06f, 0.06f, 0.06f))];
             for (int x = 0; x < dimensions.x; x++) //generate board square background
             {
-                for (int y = 0; y < boardy - 2; y++)
+                for (int y = 7; y < 27; y++)
                 {
-                    int dif = Math.Abs(y - (boardy / 2) + 1);
+                    int dif = Math.Abs(y - 7 - (22 / 2) + 1); //MATH HERE might be broken with new values for height, fix later
 
                     float multiplier = (float)((Math.Pow(dif, 2) * 0.02f) + 1);
                     Vector3 vector = colors[counter % 2].ToVector3() * new Vector3(multiplier, multiplier, multiplier);

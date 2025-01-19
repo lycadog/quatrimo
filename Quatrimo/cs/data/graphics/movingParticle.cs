@@ -26,7 +26,7 @@ namespace Quatrimo
             this.timed = timed;
         }
 
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> listEditQueue)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue)
         {
             throw new ArgumentException("movingParticle state does not accept basic drawstate 0, please set a different state.");
         }
@@ -53,7 +53,7 @@ namespace Quatrimo
             }
         }
 
-        protected void particleTick(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
+        protected void particleTick(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
         {
             if (timed && timer > lifetime)
             {
@@ -61,7 +61,7 @@ namespace Quatrimo
                 return;
             }
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
-            sprite.draw(spriteBatch, gameTime, list);
+            sprite.draw(spriteBatch, gameTime, ref list);
         }
 
         protected void updatePos()
@@ -69,17 +69,17 @@ namespace Quatrimo
             sprite.worldPos = new Vector2I((int)floatpos.X, (int)floatpos.Y);
         }
 
-        protected void basicMovement(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
+        protected void basicMovement(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
         {
-            particleTick(spriteBatch, gameTime, list);
+            particleTick(spriteBatch, gameTime, ref list);
             floatpos += new Vector2((float)(velocity.X * gameTime.ElapsedGameTime.TotalSeconds), (float)(velocity.Y * gameTime.ElapsedGameTime.TotalSeconds));
             velocity += new Vector2((float)(acceleration.X * gameTime.ElapsedGameTime.TotalSeconds), (float)(acceleration.Y * gameTime.ElapsedGameTime.TotalSeconds));
             updatePos();
         }
         
-        protected void randomAcceleration(SpriteBatch spriteBatch, GameTime gameTime, Action<List<drawable>> list)
+        protected void randomAcceleration(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
         {
-            particleTick(spriteBatch, gameTime, list);
+            particleTick(spriteBatch, gameTime, ref list);
             floatpos += velocity;
             //acceleration += new Vector2(util.rand.NextSingle()-0.5f * 2, util.rand.NextSingle()-0.5f * 2);
             velocity += new Vector2((util.rand.NextSingle() - 0.5f) * 2, (util.rand.NextSingle() - 0.5f) * 2);

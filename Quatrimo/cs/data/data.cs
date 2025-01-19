@@ -107,9 +107,9 @@ namespace Quatrimo
 
             splitLine = new(sFatLine, basic, [new blockSpecification(0), new blockSpecification(3)], [0, 1, 0, 1, 0, 1, 0, 1], texs.box, allColors);
 
-            bag1 = new([boxLine, basicCorner, basicLPick, basicRPick, basicRectangle, basicSquare, boxTwig, boxWedge], bag1Colors, "bag1");
+            bag1 = new([boxLine, basicCorner, basicLPick, basicRPick, basicRectangle, basicSquare, boxTwig, boxWedge, splitLine], bag1Colors, "bag1");
             bag2 = new([boxLine, basicDipole, basicBigT, basicLeftHatchet, basicRightHatchet, basicLeftHook, basicRightHook, boxTwig], bag2Colors, "bag2");
-            bag3 = new([basicZPieceL, basicZPieceR, circleNub, basicCaret, basicStump, basicSlash, circleTwig, circleLine, basicLepton, debugPiece2, debugPiece1, splitLine], bag3Colors, "bag3");
+            bag3 = new([basicZPieceL, basicZPieceR, circleNub, basicCaret, basicStump, basicSlash, circleTwig, circleLine, basicLepton], bag3Colors, "bag3");
         }
 
         public static simplePiece boxLine;
