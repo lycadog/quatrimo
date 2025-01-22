@@ -29,7 +29,7 @@ namespace Quatrimo
         protected override void createGFXf(block block)
         {
             base.createGFXf(block);
-            ((regSprite)blockSprite.sprite).tex = texs.bomb;
+            ((regSprite)blockSprite.sprite).tex = content.bomb;
         }
 
         //bomb sprite looks weird rotated, so disable it
@@ -45,7 +45,7 @@ namespace Quatrimo
             if (timer > 0)
             {
                 regSprite sprite = new regSprite();
-                sprite.tex = texs.nameQ;
+                sprite.tex = content.nameQ;
                 sprite.color = Color.Magenta;
                 sprite.worldPos = new Vector2I(240, 240);
                 sprite.depth = 1f;

@@ -24,10 +24,19 @@ namespace Quatrimo
         public bool keyHeld = false;
         public double timeHeld = 0;
 
+        
+
         public keybind(Keys key1, Keys key2)
         {
             this.key1 = key1;
             this.key2 = key2;
+        }
+        public static void updateMouse()
+        {
+            //update mouse position adjusted for smaller renderTarget resolution
+            //only run on moving mouse, run from Game1
+            //store data as static here in keybind
+            //mouseUpdated bool
         }
 
         public void updateKey(GameTime gameTime)

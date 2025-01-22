@@ -9,7 +9,7 @@ namespace Quatrimo
 {
     public class regSprite : sprite
     {
-        public new Texture2DRegion tex = texs.empty;
+        public new Texture2DRegion tex = content.empty;
         public Vector2 scale = Vector2.One;
         new Vector2I size;
 

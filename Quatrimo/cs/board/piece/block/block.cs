@@ -178,8 +178,8 @@ namespace Quatrimo
         {
             blockSprite = new blockSprite(this, new regSprite(tex, color, 0.8f)); //create new sprite element
 
-            dropSprite = new blockSprite(this, new regSprite(texs.dropCrosshair, new Color(180, 180, 220), 0.79f)); //create new sprite element
-            dropCorners = new blockSprite(this, new regSprite(texs.dropCorners, Color.White, 0.81f)); //create new sprite element
+            dropSprite = new blockSprite(this, new regSprite(content.dropCrosshair, new Color(180, 180, 220), 0.79f)); //create new sprite element
+            dropCorners = new blockSprite(this, new regSprite(content.dropCorners, Color.White, 0.81f)); //create new sprite element
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace Quatrimo
             sprite sprite = new sprite();
             sprite.size = new Vector2I(5, 5);
             sprite.depth = .93f;
-            sprite.tex = texs.solid; sprite.color = block.color;
+            sprite.tex = content.solid; sprite.color = block.color;
 
             return sprite;
         }

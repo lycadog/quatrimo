@@ -12,7 +12,7 @@ namespace Quatrimo
         public float rot = 0;
         public Vector2 origin = new Vector2(5, 5);
 
-        public Texture2D tex = texs.none;
+        public Texture2D tex = content.none;
         public Color color = Color.White;
         public SpriteEffects effect = SpriteEffects.None;
 

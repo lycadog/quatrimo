@@ -32,6 +32,16 @@ namespace Quatrimo
             return new Vector2I(v1.x * v2.x, v1.y * v2.y);
         }
 
+        public static bool operator ==(Vector2I v1, Vector2I v2)
+        {
+            return v1.x == v2.x && v1.y == v2.y;
+        }
+
+        public static bool operator !=(Vector2I v1, Vector2I v2)
+        {
+            return v1.x != v2.x || v1.y != v2.y;
+        }
+
         public static implicit operator Vector2(Vector2I v)
         {
             return new Vector2(v.x, v.y);

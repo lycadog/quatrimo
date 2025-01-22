@@ -71,57 +71,57 @@ namespace Quatrimo
         /// </summary>
         public void createBoardElements()
         {
-            nextbox = new pieceBox(new Vector2I(110, 200), texs.nextBox);
-            holdbox = new pieceBox(new Vector2I(110, 140), texs.holdBox);
-            pauseText.tex = texs.pausedtext;
+            nextbox = new pieceBox(new Vector2I(110, 200), content.nextBox);
+            holdbox = new pieceBox(new Vector2I(110, 140), content.holdBox);
+            pauseText.tex = content.pausedtext;
             pauseText.depth = 1;
             pauseText.size = new Vector2I(120, 40);
             pauseText.worldPos = new Vector2I(180, 100);
             sprites.Add(nextbox);
             sprites.Add(holdbox);
 
-            sprites.Add(new regSprite(texs.borderDL, new Vector2I(1, 0), Color.White, 0.9f)); //top bar
-            sprites.Add(new regSprite(texs.borderDR, new Vector2I(46, 0), Color.White, 0.9f));
+            sprites.Add(new regSprite(content.borderDL, new Vector2I(1, 0), Color.White, 0.9f)); //top bar
+            sprites.Add(new regSprite(content.borderDR, new Vector2I(46, 0), Color.White, 0.9f));
 
             //new Color(255, 17, 237), new Color(34, 255, 204), new Color(172, 0, 255)
             for (int i = 2; i < eDimensions.x - 2; i++) //create top border
             {
                 if (i == 19) //create title
                 {
-                    sprites.Add(new regSprite(texs.nameQ, new Vector2I(20, 0), new Color(255, 17, 237), 0.9f));
-                    sprites.Add(new regSprite(texs.nameU, new Vector2I(21, 0), new Color(255, 17, 237), 0.9f));
-                    sprites.Add(new regSprite(texs.nameA, new Vector2I(22, 0), new Color(255, 17, 237), 0.9f));
-                    sprites.Add(new regSprite(texs.nameT, new Vector2I(23, 0), new Color(34, 255, 204), 0.9f));
-                    sprites.Add(new regSprite(texs.nameR, new Vector2I(24, 0), new Color(34, 255, 204), 0.9f));
-                    sprites.Add(new regSprite(texs.nameI, new Vector2I(25, 0), new Color(34, 255, 204), 0.9f));
-                    sprites.Add(new regSprite(texs.nameM, new Vector2I(26, 0), new Color(172, 0, 255), 0.9f));
-                    sprites.Add(new regSprite(texs.nameO, new Vector2I(27, 0), new Color(172, 0, 255), 0.9f));
+                    sprites.Add(new regSprite(content.nameQ, new Vector2I(20, 0), new Color(255, 17, 237), 0.9f));
+                    sprites.Add(new regSprite(content.nameU, new Vector2I(21, 0), new Color(255, 17, 237), 0.9f));
+                    sprites.Add(new regSprite(content.nameA, new Vector2I(22, 0), new Color(255, 17, 237), 0.9f));
+                    sprites.Add(new regSprite(content.nameT, new Vector2I(23, 0), new Color(34, 255, 204), 0.9f));
+                    sprites.Add(new regSprite(content.nameR, new Vector2I(24, 0), new Color(34, 255, 204), 0.9f));
+                    sprites.Add(new regSprite(content.nameI, new Vector2I(25, 0), new Color(34, 255, 204), 0.9f));
+                    sprites.Add(new regSprite(content.nameM, new Vector2I(26, 0), new Color(172, 0, 255), 0.9f));
+                    sprites.Add(new regSprite(content.nameO, new Vector2I(27, 0), new Color(172, 0, 255), 0.9f));
                 }
                 else if (i > 19 && i < 28) { continue; }
-                sprites.Add(new regSprite(texs.borderD, new Vector2I(i, 0), Color.White, 0.9f));
+                sprites.Add(new regSprite(content.borderD, new Vector2I(i, 0), Color.White, 0.9f));
             }
 
             //create board border
 
-            sprites.Add(new regSprite(texs.borderUL, Color.White, new Vector2I(-1, 7), 0.9f)); // create corner pieces
-            sprites.Add(new regSprite(texs.borderDL, Color.White, new Vector2I(-1, 28), 0.9f));
-            sprites.Add(new regSprite(texs.borderUR, Color.White, new Vector2I(dimensions.x, 7), 0.9f));
-            sprites.Add(new regSprite(texs.borderDR, Color.White, new Vector2I(dimensions.x, 28), 0.9f));
+            sprites.Add(new regSprite(content.borderUL, Color.White, new Vector2I(-1, 7), 0.9f)); // create corner pieces
+            sprites.Add(new regSprite(content.borderDL, Color.White, new Vector2I(-1, 28), 0.9f));
+            sprites.Add(new regSprite(content.borderUR, Color.White, new Vector2I(dimensions.x, 7), 0.9f));
+            sprites.Add(new regSprite(content.borderDR, Color.White, new Vector2I(dimensions.x, 28), 0.9f));
 
 
             for (int x = 0; x < dimensions.x; x++) //create top/bottom border
             {
-                sprites.Add(new regSprite(texs.borderU, Color.White, new Vector2I(x, 7), 0.9f));
-                sprites.Add(new regSprite(texs.borderD, Color.White, new Vector2I(x, 28), 0.9f));
+                sprites.Add(new regSprite(content.borderU, Color.White, new Vector2I(x, 7), 0.9f));
+                sprites.Add(new regSprite(content.borderD, Color.White, new Vector2I(x, 28), 0.9f));
             }
 
             for (int y = 8; y < 28; y++) //create left/right border
             {
-                sprites.Add(new regSprite(texs.borderL, Color.White, new Vector2I(-1, y), 0.9f));
-                sprites.Add(new regSprite(texs.borderR, Color.White, new Vector2I(dimensions.x, y), 0.9f));
+                sprites.Add(new regSprite(content.borderL, Color.White, new Vector2I(-1, y), 0.9f));
+                sprites.Add(new regSprite(content.borderR, Color.White, new Vector2I(dimensions.x, y), 0.9f));
             }
 
-            var sprite = new sprite(texs.solid, new Vector2I(offset.x, offset.y - 1), Color.Black, 0.05f); //create black box behind board
+            var sprite = new sprite(content.solid, new Vector2I(offset.x, offset.y - 1), Color.Black, 0.05f); //create black box behind board
             sprite.size = new Vector2I(140, 220);
             sprite.origin = Vector2.Zero;
             sprites.Add(sprite);
@@ -137,7 +137,7 @@ namespace Quatrimo
                     float multiplier = (float)((Math.Pow(dif, 2) * 0.02f) + 1);
                     Vector3 vector = colors[counter % 2].ToVector3() * new Vector3(multiplier, multiplier, multiplier);
                     Color color = new Color(vector);
-                    sprites.Add(new regSprite(texs.box, color, new Vector2I(x, y + 1), 0.1f));
+                    sprites.Add(new regSprite(content.box, color, new Vector2I(x, y + 1), 0.1f));
                     counter++;
                 }
                 counter++;
@@ -148,7 +148,7 @@ namespace Quatrimo
             {
                 var qSprite = new regSprite
                 {
-                    tex = texs.nameQ,
+                    tex = content.nameQ,
                     color = colrs[util.rand.Next(0, 3)],
                     worldPos = new Vector2I(150, 200),
                     depth = 1,

@@ -16,7 +16,7 @@
         protected override void createGFXf(block block)
         {
             base.createGFXf(block);
-            blockSprite.setRegTexture(texs.piercing);
+            blockSprite.setRegTexture(content.piercing);
         }
 
         protected override bool fallingBlockClippedF(block placedBlock, block block)

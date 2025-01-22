@@ -31,7 +31,7 @@ namespace Quatrimo
 
         public override void setState()
         {
-            manager.keyUpdateD = updateBoardKeys;
+            manager.keyUpdate = updateBoardKeys;
             manager.updateD = encounterUpdate;
             manager.drawScene = drawBoardScene;
             manager.drawText = drawBoardText;
@@ -42,7 +42,7 @@ namespace Quatrimo
 
         public override void addState()
         {
-            manager.keyUpdateD += updateBoardKeys;
+            manager.keyUpdate += updateBoardKeys;
             manager.updateD += encounterUpdate;
             manager.drawScene += drawBoardScene;
             manager.drawText += drawBoardText;
@@ -52,7 +52,7 @@ namespace Quatrimo
 
         public override void removeState()
         {
-            manager.keyUpdateD -= updateBoardKeys;
+            manager.keyUpdate -= updateBoardKeys;
             manager.updateD -= encounterUpdate;
             manager.drawScene -= drawBoardScene;
             manager.drawText -= drawBoardText;
@@ -103,18 +103,18 @@ namespace Quatrimo
 
         protected void drawBoardScene(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.Draw(texs.bg, new Rectangle(0, 0, Game1.baseRes.x, Game1.baseRes.y), null, new Color(new Vector3(0.02f, 0.0f, 0.01f)), 0, Vector2.Zero, SpriteEffects.None, 0f);
-            spriteBatch.Draw(texs.bg, new Rectangle(0, 0, Game1.baseRes.x, Game1.baseRes.y), null, new Color(new Vector3(0.01f, 0.00f, 0.16f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(content.bg, new Rectangle(0, 0, Game1.baseRes.x, Game1.baseRes.y), null, new Color(new Vector3(0.02f, 0.0f, 0.01f)), 0, Vector2.Zero, SpriteEffects.None, 0f);
+            spriteBatch.Draw(content.bg, new Rectangle(0, 0, Game1.baseRes.x, Game1.baseRes.y), null, new Color(new Vector3(0.01f, 0.00f, 0.16f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
 
             manager.encounter.board.draw(spriteBatch, gameTime);
         }
 
         protected void drawBoardText(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.DrawString(texs.fontSmall, "SCORE: " + manager.encounter.totalScore.ToString(), new Vector2(680, 300), Color.White);
-            spriteBatch.DrawString(texs.fontSmall, "LVL: " + manager.encounter.level.ToString(), new Vector2(680, 320), Color.White);
-            spriteBatch.DrawString(texs.fontSmall, "X: " + manager.encounter.levelTimes.ToString(), new Vector2(680, 340), Color.White);
-            spriteBatch.DrawString(texs.fontSmall, "LVL UP IN: " + (manager.encounter.rowsRequired - manager.encounter.rowsCleared).ToString() + " ROWS", new Vector2(680, 360), Color.White);
+            spriteBatch.DrawString(content.fontSmall, "SCORE: " + manager.encounter.totalScore.ToString(), new Vector2(680, 300), Color.White);
+            spriteBatch.DrawString(content.fontSmall, "LVL: " + manager.encounter.level.ToString(), new Vector2(680, 320), Color.White);
+            spriteBatch.DrawString(content.fontSmall, "X: " + manager.encounter.levelTimes.ToString(), new Vector2(680, 340), Color.White);
+            spriteBatch.DrawString(content.fontSmall, "LVL UP IN: " + (manager.encounter.rowsRequired - manager.encounter.rowsCleared).ToString() + " ROWS", new Vector2(680, 360), Color.White);
         }
     }
 }

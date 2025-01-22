@@ -17,7 +17,7 @@ namespace Quatrimo
 
         stateManager stateManager;
 
-        static float scale = 2;
+        public static float scale = 2;
         public static readonly Vector2I baseRes = new Vector2I(480, 270);
         public static readonly Vector2I textRes = new Vector2I(960, 540);
         public static Vector2I res = new Vector2I(960, 540);
@@ -63,7 +63,7 @@ namespace Quatrimo
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            texs.loadContent(Content);
+            content.loadContent(Content);
             
 
             data.contentInit();
@@ -77,7 +77,7 @@ namespace Quatrimo
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             //    Exit();
 
-            stateManager.keyUpdate(gameTime);
+            
             stateManager.update(gameTime);
             
             

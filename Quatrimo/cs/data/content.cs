@@ -4,7 +4,7 @@ using MonoGame.Extended.Graphics;
 
 namespace Quatrimo
 {
-    public static class texs
+    public static class content
     {
         public static Texture2DAtlas atlas;
 

@@ -66,46 +66,46 @@ namespace Quatrimo
 
         public static void contentInit()
         {
-            boxLine = new(sLine, basic, 0, texs.box, allColors);
-            boxStick = new(sStick, basic, 0, texs.box, allColors);
-            boxTwig = new(sTwig, basic, 0, texs.box, allColors);
-            boxWedge = new(sWedge, basic, 0, texs.box, allColors);
+            boxLine = new(sLine, basic, 0, content.box, allColors);
+            boxStick = new(sStick, basic, 0, content.box, allColors);
+            boxTwig = new(sTwig, basic, 0, content.box, allColors);
+            boxWedge = new(sWedge, basic, 0, content.box, allColors);
 
-            circleLine = new(sLine, basic, 0, texs.circle, bag3Colors);
-            circleTwig = new(sTwig, basic, 0, texs.circle, bag3Colors);
-            circleWedge = new(sWedge, basic, 0, texs.circle, bag3Colors);
-            circleNub = new(sNub, basic, 0, texs.circle, bag3Colors);
+            circleLine = new(sLine, basic, 0, content.circle, bag3Colors);
+            circleTwig = new(sTwig, basic, 0, content.circle, bag3Colors);
+            circleWedge = new(sWedge, basic, 0, content.circle, bag3Colors);
+            circleNub = new(sNub, basic, 0, content.circle, bag3Colors);
 
-            basicCorner = new(sCorner, basic, 0, texs.box, allColors);
-            basicLPick = new(sLeftPick, basic, 0, texs.box, allColors);
-            basicRPick = new(sRightPick, basic, 0, texs.box, allColors);
-            basicRectangle = new(sRectangle, basic, 0, texs.boxdetail, allColors);
+            basicCorner = new(sCorner, basic, 0, content.box, allColors);
+            basicLPick = new(sLeftPick, basic, 0, content.box, allColors);
+            basicRPick = new(sRightPick, basic, 0, content.box, allColors);
+            basicRectangle = new(sRectangle, basic, 0, content.boxdetail, allColors);
 
-            basicDipole = new(sDipole, basic, 0, texs.boxdetail, allColors);
-            basicBigT = new(sBigT, basic, 0, texs.boxdetail, allColors);
-            basicLeftHatchet = new(sLeftHatchet, basic, 0, texs.box, allColors);
-            basicRightHatchet = new(sRightHatchet, basic, 0, texs.box, allColors);
-            basicLeftHook = new(sLeftHook, basic, 0, texs.box, allColors);
-            basicRightHook = new(sRightHook, basic, 0, texs.box, allColors);
+            basicDipole = new(sDipole, basic, 0, content.boxdetail, allColors);
+            basicBigT = new(sBigT, basic, 0, content.boxdetail, allColors);
+            basicLeftHatchet = new(sLeftHatchet, basic, 0, content.box, allColors);
+            basicRightHatchet = new(sRightHatchet, basic, 0, content.box, allColors);
+            basicLeftHook = new(sLeftHook, basic, 0, content.box, allColors);
+            basicRightHook = new(sRightHook, basic, 0, content.box, allColors);
 
-            basicCaret = new(sCaret, basic, 0, texs.circle, bag3Colors);
-            basicBowl = new(sBowl, basic, 0, texs.circle, bag3Colors);
-            basicBoson = new(sBoson, basic, 0, texs.circledetail, bag3Colors);
-            basicStump = new(sStump, basic, 0, texs.circle, bag3Colors);
-            basicSlash = new(sSlash, basic, 0, texs.circle, bag3Colors);
-            basicLepton = new(sLepton, basic, 0, texs.circledetail, bag3Colors);
+            basicCaret = new(sCaret, basic, 0, content.circle, bag3Colors);
+            basicBowl = new(sBowl, basic, 0, content.circle, bag3Colors);
+            basicBoson = new(sBoson, basic, 0, content.circledetail, bag3Colors);
+            basicStump = new(sStump, basic, 0, content.circle, bag3Colors);
+            basicSlash = new(sSlash, basic, 0, content.circle, bag3Colors);
+            basicLepton = new(sLepton, basic, 0, content.circledetail, bag3Colors);
 
-            basicSquare = new(sSquare, basic, 0, texs.box, allColors);
-            basicTBlock = new(sTBlock, basic, 0, texs.box, allColors);
-            basicLeftL = new(sLeftL, basic, 0, texs.box, allColors);
-            basicRightL = new(sRightL, basic, 0, texs.box, allColors);
-            basicZPieceL = new(sZPieceL, basic, 0, texs.circle, allColors);
-            basicZPieceR = new(sZPieceR, basic, 0, texs.circle, allColors);
+            basicSquare = new(sSquare, basic, 0, content.box, allColors);
+            basicTBlock = new(sTBlock, basic, 0, content.box, allColors);
+            basicLeftL = new(sLeftL, basic, 0, content.box, allColors);
+            basicRightL = new(sRightL, basic, 0, content.box, allColors);
+            basicZPieceL = new(sZPieceL, basic, 0, content.circle, allColors);
+            basicZPieceR = new(sZPieceR, basic, 0, content.circle, allColors);
 
-            debugPiece1 = new(sWedge, basic, 2, texs.box, allColors);
-            debugPiece2 = new(sNub, basic, 1, texs.box, allColors);
+            debugPiece1 = new(sWedge, basic, 2, content.box, allColors);
+            debugPiece2 = new(sNub, basic, 1, content.box, allColors);
 
-            splitLine = new(sFatLine, basic, [new blockSpecification(0), new blockSpecification(3)], [0, 1, 0, 1, 0, 1, 0, 1], texs.box, allColors);
+            splitLine = new(sFatLine, basic, [new blockSpecification(0), new blockSpecification(3)], [0, 1, 0, 1, 0, 1, 0, 1], content.box, allColors);
 
             bag1 = new([boxLine, basicCorner, basicLPick, basicRPick, basicRectangle, basicSquare, boxTwig, boxWedge, splitLine], bag1Colors, "bag1");
             bag2 = new([boxLine, basicDipole, basicBigT, basicLeftHatchet, basicRightHatchet, basicLeftHook, basicRightHook, boxTwig], bag2Colors, "bag2");

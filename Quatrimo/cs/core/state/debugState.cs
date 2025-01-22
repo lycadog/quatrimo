@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.BitmapFonts;
 
 namespace Quatrimo
@@ -12,7 +13,7 @@ namespace Quatrimo
         }
         public override void addState()
         {
-            manager.keyUpdateD += updateDebugKeys;
+            manager.keyUpdate += updateDebugKeys;
             manager.updateD += debugUpdate;
             manager.drawText += drawDebugText;
             manager.state.Add(this);
@@ -20,7 +21,7 @@ namespace Quatrimo
 
         public override void removeState()
         {
-            manager.keyUpdateD -= updateDebugKeys;
+            manager.keyUpdate -= updateDebugKeys;
             manager.updateD -= debugUpdate;
             manager.drawText -= drawDebugText;
             manager.state.Remove(this);
@@ -28,7 +29,7 @@ namespace Quatrimo
 
         public override void setState()
         {
-            manager.keyUpdateD = updateDebugKeys;
+            manager.keyUpdate = updateDebugKeys;
             manager.updateD = debugUpdate;
             manager.drawText = drawDebugText;
             manager.state.Clear();
@@ -57,14 +58,16 @@ namespace Quatrimo
 
         protected void drawDebugText(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.DrawString(texs.font, "DEBUG", new Vector2(450, 20), Color.Yellow);
+            spriteBatch.DrawString(content.font, "DEBUG", new Vector2(450, 20), Color.Yellow);
 
-            
+            spriteBatch.DrawString(content.fontSmall, $"{Mouse.GetState().X}, {Mouse.GetState().Y}", new Vector2(Mouse.GetState().X / (Game1.scale * 0.5f) - Game1.frameOffset, Mouse.GetState().Y / (Game1.scale * 0.5f)), Color.CornflowerBlue);
             //spriteBatch.DrawString(Game1.fontSmall, fps.ToString(), new Vector2(20, 460), Color.CornflowerBlue);
             //spriteBatch.DrawString(Game1.fontSmall, $"gamestate: {manager.encounter.stateOld}", new Vector2(20, 460), Color.CornflowerBlue);
             //spriteBatch.DrawString(Game1.fontSmall, $"piecefallTimer {manager.encounter.piecefallTimer}/600", new Vector2(20, 480), Color.LightBlue);
             //spriteBatch.DrawString(Game1.fontSmall, $"placeTimer {manager.encounter.placeTimer}/1000", new Vector2(20, 500), Color.LightBlue);
             //spriteBatch.DrawString(Game1.fontSmall, $"pieceWaitTimer {manager.encounter.pieceWaitTimer}/5000", new Vector2(20, 520), Color.LightBlue);
         }
+
+        
     }
 }

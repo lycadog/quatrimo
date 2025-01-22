@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace Quatrimo
 {
@@ -20,37 +22,31 @@ namespace Quatrimo
         public delegate void gameDelegate(GameTime gameTime);
         public delegate void drawDelegate(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime gameTime);
 
-        public gameDelegate keyUpdateD;
+        public gameDelegate keyUpdate;
+        public gameDelegate mouseUpdated;
         public gameDelegate updateD;
         public drawDelegate drawScene;
         public drawDelegate drawText;
 
+        public static Vector2I staleMousePos;
+
         public stateManager(Game1 game)
         {
             this.game = game;
-            
-        }
-
-        public void removeState<T>() where T : gameState
-        {
-            foreach(var state in state)
-            {
-                if(state is T)
-                {
-                    state.removeState();
-                    break;
-                }
-            }
-        }
-
-        public void keyUpdate(GameTime gameTime)
-        {
-            keyUpdateD.Invoke(gameTime);
         }
 
         public void update(GameTime gameTime)
         {
-            updateD.Invoke(gameTime);
+            Vector2I mousepos = new Vector2I(Mouse.GetState().X, Mouse.GetState().Y);
+
+            if (mousepos != staleMousePos)
+            {
+                mouseUpdated?.Invoke(gameTime);
+            }
+            staleMousePos = mousepos;
+
+            keyUpdate(gameTime);
+            updateD(gameTime);
         }
         
         public void draw(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime gameTime)
@@ -83,6 +79,18 @@ namespace Quatrimo
             spriteBatch.Draw(game.sceneTarget, new Rectangle(Game1.frameOffset, 0, Game1.res.x, Game1.res.y), Color.White);
             spriteBatch.Draw(game.textTarget, new Rectangle(Game1.frameOffset, 0, Game1.res.x, Game1.res.y), Color.White);
             spriteBatch.End();
+        }
+
+        public void removeState<T>() where T : gameState
+        {
+            foreach (var state in state)
+            {
+                if (state is T)
+                {
+                    state.removeState();
+                    break;
+                }
+            }
         }
 
         public void startEncounter()
