@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Graphics;
 using System;
 using System.Diagnostics;
@@ -67,7 +68,8 @@ namespace Quatrimo
             
 
             data.contentInit();
-
+            Mouse.SetCursor(MouseCursor.FromTexture2D(content.corey, 0, 0));
+            Mouse.SetCursor(MouseCursor.Arrow);
             stateManager = new stateManager(this);
             stateManager.startEncounter();
         }
@@ -78,6 +80,7 @@ namespace Quatrimo
             //    Exit();
 
             
+            //update mouse in keybind if mouse moved
             stateManager.update(gameTime);
             
             

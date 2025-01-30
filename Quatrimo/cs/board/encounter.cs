@@ -8,6 +8,7 @@ namespace Quatrimo
         public board board;
         public animHandler animHandler;
         public boardState state;
+        public runData runData;
 
         public bag bag;
 
@@ -22,6 +23,8 @@ namespace Quatrimo
         public double levelTimes = 1;
         public double turnMultiplier = 1;
 
+        public pieceCard[] hand = [];
+
         public boardPiece currentPiece;
         public boardPiece heldPiece = null;
         public boardPiece nextPiece;
@@ -35,12 +38,13 @@ namespace Quatrimo
         public List<block> scoredBlocks = [];
         public List<block> emptyBlocks = [];
 
-        public encounter(bag bag)
+        public encounter(bag bag, runData data)
         {
             animHandler = new animHandler(this);
             board = new board(this, new Vector2I(12, 28));
 
             this.bag = bag;
+            runData = data;
             bag.encounter = this;
 
             nextPiece = bag.drawRandomPiece();

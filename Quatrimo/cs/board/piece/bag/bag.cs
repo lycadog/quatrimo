@@ -62,6 +62,10 @@ namespace Quatrimo
 
         public boardPiece drawRandomPiece()
         {
+            if(piecePool.pool.Count == 0)
+            {//if no pieces have weight: force draw random piece
+                return pieces[util.rand.Next(0, pieces.Count)].drawPiece(encounter);
+            }
             return piecePool.getRandom().drawPiece(encounter);
         }
         

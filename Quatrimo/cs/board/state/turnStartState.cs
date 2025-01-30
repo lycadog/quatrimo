@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Quatrimo
 {
@@ -24,6 +25,14 @@ namespace Quatrimo
 
             preplayWaitingState newState = new preplayWaitingState(encounter);
             newState.startState();
+        }
+
+        public void drawHand()
+        {
+            for (int i = 0; i < encounter.runData.piecesDrawnCount, i++)
+            {
+                //draw 3 piece cards
+            }
         }
 
     }
