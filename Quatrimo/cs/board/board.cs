@@ -21,8 +21,8 @@ namespace Quatrimo
         public static Vector2I dimensions;
         public static readonly Vector2I eDimensions = new Vector2I(48, 27); //element dimensions
         public static Vector2I offset;
-        public pieceBox nextbox;
-        public pieceBox holdbox;
+        public pieceBoxOld nextbox;
+        public pieceBoxOld holdbox;
         public sprite pauseText = new sprite();
 
         public static readonly int boardy = 22;
@@ -61,6 +61,11 @@ namespace Quatrimo
             }
         }
 
+        public void drawDoubleRes(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+
+        }
+
         public void addSprite(drawable sprite)
         {
             queuedSpriteChanges += ((List<drawable> list) => { list.Add(sprite); });
@@ -71,8 +76,8 @@ namespace Quatrimo
         /// </summary>
         public void createBoardElements()
         {
-            nextbox = new pieceBox(new Vector2I(110, 200), content.nextBox);
-            holdbox = new pieceBox(new Vector2I(110, 140), content.holdBox);
+            nextbox = new pieceBoxOld(new Vector2I(110, 200), content.nextBox);
+            holdbox = new pieceBoxOld(new Vector2I(110, 140), content.holdBox);
             pauseText.tex = content.pausedtext;
             pauseText.depth = 1;
             pauseText.size = new Vector2I(120, 40);

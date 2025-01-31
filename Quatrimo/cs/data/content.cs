@@ -46,11 +46,24 @@ namespace Quatrimo
         public static Texture2DRegion hologram3;
         public static Texture2DRegion hologram4;
 
+        public static Texture2DRegion number1;
+        public static Texture2DRegion number2;
+        public static Texture2DRegion number3;
+        public static Texture2DRegion number4;
+        public static Texture2DRegion number5;
+        public static Texture2DRegion number6;
+        public static Texture2DRegion number7;
+        public static Texture2DRegion number8;
+        public static Texture2DRegion number9;
+        public static Texture2DRegion number0;
+
         public static Texture2D none;
         public static Texture2D solid;
         public static Texture2D nextBox;
         public static Texture2D holdBox;
         public static Texture2D pausedtext;
+        public static Texture2D pieceCardBG;
+        public static Texture2D pieceCardOutline;
         public static Texture2D corey;
 
         public static Texture2D bg;
@@ -110,6 +123,17 @@ namespace Quatrimo
             hologram2 = atlas[146];
             hologram3 = atlas[147];
             hologram4 = atlas[148];
+
+            number1 = atlas[228];
+            number2 = atlas[229];
+            number3 = atlas[230];
+            number4 = atlas[231];
+            number5 = atlas[232];
+            number6 = atlas[233];
+            number7 = atlas[234];
+            number8 = atlas[235];
+            number9 = atlas[236];
+            number0 = atlas[237];
 
             none = Content.Load<Texture2D>("empty");
             solid = Content.Load<Texture2D>("full");

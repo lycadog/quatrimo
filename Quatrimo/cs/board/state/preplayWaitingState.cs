@@ -16,7 +16,7 @@ namespace Quatrimo
             update = tick;
         }
 
-        protected void tick(GameTime gameTime)
+        protected void tick(GameTime gameTime) //add code to select piece
         {
             if (keybind.slamKey.keyDown)
             {
