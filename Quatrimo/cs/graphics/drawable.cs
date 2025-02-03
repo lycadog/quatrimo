@@ -8,9 +8,11 @@ namespace Quatrimo
 {
     public abstract class drawable
     {
-        public delegate void drawDelegate(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue);
+        public spriteManager manager;
+        public delegate void drawDelegate(SpriteBatch spriteBatch, GameTime gameTime);
 
         public short state;
+        public int renderLayer = 0;
         /// <summary>
         /// Run current draw method
         /// </summary>
@@ -49,15 +51,11 @@ namespace Quatrimo
             }
         }
 
-        protected abstract void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue);
-        protected virtual void noDraw(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue) { }
-        protected virtual void staleState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue)
+        protected abstract void drawState(SpriteBatch spriteBatch, GameTime gameTime);
+        protected virtual void noDraw(SpriteBatch spriteBatch, GameTime gameTime) { }
+        protected virtual void staleState(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            listEditQueue += (List<drawable> list) => { list.Remove(this); };
-        }
-        public void addSprite(drawable sprite, ref Action<List<drawable>> listEditQueue)
-        {
-            listEditQueue += (List<drawable> list) => { list.Add(sprite); };
+            manager.remove(this, renderLayer);
         }
     }
 }
