@@ -1,4 +1,6 @@
-﻿namespace Quatrimo
+﻿using Microsoft.Xna.Framework;
+
+namespace Quatrimo
 {
     public class bagPiece
     {
@@ -7,17 +9,19 @@
         public int baseWeight;
         public Vector2I dimensions;
         public Vector2I origin;
+        public Color color;
         public string name;
 
         public objPool<bagPiece>.weightedEntry bagEntry;
 
-        public bagPiece(bagBlock[] blocks, int pieceMod, Vector2I dimensions, Vector2I origin, int weight, string name)
+        public bagPiece(bagBlock[] blocks, int pieceMod, Vector2I dimensions, Vector2I origin, int weight, Color color, string name)
         {
             this.blocks = blocks;
             this.pieceMod = pieceMod;
             this.dimensions = dimensions;
             this.origin = origin;
             baseWeight = weight;
+            this.color = color;
             this.name = name;
         }
 
@@ -45,7 +49,7 @@
         /// <returns></returns>
         public boardPiece getBoardpiece(encounter encounter)
         {
-            boardPiece piece = new boardPiece(encounter, dimensions, origin, name);
+            boardPiece piece = data.pieces[pieceMod](encounter, dimensions, origin, color, name);
             block[] newBlocks = new block[blocks.Length];
             
             for(int i = 0; i <  blocks.Length; i++)

@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public class block
+    public class block : worldObject
     {
         public encounter encounter;
         public board board;
@@ -23,7 +23,6 @@ namespace Quatrimo
             this.localpos = localpos;
             this.tex = tex;
             this.color = color;
-            createGFX(this);
         }
 
         public boardPiece piece;
@@ -31,9 +30,14 @@ namespace Quatrimo
         public Vector2I boardpos;
         public Vector2I localpos;
 
-        public blockSprite blockSprite;
-        public blockSprite dropSprite;
-        public blockSprite dropCorners;
+        //update code to move the elementPos when moving block
+        //parent block to board on creation
+        //parent sprites to block and set drop position accordingly
+        //parent dropCorners to dropSprite
+
+        public sprite blockSprite;
+        public sprite dropSprite;
+        public sprite dropCorners;
         public Texture2DRegion tex;
         public Color color;
 
@@ -54,8 +58,8 @@ namespace Quatrimo
             score = new Action<block>(scoreF);
             finalizeScoring = new Action<block>(finalizeScoringF);
             tick = new Action<block>(tickF);
-            createGFX = new Action<block>(createGFXf);
-            createPreview = new Func<block, sprite>(createPreviewF);
+            createGFX = new Func<block, blockSprite[]>(createGFXf);
+            createPreview = new Func<block, spriteOld>(createPreviewF);
             updatePos = new Action<block>(updatePosF);
             updateSpritePos = new Action<block>(updateSpritePosF);
             removeFalling = new Action<block>(removeFallingF);
@@ -89,14 +93,14 @@ namespace Quatrimo
         /// </summary>
         /// <param name="encounter"></param>
         /// <param name="anim"></param>
-        public virtual void animateScore(drawable anim, bool forceAnim = false) //TODO: add support for overriding the default anim
+        public virtual void animateScore(drawableOld anim, bool forceAnim = false) //TODO: add support for overriding the default anim
         {
             scoreRemoveGFX(this);
             scoredAnim = true;
 
             animSprite sprite = animHandler.getDecayingAnim(new Vector2I(boardpos.x, boardpos.y));
 
-            board.addSprite(sprite);
+            board.sprites.add(sprite);
             encounter.animHandler.animations.Add(sprite);
         }
 
@@ -108,15 +112,22 @@ namespace Quatrimo
         public Action<block> play;
         protected virtual void playF(block block)
         {
-            updatePos(this);
+            //create sprite
+            createGFX(this);
 
+            //create drop preview
+            dropSprite = new blockSprite(this, new regSprite(content.dropCrosshair, new Color(180, 180, 220), 0.79f));
+            dropCorners = new blockSprite(this, new regSprite(content.dropCorners, Color.White, 0.81f));
+
+            updatePos(this);
+            
             blockSprite.setState(0);
             dropSprite.setState(0);
             dropCorners.setState(0);
 
-            board.addSprite(blockSprite);
-            board.addSprite(dropSprite);
-            board.addSprite(dropCorners);
+            board.sprites.add(blockSprite);
+            board.sprites.add(dropSprite);
+            board.sprites.add(dropCorners);
         }
 
         /// <summary>
@@ -171,24 +182,25 @@ namespace Quatrimo
         }
 
         /// <summary>
-        /// Initialize the graphics needed for the block
+        /// Initialize the graphics needed for the block, encloses them in an array for piececards to use
         /// </summary>
-        public Action<block> createGFX;
-        protected virtual void createGFXf(block block)
+        public Func<block, blockSprite[]> createGFX;
+        protected virtual blockSprite[] createGFXf(block block)
         {
+            //rework method! have it create every sprite needed and return one parent sprite.
+            //use this new method both for pieceCard display and for graphics creation
             blockSprite = new blockSprite(this, new regSprite(tex, color, 0.8f)); //create new sprite element
-
-            dropSprite = new blockSprite(this, new regSprite(content.dropCrosshair, new Color(180, 180, 220), 0.79f)); //create new sprite element
-            dropCorners = new blockSprite(this, new regSprite(content.dropCorners, Color.White, 0.81f)); //create new sprite element
+            return [blockSprite];
         }
 
         /// <summary>
         /// Initialize the drop preview for the currently falling block
+        /// DEPRECATED
         /// </summary>
-        public Func<block,sprite> createPreview;
-        protected virtual sprite createPreviewF(block block)
+        public Func<block,spriteOld> createPreview;
+        protected virtual spriteOld createPreviewF(block block)
         {
-            sprite sprite = new sprite();
+            spriteOld sprite = new spriteOld();
             sprite.size = new Vector2I(5, 5);
             sprite.depth = .93f;
             sprite.tex = content.solid; sprite.color = block.color;

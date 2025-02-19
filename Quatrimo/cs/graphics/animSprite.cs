@@ -1,27 +1,25 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Quatrimo
 {
     public class animSprite : sprite
     {
-        public animFrame[] sequence;
-        public int frame = 0;
-        public double timer = 0;
-        public bool loops;
+        animFrame[] sequence;
+        int frame = 0;
+        double timer = 0;
+        bool loops;
 
         public animSprite(animFrame[] sequence, bool loops = false, int frame = 0) : base()
         {
             this.sequence = sequence;
             this.loops = loops;
             this.frame = frame;
+            parentFrames();
         }
 
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
+        public override void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
             if (timer > sequence[frame].hangTime)
@@ -33,12 +31,17 @@ namespace Quatrimo
                     if (loops)
                     { frame = 0; }
 
-                    else { setState(2); return; }
+                    else { dispose(); return; }
                 }
             }
-            sequence[frame].sprite.worldPos += worldPos;
-            sequence[frame].sprite.draw(spriteBatch, gameTime, ref list);
-            sequence[frame].sprite.worldPos -= worldPos;
+        }
+
+        void parentFrames()
+        {
+            foreach(var frame in sequence)
+            {
+                frame.sprite.setParent(this);
+            }
         }
         
     }

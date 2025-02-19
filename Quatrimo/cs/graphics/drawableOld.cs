@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public abstract class drawable
+    public abstract class drawableOld
     {
         public spriteManager manager;
         public delegate void drawDelegate(SpriteBatch spriteBatch, GameTime gameTime);
@@ -19,7 +19,7 @@ namespace Quatrimo
         public drawDelegate draw;
         public bool stale = false;
 
-        public drawable(short state = 0)
+        public drawableOld(short state = 0)
         {
             setState(state);
         }

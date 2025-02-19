@@ -43,7 +43,7 @@ namespace Quatrimo
                 }
             }
 
-            return new bagPiece(bagblocks, pieceMod.getRandom(), shape.dimensions, shape.origin, baseWeight, name);
+            return new bagPiece(bagblocks, pieceMod.getRandom(), shape.dimensions, shape.origin, baseWeight, _color, name);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Quatrimo
 
         public void drawHand()
         {
-            for (int i = 0; i < encounter.runData.piecesDrawnCount, i++)
+            for (int i = 0; i < encounter.runData.piecesDrawnCount; i++)
             {
                 //draw 3 piece cards
             }

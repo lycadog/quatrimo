@@ -7,63 +7,65 @@ namespace Quatrimo
 {
     public class spriteManager
     {
-        List<drawable> baseResSprites = [];
-        List<drawable> doubleResSprites = [];
-        List<drawable> rawDrawSprites = [];
+        //multiple drawlayers might be unnecessary
+        List<IDrawable> baseTargetSprites = [];
+        List<IDrawable> rawDrawSprites = [];
 
         Action queuedOperations;
 
-        public void drawBaseRes(SpriteBatch spriteBatch, GameTime gameTime)
+        public void drawBaseTarget(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            foreach(var sprite in baseResSprites)
+            foreach(var sprite in baseTargetSprites)
             {
-                
+                sprite.draw(spriteBatch, gameTime);
             }
         }
 
-        public void add(drawable drawable, int renderLayer)
+        public void drawRaw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            drawable.renderLayer = renderLayer;
+            foreach (var sprite in rawDrawSprites)
+            {
+                sprite.draw(spriteBatch, gameTime);
+            }
+        }
+
+        public void add(IDrawable drawable, int renderLayer = 0)
+        {
+            //drawable.renderLayer = renderLayer;
             switch (renderLayer)
             {
                 case 0:
-                    baseResSprites.Add(drawable);
+                    baseTargetSprites.Add(drawable);
                     break;
                 case 1:
-                    doubleResSprites.Add(drawable);
-                    break;
-                case 2:
                     rawDrawSprites.Add(drawable);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("Drawable add list input is outside expected values of 0 to 2");
+                    throw new ArgumentOutOfRangeException("Drawable add list input is outside expected values of 0 to 1");
             }
         }
 
-        public void remove(drawable drawable, int renderLayer)
+        public void remove(IDrawable drawable, int renderLayer = 0)
         {
             switch (renderLayer)
             {
                 case 0:
-                    baseResSprites.Remove(drawable);
+                    baseTargetSprites.Remove(drawable);
                     break;
                 case 1:
-                    doubleResSprites.Remove(drawable);
-                    break;
-                case 2:
                     rawDrawSprites.Remove(drawable);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("Drawable add list input is outside expected values of 0 to 2");
+                    throw new ArgumentOutOfRangeException("Drawable add list input is outside expected values of 0 to 1");
             }
         }
 
-        public void queueAdd(drawable drawable, int renderLayer)
+        public void queueAdd(IDrawable drawable, int renderLayer = 0)
         {
             queuedOperations += () => add(drawable, renderLayer);
         }
 
-        public void queueRemove(drawable drawable, int renderLayer)
+        public void queueRemove(IDrawable drawable, int renderLayer = 0)
         {
             queuedOperations += () => remove(drawable, renderLayer);
         }

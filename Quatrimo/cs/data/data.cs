@@ -22,8 +22,8 @@ namespace Quatrimo
             () => { return new hologramBlock(); }   //3
         ];
 
-        public static Func<encounter, Vector2I, Vector2I, string, boardPiece>[] pieces = [
-            (encounter e, Vector2I dim, Vector2I orgn, string name) => { return new boardPiece(e, dim, orgn, name); }//0
+        public static readonly Func<encounter, Vector2I, Vector2I, Color, string, boardPiece>[] pieces = [
+            (encounter e, Vector2I dim, Vector2I orgn, Color color, string name) => { return new boardPiece(e, dim, orgn, color, name); }//0
         ];
 
         public static objPool<int> basic = new(0);

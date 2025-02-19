@@ -1,12 +1,16 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Quatrimo
 {
     public class encounterState : gameState
     {
-        protected stateManager.gameDelegate updates;
+        //rework later and figure out what this delegate does - maybe compress this down onto the encounter,
+        //adding the pause behavior to the update method - making this more of a wrapper for encounter
+        //actually no, since pause behavior needs to suspend certain update states it should be handled by statemanager
+        protected Action<GameTime> updates;
 
         public encounterState(stateManager manager) : base(manager)
         {
@@ -18,7 +22,7 @@ namespace Quatrimo
             manager.updateD = pausedUpdate;
 
             manager.paused = true;
-            manager.encounter.board.sprites.Add(manager.encounter.board.pauseText );
+            manager.encounter.board.sprites.add(manager.encounter.board.pauseText );
         }
 
         public void unpause()
@@ -26,15 +30,15 @@ namespace Quatrimo
             manager.updateD = updates;
 
             manager.paused = false;
-            manager.encounter.board.sprites.Remove(manager.encounter.board.pauseText);
+            manager.encounter.board.sprites.remove(manager.encounter.board.pauseText);
         }
 
         public override void setState()
         {
             manager.keyUpdate = updateBoardKeys;
             manager.updateD = encounterUpdate;
-            manager.drawScene = drawBoardScene;
-            manager.drawText = drawBoardText;
+            manager.drawBaseRes = drawBoardScene;
+            manager.draw2xRes = drawBoardText;
 
             manager.state.Clear();
             manager.state.Add(this);
@@ -44,8 +48,8 @@ namespace Quatrimo
         {
             manager.keyUpdate += updateBoardKeys;
             manager.updateD += encounterUpdate;
-            manager.drawScene += drawBoardScene;
-            manager.drawText += drawBoardText;
+            manager.drawBaseRes += drawBoardScene;
+            manager.draw2xRes += drawBoardText;
 
             manager.state.Add(this);
         }
@@ -54,8 +58,8 @@ namespace Quatrimo
         {
             manager.keyUpdate -= updateBoardKeys;
             manager.updateD -= encounterUpdate;
-            manager.drawScene -= drawBoardScene;
-            manager.drawText -= drawBoardText;
+            manager.drawBaseRes -= drawBoardScene;
+            manager.draw2xRes -= drawBoardText;
 
             manager.state.Remove(this);
         }
@@ -106,7 +110,7 @@ namespace Quatrimo
             spriteBatch.Draw(content.bg, new Rectangle(0, 0, Game1.baseRes.x, Game1.baseRes.y), null, new Color(new Vector3(0.02f, 0.0f, 0.01f)), 0, Vector2.Zero, SpriteEffects.None, 0f);
             spriteBatch.Draw(content.bg, new Rectangle(0, 0, Game1.baseRes.x, Game1.baseRes.y), null, new Color(new Vector3(0.01f, 0.00f, 0.16f)), 0, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
 
-            manager.encounter.board.draw(spriteBatch, gameTime);
+            manager.encounter.board.sprites.drawBaseRes(spriteBatch, gameTime);
         }
 
         protected void drawBoardText(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime gameTime)

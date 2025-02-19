@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace Quatrimo
 {
@@ -8,12 +9,13 @@ namespace Quatrimo
     {
         public encounter encounter;
         public board board;
-        public boardPiece(encounter encounter, Vector2I dimensions, Vector2I origin, string name)
+        public boardPiece(encounter encounter, Vector2I dimensions, Vector2I origin, Color color, string name)
         {
             this.encounter = encounter;
             board = encounter.board;
             this.dimensions = dimensions;
             this.origin = origin;
+            this.color = color;
             this.name = name;
         }
 
@@ -23,8 +25,9 @@ namespace Quatrimo
         public Vector2I origin;
         public int rotation = 0; //0 - 3
         public int dropOffset;
-        public string name;
         public bool canAbility;
+        public Color color;
+        public string name;
 
         /// <summary>
         /// Overrides necessary delegates on new block, MAKE SURE TO OVERRIDE for new piece types
@@ -49,6 +52,17 @@ namespace Quatrimo
         {
             pos = new Vector2I(pos.x + xOffset, pos.y + yOffset);
             updatePos();
+        }
+
+        public virtual blockSprite[] getSprites()
+        {
+            List<blockSprite> sprites = [];
+            foreach(block block in blocks)
+            {
+                block.createGFX(block);
+                sprites.Add(block.blockSprite);
+            }
+            return sprites.ToArray();
         }
 
         public virtual void useAbility()

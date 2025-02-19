@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Quatrimo
 {
-    public class pieceBoxOld : sprite
+    public class pieceBoxOld : spriteOld
     {
         public pieceBoxOld(Vector2I pos, Texture2D tex) : base()
         {
@@ -14,19 +14,19 @@ namespace Quatrimo
             this.tex = tex;
             this.size = new Vector2I(50, 50);
             depth = .925f;
-            blocks = new sprite[0];
+            blocks = new spriteOld[0];
         }
 
-        public sprite[] blocks;
+        public spriteOld[] blocks;
 
         public void update(boardPiece piece)
         {
-            blocks = new sprite[piece.blocks.Length];
+            blocks = new spriteOld[piece.blocks.Length];
 
             for (int i = 0; i < piece.blocks.Length; i++)
             {
                 block block = piece.blocks[i];
-                sprite sprite = block.createPreview(block);
+                spriteOld sprite = block.createPreview(block);
                 blocks[i] = sprite;
 
                 Vector2I offset = new Vector2I((block.localpos.x * 5) + 25, (block.localpos.y * 5) + 25);
@@ -35,12 +35,12 @@ namespace Quatrimo
             }
         }
 
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            base.drawState(spriteBatch, gameTime, ref list);
-            foreach (sprite sprite in blocks)
+            base.drawState(spriteBatch, gameTime);
+            foreach (spriteOld sprite in blocks)
             {
-                sprite.draw(spriteBatch, gameTime, ref list);
+                sprite.draw(spriteBatch, gameTime);
             }
         }
     }

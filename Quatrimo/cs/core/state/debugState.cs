@@ -15,7 +15,7 @@ namespace Quatrimo
         {
             manager.keyUpdate += updateDebugKeys;
             manager.updateD += debugUpdate;
-            manager.drawText += drawDebugText;
+            manager.draw2xRes += drawDebugText;
             manager.state.Add(this);
         }
 
@@ -23,7 +23,7 @@ namespace Quatrimo
         {
             manager.keyUpdate -= updateDebugKeys;
             manager.updateD -= debugUpdate;
-            manager.drawText -= drawDebugText;
+            manager.draw2xRes -= drawDebugText;
             manager.state.Remove(this);
         }
 
@@ -31,7 +31,7 @@ namespace Quatrimo
         {
             manager.keyUpdate = updateDebugKeys;
             manager.updateD = debugUpdate;
-            manager.drawText = drawDebugText;
+            manager.draw2xRes = drawDebugText;
             manager.state.Clear();
             manager.state.Add(this);
         }

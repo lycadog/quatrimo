@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using System;
 
 namespace Quatrimo
 {
@@ -11,24 +12,24 @@ namespace Quatrimo
     {
         Game1 game;
 
-        public encounter encounter;
-
         public List<gameState> state = [];
         public Stack<List<gameState>> stateStack = new();
 
-        public bool paused = false;
-        public bool debugMode = false;
+        public Action<GameTime> keyUpdate;
+        public Action<GameTime> mouseUpdated;
+        public Action<GameTime> updateD;
+        public Action<GraphicsDeviceManager, SpriteBatch, GameTime> drawBaseRes;
+        public Action<GraphicsDeviceManager, SpriteBatch, GameTime> draw2xRes;
+        public Action<GraphicsDeviceManager, SpriteBatch, GameTime> drawRaw;
 
-        public delegate void gameDelegate(GameTime gameTime);
-        public delegate void drawDelegate(GraphicsDeviceManager graphics, SpriteBatch spriteBatch, GameTime gameTime);
+        encounter encounter;
+        runData runData;
+        bool paused = false;
+        bool debugMode = false;
 
-        public gameDelegate keyUpdate;
-        public gameDelegate mouseUpdated;
-        public gameDelegate updateD;
-        public drawDelegate drawScene;
-        public drawDelegate drawText;
-
-        public static Vector2I staleMousePos;
+        public static worldObject worldRoot = new worldObject() { parent = worldRoot, localPos = Vector2I.zero };
+        
+        static Vector2I staleMousePos;
 
         public stateManager(Game1 game)
         {
@@ -58,7 +59,7 @@ namespace Quatrimo
 
             spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
 
-            drawScene.Invoke(graphics, spriteBatch, gameTime); // ==== ==== RENDER SCENE ==== ==== //////////
+            drawBaseRes.Invoke(graphics, spriteBatch, gameTime); // ==== ==== RENDER SCENE ==== ==== //////////
 
             spriteBatch.End();
 
@@ -68,7 +69,7 @@ namespace Quatrimo
 
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-            drawText.Invoke(graphics, spriteBatch, gameTime); // ==== ==== RENDER TEXT ==== ==== //////////
+            draw2xRes.Invoke(graphics, spriteBatch, gameTime); // ==== ==== RENDER TEXT ==== ==== //////////
 
             spriteBatch.End();
 
@@ -78,6 +79,8 @@ namespace Quatrimo
             // ==== DRAW BOTH RENDERTARGETS
             spriteBatch.Draw(game.sceneTarget, new Rectangle(Game1.frameOffset, 0, Game1.res.x, Game1.res.y), Color.White);
             spriteBatch.Draw(game.textTarget, new Rectangle(Game1.frameOffset, 0, Game1.res.x, Game1.res.y), Color.White);
+
+            drawRaw.Invoke(graphics, spriteBatch, gameTime);
             spriteBatch.End();
         }
 

@@ -10,7 +10,7 @@ namespace Quatrimo
         //might be issue with boardpos not being up to date when the block explodes?
         public short timer = 4;
 
-        public override void animateScore(drawable anim, bool forceAnim = false)
+        public override void animateScore(drawableOld anim, bool forceAnim = false)
         {
             base.animateScore(anim, forceAnim);
             List<Vector2I> blocks = [

@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Quatrimo
 {
-    public class movingParticle : drawable
+    public class movingParticle : drawableOld
     {
-        public sprite sprite;
+        public spriteOld sprite;
         public double timer = 0;
         public double lifetime = 0;
         bool timed = true;
@@ -16,7 +16,7 @@ namespace Quatrimo
         protected Vector2 velocity;
         protected Vector2 acceleration;
 
-        public movingParticle(short state, sprite sprite, Vector2 floatpos, Vector2 velocity, Vector2 acceleration, double lifetime = 0, bool timed = false) : base(state)
+        public movingParticle(short state, spriteOld sprite, Vector2 floatpos, Vector2 velocity, Vector2 acceleration, double lifetime = 0, bool timed = false) : base(state)
         {
             this.sprite = sprite;
             this.floatpos = floatpos;
@@ -26,7 +26,7 @@ namespace Quatrimo
             this.timed = timed;
         }
 
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime)
         {
             throw new ArgumentException("movingParticle state does not accept basic drawstate 0, please set a different state.");
         }
@@ -53,7 +53,7 @@ namespace Quatrimo
             }
         }
 
-        protected void particleTick(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
+        protected void particleTick(SpriteBatch spriteBatch, GameTime gameTime)
         {
             if (timed && timer > lifetime)
             {
@@ -61,7 +61,7 @@ namespace Quatrimo
                 return;
             }
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
-            sprite.draw(spriteBatch, gameTime, ref list);
+            sprite.draw(spriteBatch, gameTime);
         }
 
         protected void updatePos()
@@ -69,17 +69,17 @@ namespace Quatrimo
             sprite.worldPos = new Vector2I((int)floatpos.X, (int)floatpos.Y);
         }
 
-        protected void basicMovement(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
+        protected void basicMovement(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            particleTick(spriteBatch, gameTime, ref list);
+            particleTick(spriteBatch, gameTime);
             floatpos += new Vector2((float)(velocity.X * gameTime.ElapsedGameTime.TotalSeconds), (float)(velocity.Y * gameTime.ElapsedGameTime.TotalSeconds));
             velocity += new Vector2((float)(acceleration.X * gameTime.ElapsedGameTime.TotalSeconds), (float)(acceleration.Y * gameTime.ElapsedGameTime.TotalSeconds));
             updatePos();
         }
         
-        protected void randomAcceleration(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
+        protected void randomAcceleration(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            particleTick(spriteBatch, gameTime, ref list);
+            particleTick(spriteBatch, gameTime);
             floatpos += velocity;
             //acceleration += new Vector2(util.rand.NextSingle()-0.5f * 2, util.rand.NextSingle()-0.5f * 2);
             velocity += new Vector2((util.rand.NextSingle() - 0.5f) * 2, (util.rand.NextSingle() - 0.5f) * 2);

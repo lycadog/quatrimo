@@ -7,22 +7,22 @@ using System.Collections.Generic;
 namespace Quatrimo
 {
     //rework to be more open
-    public class blockSprite : drawable
+    public class blockSprite : drawableOld
     {
-        public sprite sprite;
+        public spriteOld sprite; //suggested to use a regSprite, but animSprite works too
         public block block;
         
         public Vector2I offset = Vector2I.zero;
 
-        public blockSprite(block block, sprite sprite)
+        public blockSprite(block block, spriteOld sprite)
         {
             this.block = block;
             this.sprite = sprite;
         }
 
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            sprite.draw(spriteBatch, gameTime, ref listEditQueue);
+            sprite.draw(spriteBatch, gameTime);
         }
 
         /// <summary>

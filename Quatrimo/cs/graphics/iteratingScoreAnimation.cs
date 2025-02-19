@@ -6,11 +6,14 @@ using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public class iteratingScoreAnimation : drawable
+    public class iteratingScoreAnimation : IDrawable
     {
         encounter encounter;
         board board;
         animHandler animHandler;
+
+        public spriteManager manager { get; set; }
+        public bool stale { get; set; }
 
         int y;                  //the row being scored
         int[] positions = [2];  //the positions of the left and right iterator
@@ -29,7 +32,9 @@ namespace Quatrimo
             this.positions = positions;
         }
 
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> listEditQueue)
+        
+
+        public void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
@@ -44,7 +49,7 @@ namespace Quatrimo
 
             if (animFinished)
             {
-                setState(2);
+               dispose();
             }
         }
 
@@ -63,6 +68,12 @@ namespace Quatrimo
                 block.animateScore(null, true); //TODO: change anim later so we can override it from the default
                 encounter.scoredBlocks.Add(block);
             }
+        }
+
+        public void dispose()
+        {
+            stale = true;
+            manager.remove(this);
         }
     }
 }

@@ -1,28 +1,54 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
-using System;
-using System.Collections.Generic;
 
 namespace Quatrimo
 {
-    public class pieceCard : sprite
-    {   //add code for moving and initializing all the sprites properly
+    public class pieceCard
+    {   //need new system for creating the sprite display
+        //change this off of a sprite to its own special class
         public boardPiece piece;
 
-        sprite cardBorder;
+        spriteOld cardBG;
+        spriteOld cardBorder;
 
         regSprite pieceTypeBox;
         regSprite abilityBox;
         regSprite keybindNumber;
 
+        blockSprite[] blockDisplay; 
+
         static readonly Texture2DRegion[] numbers = [content.number1, content.number2, content.number3, content.number4, content.number5, content.number6, content.number7, content.number8, content.number9, content.number0];
 
         static readonly Vector2I originPos = new Vector2I(100, 30); //topleft pixel of hand box
-        static int yOffset; //how much to offset every card to center them
+        static int yOffset; //how much to offset every card to center them, calculate on hand update
 
         static readonly int indexYOffset = 40; //how much to offset the y position based on index
         int index;
+
+        public pieceCard(boardPiece piece, int index, int handSize)
+        {
+            this.piece = piece;
+            cardBG = new spriteOld(content.pieceCardBG, Color.White, .911f)
+            {
+                origin = Vector2I.zero,
+                size = new Vector2I(70, 40)
+            };
+
+            cardBorder = new spriteOld(content.pieceCardOutline, piece.color, .915f)
+            {
+                origin = Vector2I.zero,
+                size = new Vector2I(70, 40)
+            };
+
+            pieceTypeBox = new(content.dropCrosshair, .912f);
+            abilityBox = new(content.dropCorners, .912f);
+            keybindNumber = new(content.empty, .912f);
+
+            blockDisplay = piece.getSprites();
+
+            update(index, handSize);
+        }
 
         public void play(encounter encounter)
         {
@@ -30,7 +56,7 @@ namespace Quatrimo
             piece.play();
         }
 
-        public void update(int index)
+        public void update(int index, int handSize)
         {
             this.index = index;
             updateSpritePos();
@@ -56,13 +82,21 @@ namespace Quatrimo
             }
             else { keybindNumber.tex = content.empty; }
 
+            foreach(var bSprite in blockDisplay)
+            {
+                bSprite.sprite.worldPos = worldPos * 2;
+                bSprite.sprite.worldPos = new Vector2I(
+                    bSprite.sprite.worldPos.x + bSprite.block.localpos.x * 10,
+                    bSprite.sprite.worldPos.y + bSprite.block.localpos.y * 10); //questionable but i think it works
+            }
+
             //add support for pieceTags later
         }
 
         //draw every sprite
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
+        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            base.drawState(spriteBatch, gameTime, ref list);
+            base.drawState(spriteBatch, gameTime);
         }
     }
 }

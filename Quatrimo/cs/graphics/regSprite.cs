@@ -1,54 +1,71 @@
-﻿
+﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
-using System;
-using System.Collections.Generic;
 
 namespace Quatrimo
 {
     public class regSprite : sprite
     {
-        public new Texture2DRegion tex = content.empty;
-        public Vector2 scale = Vector2.One;
-        new Vector2I size;
+        public new Texture2DRegion tex;
+        public Vector2 scale = new Vector2(2, 2);
 
-        public regSprite(Texture2DRegion tex, Color color, float depth = 0, SpriteEffects effect = SpriteEffects.None)
+        public regSprite(Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
+            localPos = Vector2.Zero;
             this.tex = tex;
             this.color = color;
             this.depth = depth;
-            this.effect = effect;
+            this.effects = effects;
         }
 
-        public regSprite() { }
-
-        public regSprite(Texture2DRegion tex, Color color, Vector2I boardPos, float depth = 0, SpriteEffects effect = SpriteEffects.None)
+        public regSprite(Vector2 localPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
+            this.localPos = localPos;
             this.tex = tex;
             this.color = color;
-            this.boardPos = boardPos;
             this.depth = depth;
-            this.effect = effect;
+            this.effects = effects;
         }
 
-        public regSprite(Texture2DRegion tex, Vector2I elementPos, Color color, float depth = 0, SpriteEffects effect = SpriteEffects.None)
+        public regSprite(Vector2I elementPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
-            this.tex = tex;
-            this.color = color;
             this.elementPos = elementPos;
+            this.tex = tex;
+            this.color = color;
             this.depth = depth;
-            this.effect = effect;
+            this.effects = effects;
         }
 
-        /// <summary>
-        /// Draws the sprite to the provided spritebatch
-        /// </summary>
-        /// <param name="spriteBatch"></param>
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime, ref Action<List<drawable>> list)
+        public regSprite(worldObject parent, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
-            SpriteBatchExtensions.Draw(spriteBatch, tex, new Vector2(worldPos.x, worldPos.y), color, rot, origin, scale, effect, depth);
+            setParent(parent);
+            this.tex = tex;
+            this.color = color;
+            this.depth = depth;
+            this.effects = effects;
         }
 
+        public regSprite(worldObject parent, Vector2 localPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
+        {
+            setParent(parent);
+            this.tex = tex;
+            this.color = color;
+            this.depth = depth;
+            this.effects = effects;
+        }
+
+        public regSprite(worldObject parent, Vector2I elementPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
+        {
+            setParent(parent);
+            this.tex = tex;
+            this.color = color;
+            this.depth = depth;
+            this.effects = effects;
+        }
+
+        public override void draw(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+            SpriteBatchExtensions.Draw(spriteBatch, tex, new Vector2(globalPos.x, globalPos.y), color, rot, origin, scale, effects, depth);
+        }
     }
 }

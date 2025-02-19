@@ -3,7 +3,7 @@
     public class cursedBlock : block
     { 
         short state = 0; //0 = closed, 1 = open and score buff active, 2 = open with score buff inactive
-        public override void animateScore(drawable anim, bool forceAnim = false)
+        public override void animateScore(drawableOld anim, bool forceAnim = false)
         {
             base.animateScore(anim, forceAnim);
             state = 1;

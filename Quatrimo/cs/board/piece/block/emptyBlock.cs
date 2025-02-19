@@ -13,14 +13,14 @@ namespace Quatrimo
             occupiedForScoring = false;
         }
 
-        public override void animateScore(drawable anim, bool forceAnim = false)
+        public override void animateScore(drawableOld anim, bool forceAnim = false)
         {
             if (forceAnim)
             {
                 scoredAnim = true;
 
                 animSprite sprite = animHandler.getDecayingAnim(new Vector2I(boardpos.x, boardpos.y));
-                board.addSprite(sprite);
+                board.sprites.add(sprite);
                 encounter.animHandler.animations.Add(sprite);
             }
         }
