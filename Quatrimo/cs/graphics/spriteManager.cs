@@ -8,8 +8,8 @@ namespace Quatrimo
     public class spriteManager
     {
         //multiple drawlayers might be unnecessary
-        List<IDrawable> baseTargetSprites = [];
-        List<IDrawable> rawDrawSprites = [];
+        List<drawableAlsoOld> baseTargetSprites = [];
+        List<drawableAlsoOld> rawDrawSprites = [];
 
         Action queuedOperations;
 
@@ -29,7 +29,7 @@ namespace Quatrimo
             }
         }
 
-        public void add(IDrawable drawable, int renderLayer = 0)
+        public void add(drawableAlsoOld drawable, int renderLayer = 0)
         {
             //drawable.renderLayer = renderLayer;
             switch (renderLayer)
@@ -45,7 +45,7 @@ namespace Quatrimo
             }
         }
 
-        public void remove(IDrawable drawable, int renderLayer = 0)
+        public void remove(drawableAlsoOld drawable, int renderLayer = 0)
         {
             switch (renderLayer)
             {
@@ -60,12 +60,12 @@ namespace Quatrimo
             }
         }
 
-        public void queueAdd(IDrawable drawable, int renderLayer = 0)
+        public void queueAdd(drawableAlsoOld drawable, int renderLayer = 0)
         {
             queuedOperations += () => add(drawable, renderLayer);
         }
 
-        public void queueRemove(IDrawable drawable, int renderLayer = 0)
+        public void queueRemove(drawableAlsoOld drawable, int renderLayer = 0)
         {
             queuedOperations += () => remove(drawable, renderLayer);
         }

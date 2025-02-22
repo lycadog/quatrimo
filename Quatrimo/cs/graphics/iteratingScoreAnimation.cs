@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public class iteratingScoreAnimation : IDrawable
+    public class iteratingScoreAnimation : drawableAlsoOld
     {
         encounter encounter;
         board board;

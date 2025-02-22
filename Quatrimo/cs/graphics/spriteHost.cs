@@ -2,7 +2,7 @@
 
 namespace Quatrimo
 {
-    public class spriteHost : worldObject, IDrawable
+    public class spriteHost : drawable, drawableAlsoOld
     {
         //COMBINE worldObject and iDrawable
         //FUCK i need parent-child system on base sprite Object

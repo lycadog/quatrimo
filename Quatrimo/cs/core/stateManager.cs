@@ -27,8 +27,9 @@ namespace Quatrimo
         bool paused = false;
         bool debugMode = false;
 
-        public static worldObject worldRoot = new worldObject() { parent = worldRoot, localPos = Vector2I.zero };
-        
+        public static drawable baseParent = new drawable() { parent = baseParent, localPos = Vector2I.zero };
+        public static drawable hiddenParent = new drawable() { parent = hiddenParent, localPos = Vector2I.zero };
+
         static Vector2I staleMousePos;
 
         public stateManager(Game1 game)

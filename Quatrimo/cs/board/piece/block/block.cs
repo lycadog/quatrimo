@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public class block : worldObject
+    public class block : drawable
     {
         public encounter encounter;
         public board board;

@@ -36,7 +36,7 @@ namespace Quatrimo
             this.effects = effects;
         }
 
-        public regSprite(worldObject parent, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
+        public regSprite(drawable parent, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
             setParent(parent);
             this.tex = tex;
@@ -45,7 +45,7 @@ namespace Quatrimo
             this.effects = effects;
         }
 
-        public regSprite(worldObject parent, Vector2 localPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
+        public regSprite(drawable parent, Vector2 localPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
             setParent(parent);
             this.tex = tex;
@@ -54,7 +54,7 @@ namespace Quatrimo
             this.effects = effects;
         }
 
-        public regSprite(worldObject parent, Vector2I elementPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
+        public regSprite(drawable parent, Vector2I elementPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
             setParent(parent);
             this.tex = tex;
@@ -66,6 +66,7 @@ namespace Quatrimo
         public override void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             SpriteBatchExtensions.Draw(spriteBatch, tex, new Vector2(globalPos.x, globalPos.y), color, rot, origin, scale, effects, depth);
+            drawChildren(spriteBatch, gameTime);
         }
     }
 }
