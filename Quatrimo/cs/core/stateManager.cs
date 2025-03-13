@@ -27,8 +27,8 @@ namespace Quatrimo
         bool paused = false;
         bool debugMode = false;
 
-        public static drawable baseParent = new drawable() { parent = baseParent, localPos = Vector2I.zero };
-        public static drawable hiddenParent = new drawable() { parent = hiddenParent, localPos = Vector2I.zero };
+        public static drawObject baseParent = new drawObject(baseParent);
+        public static drawObject hiddenParent = new drawObject(hiddenParent);
 
         static Vector2I staleMousePos;
 

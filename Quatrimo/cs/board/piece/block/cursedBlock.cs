@@ -7,13 +7,13 @@
         {
             base.animateScore(anim, forceAnim);
             state = 1;
-            blockSprite.setRegTexture(content.cursedopen);
+            blockSpriteOLD.setRegTexture(content.cursedopen);
         }
 
         protected override void createGFXf(block block)
         {
             base.createGFXf(block);
-            blockSprite.setRegTexture(content.cursedclosed);
+            blockSpriteOLD.setRegTexture(content.cursedclosed);
         }
 
         protected override void finalizeScoringF(block block)
@@ -44,7 +44,7 @@
                 return;
             }
             scoreValue = 1;
-            blockSprite.setRegTexture(content.cursedclosed);
+            blockSpriteOLD.setRegTexture(content.cursedclosed);
         }
 
     }

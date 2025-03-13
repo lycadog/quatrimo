@@ -7,7 +7,7 @@ namespace Quatrimo
     public class animHandler
     {
         //fix up this nightmare
-        encounter main;
+        encounter encounter;
         public delegate void animDelegate(GameTime gameTime);
 
         public animDelegate animState;
@@ -27,7 +27,7 @@ namespace Quatrimo
 
         public animHandler(encounter main)
         {
-            this.main = main;
+            this.encounter = main;
             animState = none;
         }
 
@@ -165,15 +165,13 @@ namespace Quatrimo
 
         public void highlightPlacedPiece(GameTime gameTime) //change later to briefly flash the newly placed piece white
         {
-            foreach(var block in main.currentPiece.blocks)
+            foreach(var block in encounter.currentPiece.blocks)
             {
                 regSprite sprite1 = new regSprite(content.boxsolid, Color.White, 0.85f);
-                sprite1.boardPos = block.boardpos;
 
                 animFrame frame1 = new animFrame(sprite1, 200);
-                animSprite anim = new animSprite([frame1]);
+                animSprite anim = new animSprite(encounter.board.boardRoot, [frame1], block.boardpos);
 
-                main.board.sprites.add(anim);
             }
             timer = 100;
             animState = timedWait;
@@ -194,7 +192,7 @@ namespace Quatrimo
 
         protected void decayBlock(block block)
         {
-            main.board.sprites.add(getDecayingAnim(block.boardpos));
+            encounter.board.spritesOLD.add(getDecayingAnim(block.boardpos));
             block.removeFromBoard(block);
         }
 

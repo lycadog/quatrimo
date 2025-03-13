@@ -5,20 +5,19 @@ using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public class drawable
+    public class drawObject
     {
-        //add proper code for global objects with no parent
         //add elementPos conversion when setting localPos
 
         public bool stale;
         public bool hidden;
 
-        protected drawable _parent = stateManager.baseParent;
-        public drawable parent { get; }
+        protected drawObject _parent;
+        public drawObject parent { get; }
 
-        protected List<drawable> children;
+        protected List<drawObject> children;
 
-        drawable staleParent;
+        drawObject staleParent;
 
         protected Vector2I _globalPos;
         public Vector2I globalPos { get => _globalPos; }
@@ -34,8 +33,21 @@ namespace Quatrimo
 
         public Vector2I size = new Vector2I(20, 20);
         public Vector2I origin = new Vector2I(10, 10);
-        public float rot = 0;
 
+        public float globalRot = 0;
+        public float localRot = 0;
+
+        public drawObject() { setParent(stateManager.baseParent); }
+
+        /// <summary>
+        /// USE ONLY for global drawables
+        /// </summary>
+        /// <param name="parentOverride"></param>
+        public drawObject(drawObject parentOverride)
+        {
+            _parent = parentOverride;
+            localPos = Vector2I.zero;
+        }
 
         /// <summary>
         /// Draw self and all children
@@ -65,10 +77,10 @@ namespace Quatrimo
         }
         
         /// <summary>
-        /// Makes the provided object the caller's parent
+        /// Sets the object's parent to the provided drawObject
         /// </summary>
         /// <param name="parent"></param>
-        public virtual void setParent(drawable parent)
+        public virtual void setParent(drawObject parent)
         {
             _parent = parent;
             parent.children.Add(this);
@@ -76,7 +88,7 @@ namespace Quatrimo
         }
 
         /// <summary>
-        /// Remove the parent of the object, linking it to the worldRoot
+        /// Remove the parent of the object, linking it to the baseParent
         /// </summary>
         /// <param name="parent"></param>
         public virtual void removeParent() //rework
@@ -91,6 +103,7 @@ namespace Quatrimo
         public virtual void syncWithParent()
         {
             _globalPos = (Vector2I)(localPos + parent.globalPos);
+            globalRot = localRot + parent.globalRot;
         }
         
         /// <summary>

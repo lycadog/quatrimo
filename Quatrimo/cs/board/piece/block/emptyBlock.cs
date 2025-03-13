@@ -20,7 +20,7 @@ namespace Quatrimo
                 scoredAnim = true;
 
                 animSprite sprite = animHandler.getDecayingAnim(new Vector2I(boardpos.x, boardpos.y));
-                board.sprites.add(sprite);
+                board.spritesOLD.add(sprite);
                 encounter.animHandler.animations.Add(sprite);
             }
         }

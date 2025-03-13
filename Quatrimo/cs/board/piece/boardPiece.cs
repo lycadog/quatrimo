@@ -60,7 +60,7 @@ namespace Quatrimo
             foreach(block block in blocks)
             {
                 block.createGFX(block);
-                sprites.Add(block.blockSprite);
+                sprites.Add(block.blockSpriteOLD);
             }
             return sprites.ToArray();
         }

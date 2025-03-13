@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public class block : drawable
+    public class block : drawObject
     {
         public encounter encounter;
         public board board;
@@ -34,10 +34,13 @@ namespace Quatrimo
         //parent block to board on creation
         //parent sprites to block and set drop position accordingly
         //parent dropCorners to dropSprite
+        public drawObject blockRoot;
+        public regSprite blockSprite;
+        public regSprite dropPreview;
 
-        public sprite blockSprite;
-        public sprite dropSprite;
-        public sprite dropCorners;
+        public sprite blockSpriteOLD;
+        public sprite dropSpriteOLD;
+        public sprite dropCornersOLD;
         public Texture2DRegion tex;
         public Color color;
 
@@ -58,7 +61,7 @@ namespace Quatrimo
             score = new Action<block>(scoreF);
             finalizeScoring = new Action<block>(finalizeScoringF);
             tick = new Action<block>(tickF);
-            createGFX = new Func<block, blockSprite[]>(createGFXf);
+            createGFX = new Func<block, sprite>(createGFXf);
             createPreview = new Func<block, spriteOld>(createPreviewF);
             updatePos = new Action<block>(updatePosF);
             updateSpritePos = new Action<block>(updateSpritePosF);
@@ -100,8 +103,9 @@ namespace Quatrimo
 
             animSprite sprite = animHandler.getDecayingAnim(new Vector2I(boardpos.x, boardpos.y));
 
-            board.sprites.add(sprite);
+            board.spritesOLD.add(sprite);
             encounter.animHandler.animations.Add(sprite);
+            //rework this method completely and add a delegate ************************************************* TODO
         }
 
         // =|||||||= [ DELEGATE DECLARATIONS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -112,22 +116,14 @@ namespace Quatrimo
         public Action<block> play;
         protected virtual void playF(block block)
         {
+            blockRoot.setParent(board.boardRoot);
             //create sprite
-            createGFX(this);
+            blockSprite = (regSprite)createGFX(this);
+            blockSprite.setParent(blockRoot);
 
+            dropPreview = new(blockRoot, content.dropCrosshair, new Color(180, 180, 220), 0.79f);
+            new regSprite(dropPreview, content.dropCorners, Color.White, 0.81f);
             //create drop preview
-            dropSprite = new blockSprite(this, new regSprite(content.dropCrosshair, new Color(180, 180, 220), 0.79f));
-            dropCorners = new blockSprite(this, new regSprite(content.dropCorners, Color.White, 0.81f));
-
-            updatePos(this);
-            
-            blockSprite.setState(0);
-            dropSprite.setState(0);
-            dropCorners.setState(0);
-
-            board.sprites.add(blockSprite);
-            board.sprites.add(dropSprite);
-            board.sprites.add(dropCorners);
         }
 
         /// <summary>
@@ -145,9 +141,8 @@ namespace Quatrimo
 
             board.blocks[boardpos.x, boardpos.y] = this;
 
-            blockSprite.sprite.depth = .75f;
-            dropSprite.setState(2);
-            dropCorners.setState(2);
+            blockSprite.depth = .75f;
+            dropPreview.dispose();
         }
 
         /// <summary>
@@ -173,7 +168,7 @@ namespace Quatrimo
         }
 
         /// <summary>
-        /// Ticks block at the end of a turn, returns whether or not it creates an animation that needs to be waited on (to suspend the state)
+        /// Ticks block at the end of a turn
         /// </summary>
         public Action<block> tick;
         protected virtual void tickF(block block)
@@ -182,20 +177,17 @@ namespace Quatrimo
         }
 
         /// <summary>
-        /// Initialize the graphics needed for the block, encloses them in an array for piececards to use
+        /// Initialize the graphics needed for the block, then returns them
         /// </summary>
-        public Func<block, blockSprite[]> createGFX;
-        protected virtual blockSprite[] createGFXf(block block)
+        public Func<block, sprite> createGFX;
+        protected virtual sprite createGFXf(block block)
         {
-            //rework method! have it create every sprite needed and return one parent sprite.
-            //use this new method both for pieceCard display and for graphics creation
-            blockSprite = new blockSprite(this, new regSprite(tex, color, 0.8f)); //create new sprite element
-            return [blockSprite];
+            return new regSprite(tex, color, 0.8f);
         }
 
         /// <summary>
         /// Initialize the drop preview for the currently falling block
-        /// DEPRECATED
+        /// DEPRECATED, REMOVE SOON
         /// </summary>
         public Func<block,spriteOld> createPreview;
         protected virtual spriteOld createPreviewF(block block)
@@ -223,13 +215,11 @@ namespace Quatrimo
         public Action<block> updateSpritePos;
         protected virtual void updateSpritePosF(block block)
         {
-            blockSprite.updatePos();
+            blockRoot.elementPos = boardpos;
+            if (boardpos.y < 4) { blockSprite.hide(); } //if sprite is above the board, hide it
+            else { blockSprite.unhide(); }
+            dropPreview.elementPos = new Vector2I(0, piece.dropOffset);
 
-            dropSprite.offset = new Vector2I(0,piece.dropOffset);
-            dropCorners.offset = new Vector2I(0, piece.dropOffset);
-
-            dropSprite.updatePos();
-            dropCorners.updatePos();
         }
 
         /// <summary>
@@ -242,14 +232,12 @@ namespace Quatrimo
         }
 
         /// <summary>
-        /// Hide the block's sprites
+        /// Delete the block's sprites
         /// </summary>
         public Action<block> removeSprites;
         protected virtual void removeSpritesF(block block)
         {
-            blockSprite.setState(2);
-            dropSprite.setState(2);
-            dropCorners.setState(2);
+            blockRoot.dispose();
         }
 
         /// <summary>
@@ -372,7 +360,7 @@ namespace Quatrimo
         public Action<int, block> rotateGFX;
         protected virtual void rotateGFXf(int direction, block block)
         {
-            blockSprite.sprite.rot += MathHelper.ToRadians(90 * direction);
+            blockSprite.localRot += MathHelper.ToRadians(90 * direction);
         }
 
         /// <summary>

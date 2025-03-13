@@ -11,6 +11,7 @@ namespace Quatrimo
 
         public regSprite(Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
+            setParent(stateManager.baseParent);
             localPos = Vector2.Zero;
             this.tex = tex;
             this.color = color;
@@ -20,6 +21,7 @@ namespace Quatrimo
 
         public regSprite(Vector2 localPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
+            setParent(stateManager.baseParent);
             this.localPos = localPos;
             this.tex = tex;
             this.color = color;
@@ -29,6 +31,7 @@ namespace Quatrimo
 
         public regSprite(Vector2I elementPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
+            setParent(stateManager.baseParent);
             this.elementPos = elementPos;
             this.tex = tex;
             this.color = color;
@@ -36,7 +39,7 @@ namespace Quatrimo
             this.effects = effects;
         }
 
-        public regSprite(drawable parent, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
+        public regSprite(drawObject parent, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
             setParent(parent);
             this.tex = tex;
@@ -45,7 +48,7 @@ namespace Quatrimo
             this.effects = effects;
         }
 
-        public regSprite(drawable parent, Vector2 localPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
+        public regSprite(drawObject parent, Vector2 localPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
             setParent(parent);
             this.tex = tex;
@@ -54,7 +57,7 @@ namespace Quatrimo
             this.effects = effects;
         }
 
-        public regSprite(drawable parent, Vector2I elementPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
+        public regSprite(drawObject parent, Vector2I elementPos, Texture2DRegion tex, Color color, float depth, SpriteEffects effects = SpriteEffects.None)
         {
             setParent(parent);
             this.tex = tex;
@@ -65,7 +68,7 @@ namespace Quatrimo
 
         public override void draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            SpriteBatchExtensions.Draw(spriteBatch, tex, new Vector2(globalPos.x, globalPos.y), color, rot, origin, scale, effects, depth);
+            SpriteBatchExtensions.Draw(spriteBatch, tex, new Vector2(globalPos.x, globalPos.y), color, globalRot, origin, scale, effects, depth);
             drawChildren(spriteBatch, gameTime);
         }
     }

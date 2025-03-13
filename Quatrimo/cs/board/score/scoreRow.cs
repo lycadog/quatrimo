@@ -25,8 +25,8 @@ namespace Quatrimo
             iteratingScoreAnimation leftIterator = new iteratingScoreAnimation(encounter, encounter.animHandler, y, [leftBounds.x, leftBounds.y]);
             iteratingScoreAnimation rightIterator = new iteratingScoreAnimation(encounter, encounter.animHandler, y, [rightBounds.x, rightBounds.y]);
             
-            encounter.board.sprites.add(leftIterator);
-            encounter.board.sprites.add(rightIterator);
+            encounter.board.spritesOLD.add(leftIterator);
+            encounter.board.spritesOLD.add(rightIterator);
             
             encounter.animHandler.animations.Add(leftIterator);
             encounter.animHandler.animations.Add(rightIterator);
