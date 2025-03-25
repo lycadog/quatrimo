@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
 
@@ -154,5 +155,38 @@ namespace Quatrimo
             nameM = atlas[30];
             nameO = atlas[31];
         }
+
+        public static animSprite getDecayingAnim(board board, drawObject parent, Vector2I boardpos, Color[] colors)
+        {
+            //rework this then go to block method and rework that
+            regSprite sprite1 = new regSprite(boardpos, full, colors[0], 0.86f);
+            regSprite sprite2 = new regSprite(boardpos, full75, colors[1], 0.86f);
+            regSprite sprite3 = new regSprite(boardpos, full50, colors[2], 0.86f);
+            regSprite sprite4 = new regSprite(boardpos, full25, colors[3], 0.86f);
+
+            animFrame f1 = new animFrame(sprite1, 100);
+            animFrame f2 = new animFrame(sprite2, 50);
+            animFrame f3 = new animFrame(sprite3, 50);
+            animFrame f4 = new animFrame(sprite4, 50);
+
+
+            return new animSprite(parent, [f1, f2, f3, f4], boardpos);
+        }
+
+        public static animSprite getDecayingAnim(board board, drawObject parent, Vector2I boardpos, Color color)
+        {
+            return getDecayingAnim(board, parent, boardpos, [color, color, color, color]);
+        }
+
+        public static animSprite getDecayingAnim(board board, drawObject parent, Vector2I boardpos)
+        {
+            return getDecayingAnim(board, parent, boardpos, Color.White);
+        }
+
+        public static animSprite getFireDecayingAnim(board board, drawObject parent, Vector2I boardpos, Color color)
+        {
+            return null; //wip, implement along with atlas changes
+        }
+        
     }
 }

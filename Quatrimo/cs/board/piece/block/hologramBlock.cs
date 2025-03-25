@@ -6,6 +6,9 @@ namespace Quatrimo
     //bug: sometimes blocks being removed from clipping event mess up and don't remove their sprite/remove block wrongly
     public class hologramBlock : block
     {
+        //TODO NEXT TIME: GO TO block, change blockSprite from a regSprite field to a drawObject virtual property so we can override it
+        //we might need an abstract block !!!! or a new baseBlock, with basicBlock overriding its behavior? 
+        //so it can stop casting its sprite from drawObject to regSprite bc its annoying but migh tbe more cluttered?
         protected override bool collidesFallingF(Vector2I checkPos, block block)
         {
             return isOutOfBounds(checkPos);
@@ -17,14 +20,11 @@ namespace Quatrimo
             return false;
         }
 
-        protected override void createGFXf(block block)
+        protected override animSprite createGFXf(block block)
         {
             animFrame frame1 = new animFrame(new regSprite(content.hologram1, color, 0.8f), 120);
             animFrame frame2 = new animFrame(new regSprite(content.hologram2, color, 0.8f), 120);
-            blockSpriteOLD = new blockSprite(this, new animSprite([frame1, frame2], true));
-
-            dropSpriteOLD = new blockSprite(this, new regSprite(content.dropCrosshair, new Color(180, 180, 220), 0.79f)); //create new sprite element
-            dropCornersOLD = new blockSprite(this, new regSprite(content.dropCorners, Color.White, 0.81f)); //create new sprite element
+            return new animSprite([frame1, frame2], true);
         }
 
         protected override bool placedBlockClippedF(block fallingBlock, block block)
@@ -36,7 +36,7 @@ namespace Quatrimo
         protected override void placeF(block block)
         {
             base.placeF(block);
-            blockSpriteOLD.setDepthOfAnimation(0.75f);
+            
         }
 
         protected override void rotateGFXf(int direction, block block)

@@ -11,6 +11,14 @@ namespace Quatrimo
         double timer = 0;
         bool loops;
 
+        public animSprite(animFrame[] sequence, bool loops = false, int frame = 0)
+        {
+            setParent(stateManager.baseParent);
+            this.sequence = sequence;
+            this.loops = loops;
+            this.frame = frame;
+            parentFrames();
+        }
         public animSprite(animFrame[] sequence, Vector2I elementPos, bool loops = false, int frame = 0)
         {
             setParent(stateManager.baseParent);
@@ -25,6 +33,15 @@ namespace Quatrimo
         {
             setParent(stateManager.baseParent);
             this.localPos = localPos;
+            this.sequence = sequence;
+            this.loops = loops;
+            this.frame = frame;
+            parentFrames();
+        }
+
+        public animSprite(drawObject parent, animFrame[] sequence, bool loops = false, int frame = 0)
+        {
+            setParent(parent);
             this.sequence = sequence;
             this.loops = loops;
             this.frame = frame;
@@ -75,6 +92,5 @@ namespace Quatrimo
                 frame.sprite.setParent(this);
             }
         }
-        
     }
 }

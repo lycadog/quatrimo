@@ -32,14 +32,13 @@ namespace Quatrimo
                 {
                     if (scoredRows.Contains(block.boardpos.y)) //add score decay anim to current piece blocks that are scored
                     {
-                        block.animateScore(null);
+                        block.animateScore(true);
                         encounter.scoredBlocks.Add(block);
                     }
                     else //if not scored, then add brief highlight
                     {
-                        regSprite e = new regSprite(content.boxsolid, Color.White, block.boardpos, 0.85f);
-                        animSprite anim = new animSprite([new animFrame(e, 200)]);
-                        encounter.board.spritesOLD.add(anim);
+                        regSprite e = new regSprite(block.boardpos, content.boxsolid, Color.White, 0.85f);
+                        new animSprite(encounter.board.animationRoot, [new animFrame(e, 200)]);
                     }
                 }
             }

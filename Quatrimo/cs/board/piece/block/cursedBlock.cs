@@ -3,17 +3,18 @@
     public class cursedBlock : block
     { 
         short state = 0; //0 = closed, 1 = open and score buff active, 2 = open with score buff inactive
-        public override void animateScore(drawableOld anim, bool forceAnim = false)
+        protected override void animateScoreF(bool forceAnim = false)
         {
-            base.animateScore(anim, forceAnim);
+            base.animateScore(forceAnim);
             state = 1;
-            blockSpriteOLD.setRegTexture(content.cursedopen);
+            blockSprite.tex = content.cursedopen;
         }
 
-        protected override void createGFXf(block block)
+        protected override sprite createGFXf(block block)
         {
-            base.createGFXf(block);
-            blockSpriteOLD.setRegTexture(content.cursedclosed);
+            regSprite sprite = (regSprite)base.createGFXf(block);
+            sprite.tex = content.cursedclosed;
+            return sprite;
         }
 
         protected override void finalizeScoringF(block block)
@@ -44,7 +45,7 @@
                 return;
             }
             scoreValue = 1;
-            blockSpriteOLD.setRegTexture(content.cursedclosed);
+            blockSprite.tex = content.cursedclosed;
         }
 
     }

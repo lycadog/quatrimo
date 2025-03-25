@@ -8,7 +8,6 @@ namespace Quatrimo
     {
         List<block> blocks = [];
         board board;
-        animSprite scoreAnim = animHandler.getDecayingAnim(Vector2I.zero);
 
         public scoreBlocks(List<Vector2I> blocks, board board)
         {
@@ -40,7 +39,7 @@ namespace Quatrimo
             {
                 if (block.scoredAnim) { continue; }
                 Debug.WriteLine("SCOREBLOCK SCORED");
-                block.animateScore(null, true);
+                block.animateScore(true);
                 encounter.scoredBlocks.Insert(counter, block);
                 counter++;
             }

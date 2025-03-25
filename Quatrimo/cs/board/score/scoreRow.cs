@@ -22,14 +22,10 @@ namespace Quatrimo
         public override void execute(encounter encounter)
         {
             //also figure out how to properly suspend animhandler state for animSuspendState
-            iteratingScoreAnimation leftIterator = new iteratingScoreAnimation(encounter, encounter.animHandler, y, [leftBounds.x, leftBounds.y]);
-            iteratingScoreAnimation rightIterator = new iteratingScoreAnimation(encounter, encounter.animHandler, y, [rightBounds.x, rightBounds.y]);
-            
-            encounter.board.spritesOLD.add(leftIterator);
-            encounter.board.spritesOLD.add(rightIterator);
-            
-            encounter.animHandler.animations.Add(leftIterator);
-            encounter.animHandler.animations.Add(rightIterator);
+            iteratingScoreAnimation leftIterator = new iteratingScoreAnimation(encounter.board.animationRoot, 
+                encounter, encounter.animHandler, y, [leftBounds.x, leftBounds.y]);
+            iteratingScoreAnimation rightIterator = new iteratingScoreAnimation(encounter.board.animationRoot, 
+                encounter, encounter.animHandler, y, [rightBounds.x, rightBounds.y]);
 
             encounter.turnRowsCleared += 1;
             Debug.WriteLine("row executed");

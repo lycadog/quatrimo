@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Quatrimo
 {
-    public class block : drawObject
+    public class block
     {
         public encounter encounter;
         public board board;
@@ -56,12 +56,14 @@ namespace Quatrimo
 
         public void linkDelegates()
         {
+
             play = new Action<block>(playF);
             place = new Action<block>(placeF);
             score = new Action<block>(scoreF);
+            animateScore = new Action<bool>(animateScoreF);
             finalizeScoring = new Action<block>(finalizeScoringF);
             tick = new Action<block>(tickF);
-            createGFX = new Func<block, sprite>(createGFXf);
+            createGFX = new Func<block, drawObject>(createGFXf);
             createPreview = new Func<block, spriteOld>(createPreviewF);
             updatePos = new Action<block>(updatePosF);
             updateSpritePos = new Action<block>(updateSpritePosF);
@@ -88,27 +90,6 @@ namespace Quatrimo
             getScore = new Func<block, long>(getScoreF);
             getTimes = new Func<block, double>(getMultF);
         }
-
-        // =|||||||= [ NONDELEGATE METHODS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-        /// <summary>
-        /// Adds the block to the scored block list and renders the score animation on top of it; forceAnim is for enabling animations on empty blocks only
-        /// </summary>
-        /// <param name="encounter"></param>
-        /// <param name="anim"></param>
-        public virtual void animateScore(drawableOld anim, bool forceAnim = false) //TODO: add support for overriding the default anim
-        {
-            scoreRemoveGFX(this);
-            scoredAnim = true;
-
-            animSprite sprite = animHandler.getDecayingAnim(new Vector2I(boardpos.x, boardpos.y));
-
-            board.spritesOLD.add(sprite);
-            encounter.animHandler.animations.Add(sprite);
-            //rework this method completely and add a delegate ************************************************* TODO
-        }
-
-        // =|||||||= [ DELEGATE DECLARATIONS ] =|||||||= >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
         /// <summary>
         /// Play the falling block into the board
@@ -168,6 +149,20 @@ namespace Quatrimo
         }
 
         /// <summary>
+        /// Adds the block to the scored block list and renders the score animation on top of it; forceAnim is for enabling animations on empty blocks only
+        /// </summary>
+        /// <param name="encounter"></param>
+        /// <param name="anim"></param>
+        public Action<bool> animateScore;
+        protected virtual void animateScoreF(bool forceAnim = false) //TODO: add support for overriding the default anim
+        {
+            scoreRemoveGFX(this);
+            scoredAnim = true;
+
+            content.getDecayingAnim(board, board.animationRoot, boardpos); //create animation and parent it to animation root
+        }
+
+        /// <summary>
         /// Ticks block at the end of a turn
         /// </summary>
         public Action<block> tick;
@@ -179,8 +174,8 @@ namespace Quatrimo
         /// <summary>
         /// Initialize the graphics needed for the block, then returns them
         /// </summary>
-        public Func<block, sprite> createGFX;
-        protected virtual sprite createGFXf(block block)
+        public Func<block, drawObject> createGFX;
+        protected virtual drawObject createGFXf(block block)
         {
             return new regSprite(tex, color, 0.8f);
         }

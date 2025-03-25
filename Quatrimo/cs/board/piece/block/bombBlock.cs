@@ -10,9 +10,9 @@ namespace Quatrimo
         //might be issue with boardpos not being up to date when the block explodes?
         public short timer = 4;
 
-        public override void animateScore(drawableOld anim, bool forceAnim = false)
+        protected override void animateScoreF(bool forceAnim = false)
         {
-            base.animateScore(anim, forceAnim);
+            base.animateScore(forceAnim);
             List<Vector2I> blocks = [
                 boardpos + new Vector2I(1, 0),
                 boardpos + new Vector2I(-1, 0),
@@ -26,10 +26,11 @@ namespace Quatrimo
             new scoreBlocks(blocks, board).execute(encounter);
         }
 
-        protected override void createGFXf(block block)
+        protected override regSprite createGFXf(block block)
         {
-            base.createGFXf(block);
-            ((regSprite)blockSpriteOLD.sprite).tex = content.bomb;
+            regSprite sprite = (regSprite)base.createGFXf(block);
+            sprite.tex = content.bomb;
+            return sprite;
         }
 
         //bomb sprite looks weird rotated, so disable it
@@ -44,7 +45,8 @@ namespace Quatrimo
 
             if (timer > 0)
             {
-                regSprite sprite = new regSprite();
+                //add countdown timer particle later //**TODO
+                /*regSprite sprite = new regSprite();
                 sprite.tex = content.nameQ;
                 sprite.color = Color.Magenta;
                 sprite.worldPos = new Vector2I(240, 240);
@@ -52,7 +54,7 @@ namespace Quatrimo
 
                 //board.sprites.Add(new movingSprite(sprite, new Vector2(0, -200f), new Vector2(0, 100f)));
 
-                return;
+                return;*/
             }
             
             List<Vector2I> blocks = [

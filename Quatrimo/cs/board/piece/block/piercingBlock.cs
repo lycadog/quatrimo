@@ -13,15 +13,16 @@
             return false;
         }
 
-        protected override void createGFXf(block block)
+        protected override regSprite createGFXf(block block)
         {
-            base.createGFXf(block);
-            blockSpriteOLD.setRegTexture(content.piercing);
+            regSprite sprite = (regSprite)base.createGFXf(block);
+            sprite.tex = content.piercing;
+            return sprite;
         }
 
         protected override bool fallingBlockClippedF(block placedBlock, block block)
         {
-            placedBlock.animateScore(null);
+            placedBlock.animateScore(false);
             placedBlock.score(placedBlock);
             if (placedBlock.removed) { placedBlock.removeFromBoard(placedBlock); return false; }
             return true;
@@ -29,7 +30,7 @@
 
         protected override bool placedBlockClippedF(block fallingBlock, block block)
         {
-            animateScore(null);
+            animateScore(false);
             score(this);
             removeFromBoard(this);
             return true;

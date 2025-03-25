@@ -12,7 +12,10 @@ namespace Quatrimo
 
         public block[,] blocks;
 
-        public spriteManager spritesOLD = new spriteManager();
+        public static drawObject baseParent = stateManager.baseParent;
+
+        public drawObject boardRoot = new drawObject() { elementPos = new Vector2I(offset.x, -3) };
+        public drawObject animationRoot = new drawObject();
 
         public static Vector2I dimensions;
         public static readonly Vector2I eDimensions = new Vector2I(48, 27); //element dimensions
@@ -22,9 +25,7 @@ namespace Quatrimo
         public spriteOld pauseText = new spriteOld();
 
         public static readonly int boardy = 22;
-        public static drawObject baseParent = stateManager.baseParent;
-        public drawObject boardRoot = new drawObject() { elementPos = new Vector2I(offset.x, -3) };
-
+        
         public board(encounter encounter, Vector2I dim)
         {
             this.encounter = encounter;

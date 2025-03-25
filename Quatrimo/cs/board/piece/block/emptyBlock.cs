@@ -13,15 +13,14 @@ namespace Quatrimo
             occupiedForScoring = false;
         }
 
-        public override void animateScore(drawableOld anim, bool forceAnim = false)
+        protected override void animateScoreF(bool forceAnim = false)
         {
             if (forceAnim)
             {
                 scoredAnim = true;
 
-                animSprite sprite = animHandler.getDecayingAnim(new Vector2I(boardpos.x, boardpos.y));
-                board.spritesOLD.add(sprite);
-                encounter.animHandler.animations.Add(sprite);
+                animSprite sprite = content.getDecayingAnim(board, board.animationRoot, boardpos);
+
             }
         }
 
@@ -38,10 +37,6 @@ namespace Quatrimo
         protected override long getScoreF(block block)
         {
             return 0;
-        }
-
-        protected override void createGFXf(block block)
-        {
         }
 
         protected override void movePlacedF(Vector2I offset, block block)

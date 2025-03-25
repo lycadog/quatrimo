@@ -190,14 +190,10 @@ namespace Quatrimo
         public void end(GameTime gameTime) { animations.Clear(); animState = none; }
         public void none(GameTime gameTime) { }
 
-        protected void decayBlock(block block)
-        {
-            encounter.board.spritesOLD.add(getDecayingAnim(block.boardpos));
-            block.removeFromBoard(block);
-        }
 
         public static animSprite getDecayingAnim(Vector2I boardpos)
         {
+            //rework this then go to block method and rework that
             regSprite sprite1 = new regSprite(content.full, Color.White, boardpos, 0.86f);
             regSprite sprite2 = new regSprite(content.full75, Color.White, boardpos, 0.86f);
             regSprite sprite3 = new regSprite(content.full50, Color.White, boardpos, 0.86f);
