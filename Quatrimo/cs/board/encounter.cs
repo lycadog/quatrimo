@@ -23,7 +23,7 @@ namespace Quatrimo
         public double levelTimes = 1;
         public double turnMultiplier = 1;
 
-        public pieceCard[] hand = [];
+        public pieceCardOld[] hand = [];
 
         public boardPiece currentPiece;
         public boardPiece heldPiece = null;

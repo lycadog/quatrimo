@@ -4,50 +4,30 @@ using MonoGame.Extended.Graphics;
 
 namespace Quatrimo
 {
-    public class pieceCard
-    {   //need new system for creating the sprite display
-        //change this off of a sprite to its own special class
+    public class pieceCard : sprite
+    {
         public boardPiece piece;
 
-        spriteOld cardBG;
-        spriteOld cardBorder;
+        //base sprite is the bg
+        sprite cardBorder;
 
-        regSprite pieceTypeBox;
-        regSprite abilityBox;
-        regSprite keybindNumber;
+        regSprite pieceTypeBox; //create method on piece to provide pieceType texture
+        regSprite abilityBox;   //another method on piece for its ability (default to none)
+        //also new method on piece for when the abilitybox needs to be updated? or integrate this to the ability method in some way
+        regSprite keybindNumber; //calculate when hand is moved around
 
-        blockSprite[] blockDisplay; 
+        int index;
 
         static readonly Texture2DRegion[] numbers = [content.number1, content.number2, content.number3, content.number4, content.number5, content.number6, content.number7, content.number8, content.number9, content.number0];
 
-        static readonly Vector2I originPos = new Vector2I(100, 30); //topleft pixel of hand box
-        static int yOffset; //how much to offset every card to center them, calculate on hand update
+        //get pos for the different sprites
+        //figure out how to determine the position of the base card
+        //should be calculated based on index? offset per index decreased if hand is too big, also calculate and update depth for all elements
+        //so the one hovered is on top, otherwise the first card will be shown over the next and so on
 
-        static readonly int indexYOffset = 40; //how much to offset the y position based on index
-        int index;
-
-        public pieceCard(boardPiece piece, int index, int handSize)
+        public pieceCard(boardPiece piece) : base(new Vector2I(10, 3), content.pieceCardBG, Color.White, .911f)
         {
-            this.piece = piece;
-            cardBG = new spriteOld(content.pieceCardBG, Color.White, .911f)
-            {
-                origin = Vector2I.zero,
-                size = new Vector2I(70, 40)
-            };
-
-            cardBorder = new spriteOld(content.pieceCardOutline, piece.color, .915f)
-            {
-                origin = Vector2I.zero,
-                size = new Vector2I(70, 40)
-            };
-
-            pieceTypeBox = new(content.dropCrosshair, .912f);
-            abilityBox = new(content.dropCorners, .912f);
-            keybindNumber = new(content.empty, .912f);
-
-            blockDisplay = piece.getSprites();
-
-            update(index, handSize);
+            cardBorder = new(content.pieceCardOutline, piece.color, 0.915f);
         }
 
         public void play(encounter encounter)
@@ -59,44 +39,11 @@ namespace Quatrimo
         public void update(int index, int handSize)
         {
             this.index = index;
-            updateSpritePos();
         }
 
         public void hover()
         {
             //display a preview of where the piece will be placed
-        }
-
-        void updateSpritePos()
-        {
-            worldPos = new Vector2I(originPos.x, originPos.y + indexYOffset * index + yOffset);
-            cardBorder.worldPos = worldPos;
-
-            pieceTypeBox.worldPos = worldPos + new Vector2I(48, 4);
-            abilityBox.worldPos = worldPos + new Vector2I(58, 4);
-
-            keybindNumber.worldPos = worldPos + new Vector2I(52, 13);
-            if(index < 10)
-            {
-                keybindNumber.tex = numbers[index];
-            }
-            else { keybindNumber.tex = content.empty; }
-
-            foreach(var bSprite in blockDisplay)
-            {
-                bSprite.sprite.worldPos = worldPos * 2;
-                bSprite.sprite.worldPos = new Vector2I(
-                    bSprite.sprite.worldPos.x + bSprite.block.localpos.x * 10,
-                    bSprite.sprite.worldPos.y + bSprite.block.localpos.y * 10); //questionable but i think it works
-            }
-
-            //add support for pieceTags later
-        }
-
-        //draw every sprite
-        protected override void drawState(SpriteBatch spriteBatch, GameTime gameTime)
-        {
-            base.drawState(spriteBatch, gameTime);
         }
     }
 }

@@ -6,9 +6,6 @@ namespace Quatrimo
     //bug: sometimes blocks being removed from clipping event mess up and don't remove their sprite/remove block wrongly
     public class hologramBlock : block
     {
-        //TODO NEXT TIME: GO TO block, change blockSprite from a regSprite field to a drawObject virtual property so we can override it
-        //we might need an abstract block !!!! or a new baseBlock, with basicBlock overriding its behavior? 
-        //so it can stop casting its sprite from drawObject to regSprite bc its annoying but migh tbe more cluttered?
         protected override bool collidesFallingF(Vector2I checkPos, block block)
         {
             return isOutOfBounds(checkPos);
