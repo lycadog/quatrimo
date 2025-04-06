@@ -8,6 +8,9 @@ namespace Quatrimo
     {
         public boardPiece piece;
 
+        //positions: pieceType box: 96, 8 || ability box: 116, 8 || tags 1, 2, and 4: [96, 50], [108, 50], [96, 62]
+        //keybind pos: 102, 26
+
         //base sprite is the bg
         sprite cardBorder;
 
@@ -25,9 +28,17 @@ namespace Quatrimo
         //should be calculated based on index? offset per index decreased if hand is too big, also calculate and update depth for all elements
         //so the one hovered is on top, otherwise the first card will be shown over the next and so on
 
+        //afterwards: update the rendertarget to line up with our single 2x rendertarget plan
         public pieceCard(boardPiece piece) : base(new Vector2I(10, 3), content.pieceCardBG, Color.White, .911f)
         {
             cardBorder = new(content.pieceCardOutline, piece.color, 0.915f);
+            drawObject[] sprites = piece.getGFX();
+            for(int i = 0; i < sprites.Length; i++)
+            {
+                sprites[i].size = new Vector2I(10, 10);
+                sprites[i].localPos = new Vector2I(20 + piece.blocks[i].localpos.x * 10, 20 + piece.blocks[i].localpos.x * 10);
+                sprites[i].setParent(this);
+            }
         }
 
         public void play(encounter encounter)

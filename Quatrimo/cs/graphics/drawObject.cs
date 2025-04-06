@@ -31,8 +31,15 @@ namespace Quatrimo
         public Vector2I elementPos { get => _elementPos; set { _elementPos = value; 
                 localPos = new Vector2I(elementPos.x * 20 + 10, elementPos.y * 20 + 10); } }
 
-        public Vector2I size = new Vector2I(20, 20);
-        public Vector2I origin = new Vector2I(10, 10);
+        protected Vector2I _size = new Vector2I(20, 20);
+        public Vector2I size { get => _size; set { _size = value; if (!originOverrided) {
+                    _origin = new Vector2I(size.x / 2, size.y / 2);
+                } } }
+
+        protected Vector2I _origin = new Vector2I(10, 10);
+        public Vector2I origin { get => _origin; set { _origin = value; originOverrided = true; } }
+
+        bool originOverrided = false;
 
         public float globalRot = 0;
         public float localRot = 0;

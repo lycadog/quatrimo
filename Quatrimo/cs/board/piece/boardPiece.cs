@@ -54,15 +54,14 @@ namespace Quatrimo
             updatePos();
         }
 
-        public virtual blockSprite[] getSprites()
+        public virtual drawObject[] getGFX()
         {
-            List<blockSprite> sprites = [];
-            foreach(block block in blocks)
+            drawObject[] sprites = new drawObject[blocks.Length];
+            for(int i = 0; i < blocks.Length; i++)
             {
-                block.createGFX(block);
-                sprites.Add(block.blockSpriteOLD);
+                sprites[i] = blocks[i].createGFX(blocks[i]);
             }
-            return sprites.ToArray();
+            return sprites;
         }
 
         public virtual void useAbility()
