@@ -8,14 +8,20 @@ namespace Quatrimo
     {
         public boardPiece piece;
 
-        //positions: pieceType box: 96, 8 || ability box: 116, 8 || tags 1, 2, and 4: [96, 50], [108, 50], [96, 62]
+        //card position is calculated using update, this is called after the hand is updated so when a piece is placed
+        //or on draw
+
+        //DEPTH: base 0.911f
+        //may need way to move a sprite over time with a set speed and duration
+
+        //positions: pieceType box: 94, 6 || ability box: 114, 6 || tags 1, 2, and 4: [96, 50], [108, 50], [96, 62]
         //keybind pos: 102, 26
 
         //base sprite is the bg
         sprite cardBorder;
 
-        regSprite pieceTypeBox; //create method on piece to provide pieceType texture
-        regSprite abilityBox;   //another method on piece for its ability (default to none)
+        drawObject pieceTypeBox; //create method on piece to provide pieceType texture
+        drawObject abilityBox;   //another method on piece for its ability (default to none)
         //also new method on piece for when the abilitybox needs to be updated? or integrate this to the ability method in some way
         regSprite keybindNumber; //calculate when hand is moved around
 
@@ -39,17 +45,30 @@ namespace Quatrimo
                 sprites[i].localPos = new Vector2I(20 + piece.blocks[i].localpos.x * 10, 20 + piece.blocks[i].localpos.x * 10);
                 sprites[i].setParent(this);
             }
+            pieceTypeBox = piece.getPieceIcon();
+            { localPos = new Vector2I(94, 6); }
+            abilityBox = piece.getAbilityIcon();
+            { localPos = new Vector2I(114, 6); }
+
+            keybindNumber = new(this, content.empty, Color.White, 0.912f);
         }
 
         public void play(encounter encounter)
         {
             encounter.currentPiece = piece;
-            piece.play();
+            piece.play(this);
         }
 
         public void update(int index, int handSize)
         {
             this.index = index;
+            if(index > 10)
+            {
+                keybindNumber.tex = content.empty;
+                return;
+            }
+            keybindNumber.tex = numbers[index];
+            //UPDATE POS here
         }
 
         public void hover()

@@ -20,6 +20,7 @@ namespace Quatrimo
         }
 
         public block[] blocks;
+        public pieceCard card;
         public Vector2I dimensions;
         public Vector2I pos;
         public Vector2I origin;
@@ -38,8 +39,9 @@ namespace Quatrimo
 
         }
 
-        public virtual void play()
+        public virtual void play(pieceCard card)
         {
+            this.card = card;
             pos = new Vector2I(5, 9 - (dimensions.y / 2));
             foreach (block block in blocks)
             {
@@ -66,6 +68,16 @@ namespace Quatrimo
 
         public virtual void useAbility()
         {
+        }
+
+        public virtual drawObject getPieceIcon()
+        {
+            return new regSprite(content.box, Color.White, 0.912f);
+        }
+
+        public virtual drawObject getAbilityIcon()
+        {
+            return new regSprite(content.empty, Color.White, 0.912f);
         }
 
         /// <summary>

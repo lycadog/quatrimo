@@ -106,15 +106,16 @@ namespace Quatrimo
             };
 
             short counter = 0;
-            Color[] colors = [new Color(new Vector3(0.04f, 0.04f, 0.04f)), new Color(new Vector3(0.06f, 0.06f, 0.06f))];
+            Vector3[] colors = [new Vector3(0.04f, 0.04f, 0.04f), new Vector3(0.06f, 0.06f, 0.06f)];
             for (int x = 0; x < dimensions.x; x++) //generate board square background
             {
                 for (int y = 7; y < 27; y++)
                 {
-                    int dif = Math.Abs(y - 7 - (22 / 2) + 1); //MATH HERE might be broken with new values for height, fix later
-
+                    int dif = Math.Abs(y - 7 - (22 / 2) + 1); 
+                    //MATH HERE might be broken with new values for height, fix later
+                    //i think i fixed it?
                     float multiplier = (float)((Math.Pow(dif, 2) * 0.02f) + 1);
-                    Vector3 vector = colors[counter % 2].ToVector3() * new Vector3(multiplier, multiplier, multiplier);
+                    Vector3 vector = colors[counter % 2] * new Vector3(multiplier, multiplier, multiplier);
                     Color color = new Color(vector);
                     
                     new regSprite(boardRoot, new Vector2I(x, y + 1), content.box, color, 0.1f);
