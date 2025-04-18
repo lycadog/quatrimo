@@ -28,7 +28,7 @@ namespace Quatrimo
             addNewEntry(value);
         }
 
-        //add elements later
+        //to add elements later
         public objPool() { }
 
         public T getRandom()

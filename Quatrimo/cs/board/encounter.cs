@@ -27,7 +27,6 @@ namespace Quatrimo
 
         public boardPiece currentPiece;
         public boardPiece heldPiece = null;
-        public boardPiece nextPiece;
 
         public bool boardUpdated = false;
         public bool[] updatedRows;
@@ -38,16 +37,15 @@ namespace Quatrimo
         public List<block> scoredBlocks = [];
         public List<block> emptyBlocks = [];
 
-        public encounter(bag bag, runData data)
+        public encounter(runData data)
         {
             animHandler = new animHandler(this);
             board = new board(this, new Vector2I(12, 28));
 
-            this.bag = bag;
             runData = data;
+            bag = runData.bag;
             bag.encounter = this;
 
-            nextPiece = bag.drawRandomPiece();
 
             turnStartState newState = new turnStartState(this);
             newState.startState();

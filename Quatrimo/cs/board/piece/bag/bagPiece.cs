@@ -4,6 +4,7 @@ namespace Quatrimo
 {
     public class bagPiece
     {
+        //TODO: add piecetags and duration mechanism
         public bagBlock[] blocks;
         public int pieceMod;
         public int baseWeight;
@@ -25,6 +26,11 @@ namespace Quatrimo
             this.name = name;
         }
 
+        public void reset()
+        {
+            bagEntry.setWeight(baseWeight);
+        }
+
         /// <summary>
         /// Ran on all pieces at the start of a turn, ticks relevant piecetags and increases draw weight
         /// </summary>
@@ -37,6 +43,7 @@ namespace Quatrimo
         //Tick relevant piece tags and lower weight
         public boardPiece drawPiece(encounter encounter)
         {
+            //TODO: ADD pieceTag ticking
             boardPiece piece = getBoardpiece(encounter);
             bagEntry.subtractWeight(3);
             return piece;

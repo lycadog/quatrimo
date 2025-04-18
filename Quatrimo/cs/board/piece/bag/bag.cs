@@ -11,6 +11,8 @@ namespace Quatrimo
         List<bagPiece> pieces = [];
         objPool<bagPiece> piecePool;
 
+        List<pieceCard> hand = [];
+
         public Texture2DRegion tex;
         public string name;
 
@@ -50,6 +52,17 @@ namespace Quatrimo
         }
 
         /// <summary>
+        /// Resets the weight of every piece back to its base weight
+        /// </summary>
+        public void reset()
+        {
+            foreach(var piece in pieces)
+            {
+                piece.reset();
+            }
+        }
+
+        /// <summary>
         /// Ran at the start of the turn
         /// </summary>
         public void tickBag()
@@ -57,6 +70,38 @@ namespace Quatrimo
             foreach(var piece in pieces)
             {
                 piece.tick();
+            }
+        }
+
+        public void turnStartUpdate()
+        {
+            if(hand.Count < encounter.runData.handDrawMaximum)
+            {
+                drawHand();
+                updateHand();
+            }
+
+        }
+
+        public void addToHand(boardPiece piece)
+        {
+            hand.Add(new pieceCard(piece));
+            updateHand();
+        }
+
+        void updateHand()
+        {
+            for (int i = 0; i < hand.Count; i++) //update position
+            {
+                hand[i].update(i, hand.Count);
+            }
+        }
+
+        public void drawHand()
+        {
+            for(short i = 0; i < encounter.runData.handDrawSize; i++)
+            {
+                addToHand(drawRandomPiece());
             }
         }
 
