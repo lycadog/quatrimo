@@ -18,15 +18,7 @@ namespace Quatrimo
 
         protected void tick(GameTime gameTime) //TODO: add code to select piece
         {
-            /*if (keybind.slamKey.keyDown)
-            {
-                //START piece fall
-                encounter.currentPiece.play();
 
-                midPiecefallState newState = new midPiecefallState(encounter);
-                encounter.state = newState;
-                newState.startState();
-            }*/
 
         }
 

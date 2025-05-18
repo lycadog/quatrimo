@@ -22,11 +22,8 @@ namespace Quatrimo
         }
 
         protected void tick(GameTime gameTime) //TODO: add code to select piece
-        {
-            //TODO: ADD CODE to choose currentPiece
-            //start piecefall
-            
-            midPiecefallState newState = new midPiecefallState(encounter);
+        {   
+            preplayWaitingState newState = new preplayWaitingState(encounter);
             encounter.state = newState;
             newState.startState();
 

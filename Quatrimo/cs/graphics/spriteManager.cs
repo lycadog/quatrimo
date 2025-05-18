@@ -7,6 +7,7 @@ namespace Quatrimo
 {
     public class spriteManager
     {
+        /*
         //multiple drawlayers might be unnecessary
         List<drawableAlsoOld> baseTargetSprites = [];
         List<drawableAlsoOld> rawDrawSprites = [];
@@ -70,6 +71,6 @@ namespace Quatrimo
             queuedOperations += () => remove(drawable, renderLayer);
         }
 
-        
+     */   
     }
 }

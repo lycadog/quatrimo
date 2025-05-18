@@ -55,7 +55,7 @@ namespace Quatrimo
         protected virtual void noDraw(SpriteBatch spriteBatch, GameTime gameTime) { }
         protected virtual void staleState(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            manager.remove(this, renderLayer);
+            //manager.remove(this, renderLayer);
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Quatrimo
 
         //positions: pieceType box: 94, 6 || ability box: 114, 6 || tags 1, 2, and 4: [96, 50], [108, 50], [96, 62]
         //keybind pos: 102, 26
+        //hand epos 10, 3 || pos: 200, 60
 
         //base sprite is the bg
         sprite cardBorder;
@@ -27,7 +28,7 @@ namespace Quatrimo
 
         int index;
 
-        static readonly Texture2DRegion[] numbers = [content.number1, content.number2, content.number3, content.number4, content.number5, content.number6, content.number7, content.number8, content.number9, content.number0];
+        static readonly Texture2DRegion[] numbers = [content.number1, content.number2, content.number3, content.number4, content.number5];
 
         //get pos for the different sprites
         //figure out how to determine the position of the base card
@@ -68,7 +69,8 @@ namespace Quatrimo
                 return;
             }
             keybindNumber.tex = numbers[index];
-            //UPDATE POS here
+
+            elementPos = new Vector2I(elementPos.x, elementPos.y + index * 4);
         }
 
         public void hover()

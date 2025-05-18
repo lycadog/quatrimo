@@ -28,7 +28,7 @@ namespace Quatrimo
             if (piecefallTimer >= 600)
             {
 
-                if (encounter.currentPiece.collidesFalling(0, 1))
+                if (encounter.fallingPiece.collidesFalling(0, 1))
                 {
                     if (placeTimer >= 1000)
                     {
@@ -38,7 +38,7 @@ namespace Quatrimo
                 }
                 else
                 {
-                    encounter.currentPiece.move(0, 1);
+                    encounter.fallingPiece.move(0, 1);
                     piecefallTimer = 0;
                     placeTimer = 0;
                     return;
@@ -54,7 +54,7 @@ namespace Quatrimo
 
         void placePiece()
         {
-            encounter.currentPiece.place();
+            encounter.fallingPiece.place();
             encounter.updatedRows = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true];
             processBoardUpdatesState newState = new processBoardUpdatesState(encounter, encounter.currentPiece);
             newState.startState();
@@ -64,7 +64,7 @@ namespace Quatrimo
         {
             if (keybind.slamKey.keyDown)
             {
-                encounter.currentPiece.move(0, encounter.currentPiece.dropOffset);
+                encounter.fallingPiece.move(0, encounter.currentPiece.dropOffset);
                 placePiece();
                 return;
             }
@@ -77,24 +77,24 @@ namespace Quatrimo
 
             if (keybind.pieceAbilityKey.keyDown)
             {
-                encounter.currentPiece.useAbility();
+                encounter.fallingPiece.useAbility();
                 return;
             }
 
             //for movement keys, when key holds: do action once, wait until timeheld, then move rapidly
             if ((keybind.leftKey.keyDown || keybind.leftKey.timeHeld > 140) && leftMoveCooldown > 30)
             {
-                if (!encounter.currentPiece.collidesFalling(-1, 0))
+                if (!encounter.fallingPiece.collidesFalling(-1, 0))
                 {
-                    encounter.currentPiece.move(-1, 0);
+                    encounter.fallingPiece.move(-1, 0);
                     leftMoveCooldown = 0;
                 }
             }
             else if ((keybind.rightKey.keyDown || keybind.rightKey.timeHeld > 140) && rightMoveCooldown > 30)
             {
-                if (!encounter.currentPiece.collidesFalling(1, 0))
+                if (!encounter.fallingPiece.collidesFalling(1, 0))
                 {
-                    encounter.currentPiece.move(1, 0);
+                    encounter.fallingPiece.move(1, 0);
                     rightMoveCooldown = 0;
                 }
             }
@@ -118,16 +118,16 @@ namespace Quatrimo
 
             if (keybind.leftRotateKey.keyDown)
             {
-                if (encounter.currentPiece.canRotate(-1))
+                if (encounter.fallingPiece.canRotate(-1))
                 {
-                    encounter.currentPiece.rotate(-1);
+                    encounter.fallingPiece.rotate(-1);
                 }
             }
             else if (keybind.rightRotateKey.keyDown)
             {
-                if (encounter.currentPiece.canRotate(1))
+                if (encounter.fallingPiece.canRotate(1))
                 {
-                    encounter.currentPiece.rotate(1);
+                    encounter.fallingPiece.rotate(1);
                 }
             }
 
@@ -138,8 +138,15 @@ namespace Quatrimo
 
         public void holdPiece()
         {
-            if (encounter.heldPiece == null)
+            if(encounter.bag.hold == null)
             {
+                //wtf
+            }
+
+
+            if (encounter.bag.hold == null)
+            {
+                
                 encounter.heldPiece = encounter.nextPiece; //put this all in one method later, main.drawPiece(); or something, updates all next boxes
                 encounter.nextPiece = encounter.bag.drawRandomPiece();
                 encounter.board.nextbox.update(encounter.nextPiece);
@@ -155,7 +162,7 @@ namespace Quatrimo
 
             encounter.board.holdbox.update(encounter.heldPiece);
 
-            encounter.currentPiece.removeFalling();
+            encounter.fallingPiece.removeFalling();
             encounter.currentPiece = formerlyHeld;
             encounter.currentPiece.play();
             canHold = false;

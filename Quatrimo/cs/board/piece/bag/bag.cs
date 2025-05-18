@@ -11,7 +11,10 @@ namespace Quatrimo
         List<bagPiece> pieces = [];
         objPool<bagPiece> piecePool;
 
-        List<pieceCard> hand = [];
+        public List<pieceCard> hand = [];
+        List<pieceCard> drawQueue = [];
+
+        public pieceCard hold;
 
         public Texture2DRegion tex;
         public string name;
@@ -78,15 +81,20 @@ namespace Quatrimo
             if(hand.Count < encounter.runData.handDrawMaximum)
             {
                 drawHand();
-                updateHand();
             }
+
+            while(hand.Count > 5)
+            {
+                drawQueue.Add(hand[5]);
+                hand.RemoveAt(5);    
+            }
+            updateHand();
 
         }
 
         public void addToHand(boardPiece piece)
         {
             hand.Add(new pieceCard(piece));
-            updateHand();
         }
 
         void updateHand()

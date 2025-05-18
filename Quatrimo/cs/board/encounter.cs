@@ -11,6 +11,7 @@ namespace Quatrimo
         public runData runData;
 
         public bag bag;
+        public boardPiece fallingPiece;
 
         public short level = 0;
         public short rowsRequired = 4;
@@ -22,11 +23,6 @@ namespace Quatrimo
 
         public double levelTimes = 1;
         public double turnMultiplier = 1;
-
-        public pieceCardOld[] hand = [];
-
-        public boardPiece currentPiece;
-        public boardPiece heldPiece = null;
 
         public bool boardUpdated = false;
         public bool[] updatedRows;
