@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://lcfq5pnqafa3"]
+
+[ext_resource type="Texture2D" uid="uid://d2umw6muvt05b" path="res://texture/pieceCard.png" id="1_dlunc"]
+[ext_resource type="Script" uid="uid://dr053va3lvbk8" path="res://PieceCard.cs" id="2_ag2cg"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jm6t2"]
+atlas = ExtResource("1_dlunc")
+region = Rect2(0, 34, 69, 34)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ag2cg"]
+atlas = ExtResource("1_dlunc")
+region = Rect2(0, 0, 69, 34)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_84sgu"]
+atlas = ExtResource("1_dlunc")
+region = Rect2(1, 119, 5, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dlunc"]
+atlas = ExtResource("1_dlunc")
+region = Rect2(1, 68, 67, 6)
+
+[node name="PieceCard" type="TextureRect" unique_id=739776105]
+offset_right = 69.0
+offset_bottom = 34.0
+pivot_offset = Vector2(34.5, 17)
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_jm6t2")
+stretch_mode = 4
+script = ExtResource("2_ag2cg")
+metadata/_custom_type_script = "uid://dr053va3lvbk8"
+
+[node name="CardBorder" type="TextureRect" parent="." unique_id=1866356336]
+modulate = Color(0.8887858, 0.40418312, 0.8053788, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_ag2cg")
+stretch_mode = 4
+
+[node name="Number" type="TextureRect" parent="." unique_id=171969518]
+layout_mode = 0
+offset_left = 62.0
+offset_top = 3.0
+offset_right = 67.0
+offset_bottom = 11.0
+texture = SubResource("AtlasTexture_84sgu")
+stretch_mode = 4
+
+[node name="TopHighlight" type="TextureRect" parent="." unique_id=68319400]
+visible = false
+layout_mode = 0
+offset_left = 1.0
+offset_top = -7.0
+offset_right = 68.0
+offset_bottom = -1.0
+texture = SubResource("AtlasTexture_dlunc")
+stretch_mode = 4
+
+[node name="BottomHighlight" type="TextureRect" parent="TopHighlight" unique_id=910129507]
+layout_mode = 0
+offset_top = 43.0
+offset_right = 67.0
+offset_bottom = 49.0
+texture = SubResource("AtlasTexture_dlunc")
+stretch_mode = 4
+flip_v = true
+
+[node name="BlackoutBox" type="ColorRect" parent="." unique_id=1658960950]
+visible = false
+layout_mode = 0
+offset_right = 69.0
+offset_bottom = 34.0
+color = Color(0, 0, 0, 0.6)

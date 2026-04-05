@@ -1,0 +1,123 @@
+[gd_scene format=3 uid="uid://blmpsbuqvqptb"]
+
+[ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="1_41chs"]
+[ext_resource type="Script" uid="uid://c4hn2t04rih3j" path="res://Block.cs" id="1_jlhqy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bquqy"]
+size = Vector2(8, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jlhqy"]
+size = Vector2(8, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3x4f7"]
+size = Vector2(8, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l6xwt"]
+size = Vector2(8, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s7ymb"]
+size = Vector2(8, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mq3p5"]
+size = Vector2(10, 10)
+
+[node name="Block" type="Area2D" unique_id=537382246 node_paths=PackedStringArray("SpriteLayer1", "SpriteLayer2", "SlamPreviewSprite", "LeftArea", "DownArea", "RightArea", "NegativeRotationArea", "PositiveRotationArea", "DropPreviewRaycast")]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_jlhqy")
+SolidWhenFalling = true
+SolidWhenPlaced = true
+SpriteLayer1 = NodePath("SpriteLayer1")
+SpriteLayer2 = NodePath("SpriteLayer1/SpriteLayer2")
+SlamPreviewSprite = NodePath("SpriteLayer1/DropPreviewSprite")
+LeftArea = NodePath("LeftArea")
+DownArea = NodePath("DownArea")
+RightArea = NodePath("RightArea")
+NegativeRotationArea = NodePath("NegativeRotationArea")
+PositiveRotationArea = NodePath("PositiveRotationArea")
+DropPreviewRaycast = NodePath("DropPreviewRaycast")
+metadata/_custom_type_script = "uid://c4hn2t04rih3j"
+
+[node name="SpriteLayer1" type="Sprite2D" parent="." unique_id=602452335]
+texture = ExtResource("1_41chs")
+region_enabled = true
+region_rect = Rect2(0, 30, 10, 10)
+
+[node name="SpriteLayer2" type="Sprite2D" parent="SpriteLayer1" unique_id=212297080]
+visible = false
+texture = ExtResource("1_41chs")
+region_enabled = true
+region_rect = Rect2(10, 10, 10, 10)
+
+[node name="DropPreviewSprite" type="Sprite2D" parent="SpriteLayer1" unique_id=573667096]
+modulate = Color(1, 1, 1, 0.8)
+texture = ExtResource("1_41chs")
+region_enabled = true
+region_rect = Rect2(60, 0, 10, 10)
+
+[node name="LeftArea" type="Area2D" parent="." unique_id=1907618161]
+position = Vector2(-10, 0)
+collision_layer = 0
+collision_mask = 5
+
+[node name="LeftCollider" type="CollisionShape2D" parent="LeftArea" unique_id=166676299]
+shape = SubResource("RectangleShape2D_bquqy")
+debug_color = Color(0.085597984, 0.5686798, 0.84131306, 0.41960785)
+
+[node name="DownArea" type="Area2D" parent="." unique_id=499854856]
+position = Vector2(0, 10)
+collision_layer = 0
+collision_mask = 5
+
+[node name="DownCollider" type="CollisionShape2D" parent="DownArea" unique_id=80465679]
+shape = SubResource("RectangleShape2D_jlhqy")
+debug_color = Color(0.06171131, 0.6123602, 0.60407156, 0.41960785)
+
+[node name="RightArea" type="Area2D" parent="." unique_id=490185612]
+position = Vector2(10, 0)
+collision_layer = 0
+collision_mask = 5
+
+[node name="RightCollider" type="CollisionShape2D" parent="RightArea" unique_id=1183473272]
+shape = SubResource("RectangleShape2D_3x4f7")
+debug_color = Color(0, 0.6392104, 0.3723388, 0.41960785)
+
+[node name="NegativeRotationArea" type="Area2D" parent="." unique_id=2076664665]
+collision_layer = 0
+collision_mask = 5
+
+[node name="NegativeRotationCollider" type="CollisionShape2D" parent="NegativeRotationArea" unique_id=664522160]
+shape = SubResource("RectangleShape2D_l6xwt")
+debug_color = Color(0.7378666, 0.46857327, 0, 0.41960785)
+
+[node name="PositiveRotationArea" type="Area2D" parent="." unique_id=1153115789]
+collision_layer = 0
+collision_mask = 5
+
+[node name="PositiveRotationCollider" type="CollisionShape2D" parent="PositiveRotationArea" unique_id=148886682]
+shape = SubResource("RectangleShape2D_s7ymb")
+debug_color = Color(0.7378666, 0.46857327, 0, 0.41960785)
+
+[node name="BlockShape" type="CollisionShape2D" parent="." unique_id=108390649]
+shape = SubResource("RectangleShape2D_mq3p5")
+debug_color = Color(0.9718556, 0, 0.44835472, 0.41960785)
+
+[node name="DropPreviewRaycast" type="RayCast2D" parent="." unique_id=868632601]
+position = Vector2(0, 8)
+enabled = false
+target_position = Vector2(0, 260)
+collision_mask = 5
+hit_from_inside = true
+collide_with_areas = true
+collide_with_bodies = false
+
+[connection signal="area_entered" from="LeftArea" to="." method="LeftAreaChanged"]
+[connection signal="area_exited" from="LeftArea" to="." method="LeftAreaChanged"]
+[connection signal="area_entered" from="DownArea" to="." method="DownAreaChanged"]
+[connection signal="area_exited" from="DownArea" to="." method="DownAreaChanged"]
+[connection signal="area_entered" from="RightArea" to="." method="RightAreaChanged"]
+[connection signal="area_exited" from="RightArea" to="." method="RightAreaChanged"]
+[connection signal="area_entered" from="NegativeRotationArea" to="." method="NegativeRotationAreaChanged"]
+[connection signal="area_exited" from="NegativeRotationArea" to="." method="NegativeRotationAreaChanged"]
+[connection signal="area_entered" from="PositiveRotationArea" to="." method="PositiveRotationAreaChanged"]
+[connection signal="area_exited" from="PositiveRotationArea" to="." method="PositiveRotationAreaChanged"]

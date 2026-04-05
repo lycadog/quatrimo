@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bpo3d227m28dj"]
+
+[ext_resource type="Script" uid="uid://bd4kboumfjxp0" path="res://PlayerHand.cs" id="1_to8vx"]
+[ext_resource type="PackedScene" uid="uid://lcfq5pnqafa3" path="res://board/piece_card.tscn" id="2_s6j4u"]
+
+[node name="PlayerHand" type="Container" unique_id=73958776]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_right = 69.0
+offset_bottom = 100.0
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_to8vx")
+metadata/_custom_type_script = "uid://bd4kboumfjxp0"
+
+[node name="PieceCard" parent="." unique_id=739776105 instance=ExtResource("2_s6j4u")]
+layout_mode = 2
