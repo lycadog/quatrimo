@@ -19,7 +19,7 @@ region = Rect2(1, 119, 5, 8)
 atlas = ExtResource("1_dlunc")
 region = Rect2(1, 68, 67, 6)
 
-[node name="PieceCard" type="TextureRect" unique_id=739776105]
+[node name="PieceCard" type="TextureRect" unique_id=739776105 node_paths=PackedStringArray("HighlightBars")]
 offset_right = 69.0
 offset_bottom = 34.0
 pivot_offset = Vector2(34.5, 17)
@@ -27,6 +27,7 @@ size_flags_vertical = 4
 texture = SubResource("AtlasTexture_jm6t2")
 stretch_mode = 4
 script = ExtResource("2_ag2cg")
+HighlightBars = NodePath("TopHighlight")
 metadata/_custom_type_script = "uid://dr053va3lvbk8"
 
 [node name="CardBorder" type="TextureRect" parent="." unique_id=1866356336]
@@ -73,4 +74,4 @@ visible = false
 layout_mode = 0
 offset_right = 69.0
 offset_bottom = 34.0
-color = Color(0, 0, 0, 0.6)
+color = Color(0, 0, 0, 0.4)

@@ -13,13 +13,14 @@ config_version=5
 config/name="Quatrimo"
 run/main_scene="uid://pw611g77o37k"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
+boot_splash/use_filter=false
 config/icon="res://icon.svg"
 
 [display]
 
 window/size/viewport_width=960
 window/size/viewport_height=540
-window/stretch/mode="viewport"
+window/stretch/mode="canvas_items"
 window/stretch/scale=2.0
 
 [dotnet]

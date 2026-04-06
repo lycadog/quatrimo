@@ -4,9 +4,16 @@ using System;
 [GlobalClass, Icon("res://texture/icon/cardicon.png")]
 public partial class PieceCard : TextureRect
 {
+	[Export] TextureRect HighlightBars;
 
 	bool IsSelected = false;
 	public float YOffset;
+
+	public void LinkToPiece()
+	{
+
+	}
+
 
 	public void UpdatePosition(float spacing, int index)
 	{
@@ -15,23 +22,18 @@ public partial class PieceCard : TextureRect
 		Position = new(0, y);
 	}
 
-	public void ToggleSelection()
+	public void Select()
 	{
-		if (IsSelected)
-		{
-
-		}
+		HighlightBars.Visible = true;
+		IsSelected = true;
 	}
 
-	void Select()
+	public void Deselect()
 	{
-
+		HighlightBars.Visible = false;
+		IsSelected = false;
 	}
 
-	void Deselect()
-	{
-
-	}
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

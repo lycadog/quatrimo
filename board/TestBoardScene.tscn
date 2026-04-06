@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://crmkyii366f3h" path="res://texture/barTop.png" id="1_tq5os"]
 [ext_resource type="Script" uid="uid://b2l6ylttx5nqm" path="res://FallingPiece.cs" id="2_p4obu"]
 [ext_resource type="PackedScene" uid="uid://blmpsbuqvqptb" path="res://board/block.tscn" id="3_shipe"]
-[ext_resource type="PackedScene" uid="uid://lcfq5pnqafa3" path="res://board/piece_card.tscn" id="5_shipe"]
+[ext_resource type="PackedScene" uid="uid://bpo3d227m28dj" path="res://board/playerHand.tscn" id="5_shipe"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qumx1"]
 size = Vector2(140, 8)
@@ -14,6 +14,25 @@ size = Vector2(11.5, 216)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p4obu"]
 size = Vector2(11.5, 216)
+
+[sub_resource type="LabelSettings" id="LabelSettings_shipe"]
+font_size = 6
+
+[sub_resource type="Gradient" id="Gradient_shipe"]
+colors = PackedColorArray(1, 1, 1, 1, 0.46518457, 0.45496517, 0.9642119, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pi7fc"]
+gradient = SubResource("Gradient_shipe")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_shipe"]
+lifetime_randomness = 0.11
+particle_flag_disable_z = true
+radial_velocity_min = 9.999977
+radial_velocity_max = 39.999977
+gravity = Vector3(0, 0, 0)
+linear_accel_min = 60.439995
+linear_accel_max = 60.439995
+color_ramp = SubResource("GradientTexture1D_pi7fc")
 
 [node name="Node2D" type="Control" unique_id=556453924]
 layout_mode = 3
@@ -76,7 +95,6 @@ monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NinePatchRect/LeftBorder" unique_id=1357501849]
 shape = SubResource("RectangleShape2D_kbktx")
-disabled = true
 
 [node name="RightBorder" type="Area2D" parent="NinePatchRect" unique_id=1554609038]
 position = Vector2(139, 111)
@@ -125,18 +143,36 @@ offset_right = 520.0
 offset_bottom = 10.0
 color = Color(0, 0, 0, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=638200410]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1623975323]
 layout_mode = 0
+offset_left = 102.0
+offset_top = 228.0
+offset_right = 160.0
+offset_bottom = 261.0
+color = Color(0.33668533, 0.28135708, 0.46703225, 1)
+
+[node name="HandAnchor" type="Control" parent="." unique_id=1015045901]
+anchors_preset = 0
 offset_left = 96.0
-offset_top = 43.0
+offset_top = 120.0
 offset_right = 165.0
-offset_bottom = 239.0
-theme_override_constants/separation = 6
-alignment = 1
+offset_bottom = 120.0
 
-[node name="PieceCard" parent="VBoxContainer" unique_id=739776105 instance=ExtResource("5_shipe")]
-layout_mode = 2
+[node name="PlayerHand" parent="HandAnchor" unique_id=73958776 instance=ExtResource("5_shipe")]
+layout_mode = 0
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1422728142]
-position = Vector2(1, 0)
-anchor_mode = 0
+[node name="Label" type="Label" parent="." unique_id=1148665305]
+layout_mode = 0
+offset_left = 337.0
+offset_top = 107.0
+offset_right = 428.0
+offset_bottom = 152.0
+text = "WE'RE ALL HUGE FROGS! WE'RE THE FABULOUS FIVE FROGGISH TENOURS!"
+label_settings = SubResource("LabelSettings_shipe")
+autowrap_mode = 2
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1558552467]
+position = Vector2(81, 180)
+amount = 22
+lifetime = 0.84
+process_material = SubResource("ParticleProcessMaterial_shipe")
