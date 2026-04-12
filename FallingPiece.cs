@@ -17,9 +17,34 @@ public partial class FallingPiece : Node2D
 
 	[Signal] public delegate void OnPiecePlacementEventHandler();
 
+   
+	/// <summary>
+	/// Links the blocks to the newly-created piece
+	/// </summary>
+	/// <param name="blocks"></param>
+	public void LinkBlocks(Block[] blocks)
+	{
+		this.blocks = blocks;
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+		foreach(var block in blocks)
+		{
+			AddChild(block);
+		}
+		//do other stuff maybe
+	}
+
+    public virtual void Play()
+    {
+
+    }
+
+    public virtual void Place()
+    {
+        //unlink all the blocks, run their events etc, then delete ourself!
+    }
+
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
 	{
 	}
 
@@ -198,15 +223,7 @@ public partial class FallingPiece : Node2D
 		}
 	}
 
-	public virtual void Place()
-	{
-		//unlink all the blocks, run their events etc, then delete ourself!
-	}
-
-	public virtual void Play()
-	{
-		
-	}
+	
 
     protected bool CanMoveLeft()
     {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 public class PieceShape
 {
-    int[,] shape;
+    readonly int[,] shape;
 
     public int this[int x, int y]
     {
@@ -16,14 +16,15 @@ public class PieceShape
         set => shape[x, y] = value;
     }
 
-
     public Vector2I origin;
     public Vector2I dimensions;
 
     public string name;
 
-    //Basic PieceType with no special types or anything
-    //public SimplePieceType B;
+    /// <summary>
+    /// Basic PieceType with no special types or anything
+    /// </summary>
+    public SimplePieceDefinition B;
 
     public PieceShape(int[,] shape, int originX, int originY, string name)
     {
@@ -33,7 +34,7 @@ public class PieceShape
 
         dimensions = new Vector2I(shape.GetLength(0), shape.GetLength(1));
 
-        //B = new(this, 0, 0);
+        B = new(this, PieceType.Basic, BlockType.Basic, new Rect2(0, 30, 10, 10));
     }
 
 }

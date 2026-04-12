@@ -194,7 +194,6 @@ public partial class Block : Area2D
     {
         if (OverrideColor) { return; }
 
-
         SpriteLayer1.SelfModulate = Color.FromHsv(hue, sat, val);
 
         SpriteLayer2.SelfModulate = Utils.GetSecondLayerColor(hue, sat, val);

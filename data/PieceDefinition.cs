@@ -2,14 +2,23 @@
 using Godot;
 using System.Collections.Generic;
 
-public abstract class PieceDefinition(PieceShape shape, Rect2 textureRegion, string name)
+public abstract class PieceDefinition
 {
-    public PieceShape Shape = shape;
+    public PieceShape Shape;
 
-    public Rect2 TextureRegion = textureRegion;
-    public string Name = name;
+    public Rect2 TextureRegion;
+    public string Name;
 
     protected (float, float, float) hsv; //Randomize the HSV every time we get a new piece
+
+    public PieceDefinition(PieceShape shape, Rect2 textureRegion, string name = null)
+    {
+        Shape = shape;
+        TextureRegion = textureRegion;
+        Name = name;
+
+        if(name == null) { Name = shape.name; }
+    }
 
     public abstract BagPiece GetPiece();
 
