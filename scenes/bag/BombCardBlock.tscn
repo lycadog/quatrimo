@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dttbse6kfd33n"]
+
+[ext_resource type="Texture2D" uid="uid://d2umw6muvt05b" path="res://texture/pieceCard.png" id="1_y7t6m"]
+[ext_resource type="Script" uid="uid://y6dpg27acggw" path="res://CardBlockSprite.cs" id="2_8d3gy"]
+
+[node name="BombCardBlock" type="Sprite2D" unique_id=347132184 node_paths=PackedStringArray("SecondLayer")]
+texture = ExtResource("1_y7t6m")
+region_enabled = true
+region_rect = Rect2(21, 74, 7, 7)
+script = ExtResource("2_8d3gy")
+SecondLayer = NodePath("Sprite2D")
+metadata/_custom_type_script = "uid://y6dpg27acggw"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=656421469]
+texture = ExtResource("1_y7t6m")
+region_enabled = true
+region_rect = Rect2(21, 81, 7, 7)

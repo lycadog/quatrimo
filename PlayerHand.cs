@@ -12,7 +12,7 @@ public partial class PlayerHand : Container
 	int SelectionIndex = -1;
 
 	//we can remove this later
-	static PackedScene CardScene = ResourceLoader.Load<PackedScene>("res://board/piece_card.tscn");
+	static PackedScene CardScene = ResourceLoader.Load<PackedScene>("uid://lcfq5pnqafa3");
 
 
     const float DrawAnimationLength = .4f;

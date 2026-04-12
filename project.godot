@@ -27,11 +27,6 @@ window/stretch/scale=2.0
 
 project/assembly_name="Quatrimo"
 
-[editor]
-
-version_control/plugin_name="GitPlugin"
-version_control/autoload_on_startup=true
-
 [input]
 
 LeftMove={

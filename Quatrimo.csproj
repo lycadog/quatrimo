@@ -5,6 +5,7 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="board\" />
+    <Compile Remove="board\**" />
+    <EmbeddedResource Remove="board\**" />
   </ItemGroup>
 </Project>

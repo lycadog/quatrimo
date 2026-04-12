@@ -3,8 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="1_qumx1"]
 [ext_resource type="Texture2D" uid="uid://crmkyii366f3h" path="res://texture/barTop.png" id="1_tq5os"]
 [ext_resource type="Script" uid="uid://b2l6ylttx5nqm" path="res://FallingPiece.cs" id="2_p4obu"]
-[ext_resource type="PackedScene" uid="uid://blmpsbuqvqptb" path="res://board/block.tscn" id="3_shipe"]
-[ext_resource type="PackedScene" uid="uid://bpo3d227m28dj" path="res://board/playerHand.tscn" id="5_shipe"]
+[ext_resource type="PackedScene" uid="uid://blmpsbuqvqptb" path="res://scenes/block/block.tscn" id="3_shipe"]
+[ext_resource type="PackedScene" uid="uid://bpo3d227m28dj" path="res://scenes/bag/playerHand.tscn" id="5_shipe"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qumx1"]
 size = Vector2(140, 8)
@@ -27,6 +27,8 @@ gradient = SubResource("Gradient_shipe")
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_shipe"]
 lifetime_randomness = 0.11
 particle_flag_disable_z = true
+angular_velocity_min = -720.0
+angular_velocity_max = 719.99994
 radial_velocity_min = 9.999977
 radial_velocity_max = 39.999977
 gravity = Vector3(0, 0, 0)
@@ -174,5 +176,6 @@ autowrap_mode = 2
 [node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1558552467]
 position = Vector2(81, 180)
 amount = 22
-lifetime = 0.84
+lifetime = 1.09
+explosiveness = 0.8
 process_material = SubResource("ParticleProcessMaterial_shipe")

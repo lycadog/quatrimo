@@ -69,6 +69,13 @@ texture = SubResource("AtlasTexture_dlunc")
 stretch_mode = 4
 flip_v = true
 
+[node name="BlockBox" type="Control" parent="." unique_id=1231716876]
+anchors_preset = 0
+offset_left = 24.5
+offset_top = 17.0
+offset_right = 24.5
+offset_bottom = 17.0
+
 [node name="BlackoutBox" type="ColorRect" parent="." unique_id=1658960950]
 visible = false
 layout_mode = 0

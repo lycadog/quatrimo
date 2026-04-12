@@ -5,7 +5,6 @@ using System.Security.Cryptography;
 [GlobalClass, Icon("res://texture/icon/blockicon.png")]
 public partial class Block : Area2D
 {
-
     public float SlamOffset;
 
     public bool CanMoveLeft = true;
@@ -16,8 +15,10 @@ public partial class Block : Area2D
 
     protected bool isPlaced = false;
 
-    [Export] bool SolidWhenFalling;
-    [Export] bool SolidWhenPlaced;
+    [Export] bool SolidWhenFalling = true;
+    [Export] bool SolidWhenPlaced = true;
+    [Export] bool OverrideColor = false;
+    [Export] bool OverrideTexture = false;
 
     [Export] Sprite2D SpriteLayer1;
     [Export] Sprite2D SpriteLayer2;
@@ -29,7 +30,9 @@ public partial class Block : Area2D
     [Export] Area2D PositiveRotationArea;
     [Export] RayCast2D DropPreviewRaycast;
 
-    [Signal] public delegate void OnPlacementEventHandler();
+    [Signal] public delegate void OnPlacementEventHandler(Vector2 placementPosition);
+
+    
 
     public override void _Process(double delta)
     {
@@ -174,35 +177,32 @@ public partial class Block : Area2D
     }
 
 
+    public void SetTexture(Rect2 rect)
+    {
+        if(OverrideTexture) { return; }
+
+        SpriteLayer1.RegionRect = rect;
+    }
+
     /// <summary>
     /// Set the color of all sprites adjusting different layers' color
     /// </summary>
     /// <param name="hue"></param>
     /// <param name="sat"></param>
     /// <param name="val"></param>
-    public virtual void SetColor(float hue, float sat, float val)
+    public void SetColor(float hue, float sat, float val)
     {
+        if (OverrideColor) { return; }
+
+
         SpriteLayer1.SelfModulate = Color.FromHsv(hue, sat, val);
 
-        float hueOffset = 0.045f;
-
-        //we want to make the color colder. if the hue is past the cold colors, we need to bring it back down towards them
-        if(hue < 0.3f) { hueOffset = -hueOffset; }
-
-        hue += hueOffset;
-
-        if(hue < 0) { hue = 1 - hue; }
-
-        //lower saturation and brightness
-        sat -= 0.03f;
-        val -= 0.12f;
-
-        SpriteLayer2.SelfModulate = Color.FromHsv(hue, sat, val);
+        SpriteLayer2.SelfModulate = Utils.GetSecondLayerColor(hue, sat, val);
     }
 
     public void SetRandomColor()
     {
-        (float, float, float) hsv = Utils.GetRandomBlockHSV();
+        (float, float, float) hsv = Utils.GetRandomPieceHSV();
 
         SetColor(hsv.Item1, hsv.Item2, hsv.Item3);
     }

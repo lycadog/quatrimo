@@ -33,7 +33,6 @@ public partial class FallingPiece : Node2D
 			{
 				//fall!
 
-
 				Move(0, 10); // move down!
 				fallingCounter = 0;
 				placementCounter = 0;
