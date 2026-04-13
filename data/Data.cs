@@ -60,6 +60,14 @@ public static class Data
     public static PieceShape sLongBoy = new(new int[,] { { 1 }, { 2 }, { 3 }, { 2 }, { 4 } }, 2, 0, "long boy");
     public static PieceShape sFatFuck = new(new int[,] { { 1, 1, 1, 1 }, { 1, 4, 4, 1 }, { 2, 4, 4, 2 }, { 3, 3, 3, 3 } }, 1, 1, "fat fuck");
 
+    public static SimplePieceDefinition LaserLine = new(sStick, BlockType.Laser);
+    public static SimplePieceDefinition BoomBox = new(sSquare, BlockType.Bomb);
+
+    public static ObjectPool<BlockType> uniqueBlockPool = new([BlockType.Cursed, BlockType.Bomb, BlockType.Reinforced, BlockType.Laser], 2);
+
+
+    public static PooledPieceDefinition RandomPiece = new(uniqueBlockPool, sLHatchet);
+
     // **********========================================[|||  BAGS  |||]========================================**********
 
     public static StarterBag magnetBag = new([sBigTee.B, sLHatchet.B, sRHatchet.B, sDipole.B, sLHook.B, sRHook.B, sLine.B, sTwig.B, sWedge.B],
@@ -72,6 +80,6 @@ public static class Data
 
     public static StarterBag longDistanceBag = new([sScatteredWedge.B, sSeperatedT.B, sLScatteredL.B, sRScatteredR.B, sSlash.B, sLepton.B, sLTangle.B, sRTangle.B, sBowl.B, sStick.B, sWedge.B, sNub.B, sLine.B], new Rect2(0, 50, 10, 10), "quanto bag idk");
 
-    public static StarterBag debugBag = new([sLongBoy.B, sFatFuck.B], "debug");
+    public static StarterBag debugBag = new([RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece], "debug");
 
 }

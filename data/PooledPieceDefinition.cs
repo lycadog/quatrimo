@@ -2,10 +2,32 @@ using Godot;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-public class PooledPieceDefinition(PieceShape shape, ObjectPool<PieceType> piecePool, ObjectPool<BlockType> blockPool, Rect2 textureRegion, string name = null) : PieceDefinition(shape, textureRegion, name)
+public class PooledPieceDefinition : PieceDefinition 
 {
+    static ObjectPool<PieceType> BasicPool = new ObjectPool<PieceType>(PieceType.Basic);
+
+    ObjectPool<PieceType> PiecePool;
+    ObjectPool<BlockType> BlockPool;
 
     static readonly int[] randomGroupPool = { 1, 2, 2, 3, 4 }; //use this in random type distribution
+
+    public PooledPieceDefinition(ObjectPool<PieceType> piecePool, ObjectPool<BlockType> blockPool, PieceShape shape, Rect2 textureRegion, string name = null) : base(shape, textureRegion, name)
+    {
+        PiecePool = piecePool;
+        BlockPool = blockPool;
+    }
+
+    public PooledPieceDefinition(ObjectPool<PieceType> piecePool, ObjectPool<BlockType> blockPool, PieceShape shape, string name = null) : base(shape, name)
+    {
+        PiecePool = piecePool;
+        BlockPool = blockPool;
+    }
+
+    public PooledPieceDefinition(ObjectPool<BlockType> blockPool, PieceShape shape, string name = null) : base(shape, name)
+    {
+        PiecePool = BasicPool;
+        BlockPool = blockPool;
+    }
 
     //how does random type distribution work?
     //we take two random block types, then get a random number from 1 to 4 using the array above
@@ -20,7 +42,7 @@ public class PooledPieceDefinition(PieceShape shape, ObjectPool<PieceType> piece
         BlockType[] blockTypes = DistributeBlockTypes();
         BagBlock[] blocks = CreateBlocks(blockTypes);
 
-        return new BagPiece(piecePool.GetRandom(), blocks, Shape.dimensions, TextureRegion, hsv.Item1, hsv.Item2, hsv.Item3, Name);
+        return new BagPiece(PiecePool.GetRandom(), blocks, Shape.dimensions, TextureRegion, hsv.Item1, hsv.Item2, hsv.Item3, Name);
 
     }
 
@@ -36,9 +58,9 @@ public class PooledPieceDefinition(PieceShape shape, ObjectPool<PieceType> piece
         //1-4 are normal blocks, which are filled with either StarterType or Remaindertype
         //5th is guaranteed to be distinct and uses ExtraType
 
-        BlockType StarterType = blockPool.GetRandom();      //We start with this one, filling in random groups within 1-4
-        BlockType RemainderType = blockPool.GetRandom();    //The remaining groups are set to this type
-        BlockType ExtraType = blockPool.GetRandom();         //The extra 5th group is filled with this always. 5th group is not guaranteed
+        BlockType StarterType = BlockPool.GetRandom();      //We start with this one, filling in random groups within 1-4
+        BlockType RemainderType = BlockPool.GetRandom();    //The remaining groups are set to this type
+        BlockType ExtraType = BlockPool.GetRandom();         //The extra 5th group is filled with this always. 5th group is not guaranteed
 
         BlockType[] types = [StarterType, StarterType, StarterType, StarterType, ExtraType];
         //Contains the type for groups 1 to 5, populated entirely with the above types                                      

@@ -20,6 +20,15 @@ public abstract class PieceDefinition
         if(name == null) { Name = shape.name; }
     }
 
+    public PieceDefinition(PieceShape shape, string name = null)
+    {
+        Shape = shape;
+        TextureRegion = new Rect2(0, 30, 10, 10);
+        Name = name;
+
+        if (name == null) { Name = shape.name; }
+    }
+
     public abstract BagPiece GetPiece();
 
 

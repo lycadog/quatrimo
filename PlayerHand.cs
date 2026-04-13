@@ -29,7 +29,7 @@ public partial class PlayerHand : Container
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-		Bag = Data.magnetBag.CreateBag();
+		Bag = Data.debugBag.CreateBag();
 
 		Position = new(0, GetNewYOffset());
 

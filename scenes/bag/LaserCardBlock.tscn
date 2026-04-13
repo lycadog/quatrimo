@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://clg0cir271nly"]
+
+[ext_resource type="Texture2D" uid="uid://d2umw6muvt05b" path="res://texture/pieceCard.png" id="1_8g112"]
+[ext_resource type="Script" uid="uid://y6dpg27acggw" path="res://CardBlockSprite.cs" id="2_fc8vl"]
+
+[node name="BasicCardBlock" type="Sprite2D" unique_id=347132184 node_paths=PackedStringArray("SecondLayer")]
+texture = ExtResource("1_8g112")
+region_enabled = true
+region_rect = Rect2(35, 74, 7, 7)
+script = ExtResource("2_fc8vl")
+OverrideColor = true
+SecondLayer = NodePath("Sprite2D")
+metadata/_custom_type_script = "uid://y6dpg27acggw"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=656421469]
+visible = false
+texture = ExtResource("1_8g112")
+offset = Vector2(3.5, 3.5)
+region_enabled = true
+region_rect = Rect2(0, 0, 7, 7)

@@ -4,6 +4,9 @@ using System;
 [GlobalClass, Icon("res://texture/icon/cardblockicon.png")]
 public partial class CardBlockSprite : Sprite2D
 {
+    /// <summary>
+    /// If we should use scene color to override color set in code
+    /// </summary>
     [Export] bool OverrideColor = false;
     [Export] Sprite2D SecondLayer;
     [Export] AnimatedSprite2D AnimatedSprite;

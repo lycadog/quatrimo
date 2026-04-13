@@ -48,9 +48,12 @@ public partial class PieceCard : TextureRect
 
 	public void UpdatePosition(float spacing, int index)
 	{
+		//updating this constantly is inefficient, especially the index! TODO change this!
 		float y = (index * 34) + (spacing * index) + YOffset; 
 		
 		Position = new(0, y);
+
+		SetIndex(index);
 	}
 
 	public void Select()

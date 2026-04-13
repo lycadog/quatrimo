@@ -1,7 +1,21 @@
 using Godot;
 
-public class SimplePieceDefinition(PieceShape shape, PieceType pieceType, BlockType blockType, Rect2 textureRegion, string name = null) : PieceDefinition(shape, textureRegion, name)
+public class SimplePieceDefinition : PieceDefinition
 {
+    PieceType pieceType;
+    BlockType blockType;
+
+    public SimplePieceDefinition(PieceShape shape, Rect2 textureRegion, BlockType blockType = BlockType.Basic, PieceType pieceType = PieceType.Basic,  string name = null) : base(shape, textureRegion, name)
+    {
+        this.pieceType = pieceType;
+        this.blockType = blockType;
+    }
+
+    public SimplePieceDefinition(PieceShape shape, BlockType blockType = BlockType.Basic, PieceType pieceType = PieceType.Basic, string name = null) : base(shape, name)
+    {
+        this.pieceType = pieceType;
+        this.blockType = blockType;
+    }
 
     public override BagPiece GetPiece()
     {

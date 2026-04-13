@@ -36,15 +36,15 @@ public static class Utils
         float hueOffset = 0.045f;
 
         //we want to make the color colder. if the hue is past the cold colors, we need to bring it back down towards them
-        if (h < 0.3f) { hueOffset = -hueOffset; }
+        if (h < 0.24f) { hueOffset = -hueOffset; }
 
         h += hueOffset;
 
-        if (h < 0) { h = 1 - h; }
+        if (h < 0) { h = 1 + h; }
 
         //lower saturation and brightness
         s -= 0.03f;
-        v -= 0.12f;
+        v -= 0.18f;
 
         return Color.FromHsv(h, s, v);
     }

@@ -34,7 +34,7 @@ public class PieceShape
 
         dimensions = new Vector2I(shape.GetLength(0), shape.GetLength(1));
 
-        B = new(this, PieceType.Basic, BlockType.Basic, new Rect2(0, 30, 10, 10));
+        B = new(this);
     }
 
 }
