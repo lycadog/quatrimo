@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 public class ObjectPool<T>
 {
-    public List<(T, int)> pool = [];         //Pool of random things to grab from.
+    public List<WeightedEntry> pool = [];    //Pool of random things to grab from.
                                              //Includes element of type T and the parent WeightedEntry's index in entries.
 
     public List<WeightedEntry> entries = []; //Where our entries belong even if they are gone from the pool
 
     /// <summary>
-    /// Provide a list of values and a same-length list of weights
+    /// Provide an array of values and a same-length list of weights
     /// </summary>
     /// <param name="values"></param>
     /// <param name="weights"></param>
@@ -24,7 +24,26 @@ public class ObjectPool<T>
 
         for (int i = 0; i < values.Length; i++)
         {
-            AddNewEntry(values[i], weights[i], i);
+            AddNewEntry(values[i], weights[i]);
+        }
+    }
+
+    /// <summary>
+    /// Provide a list of values and a same-length list of weights
+    /// </summary>
+    /// <param name="values"></param>
+    /// <param name="weights"></param>
+    /// <exception cref="ArgumentException"></exception>
+    public ObjectPool(List<T> values, int[] weights)
+    {
+        if (values.Count != weights.Length)
+        {
+            throw new ArgumentException($"objPool constructor expects a list and an array of equal length. List 1 length: {values.Count}, Array 2 length: {weights.Length}");
+        }
+
+        for (int i = 0; i < values.Count; i++)
+        {
+            AddNewEntry(values[i], weights[i]);
         }
     }
 
@@ -35,9 +54,9 @@ public class ObjectPool<T>
     /// <param name="weight"></param>
     public ObjectPool(T[] values, int weight)
     {
-        for (int i = 0; i < values.Length; i++)
+        foreach(T t in values)
         {
-            AddNewEntry(values[i], weight, i);
+            AddNewEntry(t, weight);
         }
     }
 
@@ -47,7 +66,7 @@ public class ObjectPool<T>
     /// <param name="value"></param>
     public ObjectPool(T value)
     {
-        AddNewEntry(value, 1, 0);
+        AddNewEntry(value, 1);
     }
 
     /// <summary>
@@ -56,33 +75,38 @@ public class ObjectPool<T>
     public ObjectPool() { }
 
     /// <summary>
-    /// Get a random object as well as its entry as out parameter
+    /// Get random object from pool
     /// </summary>
     /// <param name="entry"></param>
     /// <returns></returns>
-    public T GetRandom(out WeightedEntry entry)
+    public T GetRandom()
     {
-        int index = GD.RandRange(0, pool.Count);
+        if (pool.Count == 0)
+        {
+            GD.PushWarning("ObjectPool.GetRandom called with empty pool! Random entry from entries returned instead");
+            return entries[GD.RandRange(0, entries.Count - 1)].heldObject;
+        }
 
-        var randomTuple = pool[index];
+        int index = GD.RandRange(0, pool.Count - 1);
 
-        T obj = randomTuple.Item1;
-        entry = entries[randomTuple.Item2];
-        return obj;
+        return pool[index].heldObject;
     }
 
     /// <summary>
-    /// Get random object from pool without entry
+    /// Get random entry from pool
     /// </summary>
     /// <returns></returns>
-    public T GetRandom()
+    public WeightedEntry GetRandomEntry()
     {
-        int index = GD.RandRange(0, pool.Count);
+        if (pool.Count == 0)
+        {
+            GD.PushWarning("ObjectPool.GetRandom called with empty pool! Random entry from entries returned instead");
+            return entries[GD.RandRange(0, entries.Count - 1)];
+        }
 
-        var randomTuple = pool[index];
+        int index = GD.RandRange(0, pool.Count - 1);
 
-        T obj = randomTuple.Item1;
-        return obj;
+        return pool[index];
     }
 
     /// <summary>
@@ -92,79 +116,57 @@ public class ObjectPool<T>
     /// <param name="weight"></param>
     /// <param name="index"></param>
     /// <returns></returns>
-    public WeightedEntry AddNewEntry(T entry, int weight, int index)
+    public WeightedEntry AddNewEntry(T entry, int weight)
     {
-        WeightedEntry newEntry = new(this, entry, weight, index);
+        WeightedEntry newEntry = new(this, entry, weight);
         entries.Add(newEntry);
         return newEntry;
     }
 
     /// <summary>
-    /// Delete an entry and repopulate the pool to fix stale indexes. Intensive, try to avoid!
+    /// Clears the pool and readds every entry to it
     /// </summary>
-    public void DeleteEntry(WeightedEntry entry)
-    {
-        entries.Remove(entry);
-
-        Repopulate();
-    }
-
-    /// <summary>
-    /// Delete multiple entries, then repopulate pool
-    /// </summary>
-    /// <param name="entriesToRemove"></param>
-    public void DeleteEntry(WeightedEntry[] entriesToRemove)
-    {
-        foreach(var entry in entriesToRemove)
-        {
-            entries.Remove(entry);
-        }
-
-        Repopulate();
-    }
-
-    /// <summary>
-    /// Remove and readd all objects in pool, used to update values
-    /// </summary>
-    void Repopulate()
+    public void RepopulatePool()
     {
         pool.Clear();
-
-        for (int i = 0; i < entries.Count; i++)
+        
+        foreach(var entry in entries)
         {
-            entries[i].index = i;
-            entries[i].ReaddPoolElements();
+            entry.AddToPool();
         }
     }
 
     /// <summary>
     /// Remove every entry
     /// </summary>
-    public void ClearPool()
+    public void Clear()
     {
         pool.Clear();
         entries.Clear();
     }
 
+    /// <summary>
+    /// Holds a weight and an entry, controls its own destiny in its pool through its weight methods
+    /// </summary>
     public class WeightedEntry
     {
         readonly ObjectPool<T> parent;
 
-        readonly T entry;
+        public readonly T heldObject;
         public int weight;
 
-        //This index links back to the entry in entries
-        //Used for objects in the pool so you can pull the entry from them
-        internal int index;
-
-        internal WeightedEntry(ObjectPool<T> parent, T entry, int weight, int index)
+        internal WeightedEntry(ObjectPool<T> parent, T entry, int weight)
         {
             this.parent = parent;
-            this.entry = entry;
-            this.index = index;
-            ReaddPoolElements();
+            heldObject = entry;
+            this.weight = weight;
+            AddToPool();
         }
 
+        /// <summary>
+        /// Increase weight by value
+        /// </summary>
+        /// <param name="value"></param>
         public void AddWeight(int value)
         {
             for (int i = 0; i < value; i++)
@@ -172,7 +174,7 @@ public class ObjectPool<T>
                 weight += 1;
                 if (weight > 0)
                 {
-                    parent.pool.Add((entry, index));
+                    parent.pool.Add(this);
                 }
             }
         }
@@ -185,7 +187,7 @@ public class ObjectPool<T>
         {
             for (int i = 0; i < value; i++)
             {
-                if (weight > 0) { parent.pool.Remove((entry, index)); }
+                if (weight > 0) { parent.pool.Remove(this); }
                 weight -= 1;
             }
         }
@@ -197,42 +199,43 @@ public class ObjectPool<T>
         public void SetWeight(int value)
         {
             //First remove every entry to make sure no desyncs occur.
+            //Could probably improve this TODO
             for (int i = 0; i < weight; i++)
             {
-                parent.pool.Remove((entry, index));
+                parent.pool.Remove(this);
             }
 
             //Now add every entry back, to reach the specified value
             for (int i = 0; i < value; i++)
             {
-                parent.pool.Add((entry, index));
+                parent.pool.Add(this);
             }
             weight = value;
         }
 
         /// <summary>
-        /// Readds all values from pool. Assumes we have already deleted the stale values
+        /// Add to pool for every weight. ONLY use if not currently in pool
         /// </summary>
-        public void ReaddPoolElements()
+        internal void AddToPool()
         {
             for(int i = 0; i < weight; i++)
             {
-                parent.pool.Add((entry, index));
+                parent.pool.Add(this);
             }
         }
 
         /// <summary>
-        /// Set entry weight to zero. To fully delete entry, use ObjectPool method DeleteEntry instead.
+        /// Removes every entry from pool and deletes the entry
         /// </summary>
         /// <param name="deleteEntry"></param>
         public void RemoveEntry()
         {
             for (int i = 0; i < weight; i++)
             {
-                parent.pool.Remove((entry, index));
+                parent.pool.Remove(this);
             }
 
-            weight = 0;
+            parent.entries.Remove(this);
         }
     }
 }

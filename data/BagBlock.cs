@@ -3,47 +3,46 @@
 using Godot;
 using System;
 
-public class BagBlock(BlockType type, Vector2I position, Rect2 textureRect, float h, float s, float v)
+public class BagBlock(BlockType type, Vector2I position, Vector2I origin)
 {
     BlockType Type = type;
     Vector2I Position = position;
-    Rect2 TextureRect = textureRect;
-    float h = h, s = s, v = v;
+    Vector2I PieceOrigin = origin;
 
-
-    public CardBlockSprite GetCardPreviewSprite()
+    public CardBlockSprite GetCardPreviewSprite(float h, float s, float v)
     {
-        var sprite = (CardBlockSprite)CardBlocks[(int)Type].Instantiate();
+        var sprite = (CardBlockSprite) CardBlocks [(int)Type] .Instantiate();
 
-        sprite.Position = Position * 7;
+        sprite.Position = (Position + PieceOrigin) * 7;
+
         sprite.SetColor(h, s, v);
 
         return sprite;
     }
 
-    public Block GetNewBlock()
+    public Block GetNewBlock(float h, float s, float v, Rect2 rect)
     {
         Block block = (Block)Blocks[(int)Type].Instantiate();
-
         block.Position = Position * 10;
         block.SetColor(h, s, v);
-        block.SetTexture(TextureRect);
+        block.SetTexture(rect);
 
         return block;
     }
+
+    static PackedScene BasicBlock = ResourceLoader.Load<PackedScene>("uid://blmpsbuqvqptb");
 
     static PackedScene[] Blocks = [
         BasicBlock
         ];
 
-    static PackedScene BasicBlock = ResourceLoader.Load<PackedScene>("uid://blmpsbuqvqptb");
-
+    static PackedScene BasicCardBlock = ResourceLoader.Load<PackedScene>("uid://bxjbghjidd7oe");
 
     static PackedScene[] CardBlocks = [
         BasicCardBlock
         ];
 
-    static PackedScene BasicCardBlock = ResourceLoader.Load<PackedScene>("uid://bxjbghjidd7oe");
+    
 
     
 }

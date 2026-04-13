@@ -8,7 +8,7 @@ public class SimplePieceDefinition(PieceShape shape, PieceType pieceType, BlockT
         SetColor();
         BagBlock[] blocks = CreateBlocks(blockType);
 
-        return new BagPiece(pieceType, blocks, TextureRegion, hsv.Item1, hsv.Item2, hsv.Item3, Name);
+        return new BagPiece(pieceType, blocks, Shape.dimensions, TextureRegion, hsv.Item1, hsv.Item2, hsv.Item3, Name);
     }
 
 }

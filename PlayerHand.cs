@@ -6,37 +6,34 @@ using System.Diagnostics;
 [GlobalClass, Icon("res://texture/icon/handicon.png")]
 public partial class PlayerHand : Container
 {
-
 	[Export] float NewCardYPosition;
+    [Signal] public delegate void DrawOperationStartedEventHandler();
+    [Signal] public delegate void DrawOperationCompletedEventHandler();
 
-	int SelectionIndex = -1;
-
-	//we can remove this later
-	static PackedScene CardScene = ResourceLoader.Load<PackedScene>("uid://lcfq5pnqafa3");
-
-    const float DrawAnimationLength = .4f;
-	const float MoveHandAnimationLength = .3f;
-	const float TimeBeforeDrawingNextCard = .15f;
-
-	double counter = 0;
-
-	public float Spacing = 8;
-
-	public bool InputEnabled = false;
-    bool CurrentlyDrawing = false; //if we are animating cards being added or not. this extends further than just drawing the hand
+	PlayerBag Bag;
 
     public List<PieceCard> Hand = [];
-	Stack<PieceCard> queuedCards = [];
+    Stack<PieceCard> queuedCards = [];
 
-	[Signal] public delegate void DrawOperationStartedEventHandler();
-	[Signal] public delegate void DrawOperationCompletedEventHandler();
+    const float DrawAnimationLength = .4f;
+	const float MoveHandAnimationLength = .2f;
+	const float TimeBeforeDrawingNextCard = .15f;
 
+	public float Spacing = 8;
+	bool CurrentlyDrawing = false; //if we are animating cards being added or not. this extends further than just drawing the hand
+    
+	public bool InputEnabled = false;
+    int SelectionIndex = -1;
+
+    
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+		Bag = Data.magnetBag.CreateBag();
+
 		Position = new(0, GetNewYOffset());
 
-		//DrawHand();
+		DrawHand();
 
 		InputEnabled = true;
     }
@@ -44,8 +41,6 @@ public partial class PlayerHand : Container
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-		counter += delta;
-
 		TryStartDrawing();
 		UpdateHandPosition();
 
@@ -54,12 +49,6 @@ public partial class PlayerHand : Container
 			CheckInput();
 		}
 
-		if(counter > 1)
-		{
-			counter = -1000000;
-			DrawHand();
-
-		}
     }
 
     void UpdateHandPosition()
@@ -110,7 +99,7 @@ public partial class PlayerHand : Container
 
 		if (Input.IsActionJustPressed("SlamPiece"))
 		{
-
+			//play selected piece!!!
 		}
     }
 
@@ -161,17 +150,24 @@ public partial class PlayerHand : Container
 	{
 		for(int i = 0; i < RunStats.HandDrawSize; i++)
 		{
-			AddCard((PieceCard)CardScene.Instantiate());
+			AddToHand(Bag.DrawRandomCard());
         }
 	}
 
-    public void AddCard(PieceCard card)
+    public void AddToHand(PieceCard card)
 	{
 		queuedCards.Push(card);
     }
 
+	public void AddToHand(BagPiece piece)
+	{
+		AddToHand(PieceCard.CreateNewCard(piece));
+	}
+
 	void StartDrawingNextCard()
 	{
+		//get our next card and draw it, setting up tweens for all the add to hand animations and such
+
 		PieceCard card = queuedCards.Pop();
 		AddChild(card);
 

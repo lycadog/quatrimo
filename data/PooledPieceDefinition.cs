@@ -20,7 +20,7 @@ public class PooledPieceDefinition(PieceShape shape, ObjectPool<PieceType> piece
         BlockType[] blockTypes = DistributeBlockTypes();
         BagBlock[] blocks = CreateBlocks(blockTypes);
 
-        return new BagPiece(piecePool.GetRandom(), blocks, TextureRegion, hsv.Item1, hsv.Item2, hsv.Item3, Name);
+        return new BagPiece(piecePool.GetRandom(), blocks, Shape.dimensions, TextureRegion, hsv.Item1, hsv.Item2, hsv.Item3, Name);
 
     }
 

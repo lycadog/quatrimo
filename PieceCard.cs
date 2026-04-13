@@ -9,35 +9,42 @@ public partial class PieceCard : TextureRect
 	[Export] TextureRect HighlightBars;
 	[Export] Control BlockBox;
 
+    static readonly PackedScene CardScene = ResourceLoader.Load<PackedScene>("uid://lcfq5pnqafa3");
+
+    public BagPiece LinkedPiece;
+
 	int index = -1;
 
 	bool IsSelected = false;
 	public float YOffset;
 
-	public PieceCard(BagPiece piece)
+	public static PieceCard CreateNewCard(BagPiece piece)
 	{
-		CardBorder.SelfModulate = Color.FromHsv(piece.h, piece.s, piece.v);
-		
-		//TODO: add piece type icon here!
-
-		foreach(var block in piece.Blocks)
-		{
-			var sprite = block.GetCardPreviewSprite();
-			AddChild(sprite);
-			sprite.Reparent(BlockBox);
-		}
-
-        //we try to automatically center the piece based on dimensions here
-        //this may need adjustments !!! TODO
-        float xOffset = 7 - piece.Dimensions.Y * 3.5f;
-        float yOffset = 7 - piece.Dimensions.Y * 3.5f;
-
-		Vector2 offset = new(xOffset, yOffset);
-
-		BlockBox.Position -= offset;
+		PieceCard card = (PieceCard)CardScene.Instantiate();
+		card.Initialize(piece);
+		return card;
 	}
 
-	public PieceCard() { }
+	void Initialize(BagPiece piece)
+	{
+		LinkedPiece = piece;
+		
+        CardBorder.SelfModulate = Color.FromHsv(piece.h, piece.s, piece.v);
+
+        //TODO: add piece type icon here!
+
+        foreach (var block in piece.Blocks) //create every preview sprite
+        {
+            var sprite = block.GetCardPreviewSprite(piece.h, piece.s, piece.v);
+
+			BlockBox.AddChild(sprite);
+        }
+
+		//we try to automatically center the piece based on dimensions here
+		Vector2 offset = new(piece.Dimensions.X * 3.5f, piece.Dimensions.Y * 3.5f);
+
+        BlockBox.Position -= offset;
+    }
 
 	public void UpdatePosition(float spacing, int index)
 	{

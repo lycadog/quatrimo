@@ -45,7 +45,7 @@ public abstract class PieceDefinition
                     BlockType type = blockTypes[Shape[x, y] - 1]; //subtracting 1 since we are starting at 1, not 0
                     Vector2I pos = new(x - Shape.origin.X, y - Shape.origin.Y);
 
-                    BagBlock block = new(type, pos, TextureRegion, hsv.Item1, hsv.Item2, hsv.Item3);
+                    BagBlock block = new(type, pos, new(Shape.origin.X, Shape.origin.Y));
 
                     blocks.Add(block);
                 }

@@ -7,15 +7,19 @@ using System.Threading.Tasks;
 
 
 
-public class BagPiece(PieceType type, BagBlock[] blocks, Rect2 textureRegion, float h, float s, float v, string name)
+public class BagPiece(PieceType type, BagBlock[] blocks, Vector2I dimensions, Rect2 textureRegion, float h, float s, float v, string name)
 {
     public PieceType Type = type;
     public BagBlock[] Blocks = blocks;
-    public Vector2I Dimensions = new(blocks.GetLength(0), blocks.GetLength(1));
+    public Vector2I Dimensions = dimensions;
 
-    Rect2 TextureRegion = textureRegion;
+    public Rect2 TextureRegion = textureRegion;
     public float h = h, s = s, v = v;
     public string Name = name;
+
+    //Weight for use in the weighted bag system (each weight = 1 extra entry in the pool)
+    //Entry weight is reduced every time this is drawn, then reset after some amount of draws
+    public int BaseWeight = 6;
 
 
     static Func<FallingPiece>[] Pieces = [
@@ -28,7 +32,7 @@ public class BagPiece(PieceType type, BagBlock[] blocks, Rect2 textureRegion, fl
 
         for(int i = 0; i < Blocks.Length; i++)
         {
-            newBlocks[i] = Blocks[i].GetNewBlock();
+            newBlocks[i] = Blocks[i].GetNewBlock(h, s, v, TextureRegion);
         }
 
         var piece = Pieces[(int)Type]();
@@ -37,9 +41,6 @@ public class BagPiece(PieceType type, BagBlock[] blocks, Rect2 textureRegion, fl
 
         return piece;
     }
-
-
-    
 
 }
 

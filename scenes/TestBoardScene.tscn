@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://b2l6ylttx5nqm" path="res://FallingPiece.cs" id="2_p4obu"]
 [ext_resource type="PackedScene" uid="uid://blmpsbuqvqptb" path="res://scenes/block/block.tscn" id="3_shipe"]
 [ext_resource type="PackedScene" uid="uid://bpo3d227m28dj" path="res://scenes/bag/playerHand.tscn" id="5_shipe"]
+[ext_resource type="FontFile" uid="uid://cg88y1bvnly6p" path="res://Px437_ToshibaSat_8x16.ttf" id="6_eiv42"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qumx1"]
 size = Vector2(140, 8)
@@ -16,7 +17,9 @@ size = Vector2(11.5, 216)
 size = Vector2(11.5, 216)
 
 [sub_resource type="LabelSettings" id="LabelSettings_shipe"]
-font_size = 6
+line_spacing = 1.0
+font = ExtResource("6_eiv42")
+font_size = 8
 
 [sub_resource type="Gradient" id="Gradient_shipe"]
 colors = PackedColorArray(1, 1, 1, 1, 0.46518457, 0.45496517, 0.9642119, 0)

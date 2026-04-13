@@ -35,7 +35,7 @@ BlockBox = NodePath("BlockBox")
 metadata/_custom_type_script = "uid://dr053va3lvbk8"
 
 [node name="CardBorder" type="TextureRect" parent="." unique_id=1866356336]
-modulate = Color(0.8887858, 0.40418312, 0.8053788, 1)
+self_modulate = Color(0.32666662, 9.3854965e-07, 0.19559467, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -75,10 +75,10 @@ flip_v = true
 
 [node name="BlockBox" type="Control" parent="." unique_id=1231716876]
 anchors_preset = 0
-offset_left = 25.0
-offset_top = 17.0
-offset_right = 25.0
-offset_bottom = 17.0
+offset_left = 28.0
+offset_top = 20.5
+offset_right = 28.0
+offset_bottom = 20.5
 
 [node name="BlackoutBox" type="ColorRect" parent="." unique_id=1658960950]
 visible = false
