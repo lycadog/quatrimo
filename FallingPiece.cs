@@ -79,8 +79,6 @@ public partial class FallingPiece : Node2D
 			}
 		}
 
-
-
         ProcessInput(delta); //this is after the rest because sometimes this needs to end the state
 		//we don't want to run the above code if the state is ended, so we run after!
 
@@ -88,7 +86,6 @@ public partial class FallingPiece : Node2D
 		placementCounter += delta;
 
 		SetNewSlamPosition();
-
     }
 
     public void ProcessInput(double delta)
@@ -100,11 +97,11 @@ public partial class FallingPiece : Node2D
 			return;
 		}
 
-		if (Input.IsActionPressed("LeftMove"))
+		if (Input.IsActionPressed("Left"))
 		{
 			LeftCooldown -= delta;
 
-			if(Input.IsActionJustPressed("LeftMove"))
+			if(Input.IsActionJustPressed("Left"))
 			{
 				AttemptMoveLeft();
 				LeftCooldown = .1;
@@ -118,10 +115,10 @@ public partial class FallingPiece : Node2D
 
 		}
 
-		else if (Input.IsActionPressed("RightMove"))
+		else if (Input.IsActionPressed("Right"))
 		{
             RightCooldown -= delta;
-            if (Input.IsActionJustPressed("RightMove"))
+            if (Input.IsActionJustPressed("Right"))
             {
                 AttemptMoveRight();
                 RightCooldown = .1;
@@ -134,9 +131,9 @@ public partial class FallingPiece : Node2D
 			}
         }
 
-		if (Input.IsActionPressed("DownMove"))
+		if (Input.IsActionPressed("Down"))
 		{
-			if (Input.IsActionJustPressed("DownMove"))
+			if (Input.IsActionJustPressed("Down"))
 			{
 				fallingCounter += 1;
 				DownHeldTime = 0;
@@ -150,7 +147,7 @@ public partial class FallingPiece : Node2D
 			}
 
 		}
-		else if (Input.IsActionJustReleased("DownMove"))
+		else if (Input.IsActionJustReleased("Down"))
 		{
 			fallingCounter = -.2;
 		}
@@ -163,8 +160,6 @@ public partial class FallingPiece : Node2D
 		{
 			AttemptRightRotation();
 		}
-
-
 	}
 
 	public void SlamAndPlace()
@@ -176,6 +171,10 @@ public partial class FallingPiece : Node2D
     public void SetNewSlamPosition()
     {
         TotalSlamOffset = 10000;
+
+		//a bit inefficient to run this constantly
+		//ultimately doesn't matter much
+		//TODO maybe figure out a better way
 
         foreach (var block in blocks)
         {

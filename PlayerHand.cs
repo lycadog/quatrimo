@@ -14,10 +14,9 @@ public partial class PlayerHand : Container
 	//we can remove this later
 	static PackedScene CardScene = ResourceLoader.Load<PackedScene>("uid://lcfq5pnqafa3");
 
-
     const float DrawAnimationLength = .4f;
 	const float MoveHandAnimationLength = .3f;
-	const float TimeBeforeDrawingNextCard = .2f;
+	const float TimeBeforeDrawingNextCard = .15f;
 
 	double counter = 0;
 
@@ -37,7 +36,7 @@ public partial class PlayerHand : Container
     {
 		Position = new(0, GetNewYOffset());
 
-		DrawHand();
+		//DrawHand();
 
 		InputEnabled = true;
     }
@@ -45,12 +44,21 @@ public partial class PlayerHand : Container
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
+		counter += delta;
+
 		TryStartDrawing();
 		UpdateHandPosition();
 
 		if (InputEnabled && !CurrentlyDrawing)
 		{
 			CheckInput();
+		}
+
+		if(counter > 1)
+		{
+			counter = -1000000;
+			DrawHand();
+
 		}
     }
 
@@ -91,6 +99,14 @@ public partial class PlayerHand : Container
         {
             SelectCard(5);
         }
+		else if (Input.IsActionJustPressed("Up"))
+		{
+			SelectCard(SelectionIndex - 1);
+		}
+		else if (Input.IsActionJustPressed("Down"))
+		{
+			SelectCard(SelectionIndex + 1);
+		}
 
 		if (Input.IsActionJustPressed("SlamPiece"))
 		{
@@ -100,7 +116,7 @@ public partial class PlayerHand : Container
 
 	void SelectCard(int index)
 	{
-		if(index <= Hand.Count)
+		if(index < Hand.Count && index > -1)
 		{
 			if(SelectionIndex != -1)
 			{
@@ -135,7 +151,7 @@ public partial class PlayerHand : Container
             float yOffset = GetNewYOffset();
 
             tween.TweenProperty(this, "Spacing", finalSpacing, MoveHandAnimationLength * queuedCards.Count);
-            tween.TweenProperty(this, "position", new Vector2(Position.X, yOffset), MoveHandAnimationLength * queuedCards.Count);
+            tween.TweenProperty(this, "position", new Vector2(Position.X, yOffset), MoveHandAnimationLength * queuedCards.Count).SetTrans(Tween.TransitionType.Quad);
 
             StartDrawingNextCard();
         }
@@ -159,17 +175,17 @@ public partial class PlayerHand : Container
 		PieceCard card = queuedCards.Pop();
 		AddChild(card);
 
-		card.Position = Vector2.Zero;
+		card.Position = new Vector2(0, 1000);
 
 		card.Visible = true;
 		Hand.Add(card);
 
-		card.YOffset = card.GlobalPosition.Y - NewCardYPosition - 17;
+		card.YOffset = 150 - (Hand.Count * 34 + Spacing * Hand.Count); //TODO: sync these positions up with real objects
         card.Scale = new(.8f, .8f);
 
         Tween tween = GetTree().CreateTween().SetParallel(); 
 
-		tween.TweenProperty(card, "YOffset", 0, DrawAnimationLength).Finished += DrawTweenFinished;
+		tween.TweenProperty(card, "YOffset", 0, DrawAnimationLength).SetTrans(Tween.TransitionType.Quad).Finished += DrawTweenFinished;
 		tween.TweenProperty(card, "scale", new Vector2(1, 1), MoveHandAnimationLength);
     }
 

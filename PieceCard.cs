@@ -4,16 +4,40 @@ using System;
 [GlobalClass, Icon("res://texture/icon/cardicon.png")]
 public partial class PieceCard : TextureRect
 {
+	[Export] TextureRect CardBorder;
+	[Export] TextureRect CardNumber;
 	[Export] TextureRect HighlightBars;
+	[Export] Control BlockBox;
+
+	int index = -1;
 
 	bool IsSelected = false;
 	public float YOffset;
 
-	public void LinkToPiece()
+	public PieceCard(BagPiece piece)
 	{
+		CardBorder.SelfModulate = Color.FromHsv(piece.h, piece.s, piece.v);
+		
+		//TODO: add piece type icon here!
 
+		foreach(var block in piece.Blocks)
+		{
+			var sprite = block.GetCardPreviewSprite();
+			AddChild(sprite);
+			sprite.Reparent(BlockBox);
+		}
+
+        //we try to automatically center the piece based on dimensions here
+        //this may need adjustments !!! TODO
+        float xOffset = 7 - piece.Dimensions.Y * 3.5f;
+        float yOffset = 7 - piece.Dimensions.Y * 3.5f;
+
+		Vector2 offset = new(xOffset, yOffset);
+
+		BlockBox.Position -= offset;
 	}
 
+	public PieceCard() { }
 
 	public void UpdatePosition(float spacing, int index)
 	{
@@ -32,6 +56,13 @@ public partial class PieceCard : TextureRect
 	{
 		HighlightBars.Visible = false;
 		IsSelected = false;
+	}
+
+	public void SetIndex(int index)
+	{
+		Rect2 textureRect = new(index * 5, 120, 5, 8);
+
+		(CardNumber.Texture as AtlasTexture).Region = textureRect;
 	}
 
 

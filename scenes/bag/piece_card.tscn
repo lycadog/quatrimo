@@ -12,14 +12,15 @@ atlas = ExtResource("1_dlunc")
 region = Rect2(0, 0, 69, 34)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_84sgu"]
+resource_local_to_scene = true
 atlas = ExtResource("1_dlunc")
-region = Rect2(1, 119, 5, 8)
+region = Rect2(0, 120, 5, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dlunc"]
 atlas = ExtResource("1_dlunc")
 region = Rect2(1, 68, 67, 6)
 
-[node name="PieceCard" type="TextureRect" unique_id=739776105 node_paths=PackedStringArray("HighlightBars")]
+[node name="PieceCard" type="TextureRect" unique_id=739776105 node_paths=PackedStringArray("CardBorder", "CardNumber", "HighlightBars", "BlockBox")]
 offset_right = 69.0
 offset_bottom = 34.0
 pivot_offset = Vector2(34.5, 17)
@@ -27,7 +28,10 @@ size_flags_vertical = 4
 texture = SubResource("AtlasTexture_jm6t2")
 stretch_mode = 4
 script = ExtResource("2_ag2cg")
+CardBorder = NodePath("CardBorder")
+CardNumber = NodePath("Number")
 HighlightBars = NodePath("TopHighlight")
+BlockBox = NodePath("BlockBox")
 metadata/_custom_type_script = "uid://dr053va3lvbk8"
 
 [node name="CardBorder" type="TextureRect" parent="." unique_id=1866356336]
@@ -71,9 +75,9 @@ flip_v = true
 
 [node name="BlockBox" type="Control" parent="." unique_id=1231716876]
 anchors_preset = 0
-offset_left = 24.5
+offset_left = 25.0
 offset_top = 17.0
-offset_right = 24.5
+offset_right = 25.0
 offset_bottom = 17.0
 
 [node name="BlackoutBox" type="ColorRect" parent="." unique_id=1658960950]

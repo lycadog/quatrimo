@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 public class BagPiece(PieceType type, BagBlock[] blocks, Rect2 textureRegion, float h, float s, float v, string name)
 {
-    PieceType Type = type;
-    BagBlock[] Blocks = blocks;
-    Vector2I Dimensions = new(blocks.GetLength(0), blocks.GetLength(1));
+    public PieceType Type = type;
+    public BagBlock[] Blocks = blocks;
+    public Vector2I Dimensions = new(blocks.GetLength(0), blocks.GetLength(1));
 
     Rect2 TextureRegion = textureRegion;
-    float h = h, s = s, v = v;
+    public float h = h, s = s, v = v;
     public string Name = name;
 
 
