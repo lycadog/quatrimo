@@ -42,6 +42,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 texture = SubResource("AtlasTexture_ag2cg")
 stretch_mode = 4
 
@@ -56,6 +57,7 @@ stretch_mode = 4
 
 [node name="TopHighlight" type="TextureRect" parent="." unique_id=68319400]
 visible = false
+z_index = 1
 layout_mode = 0
 offset_left = 1.0
 offset_top = -7.0

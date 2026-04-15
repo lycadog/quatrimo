@@ -16,8 +16,8 @@ public partial class PlayerHand : Container
     Stack<PieceCard> queuedCards = [];
 
     const float DrawAnimationLength = .4f;
-	const float MoveHandAnimationLength = .2f;
-	const float TimeBeforeDrawingNextCard = .15f;
+	const float MoveHandAnimationLength = .25f;
+	const float TimeBeforeDrawingNextCard = .22f;
 
 	public float Spacing = 8;
 	bool CurrentlyDrawing = false; //if we are animating cards being added or not. this extends further than just drawing the hand
@@ -25,22 +25,24 @@ public partial class PlayerHand : Container
 	public bool InputEnabled = false;
     int SelectionIndex = -1;
 
+	double counter;
     
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-		Bag = Data.debugBag.CreateBag();
+		Bag = Data.ElectricBag.CreateBag();
 
 		Position = new(0, GetNewYOffset());
 
-		DrawHand();
 
 		InputEnabled = true;
     }
-
+	int num = 0;
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
+		counter += delta;
+
 		TryStartDrawing();
 		UpdateHandPosition();
 
@@ -48,6 +50,9 @@ public partial class PlayerHand : Container
 		{
 			CheckInput();
 		}
+
+		if(counter > 2) { DrawHand(); counter = num; num = -10000; }
+		
 
     }
 
@@ -121,7 +126,7 @@ public partial class PlayerHand : Container
 
 	
 
-	void TryStartDrawing()
+	void TryStartDrawing() //start drawing everything thats queued up and move the hand to match
 	{
 		if (!CurrentlyDrawing && queuedCards.Count > 0)
 		{
@@ -139,7 +144,7 @@ public partial class PlayerHand : Container
             float finalSpacing = GetNewSpacing();
             float yOffset = GetNewYOffset();
 
-            tween.TweenProperty(this, "Spacing", finalSpacing, MoveHandAnimationLength * queuedCards.Count);
+            tween.TweenProperty(this, "Spacing", finalSpacing, MoveHandAnimationLength +  queuedCards.Count * .05);
             tween.TweenProperty(this, "position", new Vector2(Position.X, yOffset), MoveHandAnimationLength * queuedCards.Count).SetTrans(Tween.TransitionType.Quad);
 
             StartDrawingNextCard();
@@ -176,7 +181,7 @@ public partial class PlayerHand : Container
 		card.Visible = true;
 		Hand.Add(card);
 
-		card.YOffset = 150 - (Hand.Count * 34 + Spacing * Hand.Count); //TODO: sync these positions up with real objects
+		card.YOffset = 110 - Hand.Count * 17; //TODO: sync these positions up with real objects/global position
         card.Scale = new(.8f, .8f);
 
         Tween tween = GetTree().CreateTween().SetParallel(); 

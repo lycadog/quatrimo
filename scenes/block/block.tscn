@@ -103,7 +103,7 @@ debug_color = Color(0.9718556, 0, 0.44835472, 0.41960785)
 [node name="DropPreviewRaycast" type="RayCast2D" parent="." unique_id=868632601]
 position = Vector2(0, 8)
 enabled = false
-target_position = Vector2(0, 260)
+target_position = Vector2(0, 280)
 collision_mask = 5
 hit_from_inside = true
 collide_with_areas = true

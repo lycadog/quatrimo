@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://pw611g77o37k"]
 
+[ext_resource type="Texture2D" uid="uid://b63jviq4fkryy" path="res://texture/ditheredBackground.png" id="1_q274h"]
 [ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="1_qumx1"]
 [ext_resource type="Texture2D" uid="uid://crmkyii366f3h" path="res://texture/barTop.png" id="1_tq5os"]
 [ext_resource type="Script" uid="uid://b2l6ylttx5nqm" path="res://FallingPiece.cs" id="2_p4obu"]
@@ -52,6 +53,24 @@ offset_right = 240.0
 offset_bottom = 135.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="." unique_id=803257186]
+self_modulate = Color(0.09502769, 0.12996504, 0.25235644, 1)
+z_index = -1
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_q274h")
+
+[node name="ColorRect" type="ColorRect" parent="Background" unique_id=900331187]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.17099997, 0, 0.27, 1)
 
 [node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=348351135]
 layout_mode = 1
@@ -142,10 +161,14 @@ metadata/_edit_use_anchors_ = true
 
 [node name="ColorRect" type="ColorRect" parent="TextureRect" unique_id=700189775]
 show_behind_parent = true
-layout_mode = 0
-offset_left = -95.0
-offset_right = 520.0
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -257.5
+offset_right = 257.5
 offset_bottom = 10.0
+grow_horizontal = 2
 color = Color(0, 0, 0, 1)
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1623975323]

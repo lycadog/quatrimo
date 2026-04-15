@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://dl7cdkh88t5p0"]
+
+[ext_resource type="Script" uid="uid://cdm15780yiwua" path="res://Board.cs" id="1_qails"]
+[ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="2_hs2ul"]
+[ext_resource type="Texture2D" uid="uid://bq12fhs8hplyu" path="res://boardGradient.tres" id="2_w6jgk"]
+[ext_resource type="Texture2D" uid="uid://pf1ck3tc5dmk" path="res://texture/boardBG.png" id="3_66b1s"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w6jgk"]
+size = Vector2(10, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xdl3i"]
+size = Vector2(10, 10)
+
+[node name="Board" type="Control" unique_id=30435418 node_paths=PackedStringArray("border", "TopBorder", "BottomBorder", "LeftBorder", "RightBorder")]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_qails")
+border = NodePath("Border")
+darkGradient = ExtResource("2_w6jgk")
+TopBorder = NodePath("Border/TopArea")
+BottomBorder = NodePath("Border/BottomArea")
+LeftBorder = NodePath("Border/LeftArea")
+RightBorder = NodePath("Border/RightArea")
+metadata/_custom_type_script = "uid://cdm15780yiwua"
+
+[node name="Border" type="NinePatchRect" parent="." unique_id=1026354413]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_hs2ul")
+region_rect = Rect2(160, 0, 30, 30)
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+
+[node name="BlackBG" type="ColorRect" parent="Border" unique_id=1299515121]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="GridBG" type="TextureRect" parent="Border" unique_id=649443195]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_66b1s")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="DarkGradient" type="TextureRect" parent="Border" unique_id=1067627619]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_w6jgk")
+
+[node name="TopArea" type="Area2D" parent="Border" unique_id=1626896197]
+position = Vector2(20, 5)
+scale = Vector2(4, 1)
+collision_layer = 4
+collision_mask = 0
+
+[node name="TopShape" type="CollisionShape2D" parent="Border/TopArea" unique_id=616169319]
+shape = SubResource("RectangleShape2D_w6jgk")
+
+[node name="BottomArea" type="Area2D" parent="Border" unique_id=899889669]
+position = Vector2(20, 35)
+collision_layer = 4
+collision_mask = 0
+
+[node name="BottomShape" type="CollisionShape2D" parent="Border/BottomArea" unique_id=1822151684]
+shape = SubResource("RectangleShape2D_w6jgk")
+
+[node name="LeftArea" type="Area2D" parent="Border" unique_id=657418429]
+position = Vector2(5, 20)
+collision_layer = 4
+collision_mask = 0
+
+[node name="LeftShape" type="CollisionShape2D" parent="Border/LeftArea" unique_id=123635074]
+shape = SubResource("RectangleShape2D_xdl3i")
+
+[node name="RightArea" type="Area2D" parent="Border" unique_id=1917224304]
+position = Vector2(35, 20)
+collision_layer = 4
+collision_mask = 0
+
+[node name="RightShape" type="CollisionShape2D" parent="Border/RightArea" unique_id=1840730440]
+shape = SubResource("RectangleShape2D_xdl3i")
+
+[connection signal="resized" from="Border" to="." method="OnBorderResize"]

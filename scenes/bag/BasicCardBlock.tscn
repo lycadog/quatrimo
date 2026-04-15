@@ -8,10 +8,10 @@ texture = ExtResource("1_y13mm")
 region_enabled = true
 region_rect = Rect2(0, 74, 7, 7)
 script = ExtResource("1_4ooqo")
-SecondLayer = NodePath("Sprite2D")
+SecondLayer = NodePath("Layer2Sprite")
 metadata/_custom_type_script = "uid://y6dpg27acggw"
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=656421469]
+[node name="Layer2Sprite" type="Sprite2D" parent="." unique_id=656421469]
 visible = false
 texture = ExtResource("1_y13mm")
 offset = Vector2(3.5, 3.5)
