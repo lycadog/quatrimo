@@ -11,7 +11,10 @@ size = Vector2(10, 40)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xdl3i"]
 size = Vector2(40, 30)
 
-[node name="Board" type="Control" unique_id=30435418 node_paths=PackedStringArray("border", "BottomBorder", "LeftBorder", "RightBorder")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wlyqt"]
+size = Vector2(10, 10)
+
+[node name="Board" type="Control" unique_id=30435418 node_paths=PackedStringArray("border", "BoardArea", "BottomBorder", "LeftBorder", "RightBorder")]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -23,6 +26,7 @@ grow_vertical = 2
 script = ExtResource("1_qails")
 border = NodePath("Border")
 darkGradient = ExtResource("2_w6jgk")
+BoardArea = NodePath("BoardArea")
 BottomBorder = NodePath("Border/BottomArea")
 LeftBorder = NodePath("Border/LeftArea")
 RightBorder = NodePath("Border/RightArea")
@@ -88,6 +92,7 @@ texture = ExtResource("2_w6jgk")
 position = Vector2(70, 215)
 collision_layer = 4
 collision_mask = 0
+monitoring = false
 
 [node name="BottomShape" type="CollisionShape2D" parent="Border/BottomArea" unique_id=1822151684]
 position = Vector2(0, 15)
@@ -97,6 +102,7 @@ shape = SubResource("RectangleShape2D_w6jgk")
 position = Vector2(5, 110)
 collision_layer = 4
 collision_mask = 0
+monitoring = false
 
 [node name="LeftShape" type="CollisionShape2D" parent="Border/LeftArea" unique_id=123635074]
 position = Vector2(-15, 0)
@@ -106,9 +112,21 @@ shape = SubResource("RectangleShape2D_xdl3i")
 position = Vector2(135, 110)
 collision_layer = 4
 collision_mask = 0
+monitoring = false
 
 [node name="RightShape" type="CollisionShape2D" parent="Border/RightArea" unique_id=1840730440]
 position = Vector2(15, 0)
 shape = SubResource("RectangleShape2D_xdl3i")
 
+[node name="BoardArea" type="Area2D" parent="." unique_id=1084808968]
+scale = Vector2(11.5, 19.5)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="BoardShape" type="CollisionShape2D" parent="BoardArea" unique_id=977289770]
+shape = SubResource("RectangleShape2D_wlyqt")
+
 [connection signal="resized" from="Border" to="." method="OnBorderResize"]
+[connection signal="area_entered" from="BoardArea" to="." method="OnAreaEntered"]
+[connection signal="area_exited" from="BoardArea" to="." method="OnAreaExited"]

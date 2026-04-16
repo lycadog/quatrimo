@@ -30,6 +30,11 @@ public class BagBlock(BlockType type, Vector2I position, Vector2I origin)
         return block;
     }
 
+    public static Block GetNewBlock(BlockType type)
+    {
+        return (Block)Blocks[(int)type].Instantiate();
+    }
+
     static PackedScene BasicBlock = ResourceLoader.Load<PackedScene>("uid://blmpsbuqvqptb");
 
     static PackedScene[] Blocks = [

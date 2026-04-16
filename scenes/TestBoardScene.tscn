@@ -147,7 +147,6 @@ label_settings = SubResource("LabelSettings_shipe")
 autowrap_mode = 2
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1558552467]
-visible = false
 position = Vector2(81, 180)
 amount = 22
 lifetime = 1.09

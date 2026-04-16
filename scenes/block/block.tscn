@@ -21,13 +21,14 @@ size = Vector2(8, 8)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mq3p5"]
 size = Vector2(10, 10)
 
-[node name="Block" type="Area2D" unique_id=537382246 node_paths=PackedStringArray("SpriteLayer1", "SpriteLayer2", "SlamPreviewSprite", "LeftArea", "DownArea", "RightArea", "NegativeRotationArea", "PositiveRotationArea", "DropPreviewRaycast")]
+[node name="Block" type="Area2D" unique_id=537382246 node_paths=PackedStringArray("SpriteLayer1", "SpriteLayer2", "AboveBoardIndicatorSprite", "DropPreviewSprite", "LeftArea", "DownArea", "RightArea", "NegativeRotationArea", "PositiveRotationArea", "DropPreviewRaycast")]
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_jlhqy")
 SpriteLayer1 = NodePath("SpriteLayer1")
 SpriteLayer2 = NodePath("SpriteLayer1/SpriteLayer2")
-SlamPreviewSprite = NodePath("DropPreviewSprite")
+AboveBoardIndicatorSprite = NodePath("AboveBoardIndicatorSprite")
+DropPreviewSprite = NodePath("DropPreviewSprite")
 LeftArea = NodePath("LeftArea")
 DownArea = NodePath("DownArea")
 RightArea = NodePath("RightArea")

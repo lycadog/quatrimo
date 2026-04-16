@@ -13,7 +13,7 @@ public partial class FallingPiece : Node2D
 
 	public Vector2I Dimensions;
 
-	[Export] public Block[] blocks;
+	public Block[] blocks;
 
 	public float TotalSlamOffset = 10000;
 
@@ -23,7 +23,7 @@ public partial class FallingPiece : Node2D
         Dimensions = dimensions;
     }
 
-    [Signal] public delegate void OnPiecePlacementEventHandler();
+    [Signal] public delegate void OnPiecePlacementEventHandler(FallingPiece piece);
 
    
 	/// <summary>
@@ -32,6 +32,7 @@ public partial class FallingPiece : Node2D
 	/// <param name="blocks"></param>
 	void LinkBlocks(Block[] blocks)
 	{
+		
 		this.blocks = blocks;
 
 		foreach(var block in blocks)
@@ -43,12 +44,22 @@ public partial class FallingPiece : Node2D
 
     public virtual void Play()
     {
-
+		foreach(var block in blocks)
+		{
+			block.Play();
+		}
     }
 
     public virtual void Place()
     {
-        //unlink all the blocks, run their events etc, then delete ourself!
+		foreach(var block in blocks)
+		{
+			block.Place();
+		}
+
+		EmitSignalOnPiecePlacement(this);
+
+        QueueFree();
     }
 
     // Called when the node enters the scene tree for the first time.
@@ -80,7 +91,6 @@ public partial class FallingPiece : Node2D
 				{
 					Place();
 
-					fallingCounter = 0;
 					return;
 				}
 
@@ -105,9 +115,9 @@ public partial class FallingPiece : Node2D
 			return;
 		}
 
-        if (Input.IsActionPressed("Down"))
+        if (Input.IsActionPressed("Down")) 
         {
-            if (Input.IsActionJustPressed("Down"))
+            if (Input.IsActionJustPressed("Down")) //When down is pressed immediately move down, then 
             {
                 fallingCounter += 1;
                 DownHeldTime = 0;
@@ -115,27 +125,33 @@ public partial class FallingPiece : Node2D
 
             DownHeldTime += delta;
 
-            if (DownHeldTime >= 0.14)
+            if (DownHeldTime >= 0.14) //After it's held for a bit move down some more
             {
                 fallingCounter += delta * 20;
             }
         }
-        else if (Input.IsActionJustReleased("Down"))
+
+        else if (Input.IsActionJustReleased("Down")) //Set the timer to negative when we release so we have more precision
         {
             fallingCounter = -.2;
         }
 
-        if (Input.IsActionPressed("Left"))
+		else if (Input.IsActionPressed("Up"))
+		{
+			fallingCounter = 0;
+		}
+
+		if (Input.IsActionPressed("Left"))
 		{
 			LeftCooldown -= delta;
 
-			if(Input.IsActionJustPressed("Left"))
+			if (Input.IsActionJustPressed("Left"))
 			{
 				AttemptMoveLeft();
 				LeftCooldown = .1;
 			}
 
-			if(LeftCooldown <= 0)
+			if (LeftCooldown <= 0)
 			{
 				AttemptMoveLeft();
 				LeftCooldown = .03;

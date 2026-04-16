@@ -15,6 +15,8 @@ public partial class Block : Area2D
 
     protected bool isPlaced = false;
 
+    [Export] public bool Scorable = true;
+
     [Export] bool SolidWhenFalling = true;
     [Export] bool SolidWhenPlaced = true;
     [Export] bool OverrideColor = false;
@@ -23,7 +25,7 @@ public partial class Block : Area2D
     [Export] Sprite2D SpriteLayer1;
     [Export] Sprite2D SpriteLayer2;
     [Export] Sprite2D AboveBoardIndicatorSprite;
-    [Export] Sprite2D SlamPreviewSprite;
+    [Export] Sprite2D DropPreviewSprite;
     [Export] Area2D LeftArea;
     [Export] Area2D DownArea;
     [Export] Area2D RightArea;
@@ -33,12 +35,12 @@ public partial class Block : Area2D
 
     [Signal] public delegate void PlacedEventHandler(Block block);
 
-    
-
     public override void _Process(double delta)
     {
         //run process event here
         //we need to make an event (empty by default) that runs every frame here for stuff like attack falling code using this block
+        //no we dont lol
+        //just make the attack run code every turn
     }
 
     public override void _Ready()
@@ -58,7 +60,7 @@ public partial class Block : Area2D
 
     public void UpdateSlamSprite(float yOffset)
     {
-        SlamPreviewSprite.Offset = new(0, yOffset);
+        DropPreviewSprite.Offset = new(0, yOffset);
     }
 
 
@@ -67,6 +69,7 @@ public partial class Block : Area2D
     public virtual void Play()
     {
         UpdateRotationDestinations();
+        ToggleOffBoardTexture(true);
     }
 
     public virtual void Place()
@@ -74,12 +77,13 @@ public partial class Block : Area2D
         SetCollisionLayerValue(1, SolidWhenPlaced); //we are now solid on the placedblocks layer
 
         DropPreviewRaycast.Enabled = false;
-        
-        LeftArea.Monitoring = false;
-        RightArea.Monitoring = false;
-        DownArea.Monitoring = false;
-        NegativeRotationArea.Monitoring = false;
-        PositiveRotationArea.Monitoring = false;
+        DropPreviewSprite.Visible = false;
+
+        LeftArea.ProcessMode = ProcessModeEnum.Disabled;
+        RightArea.ProcessMode = ProcessModeEnum.Disabled;
+        DownArea.ProcessMode = ProcessModeEnum.Disabled;
+        NegativeRotationArea.ProcessMode = ProcessModeEnum.Disabled;
+        PositiveRotationArea.ProcessMode = ProcessModeEnum.Disabled;
 
         EmitSignalPlaced(this);
 
@@ -128,8 +132,66 @@ public partial class Block : Area2D
 
     }
 
+    /// ///=========================|[ Visual Methods ]|=========================\\\
+
+    public void SetTexture(Rect2 rect)
+    {
+        if (OverrideTexture) { return; }
+
+        SpriteLayer1.RegionRect = rect;
+    }
+
+    /// <summary>
+    /// Set the color of all sprites adjusting different layers' color
+    /// </summary>
+    /// <param name="hue"></param>
+    /// <param name="sat"></param>
+    /// <param name="val"></param>
+    public virtual void SetColor(float hue, float sat, float val)
+    {
+        if (OverrideColor) { return; }
+
+        SpriteLayer1.SelfModulate = Color.FromHsv(hue, sat, val);
+
+        SpriteLayer2.SelfModulate = Utils.GetSecondLayerColor(hue, sat, val);
+    }
+
+    public virtual void ToggleOffBoardTexture(bool toggleOn)
+    {
+        if (toggleOn)
+        {
+            HideSprites();
+            AboveBoardIndicatorSprite.Visible = true;
+        }
+        else
+        {
+            UnhideSprites();
+            AboveBoardIndicatorSprite.Visible = false;
+        }
+    }
+
+    protected virtual void UnhideSprites()
+    {
+        SpriteLayer1.Visible = true;
+    }
+
+    protected virtual void HideSprites()
+    {
+        SpriteLayer1.Visible = false;
+    }
+
+
     /// ///=========================|[ Event Methods ]|=========================\\\
 
+    public void OnEnterBoard()
+    {
+        ToggleOffBoardTexture(false);
+    }
+
+    public void OnExitBoard()
+    {
+        ToggleOffBoardTexture(true);
+    }
 
     public void OnAreaEntered(Area2D area)
     {
@@ -137,7 +199,7 @@ public partial class Block : Area2D
         {
             //we want to ensure the placed block calls their method first, so we only call this is we are placed.
             //if the placed block doesn't delete the falling block, then the falling block's collision method will run after
-            CollidedWithBlockWhilePlaced((Block)area); 
+            CollidedWithBlockWhilePlaced((Block)area);
         }
     }
 
@@ -159,7 +221,6 @@ public partial class Block : Area2D
     {
         //nothing to do!
     }
-
 
 
     public void LeftAreaChanged(Area2D area)
@@ -185,35 +246,5 @@ public partial class Block : Area2D
     public void PositiveRotationAreaChanged(Area2D area)
     {
         if (PositiveRotationArea.HasOverlappingAreas()) { CanRotatePositive = false; } else { CanRotatePositive = true; }
-    }
-
-
-    public void SetTexture(Rect2 rect)
-    {
-        if(OverrideTexture) { return; }
-
-        SpriteLayer1.RegionRect = rect;
-    }
-
-    /// <summary>
-    /// Set the color of all sprites adjusting different layers' color
-    /// </summary>
-    /// <param name="hue"></param>
-    /// <param name="sat"></param>
-    /// <param name="val"></param>
-    public void SetColor(float hue, float sat, float val)
-    {
-        if (OverrideColor) { return; }
-
-        SpriteLayer1.SelfModulate = Color.FromHsv(hue, sat, val);
-
-        SpriteLayer2.SelfModulate = Utils.GetSecondLayerColor(hue, sat, val);
-    }
-
-    public void SetRandomColor()
-    {
-        (float, float, float) hsv = Utils.GetRandomPieceHSV();
-
-        SetColor(hsv.Item1, hsv.Item2, hsv.Item3);
     }
 }
