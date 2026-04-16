@@ -22,6 +22,7 @@ public partial class Block : Area2D
 
     [Export] Sprite2D SpriteLayer1;
     [Export] Sprite2D SpriteLayer2;
+    [Export] Sprite2D AboveBoardIndicatorSprite;
     [Export] Sprite2D SlamPreviewSprite;
     [Export] Area2D LeftArea;
     [Export] Area2D DownArea;
@@ -30,7 +31,7 @@ public partial class Block : Area2D
     [Export] Area2D PositiveRotationArea;
     [Export] RayCast2D DropPreviewRaycast;
 
-    [Signal] public delegate void OnPlacementEventHandler(Vector2 placementPosition);
+    [Signal] public delegate void PlacedEventHandler(Block block);
 
     
 
@@ -52,7 +53,7 @@ public partial class Block : Area2D
         }
 
         UpdateRotationDestinations();
-        SetRandomColor();
+        //SetRandomColor();
     }
 
     public void UpdateSlamSprite(float yOffset)
@@ -73,6 +74,14 @@ public partial class Block : Area2D
         SetCollisionLayerValue(1, SolidWhenPlaced); //we are now solid on the placedblocks layer
 
         DropPreviewRaycast.Enabled = false;
+        
+        LeftArea.Monitoring = false;
+        RightArea.Monitoring = false;
+        DownArea.Monitoring = false;
+        NegativeRotationArea.Monitoring = false;
+        PositiveRotationArea.Monitoring = false;
+
+        EmitSignalPlaced(this);
 
         //do clipping? idk
     }
@@ -81,11 +90,11 @@ public partial class Block : Area2D
     {
         if(direction == -1)
         {
-            Position = NegativeRotationArea.Position;
+            GlobalPosition = NegativeRotationArea.GlobalPosition;
         }
         else if(direction == 1)
         {
-            Position = PositiveRotationArea.Position;
+            GlobalPosition = PositiveRotationArea.GlobalPosition;
         }
 
         else { throw new ArgumentOutOfRangeException($"Attempted to rotate block with invalid direction value: {direction}"); }
@@ -96,13 +105,15 @@ public partial class Block : Area2D
 
     protected void UpdateRotationDestinations()
     {
-        NegativeRotationArea.Position = SwapPositionXY(Position, -1);
-        PositiveRotationArea.Position = SwapPositionXY(Position, 1);
+        NegativeRotationArea.Position = GetAreaRotationPositon(Position, -1);
+        PositiveRotationArea.Position = GetAreaRotationPositon(Position, 1);
     }
 
-    Vector2 SwapPositionXY(Vector2 initialPosition, int direction)
+    Vector2 GetAreaRotationPositon(Vector2 initialPosition, int direction)
     {
-        return new Vector2(initialPosition.Y * -direction, initialPosition.X * direction);
+        Vector2 swappedPos = new(initialPosition.Y * -direction, initialPosition.X * direction);
+
+        return swappedPos - Position;
     }
 
     public void UpdateSlamPosition()

@@ -22,8 +22,8 @@ public class BagPiece(PieceType type, BagBlock[] blocks, Vector2I dimensions, Re
     public int BaseWeight = 6;
 
 
-    static Func<FallingPiece>[] Pieces = [
-        () => { return new FallingPiece(); }
+    static Func<Block[], Vector2I, FallingPiece>[] Pieces = [
+        (blocks, dimensions) => { return new FallingPiece(blocks, dimensions); }
         ];
 
     public FallingPiece CreatePiece()
@@ -35,9 +35,7 @@ public class BagPiece(PieceType type, BagBlock[] blocks, Vector2I dimensions, Re
             newBlocks[i] = Blocks[i].GetNewBlock(h, s, v, TextureRegion);
         }
 
-        var piece = Pieces[(int)Type]();
-
-        piece.LinkBlocks(newBlocks);
+        var piece = Pieces[(int)Type](newBlocks, Dimensions);
 
         return piece;
     }

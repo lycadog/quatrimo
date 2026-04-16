@@ -10,12 +10,15 @@ public partial class PlayerHand : Container
     [Signal] public delegate void DrawOperationStartedEventHandler();
     [Signal] public delegate void DrawOperationCompletedEventHandler();
 
+	[Signal] public delegate void CardPlayedEventHandler(PieceCard card);
+
 	PlayerBag Bag;
 
     public List<PieceCard> Hand = [];
     Stack<PieceCard> queuedCards = [];
 
     const float DrawAnimationLength = .4f;
+	const float ScaleTweenLength = .3f;
 	const float MoveHandAnimationLength = .25f;
 	const float TimeBeforeDrawingNextCard = .22f;
 
@@ -25,36 +28,40 @@ public partial class PlayerHand : Container
 	public bool InputEnabled = false;
     int SelectionIndex = -1;
 
-	double counter;
+    public override void _EnterTree()
+    {
+        Bag = Data.longDistanceBag.CreateBag();
+    }
     
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-		Bag = Data.ElectricBag.CreateBag();
+		
 
 		Position = new(0, GetNewYOffset());
-
-
-		InputEnabled = true;
     }
-	int num = 0;
+
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
-		counter += delta;
-
 		TryStartDrawing();
 		UpdateHandPosition();
 
 		if (InputEnabled && !CurrentlyDrawing)
 		{
 			CheckInput();
-		}
-
-		if(counter > 2) { DrawHand(); counter = num; num = -10000; }
-		
+		}		
 
     }
+
+	public void OnTurnStart()
+	{
+		InputEnabled = true;
+		if (Hand.Count <= RunStats.CardCountRequiredBeforeDrawing)
+		{
+			DrawHand();
+		}
+	}
 
     void UpdateHandPosition()
     {
@@ -104,9 +111,19 @@ public partial class PlayerHand : Container
 
 		if (Input.IsActionJustPressed("SlamPiece"))
 		{
-			//play selected piece!!!
+			if(SelectionIndex != -1)
+			{
+                PlayCard(Hand[SelectionIndex]);
+				return;
+            }
 		}
     }
+
+	void PlayCard(PieceCard card)
+	{
+		EmitSignalCardPlayed(card);
+		InputEnabled = false;
+	}
 
 	void SelectCard(int index)
 	{
@@ -124,9 +141,15 @@ public partial class PlayerHand : Container
 		}
 	}
 
-	
+    public void DrawHand()
+    {
+        for (int i = 0; i < RunStats.HandDrawSize; i++)
+        {
+            AddToHand(Bag.DrawRandomCard());
+        }
+    }
 
-	void TryStartDrawing() //start drawing everything thats queued up and move the hand to match
+    void TryStartDrawing() //start drawing everything thats queued up and move the hand to match
 	{
 		if (!CurrentlyDrawing && queuedCards.Count > 0)
 		{
@@ -151,13 +174,7 @@ public partial class PlayerHand : Container
         }
 	}
 
-	public void DrawHand()
-	{
-		for(int i = 0; i < RunStats.HandDrawSize; i++)
-		{
-			AddToHand(Bag.DrawRandomCard());
-        }
-	}
+	
 
     public void AddToHand(PieceCard card)
 	{
@@ -181,13 +198,13 @@ public partial class PlayerHand : Container
 		card.Visible = true;
 		Hand.Add(card);
 
-		card.YOffset = 110 - Hand.Count * 17; //TODO: sync these positions up with real objects/global position
-        card.Scale = new(.8f, .8f);
+		card.YOffset = 130 - Hand.Count * 17; //TODO: sync these positions up with real objects/global position
+        card.Scale = new(.7f, .7f);
 
         Tween tween = GetTree().CreateTween().SetParallel(); 
 
 		tween.TweenProperty(card, "YOffset", 0, DrawAnimationLength).SetTrans(Tween.TransitionType.Quad).Finished += DrawTweenFinished;
-		tween.TweenProperty(card, "scale", new Vector2(1, 1), MoveHandAnimationLength);
+		tween.TweenProperty(card, "scale", new Vector2(1, 1), ScaleTweenLength);
     }
 
 	void DrawTweenFinished()

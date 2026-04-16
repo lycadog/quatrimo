@@ -10,7 +10,7 @@ metadata/_snap_count = 2
 [resource]
 gradient = SubResource("Gradient_66b1s")
 width = 1
-height = 20
+height = 10
 fill_from = Vector2(0.5, 1)
 fill_to = Vector2(0.5, 0)
 metadata/_snap_count = 2

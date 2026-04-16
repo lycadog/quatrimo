@@ -11,18 +11,26 @@ public partial class FallingPiece : Node2D
 	double LeftCooldown = 0;
 	double RightCooldown = 0;
 
+	public Vector2I Dimensions;
+
 	[Export] public Block[] blocks;
 
 	public float TotalSlamOffset = 10000;
 
-	[Signal] public delegate void OnPiecePlacementEventHandler();
+    public FallingPiece(Block[] blocks, Vector2I dimensions)
+    {
+        LinkBlocks(blocks);
+        Dimensions = dimensions;
+    }
+
+    [Signal] public delegate void OnPiecePlacementEventHandler();
 
    
 	/// <summary>
 	/// Links the blocks to the newly-created piece
 	/// </summary>
 	/// <param name="blocks"></param>
-	public void LinkBlocks(Block[] blocks)
+	void LinkBlocks(Block[] blocks)
 	{
 		this.blocks = blocks;
 
@@ -97,7 +105,27 @@ public partial class FallingPiece : Node2D
 			return;
 		}
 
-		if (Input.IsActionPressed("Left"))
+        if (Input.IsActionPressed("Down"))
+        {
+            if (Input.IsActionJustPressed("Down"))
+            {
+                fallingCounter += 1;
+                DownHeldTime = 0;
+            }
+
+            DownHeldTime += delta;
+
+            if (DownHeldTime >= 0.14)
+            {
+                fallingCounter += delta * 20;
+            }
+        }
+        else if (Input.IsActionJustReleased("Down"))
+        {
+            fallingCounter = -.2;
+        }
+
+        if (Input.IsActionPressed("Left"))
 		{
 			LeftCooldown -= delta;
 
@@ -112,10 +140,11 @@ public partial class FallingPiece : Node2D
 				AttemptMoveLeft();
 				LeftCooldown = .03;
 			}
+			return;
 
 		}
 
-		else if (Input.IsActionPressed("Right"))
+		if (Input.IsActionPressed("Right"))
 		{
             RightCooldown -= delta;
             if (Input.IsActionJustPressed("Right"))
@@ -129,37 +158,24 @@ public partial class FallingPiece : Node2D
 				AttemptMoveRight();
 				RightCooldown = .03;
 			}
+			return;
         }
 
-		if (Input.IsActionPressed("Down"))
-		{
-			if (Input.IsActionJustPressed("Down"))
-			{
-				fallingCounter += 1;
-				DownHeldTime = 0;
-			}
-
-			DownHeldTime += delta;
-
-			if (DownHeldTime >= 0.14)
-			{
-				fallingCounter += delta * 20;
-			}
-
-		}
-		else if (Input.IsActionJustReleased("Down"))
-		{
-			fallingCounter = -.2;
-		}
+		
+		
 
 		if (Input.IsActionJustPressed("RotateLeft"))
 		{
 			AttemptLeftRotation();
+			return;
 		}
-		else if (Input.IsActionJustPressed("RotateRight"))
+
+		if (Input.IsActionJustPressed("RotateRight"))
 		{
 			AttemptRightRotation();
+			return;
 		}
+
 	}
 
 	public void SlamAndPlace()
