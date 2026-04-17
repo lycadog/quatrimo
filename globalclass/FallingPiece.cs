@@ -57,9 +57,8 @@ public partial class FallingPiece : Node2D
 			block.Place();
 		}
 
-		EmitSignalOnPiecePlacement(this);
-
         QueueFree();
+        EmitSignalOnPiecePlacement(this);
     }
 
     // Called when the node enters the scene tree for the first time.

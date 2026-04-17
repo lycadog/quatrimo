@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dl7cdkh88t5p0"]
 
-[ext_resource type="Script" uid="uid://cdm15780yiwua" path="res://Board.cs" id="1_qails"]
+[ext_resource type="Script" uid="uid://cdm15780yiwua" path="res://globalclass/Board.cs" id="1_qails"]
 [ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="2_hs2ul"]
 [ext_resource type="Texture2D" uid="uid://bq12fhs8hplyu" path="res://boardGradient.tres" id="2_w6jgk"]
 [ext_resource type="Texture2D" uid="uid://pf1ck3tc5dmk" path="res://texture/boardBG.png" id="3_66b1s"]

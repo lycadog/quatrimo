@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bpo3d227m28dj" path="res://scenes/bag/playerHand.tscn" id="5_shipe"]
 [ext_resource type="FontFile" uid="uid://cg88y1bvnly6p" path="res://Px437_ToshibaSat_8x16.ttf" id="6_eiv42"]
 [ext_resource type="Texture2D" uid="uid://bavo54t2txnif" path="res://texture/backgroundElements.png" id="8_3hoax"]
+[ext_resource type="Shader" uid="uid://bymdcljo62wwu" path="res://scenes/testscreenshader.gdshader" id="8_3q3ns"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_06til"]
 atlas = ExtResource("8_3hoax")
@@ -39,7 +40,10 @@ linear_accel_min = 60.439995
 linear_accel_max = 60.439995
 color_ramp = SubResource("GradientTexture1D_pi7fc")
 
-[node name="Node2D" type="Control" unique_id=556453924]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3hoax"]
+shader = ExtResource("8_3q3ns")
+
+[node name="root" type="Control" unique_id=556453924]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -58,11 +62,22 @@ modulate = Color(0.88972396, 0.889724, 0.88972396, 1)
 self_modulate = Color(0.09502769, 0.12996504, 0.25235644, 1)
 z_index = -1
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 480.0
+offset_bottom = 270.0
 texture = ExtResource("1_q274h")
 
 [node name="BG2" type="ColorRect" parent="Background" unique_id=900331187]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.17099997, 0, 0.27, 1)
+
+[node name="BG2" type="ColorRect" parent="." unique_id=1887796625]
+visible = false
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -152,6 +167,16 @@ amount = 22
 lifetime = 1.09
 explosiveness = 0.8
 process_material = SubResource("ParticleProcessMaterial_shipe")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1396225142]
+visible = false
+material = SubResource("ShaderMaterial_3hoax")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [connection signal="TurnStarted" from="Board" to="HandAnchor/PlayerHand" method="OnTurnStart"]
 [connection signal="CardPlayed" from="HandAnchor/PlayerHand" to="Board" method="OnCardPlayed"]

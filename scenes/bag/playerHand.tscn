@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bpo3d227m28dj"]
 
-[ext_resource type="Script" uid="uid://bd4kboumfjxp0" path="res://PlayerHand.cs" id="1_to8vx"]
+[ext_resource type="Script" uid="uid://bd4kboumfjxp0" path="res://globalclass/PlayerHand.cs" id="1_to8vx"]
 
 [node name="PlayerHand" type="Container" unique_id=73958776]
 offset_right = 69.0

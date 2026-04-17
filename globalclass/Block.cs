@@ -5,8 +5,8 @@ using System.Security.Cryptography;
 [GlobalClass, Icon("res://texture/icon/blockicon.png")]
 public partial class Block : Area2D
 {
-    public float SlamOffset;
 
+    public float SlamOffset;
     public bool CanMoveLeft = true;
     public bool CanMoveDown = true;
     public bool CanMoveRight = true;
@@ -16,6 +16,7 @@ public partial class Block : Area2D
     protected bool isPlaced = false;
 
     [Export] public bool Scorable = true;
+    [Export] public double Score = 1;
 
     [Export] bool SolidWhenFalling = true;
     [Export] bool SolidWhenPlaced = true;
@@ -26,6 +27,7 @@ public partial class Block : Area2D
     [Export] Sprite2D SpriteLayer2;
     [Export] Sprite2D AboveBoardIndicatorSprite;
     [Export] Sprite2D DropPreviewSprite;
+    [Export] Sprite2D WhiteFlashSprite;
     [Export] Area2D LeftArea;
     [Export] Area2D DownArea;
     [Export] Area2D RightArea;
@@ -34,6 +36,7 @@ public partial class Block : Area2D
     [Export] RayCast2D DropPreviewRaycast;
 
     [Signal] public delegate void PlacedEventHandler(Block block);
+    [Signal] public delegate void MovedCellsEventHandler();
 
     public override void _Process(double delta)
     {
@@ -55,7 +58,6 @@ public partial class Block : Area2D
         }
 
         UpdateRotationDestinations();
-        //SetRandomColor();
     }
 
     public void UpdateSlamSprite(float yOffset)
@@ -63,9 +65,8 @@ public partial class Block : Area2D
         DropPreviewSprite.Offset = new(0, yOffset);
     }
 
+    #region === Board Interaction/Positional Methods ===
 
-    // <([=========================|[ Board Interaction/Positional Methods ]|=========================])>
-   
     public virtual void Play()
     {
         UpdateRotationDestinations();
@@ -84,6 +85,11 @@ public partial class Block : Area2D
         DownArea.ProcessMode = ProcessModeEnum.Disabled;
         NegativeRotationArea.ProcessMode = ProcessModeEnum.Disabled;
         PositiveRotationArea.ProcessMode = ProcessModeEnum.Disabled;
+
+        //temporarily make the white sprite visible so we get a little flash animation when we place stuff
+        WhiteFlashSprite.Visible = true;
+        Tween tween = GetTree().CreateTween();
+        tween.TweenCallback(Callable.From(() => WhiteFlashSprite.Visible = false)).SetDelay(0.1);
 
         EmitSignalPlaced(this);
 
@@ -132,7 +138,8 @@ public partial class Block : Area2D
 
     }
 
-    /// ///=========================|[ Visual Methods ]|=========================\\\
+    #endregion
+    #region === Visual Methods ===
 
     public void SetTexture(Rect2 rect)
     {
@@ -179,10 +186,8 @@ public partial class Block : Area2D
     {
         SpriteLayer1.Visible = false;
     }
-
-
-    /// ///=========================|[ Event Methods ]|=========================\\\
-
+    #endregion
+    #region === Event Methods ===
     public void OnEnterBoard()
     {
         ToggleOffBoardTexture(false);
@@ -247,4 +252,5 @@ public partial class Block : Area2D
     {
         if (PositiveRotationArea.HasOverlappingAreas()) { CanRotatePositive = false; } else { CanRotatePositive = true; }
     }
+    #endregion
 }

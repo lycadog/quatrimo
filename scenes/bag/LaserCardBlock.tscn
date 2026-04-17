@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://clg0cir271nly"]
 
 [ext_resource type="Texture2D" uid="uid://d2umw6muvt05b" path="res://texture/pieceCard.png" id="1_8g112"]
-[ext_resource type="Script" uid="uid://y6dpg27acggw" path="res://CardBlockSprite.cs" id="2_fc8vl"]
+[ext_resource type="Script" uid="uid://y6dpg27acggw" path="res://globalclass/CardBlockSprite.cs" id="2_fc8vl"]
 
 [node name="BasicCardBlock" type="Sprite2D" unique_id=347132184 node_paths=PackedStringArray("SecondLayer")]
 texture = ExtResource("1_8g112")
