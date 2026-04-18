@@ -19,8 +19,12 @@ public partial class Board : Control
 
     [Signal] public delegate void TurnStartedEventHandler();
 	[Signal] public delegate void PiecePlayedEventHandler();
+    [Signal] public delegate void TickStepStartedEventHandler();
     [Signal] public delegate void ScoreStepStartedEventHandler(bool isInitialStep);
 
+    public bool BoardUpdated = false;
+
+    BoardRow[] Rows;
     Cell[,] CellBoard;
 
     FallingPiece CurrentPiece;
@@ -29,16 +33,41 @@ public partial class Board : Control
 
     public void StartTurn()
     {
+        BoardUpdated = false;
         EmitSignalTurnStarted();
     }
 
-    public void ScoreBoard(bool initialStep)
+    void ScoreBoard(bool initialStep)
     {
+        if(!BoardUpdated && !initialStep)
+        {
+            TickBlocks();
+            return;
+        }
+
         EmitSignalScoreStepStarted(initialStep);
+        BoardUpdated = false;
+
+        foreach (var row in Rows)
+        {
+            row.AttemptScoring();
+        }
+
+        ScoreBoard(false);
+    }
+
+    void TickBlocks()
+    {
+
+        StartTurn();
 
 
 
-        //todo: add recursive calls
+    }
+
+    void EndTurn()
+    {
+
     }
 
     void LowerCollumn(int x, int startingY)
@@ -71,18 +100,88 @@ public partial class Board : Control
 
         CellBoard = new Cell[width, height];
 
-        for (int x = 0; x < width; x++)
+        Rows = new BoardRow[height];
+
+        for(int y = 0; y < height; y++)
         {
-            for (int y = 0; y < height; y++)
+            BoardRow row = new(y, width);
+
+            AddChild(row);
+
+            Rows[y] = row;
+
+            Cell[] cellsInRow = new Cell[width];
+
+            for(int x = 0; x < width; x++)
             {
-                CellBoard[x, y] = new Cell(x, y, GetRealPosition(x, y));
-                ScoreStepStarted += CellBoard[x, y].OnScoreStepBegin;
+                Cell newCell = new Cell(x, y, GetRealPosition(x, y));
+
+                newCell.UpdatedBoard += () => { BoardUpdated = true; }; //bind events
+
+                CellBoard[x, y] = newCell;
+
+                ScoreStepStarted += newCell.OnScoreStepBegin;
+
+                cellsInRow[x] = newCell;
+                row.BindCell(CellBoard[x, y]);
             }
+
+            row.cells = cellsInRow;
         }
 
     }
 
-    #endregion 
+    #endregion
+    #region === Godot Methods ===
+
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
+    {
+        SetDimensions(defaultX, defaultY);
+        StartTurn();
+
+        GD.Print(GetRealPosition(new(0, 0)));
+        GD.Print(GetRealPosition(new(2, 2)));
+        GD.Print(GetRealPosition(new(4, 4)));
+        GD.Print(GetRealPosition(new(11, 20)));
+    }
+
+
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _Process(double delta)
+    {
+
+        if (Input.IsActionJustPressed("Debug1"))
+        {
+            StartTurn();
+        }
+
+        if (Input.IsActionJustPressed("Debug2"))
+        {
+            GD.Print("board updated? " + BoardUpdated);
+        }
+
+        if (Input.IsActionJustPressed("Debug3"))
+        {
+            foreach (var row in Rows)
+            {
+                GD.Print($"row {row.y} scorability: {row.totalScorability}, can score: {row.Scorable}");
+            }
+        }
+
+        if (Input.IsActionJustPressed("Fullscreen"))
+        {
+            if(DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Fullscreen)
+            {
+                DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
+                return;
+            }
+
+            DisplayServer.WindowSetMode(DisplayServer.WindowMode.Fullscreen);
+        }
+
+    }
+    #endregion
     #region === Visuals and Initialization ===
 
     void SetDimensions(int x, int y)
@@ -121,51 +220,30 @@ public partial class Board : Control
     #endregion
     #region === Event Methods ===
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-        SetDimensions(defaultX, defaultY);
-        StartTurn();
-
-        GD.Print(GetRealPosition(new(0, 0)));
-        GD.Print(GetRealPosition(new(2, 2)));
-        GD.Print(GetRealPosition(new(4, 4)));
-        GD.Print(GetRealPosition(new(11, 20)));
-    }
-
-
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-    {
-
-        if (Input.IsActionJustPressed("Debug1"))
-        {
-            if (CurrentPiece != null) //bad
-            {
-                CurrentPiece.Free();
-            }
-
-            StartTurn();
-        }
-
-    }
-
     public void OnPiecePlayed(FallingPiece piece)
     {
 
     }
 
+    /// <summary>
+    /// When a card is played we create its piece and its blocks, binding signals
+    /// </summary>
+    /// <param name="card"></param>
     public void OnCardPlayed(PieceCard card)
     {
         CurrentPiece = card.LinkedPiece.CreatePiece();
 
         AddChild(CurrentPiece);
 
-        //bind signals here
+        //BIND SIGNALS HERE ******************************************
+
         CurrentPiece.Connect(FallingPiece.SignalName.OnPiecePlacement, new(this, MethodName.OnPiecePlaced), (uint)ConnectFlags.OneShot);
         foreach(var block in CurrentPiece.blocks)
         {
             block.Connect(Block.SignalName.Placed, new(this, MethodName.OnBlockPlaced), (uint)ConnectFlags.OneShot);
+
+            Connect(SignalName.TurnStarted, new(block, Block.MethodName.OnTurnStart));
+
             //block signals here
         }
 
@@ -195,7 +273,6 @@ public partial class Board : Control
 
         ScoreBoard(true);
         //move onto scoring now!
-        //next up: here!
     }
 
     public void OnAreaEntered(Area2D area)

@@ -1,29 +1,46 @@
 
 using Godot;
+using System;
 
 public class Cell(int x, int y, Vector2 cellPosition)
 {
 
-
     Block _HeldBlock;
     public Block HeldBlock { get => _HeldBlock; set => SetBlock(value); }
 
-    bool Occupied = false;
-    
-    public bool Scorable
-    {
-        get { if (Occupied && ScoreFlag == ScoringFlags.CanScore) { 
-                return _HeldBlock.Scorable; } 
-            return false; }
+    bool _Occupied = false;
+    bool Occupied 
+    { 
+        get => _Occupied;
+        set
+        {
+            UpdatedBoard.Invoke();
+            bool staleScorable = Scorable;
+            _Occupied = value;
+            ScorabilityUpdated(staleScorable); //occupied changes this value so we need to mark this as updated
+        }
     }
 
-    public double Score
+    ScoringFlags _ScoreFlag;
+    public ScoringFlags ScoreFlag
+    {
+        get => _ScoreFlag;
+        set
+        {
+            bool staleScorable = Scorable;
+            _ScoreFlag = value;
+            ScorabilityUpdated(staleScorable); //this value may have changed so let's check if we should run our events
+
+        }
+    }
+
+    public double ScoreValue
     {
         get
         {
             if (Occupied)
             {
-                return _HeldBlock.Score;
+                return _HeldBlock.ScoreValue;
             }
             return 0;
         }
@@ -32,7 +49,7 @@ public class Cell(int x, int y, Vector2 cellPosition)
         {
             if (Occupied)
             {
-                HeldBlock.Score = value;
+                HeldBlock.ScoreValue = value;
             }
             else
             {
@@ -41,7 +58,50 @@ public class Cell(int x, int y, Vector2 cellPosition)
         }
     }
 
-    public ScoringFlags ScoreFlag;
+    public bool Scorable
+    {
+        get
+        {
+            if (Occupied && ScoreFlag == ScoringFlags.CanScore)
+            {
+                return _HeldBlock.Scorable;
+            }
+            return false;
+        }
+    }
+
+    public bool JustPlaced
+    {
+        get
+        {
+            if (_Occupied) { return HeldBlock.JustPlaced; }
+            return false;
+        }
+    }
+
+    public event Action BecameScorable;
+    public event Action BecameNonScorable;
+
+    public event Action UpdatedBoard;
+
+    void ScorabilityUpdated(bool staleScorable)
+    {
+        if(staleScorable == Scorable)
+        {
+            return;
+        }
+
+        if (Scorable == false)
+        {
+            BecameNonScorable?.Invoke();
+        }
+        else
+        {
+            BecameScorable?.Invoke();
+        }
+
+    }
+
 
     /// <summary>
     /// Place new block inside this cell
@@ -49,6 +109,7 @@ public class Cell(int x, int y, Vector2 cellPosition)
     /// <param name="block"></param>
     public void PlaceBlock(Block block)
     {
+
         if (!Occupied)
         {
             SetBlock(block);
@@ -57,6 +118,7 @@ public class Cell(int x, int y, Vector2 cellPosition)
 
         //TODO: do clipping shenanigans here
     }
+
 
     void SetBlock(Block block)
     {
@@ -74,7 +136,7 @@ public class Cell(int x, int y, Vector2 cellPosition)
         Occupied = true;
 
         _HeldBlock.TreeExiting += RemoveBlock;
-        _HeldBlock.MovedCells += RemoveBlock; 
+        _HeldBlock.MovedCells += RemoveBlock;
         //If our block is deleted or *gasp* abandons us for a new cell! We need to discard our connections to it
 
     }
@@ -92,6 +154,13 @@ public class Cell(int x, int y, Vector2 cellPosition)
 
     public void ScoreBlock()
     {
+        //TODO: score stuff here
+
+        if (Occupied)
+        {
+            HeldBlock.Score();
+        }
+        
         ScoreFlag = ScoringFlags.CannotScoreThisStep;
     }
 
@@ -103,7 +172,7 @@ public class Cell(int x, int y, Vector2 cellPosition)
             return;
         }
 
-        if(ScoreFlag == ScoringFlags.CannotScoreThisTurn)
+        if (ScoreFlag == ScoringFlags.CannotScoreThisTurn)
         {
             return;
         }
@@ -117,5 +186,5 @@ public class Cell(int x, int y, Vector2 cellPosition)
         CannotScoreThisStep,    //Each scoring step can only process a block once. Set to this when we score
         CannotScoreThisTurn     //We reset this on the initial scoring step!
     }
-    
+
 }

@@ -8,6 +8,7 @@
 [ext_resource type="FontFile" uid="uid://cg88y1bvnly6p" path="res://Px437_ToshibaSat_8x16.ttf" id="6_eiv42"]
 [ext_resource type="Texture2D" uid="uid://bavo54t2txnif" path="res://texture/backgroundElements.png" id="8_3hoax"]
 [ext_resource type="Shader" uid="uid://bymdcljo62wwu" path="res://scenes/testscreenshader.gdshader" id="8_3q3ns"]
+[ext_resource type="PackedScene" uid="uid://joftg3j7lslu" path="res://scenes/ScoreAnimation.tscn" id="9_3hoax"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_06til"]
 atlas = ExtResource("8_3hoax")
@@ -169,7 +170,6 @@ explosiveness = 0.8
 process_material = SubResource("ParticleProcessMaterial_shipe")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1396225142]
-visible = false
 material = SubResource("ShaderMaterial_3hoax")
 layout_mode = 1
 anchors_preset = 15
@@ -177,6 +177,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="ScoreAnimation" parent="." unique_id=936479591 instance=ExtResource("9_3hoax")]
+position = Vector2(110, 177)
 
 [connection signal="TurnStarted" from="Board" to="HandAnchor/PlayerHand" method="OnTurnStart"]
 [connection signal="CardPlayed" from="HandAnchor/PlayerHand" to="Board" method="OnCardPlayed"]

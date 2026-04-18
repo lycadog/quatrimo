@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://joftg3j7lslu"]
+
+[ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="1_mdtbv"]
+[ext_resource type="Script" uid="uid://cdm32mfdugipb" path="res://scripts/OneshotAnimation.cs" id="2_resiv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f5mqy"]
+atlas = ExtResource("1_mdtbv")
+region = Rect2(70, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a6fe2"]
+atlas = ExtResource("1_mdtbv")
+region = Rect2(80, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y2kat"]
+atlas = ExtResource("1_mdtbv")
+region = Rect2(90, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xqjlp"]
+atlas = ExtResource("1_mdtbv")
+region = Rect2(100, 0, 10, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tdb54"]
+animations = [{
+"frames": [{
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_f5mqy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a6fe2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y2kat")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xqjlp")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"BasicScore",
+"speed": 12.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="ScoreAnimation" type="AnimatedSprite2D" unique_id=936479591]
+sprite_frames = SubResource("SpriteFrames_tdb54")
+animation = &"BasicScore"
+script = ExtResource("2_resiv")
+
+[connection signal="animation_finished" from="." to="." method="OnAnimationFinished"]

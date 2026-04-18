@@ -15,8 +15,11 @@ public partial class Block : Area2D
 
     protected bool isPlaced = false;
 
+    public bool JustPlaced = false;
+    public bool IsTicked = false;
+
     [Export] public bool Scorable = true;
-    [Export] public double Score = 1;
+    [Export] public double ScoreValue = 1;
 
     [Export] bool SolidWhenFalling = true;
     [Export] bool SolidWhenPlaced = true;
@@ -36,34 +39,10 @@ public partial class Block : Area2D
     [Export] RayCast2D DropPreviewRaycast;
 
     [Signal] public delegate void PlacedEventHandler(Block block);
+    [Signal] public delegate void ScoredEventHandler(Block block);
     [Signal] public delegate void MovedCellsEventHandler();
 
-    public override void _Process(double delta)
-    {
-        //run process event here
-        //we need to make an event (empty by default) that runs every frame here for stuff like attack falling code using this block
-        //no we dont lol
-        //just make the attack run code every turn
-    }
-
-    public override void _Ready()
-    {
-        if (!SolidWhenFalling)
-        {
-            LeftArea.SetCollisionMaskValue(1, false);
-            DownArea.SetCollisionMaskValue(1, false);
-            RightArea.SetCollisionMaskValue(1, false);
-            NegativeRotationArea.SetCollisionMaskValue(1, false);
-            PositiveRotationArea.SetCollisionMaskValue(1, false);
-        }
-
-        UpdateRotationDestinations();
-    }
-
-    public void UpdateSlamSprite(float yOffset)
-    {
-        DropPreviewSprite.Offset = new(0, yOffset);
-    }
+    static PackedScene ScoreAnimation = ResourceLoader.Load<PackedScene>("uid://joftg3j7lslu");
 
     #region === Board Interaction/Positional Methods ===
 
@@ -73,9 +52,21 @@ public partial class Block : Area2D
         ToggleOffBoardTexture(true);
     }
 
+    public virtual void Score()
+    {
+        HideSprites();
+
+        AddChild(ScoreAnimation.Instantiate());
+
+        EmitSignalScored(this);
+
+    }
+
     public virtual void Place()
     {
         SetCollisionLayerValue(1, SolidWhenPlaced); //we are now solid on the placedblocks layer
+
+        JustPlaced = true;
 
         DropPreviewRaycast.Enabled = false;
         DropPreviewSprite.Visible = false;
@@ -92,7 +83,6 @@ public partial class Block : Area2D
         tween.TweenCallback(Callable.From(() => WhiteFlashSprite.Visible = false)).SetDelay(0.1);
 
         EmitSignalPlaced(this);
-
         //do clipping? idk
     }
 
@@ -139,6 +129,30 @@ public partial class Block : Area2D
     }
 
     #endregion
+    #region === Godot Methods ===
+
+    public override void _Process(double delta)
+    {
+        //run process event here
+        //we need to make an event (empty by default) that runs every frame here for stuff like attack falling code using this block
+        //no we dont lol
+        //just make the attack run code every turn
+    }
+
+    public override void _Ready()
+    {
+        if (!SolidWhenFalling)
+        {
+            LeftArea.SetCollisionMaskValue(1, false);
+            DownArea.SetCollisionMaskValue(1, false);
+            RightArea.SetCollisionMaskValue(1, false);
+            NegativeRotationArea.SetCollisionMaskValue(1, false);
+            PositiveRotationArea.SetCollisionMaskValue(1, false);
+        }
+
+        UpdateRotationDestinations();
+    }
+    #endregion
     #region === Visual Methods ===
 
     public void SetTexture(Rect2 rect)
@@ -163,16 +177,21 @@ public partial class Block : Area2D
         SpriteLayer2.SelfModulate = Utils.GetSecondLayerColor(hue, sat, val);
     }
 
+    public void UpdateSlamSprite(float yOffset)
+    {
+        DropPreviewSprite.Offset = new(0, yOffset);
+    }
+
     public virtual void ToggleOffBoardTexture(bool toggleOn)
     {
         if (toggleOn)
         {
-            HideSprites();
+
             AboveBoardIndicatorSprite.Visible = true;
         }
         else
         {
-            UnhideSprites();
+
             AboveBoardIndicatorSprite.Visible = false;
         }
     }
@@ -188,6 +207,18 @@ public partial class Block : Area2D
     }
     #endregion
     #region === Event Methods ===
+
+    public void OnTurnStart()
+    {
+        JustPlaced = false;
+        IsTicked = false;
+    }
+
+    public void OnTickStep()
+    {
+        
+    }
+
     public void OnEnterBoard()
     {
         ToggleOffBoardTexture(false);
