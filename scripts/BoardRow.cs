@@ -37,18 +37,19 @@ public partial class BoardRow(int y, int boardWidth) : Node
             //if we find a newly placed block, iterate left from it. then change state to next line
             //if we find a block that isn't newly placed, iterate right from the block to the left of it. then revert state
 
-            if (leftIteratorNext)
+            if (cells[x].JustPlaced)
             {
-                if (cells[x].JustPlaced)
+                if (cells[x].Scorable) { cells[x].ScoreBlock(); }
+
+                if (leftIteratorNext)
                 {
                     CreateIterator(x, -1);
-
                     leftIteratorNext = false;
+                    continue;
                 }
-                continue;
             }
 
-            if (!cells[x].JustPlaced)
+            else if(!leftIteratorNext)
             {
                 CreateIterator(x - 1, 1);
                 leftIteratorNext = true;

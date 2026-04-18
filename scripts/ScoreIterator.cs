@@ -4,7 +4,7 @@ using System;
 public partial class ScoreIterator(int x, int direction, Cell[] row) : Node
 {
 
-	const double TimeBetweenIterating = 0.05;
+	const double TimeBetweenIterating = 0.03;
     double timer = 0;
 
     [Signal] public delegate void IteratorCompletedEventHandler();

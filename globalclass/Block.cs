@@ -42,8 +42,6 @@ public partial class Block : Area2D
     [Signal] public delegate void ScoredEventHandler(Block block);
     [Signal] public delegate void MovedCellsEventHandler();
 
-    static PackedScene ScoreAnimation = ResourceLoader.Load<PackedScene>("uid://joftg3j7lslu");
-
     #region === Board Interaction/Positional Methods ===
 
     public virtual void Play()
@@ -55,9 +53,6 @@ public partial class Block : Area2D
     public virtual void Score()
     {
         HideSprites();
-
-        AddChild(ScoreAnimation.Instantiate());
-
         EmitSignalScored(this);
 
     }

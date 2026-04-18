@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 [GlobalClass, Icon("res://texture/icon/boardicon.png")]
 public partial class Board : Control
@@ -24,10 +25,13 @@ public partial class Board : Control
 
     public bool BoardUpdated = false;
 
+    List<Block> ScoredBlocks = [];
     BoardRow[] Rows;
     Cell[,] CellBoard;
 
     FallingPiece CurrentPiece;
+
+    static PackedScene ScoreAnimation = ResourceLoader.Load<PackedScene>("uid://joftg3j7lslu");
 
     #region === Board Logic ===
 
@@ -45,6 +49,7 @@ public partial class Board : Control
             return;
         }
 
+        ScoredBlocks.Clear();
         EmitSignalScoreStepStarted(initialStep);
         BoardUpdated = false;
 
@@ -132,6 +137,91 @@ public partial class Board : Control
     }
 
     #endregion
+    #region === Event Methods ===
+
+    public void OnBlockScored(Block block)
+    {
+        block.AddChild(ScoreAnimation.Instantiate());
+
+        ScoredBlocks.Add(block);
+
+    }
+
+    public void OnPiecePlayed(FallingPiece piece)
+    {
+
+    }
+
+    /// <summary>
+    /// When a card is played we create its piece and its blocks, binding signals
+    /// </summary>
+    /// <param name="card"></param>
+    public void OnCardPlayed(PieceCard card)
+    {
+        CurrentPiece = card.LinkedPiece.CreatePiece();
+
+        AddChild(CurrentPiece);
+
+        //BIND SIGNALS HERE ******************************************
+
+        CurrentPiece.Connect(FallingPiece.SignalName.OnPiecePlacement, new(this, MethodName.OnPiecePlaced), (uint)ConnectFlags.OneShot);
+        foreach (var block in CurrentPiece.blocks)
+        {
+            block.Connect(Block.SignalName.Placed, new(this, MethodName.OnBlockPlaced), (uint)ConnectFlags.OneShot);
+            block.Connect(Block.SignalName.Scored, new(this, MethodName.OnBlockScored));
+
+            Connect(SignalName.TurnStarted, new(block, Block.MethodName.OnTurnStart));
+            
+            //block signals here
+        }
+
+        CurrentPiece.Position = new Vector2(5, -Dimensions.Y * 5 + 5);
+        CurrentPiece.Play();
+
+        OnPiecePlayed(CurrentPiece);
+        EmitSignalPiecePlayed();
+    }
+
+    public void OnBlockPlaced(Block block)
+    {
+        block.Reparent(this);
+
+        Vector2I blockpos = GetBlockPosition(block.Position);
+
+        GD.Print($"block placed at {blockpos.X}, {blockpos.Y}");
+
+        CellBoard[blockpos.X, blockpos.Y].PlaceBlock(block);
+        //add block to CellBoard
+    }
+
+    public void OnPiecePlaced(FallingPiece piece)
+    {
+        CurrentPiece = null;
+        GD.Print("Piece placed!");
+
+        ScoreBoard(true);
+        //move onto scoring now!
+    }
+
+    public void OnAreaEntered(Area2D area)
+    {
+        if (area is Block)
+        {
+            Block block = area as Block;
+            block.OnEnterBoard();
+        }
+    }
+
+    public void OnAreaExited(Area2D area)
+    {
+        if (area is Block)
+        {
+            Block block = area as Block;
+            block.OnExitBoard();
+        }
+    }
+
+    #endregion
     #region === Godot Methods ===
 
     // Called when the node enters the scene tree for the first time.
@@ -215,82 +305,6 @@ public partial class Board : Control
     void SetDimensions(Vector2I dimensions)
     {
         SetDimensions(dimensions.X, dimensions.Y);
-    }
-
-    #endregion
-    #region === Event Methods ===
-
-    public void OnPiecePlayed(FallingPiece piece)
-    {
-
-    }
-
-    /// <summary>
-    /// When a card is played we create its piece and its blocks, binding signals
-    /// </summary>
-    /// <param name="card"></param>
-    public void OnCardPlayed(PieceCard card)
-    {
-        CurrentPiece = card.LinkedPiece.CreatePiece();
-
-        AddChild(CurrentPiece);
-
-        //BIND SIGNALS HERE ******************************************
-
-        CurrentPiece.Connect(FallingPiece.SignalName.OnPiecePlacement, new(this, MethodName.OnPiecePlaced), (uint)ConnectFlags.OneShot);
-        foreach(var block in CurrentPiece.blocks)
-        {
-            block.Connect(Block.SignalName.Placed, new(this, MethodName.OnBlockPlaced), (uint)ConnectFlags.OneShot);
-
-            Connect(SignalName.TurnStarted, new(block, Block.MethodName.OnTurnStart));
-
-            //block signals here
-        }
-
-        CurrentPiece.Position = new Vector2(5, -Dimensions.Y * 5 + 5);
-        CurrentPiece.Play();
-
-        OnPiecePlayed(CurrentPiece);
-        EmitSignalPiecePlayed();
-    }
-
-    public void OnBlockPlaced(Block block)
-    {
-        block.Reparent(this);
-
-        Vector2I blockpos = GetBlockPosition(block.Position);
-
-        GD.Print($"block placed at {blockpos.X}, {blockpos.Y}");
-
-        CellBoard[blockpos.X, blockpos.Y].PlaceBlock(block);
-        //add block to CellBoard
-    }
-
-    public void OnPiecePlaced(FallingPiece piece)
-    {
-        CurrentPiece = null;
-        GD.Print("Piece placed!");
-
-        ScoreBoard(true);
-        //move onto scoring now!
-    }
-
-    public void OnAreaEntered(Area2D area)
-    {
-        if (area is Block)
-        {
-            Block block = area as Block;
-            block.OnEnterBoard();
-        }
-    }
-
-    public void OnAreaExited(Area2D area)
-    {
-        if (area is Block)
-        {
-            Block block = area as Block;
-            block.OnExitBoard();
-        }
     }
 
     #endregion
