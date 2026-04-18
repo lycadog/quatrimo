@@ -1,5 +1,6 @@
 
 using Godot;
+using System;
 
 public class Cell(int x, int y, Vector2 cellPosition)
 {
@@ -9,7 +10,10 @@ public class Cell(int x, int y, Vector2 cellPosition)
     public Block HeldBlock { get => _HeldBlock; set => SetBlock(value); }
 
     bool Occupied = false;
-    
+
+    public event Action BecameScorable;
+    public event Action BecameNonScorable;
+
     public bool Scorable
     {
         get { if (Occupied && ScoreFlag == ScoringFlags.CanScore) { 
@@ -41,7 +45,27 @@ public class Cell(int x, int y, Vector2 cellPosition)
         }
     }
 
-    public ScoringFlags ScoreFlag;
+    ScoringFlags _ScoreFlag;
+    public ScoringFlags ScoreFlag
+    {
+        get { return _ScoreFlag; }
+        set
+        {
+            if(value == _ScoreFlag) { return; }
+
+            if(_ScoreFlag == ScoringFlags.CanScore)
+            {
+                BecameNonScorable?.Invoke(); //we are changing away from scorable so we evoke our event
+            }
+
+            if (value == ScoringFlags.CanScore)
+            {
+                BecameScorable?.Invoke();
+            }
+
+            _ScoreFlag = value;
+        }
+    }
 
     /// <summary>
     /// Place new block inside this cell

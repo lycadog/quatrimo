@@ -19,7 +19,7 @@ public partial class Board : Control
 
     [Signal] public delegate void TurnStartedEventHandler();
 	[Signal] public delegate void PiecePlayedEventHandler();
-    [Signal] public delegate void ScoreStepStartedEventHandler();
+    [Signal] public delegate void ScoreStepStartedEventHandler(bool isInitialStep);
 
     Cell[,] CellBoard;
 
@@ -30,11 +30,15 @@ public partial class Board : Control
     public void StartTurn()
     {
         EmitSignalTurnStarted();
-
     }
 
-    public void ProcessScoring()
+    public void ScoreBoard(bool initialStep)
     {
+        EmitSignalScoreStepStarted(initialStep);
+
+
+
+        //todo: add recursive calls
     }
 
     void LowerCollumn(int x, int startingY)
@@ -55,6 +59,27 @@ public partial class Board : Control
             //replace our block with the above block
             //SHOULD remove extra references automatically. double check!
         }
+    }
+
+    void CreateBlockBoard(int width, int height)
+    {
+        height += 8; //Add an extra 8 height so we have a buffer above the board
+
+        CellDimensions = new(width, height);
+
+        GD.Print(CellDimensions);
+
+        CellBoard = new Cell[width, height];
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                CellBoard[x, y] = new Cell(x, y, GetRealPosition(x, y));
+                ScoreStepStarted += CellBoard[x, y].OnScoreStepBegin;
+            }
+        }
+
     }
 
     #endregion 
@@ -91,26 +116,6 @@ public partial class Board : Control
     void SetDimensions(Vector2I dimensions)
     {
         SetDimensions(dimensions.X, dimensions.Y);
-    }
-
-    void CreateBlockBoard(int width, int height)
-    {
-        height += 8; //Add an extra 8 height so we have a buffer above the board
-
-        CellDimensions = new(width, height);
-
-        GD.Print(CellDimensions);
-
-        CellBoard = new Cell[width, height];
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                CellBoard[x, y] = new Cell(x, y, GetRealPosition(x,y));
-            }
-        }
-
     }
 
     #endregion
@@ -171,6 +176,27 @@ public partial class Board : Control
         EmitSignalPiecePlayed();
     }
 
+    public void OnBlockPlaced(Block block)
+    {
+        block.Reparent(this);
+
+        Vector2I blockpos = GetBlockPosition(block.Position);
+
+        GD.Print($"block placed at {blockpos.X}, {blockpos.Y}");
+
+        CellBoard[blockpos.X, blockpos.Y].PlaceBlock(block);
+        //add block to CellBoard
+    }
+
+    public void OnPiecePlaced(FallingPiece piece)
+    {
+        CurrentPiece = null;
+        GD.Print("Piece placed!");
+
+        ScoreBoard(true);
+        //move onto scoring now!
+        //next up: here!
+    }
 
     public void OnAreaEntered(Area2D area)
     {
@@ -188,27 +214,6 @@ public partial class Board : Control
             Block block = area as Block;
             block.OnExitBoard();
         }
-    }
-
-    public void OnBlockPlaced(Block block)
-	{
-        block.Reparent(this);
-
-        Vector2I blockpos = GetBlockPosition(block.Position);
-
-        GD.Print($"block placed at {blockpos.X}, {blockpos.Y}");
-
-        CellBoard[blockpos.X, blockpos.Y].PlaceBlock(block);
-        //add block to CellBoard
-    }
-
-    public void OnPiecePlaced(FallingPiece piece)
-    {
-        CurrentPiece = null;
-        GD.Print("Piece placed!");
-
-        //move onto scoring now!
-        //next up: here!
     }
 
     #endregion
