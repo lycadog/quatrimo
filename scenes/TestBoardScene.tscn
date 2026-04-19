@@ -23,24 +23,6 @@ line_spacing = 1.0
 font = ExtResource("6_eiv42")
 font_size = 8
 
-[sub_resource type="Gradient" id="Gradient_shipe"]
-colors = PackedColorArray(1, 1, 1, 1, 0.46518457, 0.45496517, 0.9642119, 0)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_pi7fc"]
-gradient = SubResource("Gradient_shipe")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_shipe"]
-lifetime_randomness = 0.11
-particle_flag_disable_z = true
-angular_velocity_min = -720.0
-angular_velocity_max = 719.99994
-radial_velocity_min = 9.999977
-radial_velocity_max = 39.999977
-gravity = Vector3(0, 0, 0)
-linear_accel_min = 60.439995
-linear_accel_max = 60.439995
-color_ramp = SubResource("GradientTexture1D_pi7fc")
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3hoax"]
 shader = ExtResource("8_3q3ns")
 
@@ -162,13 +144,6 @@ text = "WE'RE ALL HUGE FROGS! WE'RE THE FABULOUS FIVE FROGGISH TENOURS!"
 label_settings = SubResource("LabelSettings_shipe")
 autowrap_mode = 2
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1558552467]
-position = Vector2(81, 180)
-amount = 22
-lifetime = 1.09
-explosiveness = 0.8
-process_material = SubResource("ParticleProcessMaterial_shipe")
-
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1396225142]
 material = SubResource("ShaderMaterial_3hoax")
 layout_mode = 1
@@ -181,5 +156,6 @@ grow_vertical = 2
 [node name="ScoreAnimation" parent="." unique_id=936479591 instance=ExtResource("9_3hoax")]
 position = Vector2(110, 177)
 
+[connection signal="TurnEnded" from="Board" to="HandAnchor/PlayerHand" method="OnTurnEnd"]
 [connection signal="TurnStarted" from="Board" to="HandAnchor/PlayerHand" method="OnTurnStart"]
 [connection signal="CardPlayed" from="HandAnchor/PlayerHand" to="Board" method="OnCardPlayed"]

@@ -30,7 +30,7 @@ public partial class PlayerHand : Container
 
     public override void _EnterTree()
     {
-        Bag = Data.magnetBag.CreateBag();
+        Bag = Data.debugBag.CreateBag();
     }
     
     // Called when the node enters the scene tree for the first time.
@@ -45,7 +45,7 @@ public partial class PlayerHand : Container
     public override void _Process(double delta)
     {
 		TryStartDrawing();
-		UpdateHandPosition();
+		UpdateCards();
 
 		if (InputEnabled && !CurrentlyDrawing)
 		{
@@ -63,7 +63,27 @@ public partial class PlayerHand : Container
 		}
 	}
 
-    void UpdateHandPosition()
+	public void OnTurnEnd()
+	{
+		RemoveCard(SelectionIndex);
+	}
+
+	public void RemoveCard(int index)
+	{
+		PieceCard card = Hand[index];
+		card.Destroy();
+
+		Hand.RemoveAt(index);
+
+		if(index == SelectionIndex) { SelectionIndex = -1; }
+	}
+
+	void UpdateHandPosition()
+	{
+
+	}
+
+    void UpdateCards()
     {
         for (int i = 0; i < Hand.Count; i++)
         {
@@ -163,6 +183,8 @@ public partial class PlayerHand : Container
 			{
 				tween.TweenCallback(Callable.From(StartDrawingNextCard)).SetDelay(TimeBeforeDrawingNextCard * i);
 			}
+
+			UpdateHandPosition();
 
             float finalSpacing = GetNewSpacing();
             float yOffset = GetNewYOffset();

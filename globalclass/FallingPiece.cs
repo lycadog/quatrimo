@@ -126,7 +126,7 @@ public partial class FallingPiece : Node2D
 
             if (DownHeldTime >= 0.14) //After it's held for a bit move down some more
             {
-                fallingCounter += delta * 20;
+                fallingCounter += delta * 40;
             }
         }
 

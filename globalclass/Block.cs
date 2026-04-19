@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 [GlobalClass, Icon("res://texture/icon/blockicon.png")]
 public partial class Block : Area2D
 {
+    public int boardX, boardY;
 
     public float SlamOffset;
     public bool CanMoveLeft = true;
@@ -12,10 +13,12 @@ public partial class Block : Area2D
     public bool CanMoveRight = true;
     public bool CanRotateNegative = true;
     public bool CanRotatePositive = true;
+    public int LowerDistance = 0;
 
-    protected bool isPlaced = false;
+    public bool isPlaced = false;
 
     public bool JustPlaced = false;
+    public bool IsScored = false;
     public bool IsTicked = false;
 
     [Export] public bool Scorable = true;
@@ -42,6 +45,8 @@ public partial class Block : Area2D
     [Signal] public delegate void ScoredEventHandler(Block block);
     [Signal] public delegate void MovedCellsEventHandler();
 
+    const double PlacementFlashLength = .14;
+
     #region === Board Interaction/Positional Methods ===
 
     public virtual void Play()
@@ -53,6 +58,7 @@ public partial class Block : Area2D
     public virtual void Score()
     {
         HideSprites();
+        IsScored = true;
         EmitSignalScored(this);
 
     }
@@ -61,6 +67,7 @@ public partial class Block : Area2D
     {
         SetCollisionLayerValue(1, SolidWhenPlaced); //we are now solid on the placedblocks layer
 
+        isPlaced = true;
         JustPlaced = true;
 
         DropPreviewRaycast.Enabled = false;
@@ -75,7 +82,7 @@ public partial class Block : Area2D
         //temporarily make the white sprite visible so we get a little flash animation when we place stuff
         WhiteFlashSprite.Visible = true;
         Tween tween = GetTree().CreateTween();
-        tween.TweenCallback(Callable.From(() => WhiteFlashSprite.Visible = false)).SetDelay(0.1);
+        tween.TweenCallback(Callable.From(() => WhiteFlashSprite.Visible = false)).SetDelay(PlacementFlashLength);
 
         EmitSignalPlaced(this);
         //do clipping? idk

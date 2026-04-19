@@ -2,8 +2,9 @@ using Godot;
 using System;
 
 [GlobalClass, Icon("res://texture/icon/cardicon.png")]
-public partial class PieceCard : TextureRect
+public partial class PieceCard : Control
 {
+
 	[Export] TextureRect CardBorder;
 	[Export] TextureRect CardNumber;
 	[Export] TextureRect HighlightBars;
@@ -75,6 +76,11 @@ public partial class PieceCard : TextureRect
 		(CardNumber.Texture as AtlasTexture).Region = textureRect;
 	}
 
+	public void Destroy()
+	{
+		//TODO: replace with removal animation
+		QueueFree();
+	}
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

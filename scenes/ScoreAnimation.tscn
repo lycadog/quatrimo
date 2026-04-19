@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://joftg3j7lslu"]
 
 [ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="1_mdtbv"]
-[ext_resource type="Script" uid="uid://cdm32mfdugipb" path="res://scripts/OneshotAnimation.cs" id="2_resiv"]
+[ext_resource type="Script" uid="uid://cdm32mfdugipb" path="res://scripts/ScoreAnimation.cs" id="2_mdtbv"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_f5mqy"]
 atlas = ExtResource("1_mdtbv")
@@ -48,7 +48,7 @@ animations = [{
 }]
 
 [sub_resource type="Gradient" id="Gradient_mdtbv"]
-colors = PackedColorArray(1, 1, 1, 1, 0.46518457, 0.45496517, 0.9642119, 0)
+colors = PackedColorArray(1, 1, 1, 1, 0.58828014, 0.4312, 0.88, 0)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_pi7fc"]
 gradient = SubResource("Gradient_mdtbv")
@@ -56,23 +56,24 @@ gradient = SubResource("Gradient_mdtbv")
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_resiv"]
 lifetime_randomness = 0.11
 particle_flag_disable_z = true
-angular_velocity_min = -720.0
-angular_velocity_max = 719.99994
+angular_velocity_min = -461.39
+angular_velocity_max = 484.89996
 radial_velocity_min = 9.999977
 radial_velocity_max = 39.999977
-gravity = Vector3(0, 0, 0)
-linear_accel_min = 60.439995
-linear_accel_max = 60.439995
+linear_accel_min = 57.989998
+linear_accel_max = 80.03
 color_ramp = SubResource("GradientTexture1D_pi7fc")
 
 [node name="ScoreAnimation" type="AnimatedSprite2D" unique_id=936479591]
 sprite_frames = SubResource("SpriteFrames_tdb54")
 animation = &"BasicScore"
-script = ExtResource("2_resiv")
+script = ExtResource("2_mdtbv")
 
 [node name="ScoreParticles" type="GPUParticles2D" parent="." unique_id=674775356]
+show_behind_parent = true
 emitting = false
-amount = 14
+amount = 10
+lifetime = 0.9
 one_shot = true
 explosiveness = 0.9
 process_material = SubResource("ParticleProcessMaterial_resiv")

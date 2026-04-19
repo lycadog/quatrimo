@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://d2umw6muvt05b" path="res://texture/pieceCard.png" id="1_dlunc"]
 [ext_resource type="Script" uid="uid://dr053va3lvbk8" path="res://globalclass/PieceCard.cs" id="2_ag2cg"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jm6t2"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_d5chy"]
 atlas = ExtResource("1_dlunc")
 region = Rect2(0, 34, 69, 34)
 
@@ -20,21 +20,33 @@ region = Rect2(0, 120, 5, 8)
 atlas = ExtResource("1_dlunc")
 region = Rect2(1, 68, 67, 6)
 
-[node name="PieceCard" type="TextureRect" unique_id=739776105 node_paths=PackedStringArray("CardBorder", "CardNumber", "HighlightBars", "BlockBox")]
+[node name="PieceCard" type="Control" unique_id=1109525706 node_paths=PackedStringArray("CardBorder", "CardNumber", "HighlightBars", "BlockBox")]
+layout_mode = 3
+anchors_preset = 0
 offset_right = 69.0
 offset_bottom = 34.0
 pivot_offset = Vector2(34.5, 17)
 size_flags_vertical = 4
-texture = SubResource("AtlasTexture_jm6t2")
-stretch_mode = 4
+mouse_filter = 1
 script = ExtResource("2_ag2cg")
-CardBorder = NodePath("CardBorder")
-CardNumber = NodePath("Number")
-HighlightBars = NodePath("TopHighlight")
-BlockBox = NodePath("BlockBox")
+CardBorder = NodePath("CardBG/CardBorder")
+CardNumber = NodePath("CardBG/Number")
+HighlightBars = NodePath("CardBG/TopHighlight")
+BlockBox = NodePath("CardBG/BlockBox")
 metadata/_custom_type_script = "uid://dr053va3lvbk8"
 
-[node name="CardBorder" type="TextureRect" parent="." unique_id=1866356336]
+[node name="CardBG" type="TextureRect" parent="." unique_id=1866356336]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("AtlasTexture_d5chy")
+stretch_mode = 4
+
+[node name="CardBorder" type="TextureRect" parent="CardBG" unique_id=1837139526]
 self_modulate = Color(0.32666662, 9.3854965e-07, 0.19559467, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -46,7 +58,7 @@ mouse_filter = 2
 texture = SubResource("AtlasTexture_ag2cg")
 stretch_mode = 4
 
-[node name="Number" type="TextureRect" parent="." unique_id=171969518]
+[node name="Number" type="TextureRect" parent="CardBG" unique_id=171969518]
 layout_mode = 0
 offset_left = 62.0
 offset_top = 3.0
@@ -55,7 +67,7 @@ offset_bottom = 11.0
 texture = SubResource("AtlasTexture_84sgu")
 stretch_mode = 4
 
-[node name="TopHighlight" type="TextureRect" parent="." unique_id=68319400]
+[node name="TopHighlight" type="TextureRect" parent="CardBG" unique_id=68319400]
 visible = false
 z_index = 1
 layout_mode = 0
@@ -66,7 +78,7 @@ offset_bottom = -1.0
 texture = SubResource("AtlasTexture_dlunc")
 stretch_mode = 4
 
-[node name="BottomHighlight" type="TextureRect" parent="TopHighlight" unique_id=910129507]
+[node name="BottomHighlight" type="TextureRect" parent="CardBG/TopHighlight" unique_id=910129507]
 layout_mode = 0
 offset_top = 43.0
 offset_right = 67.0
@@ -75,16 +87,18 @@ texture = SubResource("AtlasTexture_dlunc")
 stretch_mode = 4
 flip_v = true
 
-[node name="BlockBox" type="Control" parent="." unique_id=1231716876]
+[node name="BlockBox" type="Control" parent="CardBG" unique_id=1231716876]
 anchors_preset = 0
 offset_left = 28.0
 offset_top = 20.5
 offset_right = 28.0
 offset_bottom = 20.5
 
-[node name="BlackoutBox" type="ColorRect" parent="." unique_id=1658960950]
+[node name="BlackoutBox" type="ColorRect" parent="CardBG" unique_id=1658960950]
 visible = false
 layout_mode = 0
 offset_right = 69.0
 offset_bottom = 34.0
 color = Color(0, 0, 0, 0.4)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1584020593]

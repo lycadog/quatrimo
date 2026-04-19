@@ -25,8 +25,8 @@ public static class Data
     public static PieceShape sLLPiece = new(new int[,] { { 1, 2, 3 }, { 4, 0, 0 } }, 1, 1, "Left Elle");
     public static PieceShape sRLPiece = new(new int[,] { { 1, 0, 0 }, { 2, 3, 4 } }, 1, 1, "Right Elle");
 
-    public static PieceShape sBigTee = new(new int[,] { { 1, 2, 1 }, { 0, 3, 0 }, { 0, 4, 0 } }, 1, 1, "Big Tee");
-    public static PieceShape sLHatchet = new(new int[,] { { 1, 2 }, { 1, 2 }, { 3, 0 }, { 3, 0 } }, 2, 0, "Left Hatchet");
+    public static PieceShape sBigTee = new(new int[,] { { 0, 2, 0 }, { 0, 3, 0 }, { 1, 4, 1 } }, 1, 1, "Big Tee");
+    public static PieceShape sLHatchet = new(new int[,] { { 1, 2 }, { 1, 2 }, { 0, 3 }, { 0, 3 } }, 2, 0, "Left Hatchet");
     public static PieceShape sRHatchet = new(new int[,] { { 1, 0 }, { 1, 0 }, { 2, 3 }, { 2, 3 } }, 1, 0, "Right Hatchet");
     public static PieceShape sDipole = new(new int[,] { { 1, 2 }, { 0, 0 }, { 3, 4 } }, 1, 1, "Dipole");
     public static PieceShape sLHook = new(new int[,] { { 0, 1 }, { 2, 0 }, { 3, 0 } }, 1, 0, "Left Hook");
@@ -39,9 +39,9 @@ public static class Data
 
     public static PieceShape sCaret = new(new int[,] { { 0, 1 }, { 2, 0 }, { 0, 3 } }, 1, 1, "Caret");
     public static PieceShape sGlider = new(new int[,] { { 0, 1, 0 }, { 0, 2, 3 }, { 4, 0, 0 } }, 1, 1, "Glider");
-    public static PieceShape sLStep = new(new int[,] { { 1, 2 }, { 0, 0 }, { 3, 0 } }, 1, 0, "Left Step");
-    public static PieceShape sRStep = new(new int[,] { { 3, 0 }, { 0, 0 }, { 1, 2 } }, 1, 0, "Right Step");
-    public static PieceShape sStump = new(new int[,] { { 1, 0 }, { 2, 3 }, { 2, 3 }, { 4, 0 } }, 1, 1, "Stump");
+    public static PieceShape sLStep = new(new int[,] { { 1, 2 }, { 0, 0 }, { 0, 3 } }, 1, 0, "Left Step");
+    public static PieceShape sRStep = new(new int[,] { { 0, 3 }, { 0, 0 }, { 1, 2 } }, 1, 0, "Right Step");
+    public static PieceShape sStump = new(new int[,] { { 0, 1 }, { 2, 3 }, { 2, 3 }, { 0, 4 } }, 1, 1, "Stump");
 
     public static PieceShape sScatteredWedge = new(new int[,] { { 4, 0, 1 }, { 0, 0, 0 }, { 2, 0, 0 } }, 1, 1, "temp");
     public static PieceShape sTripleHole = new(new int[,] { { 1 }, { 0 }, { 4 }, { 0 }, { 2 } }, 2, 0, "temp");
@@ -80,6 +80,6 @@ public static class Data
 
     public static StarterBag longDistanceBag = new([sScatteredWedge.B, sSeperatedT.B, sLScatteredL.B, sRScatteredR.B, sSlash.B, sLepton.B, sLTangle.B, sRTangle.B, sBowl.B, sStick.B, sWedge.B, sNub.B, sLine.B], new Rect2(0, 50, 10, 10), "quanto bag idk");
 
-    public static StarterBag debugBag = new([RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece], "debug");
+    public static StarterBag debugBag = new([sLine.B, sLine.B, sLine.B], "debug");
 
 }

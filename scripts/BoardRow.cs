@@ -21,7 +21,6 @@ public partial class BoardRow(int y, int boardWidth) : Node
 
     public void AttemptScoring()
     {
-        GD.Print("attempted scoring: " + Scorable);
         if (Scorable)
         {
             StartScoring();
@@ -31,6 +30,7 @@ public partial class BoardRow(int y, int boardWidth) : Node
     public void StartScoring()
     {
         bool leftIteratorNext = true;
+        bool createdIterator = false;
 
         for(int x = 0; x < boardWidth; x++)
         {
@@ -45,6 +45,7 @@ public partial class BoardRow(int y, int boardWidth) : Node
                 {
                     CreateIterator(x, -1);
                     leftIteratorNext = false;
+                    createdIterator = true;
                     continue;
                 }
             }
@@ -54,6 +55,13 @@ public partial class BoardRow(int y, int boardWidth) : Node
                 CreateIterator(x - 1, 1);
                 leftIteratorNext = true;
             }
+        }
+
+        //if we failed to make an iterator, emergency backup! this starts from the middle and goes out
+        if (!createdIterator)
+        {
+            CreateIterator(boardWidth / 2 - 1, -1);
+            CreateIterator(boardWidth / 2, 1);
         }
     }
 

@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 [GlobalClass, Icon("res://texture/icon/boardicon.png")]
 public partial class Board : Control
@@ -20,18 +21,25 @@ public partial class Board : Control
 
     [Signal] public delegate void TurnStartedEventHandler();
 	[Signal] public delegate void PiecePlayedEventHandler();
-    [Signal] public delegate void TickStepStartedEventHandler();
     [Signal] public delegate void ScoreStepStartedEventHandler(bool isInitialStep);
+    [Signal] public delegate void TickStepStartedEventHandler();
+    [Signal] public delegate void TurnEndedEventHandler();
+
 
     public bool BoardUpdated = false;
 
     List<Block> ScoredBlocks = [];
+    List<Block> PlacedBlocks = [];
     BoardRow[] Rows;
     Cell[,] CellBoard;
+
+    int TotalAnimations = 0;
+    int AnimationsCompleted = 0;
 
     FallingPiece CurrentPiece;
 
     static PackedScene ScoreAnimation = ResourceLoader.Load<PackedScene>("uid://joftg3j7lslu");
+    const double LowerAnimLength = .1;
 
     #region === Board Logic ===
 
@@ -43,8 +51,13 @@ public partial class Board : Control
 
     void ScoreBoard(bool initialStep)
     {
+        TotalAnimations = 0;
+        AnimationsCompleted = 0;
+
         if(!BoardUpdated && !initialStep)
         {
+            //progress forwards!
+            //everything should come back to this eventually. we should NOT have a path to ticking that isn't here or the below one
             TickBlocks();
             return;
         }
@@ -58,21 +71,84 @@ public partial class Board : Control
             row.AttemptScoring();
         }
 
-        ScoreBoard(false);
+        if(TotalAnimations == 0)
+        {
+            GD.Print("nothing scored");
+            TickBlocks(); //this is the only other allowed end spot of this state
+        }
+
+        //continue board logic after animations have finished
     }
 
     void TickBlocks()
     {
 
-        StartTurn();
+        //todo: this
 
-
-
+        EndTurn();
     }
 
     void EndTurn()
     {
+        EmitSignalTurnEnded();
+        StartTurn();
+    }
 
+    void LowerScoredBlocks()
+    {
+        TotalAnimations = 0;
+        AnimationsCompleted = 0;
+
+        GD.Print("lowering scored blocks now");
+        foreach(var block in ScoredBlocks)
+        {
+            //iterate upwards in the array, setting lower values for every cell
+
+            for (int y = block.boardY+1; y < CellDimensions.Y - 1; y++)
+            {
+                Cell cell = CellBoard[block.boardX, y];
+
+                cell.LowerDistance++;
+            }
+            PlacedBlocks.Remove(block);
+
+            block.QueueFree();
+        }
+
+        ScoredBlocks.Clear();
+
+        if(PlacedBlocks.Count == 0) 
+        { 
+            return; 
+        }
+
+        Tween tween = GetTree().CreateTween().SetParallel();
+
+        foreach(var block in PlacedBlocks)
+        {
+            LowerBlock(block, tween);
+        }
+
+
+    }
+
+    void LowerBlock(Block block, Tween tween)
+    {
+        block.boardY -= block.LowerDistance;
+
+        GD.Print("lowering block");
+
+        TotalAnimations++;
+
+        //todo: change delay to be more exponential falloff. higher Y values give less delay
+
+        //tween lowering to our new position, and we actually move when its done with the method
+        tween.TweenProperty(block, "position",
+            new Vector2(0, block.LowerDistance * 10), LowerAnimLength).AsRelative()
+            .SetTrans(Tween.TransitionType.Quad)
+            .SetDelay(block.boardY * .03)
+            .Finished += () => OnBlockFinishedLowering(block);
+            
     }
 
     void LowerCollumn(int x, int startingY)
@@ -139,12 +215,50 @@ public partial class Board : Control
     #endregion
     #region === Event Methods ===
 
+    public void OnBlockExitingTree(Block block)
+    {
+        if (block.isPlaced)
+        {
+            PlacedBlocks.Remove(block);
+        }
+    }
+
+    public void OnBlockFinishedLowering(Block block)
+    {
+        AnimationsCompleted++;
+        CellBoard[block.boardX, block.boardY].HeldBlock = block;
+        block.LowerDistance = 0;
+
+        if(AnimationsCompleted >= TotalAnimations)
+        {
+            ScoreBoard(false);
+        }
+    }
+
     public void OnBlockScored(Block block)
     {
-        block.AddChild(ScoreAnimation.Instantiate());
+        ScoreAnimation animation = (ScoreAnimation)ScoreAnimation.Instantiate();
+
+        AddChild(animation);
+
+        animation.GlobalPosition = block.GlobalPosition;
+
+        animation.AnimationFinished += OnScoreAnimationFinished;
+        TotalAnimations++;
 
         ScoredBlocks.Add(block);
 
+    }
+
+    public void OnScoreAnimationFinished()
+    {
+        AnimationsCompleted++;
+        GD.Print($"hey i'm animation and i just ended! Animations completed: {AnimationsCompleted}/{TotalAnimations}");
+
+        if(AnimationsCompleted >= TotalAnimations)
+        {
+            LowerScoredBlocks();
+        }
     }
 
     public void OnPiecePlayed(FallingPiece piece)
@@ -169,8 +283,11 @@ public partial class Board : Control
         {
             block.Connect(Block.SignalName.Placed, new(this, MethodName.OnBlockPlaced), (uint)ConnectFlags.OneShot);
             block.Connect(Block.SignalName.Scored, new(this, MethodName.OnBlockScored));
+            block.Connect(Block.SignalName.TreeExiting, new(this, MethodName.OnBlockExitingTree), (uint)ConnectFlags.AppendSourceObject);
+
 
             Connect(SignalName.TurnStarted, new(block, Block.MethodName.OnTurnStart));
+
             
             //block signals here
         }
@@ -185,6 +302,7 @@ public partial class Board : Control
     public void OnBlockPlaced(Block block)
     {
         block.Reparent(this);
+        PlacedBlocks.Add(block);
 
         Vector2I blockpos = GetBlockPosition(block.Position);
 

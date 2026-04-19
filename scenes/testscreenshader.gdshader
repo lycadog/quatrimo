@@ -10,5 +10,5 @@ void fragment() {
 
 	vec3 screen_color = textureLod(screen_texture, (centered_uv + 1.0) / 2.0, 0.4).rgb * scanlines;
 	
-	COLOR = vec4(screen_color, 0.5);
+	COLOR = vec4(screen_color, 0.45);
 }

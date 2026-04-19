@@ -1,8 +1,10 @@
 using Godot;
 using System;
 
-public partial class OneshotAnimation : AnimatedSprite2D
+public partial class ScoreAnimation : AnimatedSprite2D
 {
+	[Signal] public delegate void ScoreAnimationEndedEventHandler();
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -17,8 +19,9 @@ public partial class OneshotAnimation : AnimatedSprite2D
 	{
 	}
 
-	public void OnParticlesFinished()
+	public void OnAnimationFinished()
 	{
-		QueueFree();
+        EmitSignalScoreAnimationEnded();
+        QueueFree();
 	}
 }

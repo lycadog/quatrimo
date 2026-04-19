@@ -79,10 +79,37 @@ public class Cell(int x, int y, Vector2 cellPosition)
         }
     }
 
+    public bool IsScored
+    {
+        get
+        {
+            if (_Occupied) { return HeldBlock.IsScored; }
+            return false;
+        }
+    }
+
+
     public event Action BecameScorable;
     public event Action BecameNonScorable;
-
     public event Action UpdatedBoard;
+
+    public int LowerDistance
+    {
+        get
+        {
+            if (Occupied) { return HeldBlock.LowerDistance; }
+            return 0;
+        }
+
+        set
+        {
+            if (Occupied)
+            {
+                HeldBlock.LowerDistance = value;
+                
+            }
+        }
+    }
 
     void ScorabilityUpdated(bool staleScorable)
     {
@@ -120,6 +147,7 @@ public class Cell(int x, int y, Vector2 cellPosition)
     }
 
 
+
     void SetBlock(Block block)
     {
         //TODO: maybe find a way to sync block to cell position here?
@@ -133,6 +161,7 @@ public class Cell(int x, int y, Vector2 cellPosition)
         _HeldBlock = block;
         _HeldBlock.EmitSignal(Block.SignalName.MovedCells);
         _HeldBlock.Position = cellPosition; //Update our blocks position to ensure it is placed right
+        _HeldBlock.boardX = x; _HeldBlock.boardY = y;
         Occupied = true;
 
         _HeldBlock.TreeExiting += RemoveBlock;
