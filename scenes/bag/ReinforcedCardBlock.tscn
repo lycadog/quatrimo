@@ -1,17 +1,20 @@
 [gd_scene format=3 uid="uid://bpt452pea0ewe"]
 
-[ext_resource type="Texture2D" uid="uid://d2umw6muvt05b" path="res://texture/pieceCard.png" id="1_8prax"]
-[ext_resource type="Script" uid="uid://y6dpg27acggw" path="res://globalclass/CardBlockSprite.cs" id="2_ejxts"]
+[ext_resource type="Script" uid="uid://y6dpg27acggw" path="res://globalclass/CardBlockSprite.cs" id="1_8prax"]
+[ext_resource type="Texture2D" uid="uid://d2umw6muvt05b" path="res://texture/pieceCard.png" id="2_ejxts"]
 
-[node name="ReinforcedCardBlock" type="Sprite2D" unique_id=347132184 node_paths=PackedStringArray("SecondLayer")]
-texture = ExtResource("1_8prax")
-region_enabled = true
-region_rect = Rect2(14, 74, 7, 7)
-script = ExtResource("2_ejxts")
-SecondLayer = NodePath("Sprite2D")
+[node name="BasicCardBlock" type="Node2D" unique_id=459041350 node_paths=PackedStringArray("FirstLayer", "SecondLayer")]
+script = ExtResource("1_8prax")
+FirstLayer = NodePath("Layer1Sprite")
+SecondLayer = NodePath("Layer2Sprite")
 metadata/_custom_type_script = "uid://y6dpg27acggw"
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=656421469]
-texture = ExtResource("1_8prax")
+[node name="Layer1Sprite" type="Sprite2D" parent="." unique_id=759158297]
+texture = ExtResource("2_ejxts")
+region_enabled = true
+region_rect = Rect2(14, 74, 7, 7)
+
+[node name="Layer2Sprite" type="Sprite2D" parent="." unique_id=656421469]
+texture = ExtResource("2_ejxts")
 region_enabled = true
 region_rect = Rect2(14, 81, 7, 7)

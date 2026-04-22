@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://joftg3j7lslu"]
+
+[ext_resource type="Script" uid="uid://cdm32mfdugipb" path="res://scripts/ScoreAnimation.cs" id="2_mdtbv"]
+[ext_resource type="SpriteFrames" uid="uid://b1ippmyjfd015" path="res://texture/scoreanimframes.tres" id="2_yhafw"]
+[ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_vfytb"]
+
+[sub_resource type="Gradient" id="Gradient_mdtbv"]
+offsets = PackedFloat32Array(0.23030303, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.58828014, 0.4312, 0.88, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pi7fc"]
+gradient = SubResource("Gradient_mdtbv")
+
+[sub_resource type="Curve" id="Curve_yhafw"]
+_data = [Vector2(1e-05, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.37360185), 0.0, 1.4, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_vfytb"]
+curve = SubResource("Curve_yhafw")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_resiv"]
+lifetime_randomness = 0.11
+particle_flag_disable_z = true
+inherit_velocity_ratio = 0.265
+direction = Vector3(0, -1, 0)
+angular_velocity_min = -461.39
+angular_velocity_max = 484.89996
+radial_velocity_min = 9.999977
+radial_velocity_max = 39.999977
+linear_accel_min = 57.989998
+linear_accel_max = 80.03
+scale_max = 1.8
+scale_curve = SubResource("CurveTexture_vfytb")
+color_ramp = SubResource("GradientTexture1D_pi7fc")
+
+[node name="ScoreAnimation" type="Node2D" unique_id=1940922266]
+script = ExtResource("2_mdtbv")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=225363256]
+sprite_frames = ExtResource("2_yhafw")
+animation = &"BasicScore"
+autoplay = "BasicScore"
+
+[node name="ScoreParticles" type="GPUParticles2D" parent="." unique_id=674775356]
+show_behind_parent = true
+emitting = false
+amount = 20
+lifetime = 1.2
+one_shot = true
+explosiveness = 0.9
+process_material = SubResource("ParticleProcessMaterial_resiv")
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=2059834659]
+energy = 0.2
+texture = ExtResource("3_vfytb")
+texture_scale = 1.2
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="OnAnimationFinished"]
+[connection signal="finished" from="ScoreParticles" to="." method="OnFinalVisualFinished"]

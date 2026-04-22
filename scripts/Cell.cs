@@ -2,9 +2,9 @@
 using Godot;
 using System;
 
-public class Cell(int x, int y, Vector2 cellPosition)
+public class Cell(int x, int y, Vector2 cellRealPosition)
 {
-
+    public int x = x, y = y;
     Block _HeldBlock;
     public Block HeldBlock { get => _HeldBlock; set => SetBlock(value); }
 
@@ -92,6 +92,7 @@ public class Cell(int x, int y, Vector2 cellPosition)
     public event Action BecameScorable;
     public event Action BecameNonScorable;
     public event Action UpdatedBoard;
+    public event Action<Block> DeletedBlock;
 
     public int LowerDistance
     {
@@ -106,7 +107,6 @@ public class Cell(int x, int y, Vector2 cellPosition)
             if (Occupied)
             {
                 HeldBlock.LowerDistance = value;
-                
             }
         }
     }
@@ -143,10 +143,44 @@ public class Cell(int x, int y, Vector2 cellPosition)
             return;
         }
 
-        //TODO: do clipping shenanigans here
+        GD.Print("Placement clipping behavior ran!");
+
+        //clipping shenanigans below
+        //basically, we want to run through every possible method to ensure SOMETHING handles this.
+        //we need to run falling methods bc slamming blocks runs before normal falling methods can run
+
+        //this is terrible. we have no way of knowing if things resolved properly so we have to check everything.
+        //TODO fix this mess
+
+        HeldBlock.CollidedWithBlockWhilePlaced(block);
+
+        if (block.IsQueuedForDeletion()) { return; }
+        else if (HeldBlock.IsQueuedForDeletion()) { SetBlock(block); return; } //if any of our blocks have been deleted, return
+
+        HeldBlock.FallingBlockAttemptingPlacementOnUs(block);
+
+        if(!HeldBlock.IsQueuedForDeletion() && !block.IsQueuedForDeletion())
+        {
+            //if nothing gets resolved, just delete the falling block and carry on
+            block.QueueFree();
+            return;
+        }
+
+        if (!block.IsQueuedForDeletion())
+        {
+            SetBlock(block); //if our falling block isn't queued for deletion the other block is. so let's place
+        }
     }
 
-
+    public void DeleteBlock()
+    {
+        if (Occupied)
+        {
+            DeletedBlock?.Invoke(HeldBlock);
+            _HeldBlock.QueueFree();
+        }
+        //if not occupied: cool! we can just chill
+    }
 
     void SetBlock(Block block)
     {
@@ -160,7 +194,7 @@ public class Cell(int x, int y, Vector2 cellPosition)
 
         _HeldBlock = block;
         _HeldBlock.EmitSignal(Block.SignalName.MovedCells);
-        _HeldBlock.Position = cellPosition; //Update our blocks position to ensure it is placed right
+        _HeldBlock.Position = cellRealPosition; //Update our blocks position to ensure it is placed right
         _HeldBlock.boardX = x; _HeldBlock.boardY = y;
         Occupied = true;
 

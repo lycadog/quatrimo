@@ -67,11 +67,24 @@ public class StarterBag
             //if we override color or texture, do so!
             if (useSetColors)
             {
-                float h = ((float)colors[i].Item1) / 360f; //we store this in 0-360 format for ease of entering
+                if (i >= colors.Count)
+                {
+                    GD.PushWarning($"Too little preset colors specified in bag! Falling back to random color. Expected {pieces.Count}, got {colors.Count}");
+                    (float, float, float) coloure = Utils.GetRandomPieceHSV();
 
-                newPiece.h = h;
-                newPiece.s = colors[i].Item2;
-                newPiece.v = colors[i].Item3;
+                    newPiece.h = coloure.Item1;
+                    newPiece.s = coloure.Item2;
+                    newPiece.v = coloure.Item3;
+                }
+
+                else
+                {
+                    float h = ((float)colors[i].Item1) / 360f; //we store this in 0-360 format for ease of entering
+
+                    newPiece.h = h;
+                    newPiece.s = colors[i].Item2;
+                    newPiece.v = colors[i].Item3;
+                }
             }
 
             if (useBagTexture)

@@ -9,15 +9,18 @@ public partial class Board : Control
 	Vector2I Dimensions;
     Vector2I CellDimensions;
 
-	[Export] NinePatchRect border;
+    [Export] BoardAnimationManager AnimationManager;
+
+    [Export] NinePatchRect border;
 	[Export] GradientTexture2D darkGradient;
+    [Export] Label ScoreLabel;
 
     [Export] Area2D BoardArea;
     [Export] Area2D BottomBorder;
     [Export] Area2D LeftBorder;
     [Export] Area2D RightBorder;
 
-	[Export] int defaultX, defaultY;
+	[Export] int defaultX = 12, defaultY = 20;
 
     [Signal] public delegate void TurnStartedEventHandler();
 	[Signal] public delegate void PiecePlayedEventHandler();
@@ -25,102 +28,105 @@ public partial class Board : Control
     [Signal] public delegate void TickStepStartedEventHandler();
     [Signal] public delegate void TurnEndedEventHandler();
 
+    [Signal] public delegate void AnimationCreatedEventHandler();
+    [Signal] public delegate void AnimationEndedEventHandler();
+
+    public double totalScore = 0;
 
     public bool BoardUpdated = false;
 
-    List<Block> ScoredBlocks = [];
+    List<Cell> ScoredCells = [];
     List<Block> PlacedBlocks = [];
     BoardRow[] Rows;
     Cell[,] CellBoard;
 
-    int TotalAnimations = 0;
-    int AnimationsCompleted = 0;
-
     FallingPiece CurrentPiece;
 
     static PackedScene ScoreAnimation = ResourceLoader.Load<PackedScene>("uid://joftg3j7lslu");
-    const double LowerAnimLength = .1;
+    const double LowerAnimLength = .12;
 
     #region === Board Logic ===
 
     public void StartTurn()
     {
         BoardUpdated = false;
+        AnimationManager.ClearAnimations();
         EmitSignalTurnStarted();
     }
 
     void ScoreBoard(bool initialStep)
     {
-        TotalAnimations = 0;
-        AnimationsCompleted = 0;
 
         if(!BoardUpdated && !initialStep)
         {
             //progress forwards!
-            //everything should come back to this eventually. we should NOT have a path to ticking that isn't here or the below one
+            //this is one of 2 ways we should tick blocks. nothing outside of this method should be ticking blocks
             TickBlocks();
             return;
         }
 
-        ScoredBlocks.Clear();
+        ScoredCells.Clear();
         EmitSignalScoreStepStarted(initialStep);
         BoardUpdated = false;
 
+        //this will create scoring animations, which will handle repeating this state if applicable.
         foreach (var row in Rows)
         {
-            row.AttemptScoring();
+            row.AttemptScoring(); //this will update the board if scoring succeeds
         }
 
-        if(TotalAnimations == 0)
+        if(!BoardUpdated) //if the board hasn't changed after scoring we can progress
         {
-            GD.Print("nothing scored");
             TickBlocks(); //this is the only other allowed end spot of this state
         }
-
-        //continue board logic after animations have finished
     }
 
     void TickBlocks()
     {
+        //this may be too simple. reinspect it sooner todo
 
-        //todo: this
+        EmitSignalTickStepStarted();
+        //signal our blocks that we're ticking
 
-        EndTurn();
+        if (BoardUpdated) //if the board has updated we gotta check it again
+        {
+            ScoreBoard(false);
+            return;
+        }
+
+        EndTurn(); //nothing to score, let's progress
     }
 
     void EndTurn()
     {
+        GD.Print("Turn ended!");
         EmitSignalTurnEnded();
         StartTurn();
     }
 
-    void LowerScoredBlocks()
+    void LowerToFillScoredSpaces()
     {
-        TotalAnimations = 0;
-        AnimationsCompleted = 0;
-
-        GD.Print("lowering scored blocks now");
-        foreach(var block in ScoredBlocks)
+        foreach(var cell in ScoredCells)
         {
             //iterate upwards in the array, setting lower values for every cell
 
-            for (int y = block.boardY+1; y < CellDimensions.Y - 1; y++)
+            for (int y = cell.y+1; y < CellDimensions.Y - 1; y++)
             {
-                Cell cell = CellBoard[block.boardX, y];
-
-                cell.LowerDistance++;
+                CellBoard[cell.x, y].LowerDistance++;
             }
-            PlacedBlocks.Remove(block);
 
-            block.QueueFree();
+            cell.DeleteBlock();
         }
 
-        ScoredBlocks.Clear();
+        ScoredCells.Clear();
 
-        if(PlacedBlocks.Count == 0) 
-        { 
-            return; 
+        if(PlacedBlocks.Count == 0)
+        {
+            //why are we returning? what are we returning to? doesn't this just hang forever???
+            return;
         }
+
+        AnimationManager.StartAnimating(() => ScoreBoard(false));
 
         Tween tween = GetTree().CreateTween().SetParallel();
 
@@ -136,9 +142,7 @@ public partial class Board : Control
     {
         block.boardY -= block.LowerDistance;
 
-        GD.Print("lowering block");
-
-        TotalAnimations++;
+        EmitSignalAnimationCreated();
 
         //todo: change delay to be more exponential falloff. higher Y values give less delay
 
@@ -148,36 +152,18 @@ public partial class Board : Control
             .SetTrans(Tween.TransitionType.Quad)
             .SetDelay(block.boardY * .03)
             .Finished += () => OnBlockFinishedLowering(block);
-            
     }
 
-    void LowerCollumn(int x, int startingY)
-    {
-        //todo: tween this?
-
-        //Go up and bring stuff down!
-        for (int y = startingY; y < CellDimensions.Y; y++)
-        {
-            if (y == CellDimensions.Y - 1)
-            {
-                //if we're at the top we don't need to lower anything since there's nothing above us
-                //this line below should throw an error. be concerned if it doesn't!
-                CellBoard[x, y].RemoveBlock();
-                return;
-            }
-            CellBoard[x, y].HeldBlock = CellBoard[x, y + 1].HeldBlock;
-            //replace our block with the above block
-            //SHOULD remove extra references automatically. double check!
-        }
-    }
-
+    /// <summary>
+    /// Initialize the cells and rows required for board behavior to function
+    /// </summary>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
     void CreateBlockBoard(int width, int height)
     {
         height += 8; //Add an extra 8 height so we have a buffer above the board
 
         CellDimensions = new(width, height);
-
-        GD.Print(CellDimensions);
 
         CellBoard = new Cell[width, height];
 
@@ -186,10 +172,11 @@ public partial class Board : Control
         for(int y = 0; y < height; y++)
         {
             BoardRow row = new(y, width);
-
             AddChild(row);
-
             Rows[y] = row;
+
+            //bind row events here *********                                                <*************
+            row.ScoringStarted += OnRowStartedScoring;
 
             Cell[] cellsInRow = new Cell[width];
 
@@ -197,7 +184,9 @@ public partial class Board : Control
             {
                 Cell newCell = new Cell(x, y, GetRealPosition(x, y));
 
-                newCell.UpdatedBoard += () => { BoardUpdated = true; }; //bind events
+                //bind cell events here ****************                                    <*************
+                newCell.UpdatedBoard += () => BoardUpdated = true;
+                newCell.DeletedBlock += OnBlockExitingTree;
 
                 CellBoard[x, y] = newCell;
 
@@ -215,6 +204,43 @@ public partial class Board : Control
     #endregion
     #region === Event Methods ===
 
+    public void OnRowStartedScoring()
+    {
+        BoardUpdated = true;
+        AnimationManager.StartAnimating(LowerToFillScoredSpaces);
+        //set up our animationmanager to score again when we conclude!
+    }
+    
+
+    public void OnBlockScored(Block block)
+    {
+        ScoreAnimation animation = (ScoreAnimation)ScoreAnimation.Instantiate();
+
+        AddChild(animation);
+
+        totalScore += block.ScoreValue;
+        ScoreLabel.Text = totalScore.ToString();
+
+        animation.GlobalPosition = block.GlobalPosition;
+        animation.AnimationFinished += EmitSignalAnimationEnded;
+
+        EmitSignalAnimationCreated();
+
+        if (block.RemovedOnScoring)
+        {
+            GD.Print($"Flagging cell {block.boardX}, {block.boardY} for deletion");
+            ScoredCells.Add(CellBoard[block.boardX, block.boardY]);
+        }
+    }
+
+    public void OnBlockFinishedLowering(Block block)
+    {
+        CellBoard[block.boardX, block.boardY].HeldBlock = block;
+        block.LowerDistance = 0;
+
+        EmitSignalAnimationEnded();
+    }
+
     public void OnBlockExitingTree(Block block)
     {
         if (block.isPlaced)
@@ -223,42 +249,22 @@ public partial class Board : Control
         }
     }
 
-    public void OnBlockFinishedLowering(Block block)
+    public void OnBlockPlaced(Block block)
     {
-        AnimationsCompleted++;
-        CellBoard[block.boardX, block.boardY].HeldBlock = block;
-        block.LowerDistance = 0;
+        block.Reparent(this);
+        PlacedBlocks.Add(block);
 
-        if(AnimationsCompleted >= TotalAnimations)
-        {
-            ScoreBoard(false);
-        }
+        Vector2I blockpos = GetBlockPosition(block.Position);
+
+        CellBoard[blockpos.X, blockpos.Y].PlaceBlock(block);
+        //add block to CellBoard
     }
 
-    public void OnBlockScored(Block block)
+    public void OnPiecePlaced(FallingPiece piece)
     {
-        ScoreAnimation animation = (ScoreAnimation)ScoreAnimation.Instantiate();
-
-        AddChild(animation);
-
-        animation.GlobalPosition = block.GlobalPosition;
-
-        animation.AnimationFinished += OnScoreAnimationFinished;
-        TotalAnimations++;
-
-        ScoredBlocks.Add(block);
-
-    }
-
-    public void OnScoreAnimationFinished()
-    {
-        AnimationsCompleted++;
-        GD.Print($"hey i'm animation and i just ended! Animations completed: {AnimationsCompleted}/{TotalAnimations}");
-
-        if(AnimationsCompleted >= TotalAnimations)
-        {
-            LowerScoredBlocks();
-        }
+        CurrentPiece = null;
+        ScoreBoard(true);
+        //move onto scoring now!
     }
 
     public void OnPiecePlayed(FallingPiece piece)
@@ -276,19 +282,19 @@ public partial class Board : Control
 
         AddChild(CurrentPiece);
 
-        //BIND SIGNALS HERE ******************************************
+        //BIND SIGNALS HERE **********************************************************************************************
 
         CurrentPiece.Connect(FallingPiece.SignalName.OnPiecePlacement, new(this, MethodName.OnPiecePlaced), (uint)ConnectFlags.OneShot);
-        foreach (var block in CurrentPiece.blocks)
+        foreach (var block in CurrentPiece.Blocks)
         {
             block.Connect(Block.SignalName.Placed, new(this, MethodName.OnBlockPlaced), (uint)ConnectFlags.OneShot);
             block.Connect(Block.SignalName.Scored, new(this, MethodName.OnBlockScored));
-            block.Connect(Block.SignalName.TreeExiting, new(this, MethodName.OnBlockExitingTree), (uint)ConnectFlags.AppendSourceObject);
-
+            block.Connect(Node.SignalName.TreeExiting, new(this, MethodName.OnBlockExitingTree), (uint)ConnectFlags.AppendSourceObject);
 
             Connect(SignalName.TurnStarted, new(block, Block.MethodName.OnTurnStart));
+            Connect(SignalName.TickStepStarted, new(block, Block.MethodName.OnTickStep));
 
-            
+
             //block signals here
         }
 
@@ -297,28 +303,6 @@ public partial class Board : Control
 
         OnPiecePlayed(CurrentPiece);
         EmitSignalPiecePlayed();
-    }
-
-    public void OnBlockPlaced(Block block)
-    {
-        block.Reparent(this);
-        PlacedBlocks.Add(block);
-
-        Vector2I blockpos = GetBlockPosition(block.Position);
-
-        GD.Print($"block placed at {blockpos.X}, {blockpos.Y}");
-
-        CellBoard[blockpos.X, blockpos.Y].PlaceBlock(block);
-        //add block to CellBoard
-    }
-
-    public void OnPiecePlaced(FallingPiece piece)
-    {
-        CurrentPiece = null;
-        GD.Print("Piece placed!");
-
-        ScoreBoard(true);
-        //move onto scoring now!
     }
 
     public void OnAreaEntered(Area2D area)
@@ -347,11 +331,6 @@ public partial class Board : Control
     {
         SetDimensions(defaultX, defaultY);
         StartTurn();
-
-        GD.Print(GetRealPosition(new(0, 0)));
-        GD.Print(GetRealPosition(new(2, 2)));
-        GD.Print(GetRealPosition(new(4, 4)));
-        GD.Print(GetRealPosition(new(11, 20)));
     }
 
 
@@ -359,14 +338,11 @@ public partial class Board : Control
     public override void _Process(double delta)
     {
 
-        if (Input.IsActionJustPressed("Debug1"))
-        {
-            StartTurn();
-        }
+        
 
         if (Input.IsActionJustPressed("Debug2"))
         {
-            GD.Print("board updated? " + BoardUpdated);
+
         }
 
         if (Input.IsActionJustPressed("Debug3"))
@@ -377,6 +353,8 @@ public partial class Board : Control
             }
         }
 
+        
+
         if (Input.IsActionJustPressed("Fullscreen"))
         {
             if(DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Fullscreen)
@@ -386,6 +364,11 @@ public partial class Board : Control
             }
 
             DisplayServer.WindowSetMode(DisplayServer.WindowMode.Fullscreen);
+        }
+
+        if (Input.IsActionJustPressed("Restart"))
+        {
+            GetTree().ReloadCurrentScene();
         }
 
     }

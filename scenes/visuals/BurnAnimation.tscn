@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://by12ay4yqa5lo"]
+
+[ext_resource type="Script" uid="uid://cdm32mfdugipb" path="res://scripts/ScoreAnimation.cs" id="1_e40o2"]
+[ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="2_x34o8"]
+
+[sub_resource type="Animation" id="Animation_e40o2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_x34o8"]
+resource_name = "burnAnimation"
+length = 0.55
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.23333333, 0.4, 0.53333336),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0.9, 0.165, 0, 1), Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_b4j4h"]
+_data = {
+&"RESET": SubResource("Animation_e40o2"),
+&"burnAnimation": SubResource("Animation_x34o8")
+}
+
+[sub_resource type="Gradient" id="Gradient_7amkc"]
+offsets = PackedFloat32Array(0.23030303, 1)
+colors = PackedColorArray(1, 0.43899995, 0.33999997, 1, 0.58, 0, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pi7fc"]
+gradient = SubResource("Gradient_7amkc")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_svyjt"]
+lifetime_randomness = 0.11
+particle_flag_disable_z = true
+angular_velocity_min = -461.39
+angular_velocity_max = 484.89996
+radial_velocity_min = 9.999977
+radial_velocity_max = 39.999977
+linear_accel_min = 57.989998
+linear_accel_max = 80.03
+color_ramp = SubResource("GradientTexture1D_pi7fc")
+
+[node name="ScoreAnimation" type="Node2D" unique_id=1940922266]
+script = ExtResource("1_e40o2")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1393819459]
+texture = ExtResource("2_x34o8")
+region_enabled = true
+region_rect = Rect2(0, 10, 10, 10)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite2D" unique_id=540590948]
+libraries/ = SubResource("AnimationLibrary_b4j4h")
+autoplay = &"burnAnimation"
+
+[node name="ScoreParticles" type="GPUParticles2D" parent="." unique_id=1777781390]
+show_behind_parent = true
+emitting = false
+amount = 12
+one_shot = true
+explosiveness = 0.9
+process_material = SubResource("ParticleProcessMaterial_svyjt")
+
+[connection signal="finished" from="ScoreParticles" to="." method="OnAnimationFinished"]

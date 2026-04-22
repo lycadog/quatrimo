@@ -21,7 +21,10 @@ public partial class Block : Area2D
     public bool IsScored = false;
     public bool IsTicked = false;
 
+    bool ExitBoardBehaviorEnabled = true;
+
     [Export] public bool Scorable = true;
+    [Export] public bool RemovedOnScoring = true;
     [Export] public double ScoreValue = 1;
 
     [Export] bool SolidWhenFalling = true;
@@ -29,42 +32,52 @@ public partial class Block : Area2D
     [Export] bool OverrideColor = false;
     [Export] bool OverrideTexture = false;
 
-    [Export] Sprite2D SpriteLayer1;
-    [Export] Sprite2D SpriteLayer2;
-    [Export] Sprite2D AboveBoardIndicatorSprite;
-    [Export] Sprite2D DropPreviewSprite;
-    [Export] Sprite2D WhiteFlashSprite;
-    [Export] Area2D LeftArea;
-    [Export] Area2D DownArea;
-    [Export] Area2D RightArea;
-    [Export] Area2D NegativeRotationArea;
-    [Export] Area2D PositiveRotationArea;
-    [Export] RayCast2D DropPreviewRaycast;
+    [Export] protected Node2D SpriteLayer1;
+    [Export] protected Node2D SpriteLayer2;
+    [Export] protected Sprite2D AboveBoardIndicatorSprite;
+    [Export] protected Sprite2D DropPreviewSprite;
+    [Export] protected Sprite2D WhiteFlashSprite;
+    [Export] protected Area2D LeftArea;
+    [Export] protected Area2D DownArea;
+    [Export] protected Area2D RightArea;
+    [Export] protected Area2D NegativeRotationArea;
+    [Export] protected Area2D PositiveRotationArea;
+    [Export] protected RayCast2D DropPreviewRaycast;
 
     [Signal] public delegate void PlacedEventHandler(Block block);
     [Signal] public delegate void ScoredEventHandler(Block block);
     [Signal] public delegate void MovedCellsEventHandler();
 
-    const double PlacementFlashLength = .14;
+    const double PlacementFlashLength = .18;
 
     #region === Board Interaction/Positional Methods ===
 
     public virtual void Play()
     {
+        ForceUpdateTransform();
+        DropPreviewRaycast.ForceRaycastUpdate();
+        DropPreviewSprite.Visible = true;
         UpdateRotationDestinations();
         ToggleOffBoardTexture(true);
     }
 
-    public virtual void Score()
+    public void Score()
     {
-        HideSprites();
         IsScored = true;
+        CustomScore();
         EmitSignalScored(this);
-
     }
 
-    public virtual void Place()
+    protected virtual void CustomScore()
     {
+        HideSprites();
+    }
+
+    public void Place()
+    {
+        ExitBoardBehaviorEnabled = false;
+        ToggleOffBoardTexture(false);
+
         SetCollisionLayerValue(1, SolidWhenPlaced); //we are now solid on the placedblocks layer
 
         isPlaced = true;
@@ -81,8 +94,9 @@ public partial class Block : Area2D
 
         //temporarily make the white sprite visible so we get a little flash animation when we place stuff
         WhiteFlashSprite.Visible = true;
-        Tween tween = GetTree().CreateTween();
+        Tween tween = GetTree().CreateTween().SetParallel();
         tween.TweenCallback(Callable.From(() => WhiteFlashSprite.Visible = false)).SetDelay(PlacementFlashLength);
+        tween.TweenProperty(GetNode("WhiteFlashBox/PointLight2D"), "energy", 0, PlacementFlashLength);
 
         EmitSignalPlaced(this);
         //do clipping? idk
@@ -150,6 +164,8 @@ public partial class Block : Area2D
             RightArea.SetCollisionMaskValue(1, false);
             NegativeRotationArea.SetCollisionMaskValue(1, false);
             PositiveRotationArea.SetCollisionMaskValue(1, false);
+
+            DropPreviewRaycast.SetCollisionMaskValue(1, false);
         }
 
         UpdateRotationDestinations();
@@ -161,7 +177,11 @@ public partial class Block : Area2D
     {
         if (OverrideTexture) { return; }
 
-        SpriteLayer1.RegionRect = rect;
+        if(SpriteLayer1 is Sprite2D)
+        {
+            (SpriteLayer1 as Sprite2D).RegionRect = rect;
+        }
+
     }
 
     /// <summary>
@@ -188,12 +208,12 @@ public partial class Block : Area2D
     {
         if (toggleOn)
         {
-
+            HideSprites();
             AboveBoardIndicatorSprite.Visible = true;
         }
         else
         {
-
+            UnhideSprites();
             AboveBoardIndicatorSprite.Visible = false;
         }
     }
@@ -210,7 +230,9 @@ public partial class Block : Area2D
     #endregion
     #region === Event Methods ===
 
-    public void OnTurnStart()
+    
+
+    public virtual void OnTurnStart()
     {
         JustPlaced = false;
         IsTicked = false;
@@ -218,16 +240,35 @@ public partial class Block : Area2D
 
     public void OnTickStep()
     {
-        
+        if (!IsTicked)
+        {
+            IsTicked = true;
+            TickBlock();
+        }
+    }
+
+    protected virtual void TickBlock()
+    {
+
     }
 
     public void OnEnterBoard()
     {
+        if (!ExitBoardBehaviorEnabled)
+        {
+            return;
+        }
+        HideSprites();
         ToggleOffBoardTexture(false);
     }
 
     public void OnExitBoard()
     {
+        if (!ExitBoardBehaviorEnabled)
+        {
+            return;
+        }
+        HideSprites();
         ToggleOffBoardTexture(true);
     }
 
@@ -258,6 +299,25 @@ public partial class Block : Area2D
     public virtual void CollidedWithBlockWhileFalling(Block placedBlock)
     {
         //nothing to do!
+    }
+
+    /// <summary>
+    /// A falling block is trying to place itself on us! by default, we don't do anything and let the falling block sort it out
+    /// </summary>
+    /// <param name="fallingBlock"></param>
+    public virtual void FallingBlockAttemptingPlacementOnUs(Block fallingBlock)
+    {
+        fallingBlock.AttemptedToPlaceIntoBlock(this);
+    }
+
+    /// <summary>
+    /// We are being placed ontop of an existing block! By default we will delete ourselves to resolve the conflict
+    /// </summary>
+    /// <param name="placedBlock"></param>
+    public virtual void AttemptedToPlaceIntoBlock(Block placedBlock)
+    {
+        //we are trying to place into a block! we must terminate instead
+        QueueFree();
     }
 
 

@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="2_hs2ul"]
 [ext_resource type="Texture2D" uid="uid://bq12fhs8hplyu" path="res://boardGradient.tres" id="2_w6jgk"]
 [ext_resource type="Texture2D" uid="uid://pf1ck3tc5dmk" path="res://texture/boardBG.png" id="3_66b1s"]
+[ext_resource type="Script" uid="uid://bh52m3rslxvoc" path="res://scripts/BoardAnimationManager.cs" id="5_xdl3i"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w6jgk"]
 size = Vector2(10, 40)
@@ -14,7 +15,7 @@ size = Vector2(40, 30)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wlyqt"]
 size = Vector2(10, 10)
 
-[node name="Board" type="Control" unique_id=30435418 node_paths=PackedStringArray("border", "BoardArea", "BottomBorder", "LeftBorder", "RightBorder")]
+[node name="Board" type="Control" unique_id=30435418 node_paths=PackedStringArray("AnimationManager", "border", "BoardArea", "BottomBorder", "LeftBorder", "RightBorder")]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -24,15 +25,17 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qails")
+AnimationManager = NodePath("AnimationManager")
 border = NodePath("Border")
 darkGradient = ExtResource("2_w6jgk")
 BoardArea = NodePath("BoardArea")
 BottomBorder = NodePath("Border/BottomArea")
 LeftBorder = NodePath("Border/LeftArea")
 RightBorder = NodePath("Border/RightArea")
-defaultX = 12
-defaultY = 20
 metadata/_custom_type_script = "uid://cdm15780yiwua"
+
+[node name="AnimationManager" type="Node" parent="." unique_id=794881018]
+script = ExtResource("5_xdl3i")
 
 [node name="Border" type="NinePatchRect" parent="." unique_id=1026354413]
 custom_minimum_size = Vector2(140, 220)
@@ -127,6 +130,8 @@ monitorable = false
 [node name="BoardShape" type="CollisionShape2D" parent="BoardArea" unique_id=977289770]
 shape = SubResource("RectangleShape2D_wlyqt")
 
+[connection signal="AnimationCreated" from="." to="AnimationManager" method="OnAnimationCreated"]
+[connection signal="AnimationEnded" from="." to="AnimationManager" method="OnAnimationCompleted"]
 [connection signal="resized" from="Border" to="." method="OnBorderResize"]
 [connection signal="area_entered" from="BoardArea" to="." method="OnAreaEntered"]
 [connection signal="area_exited" from="BoardArea" to="." method="OnAreaExited"]

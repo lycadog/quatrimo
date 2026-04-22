@@ -1,11 +1,62 @@
-[gd_scene format=3 uid="uid://blmpsbuqvqptb"]
+[gd_scene format=3 uid="uid://b5cakofogsq20"]
 
-[ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="1_41chs"]
-[ext_resource type="Script" uid="uid://c4hn2t04rih3j" path="res://globalclass/Block.cs" id="1_jlhqy"]
-[ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_rfxuc"]
+[ext_resource type="Script" uid="uid://csi7k2rtw75pk" path="res://scenes/block/Hologramblock.cs" id="1_ymeqs"]
+[ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="2_swkhm"]
+[ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_swkhm"]
 
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_rfxuc"]
-polygon = PackedVector2Array(-2, -2, -2, 2, 2, 2, 2, -2)
+[sub_resource type="AtlasTexture" id="AtlasTexture_ymeqs"]
+atlas = ExtResource("2_swkhm")
+region = Rect2(210, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_swkhm"]
+atlas = ExtResource("2_swkhm")
+region = Rect2(220, 0, 10, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v85fl"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ymeqs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_swkhm")
+}],
+"loop": true,
+"name": &"hologramAnimation",
+"speed": 8.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vl6iy"]
+atlas = ExtResource("2_swkhm")
+region = Rect2(210, 10, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qr6gu"]
+atlas = ExtResource("2_swkhm")
+region = Rect2(220, 10, 10, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jqspu"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vl6iy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qr6gu")
+}],
+"loop": true,
+"name": &"hologramlayer2",
+"speed": 8.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bquqy"]
 size = Vector2(8, 8)
@@ -25,10 +76,14 @@ size = Vector2(8, 8)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mq3p5"]
 size = Vector2(8, 8)
 
-[node name="Block" type="Area2D" unique_id=537382246 node_paths=PackedStringArray("SpriteLayer1", "SpriteLayer2", "AboveBoardIndicatorSprite", "DropPreviewSprite", "WhiteFlashSprite", "LeftArea", "DownArea", "RightArea", "NegativeRotationArea", "PositiveRotationArea", "DropPreviewRaycast")]
+[node name="Block" type="Area2D" unique_id=537382246 node_paths=PackedStringArray("glowy", "SpriteLayer1", "SpriteLayer2", "AboveBoardIndicatorSprite", "DropPreviewSprite", "WhiteFlashSprite", "LeftArea", "DownArea", "RightArea", "NegativeRotationArea", "PositiveRotationArea", "DropPreviewRaycast")]
 collision_layer = 2
 collision_mask = 2
-script = ExtResource("1_jlhqy")
+script = ExtResource("1_ymeqs")
+glowy = NodePath("SpriteLayer1/PointLight2D")
+SolidWhenFalling = false
+SolidWhenPlaced = false
+OverrideTexture = true
 SpriteLayer1 = NodePath("SpriteLayer1")
 SpriteLayer2 = NodePath("SpriteLayer1/SpriteLayer2")
 AboveBoardIndicatorSprite = NodePath("AboveBoardIndicatorSprite")
@@ -42,44 +97,45 @@ PositiveRotationArea = NodePath("PositiveRotationArea")
 DropPreviewRaycast = NodePath("DropPreviewRaycast")
 metadata/_custom_type_script = "uid://c4hn2t04rih3j"
 
-[node name="SpriteLayer1" type="Sprite2D" parent="." unique_id=602452335]
-texture = ExtResource("1_41chs")
-region_enabled = true
-region_rect = Rect2(0, 30, 10, 10)
+[node name="SpriteLayer1" type="AnimatedSprite2D" parent="." unique_id=1505970730]
+sprite_frames = SubResource("SpriteFrames_v85fl")
+animation = &"hologramAnimation"
+autoplay = "hologramAnimation"
+frame_progress = 0.0067598284
 
-[node name="SpriteLayer2" type="Sprite2D" parent="SpriteLayer1" unique_id=212297080]
-visible = false
-texture = ExtResource("1_41chs")
-region_enabled = true
-region_rect = Rect2(10, 10, 10, 10)
+[node name="SpriteLayer2" type="AnimatedSprite2D" parent="SpriteLayer1" unique_id=588795915]
+sprite_frames = SubResource("SpriteFrames_jqspu")
+animation = &"hologramlayer2"
+autoplay = "hologramlayer2"
+frame_progress = 0.7712925
 
-[node name="LightOccluder2D" type="LightOccluder2D" parent="SpriteLayer1" unique_id=1443154381]
-occluder = SubResource("OccluderPolygon2D_rfxuc")
+[node name="PointLight2D" type="PointLight2D" parent="SpriteLayer1" unique_id=555582034]
+energy = 0.18
+shadow_enabled = true
+texture = ExtResource("3_swkhm")
 
 [node name="AboveBoardIndicatorSprite" type="Sprite2D" parent="." unique_id=1898403300]
 visible = false
-texture = ExtResource("1_41chs")
+texture = ExtResource("2_swkhm")
 region_enabled = true
 region_rect = Rect2(20, 10, 10, 10)
 
 [node name="DropPreviewSprite" type="Sprite2D" parent="." unique_id=573667096]
 visible = false
 modulate = Color(1, 1, 1, 0.8)
-texture = ExtResource("1_41chs")
+texture = ExtResource("2_swkhm")
 region_enabled = true
 region_rect = Rect2(60, 0, 10, 10)
 
 [node name="WhiteFlashBox" type="Sprite2D" parent="." unique_id=1512181127]
 visible = false
-texture = ExtResource("1_41chs")
+texture = ExtResource("2_swkhm")
 region_enabled = true
 region_rect = Rect2(0, 10, 10, 10)
 
-[node name="PointLight2D" type="PointLight2D" parent="WhiteFlashBox" unique_id=319429166]
+[node name="PointLight2D" type="PointLight2D" parent="WhiteFlashBox" unique_id=404476051]
 energy = 0.12
-shadow_enabled = true
-shadow_item_cull_mask = 0
-texture = ExtResource("3_rfxuc")
+texture = ExtResource("3_swkhm")
 
 [node name="LeftArea" type="Area2D" parent="." unique_id=1907618161]
 position = Vector2(-10, 0)

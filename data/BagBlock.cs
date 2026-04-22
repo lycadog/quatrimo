@@ -36,9 +36,17 @@ public class BagBlock(BlockType type, Vector2I position, Vector2I origin)
     }
 
     static PackedScene BasicBlock = ResourceLoader.Load<PackedScene>("uid://blmpsbuqvqptb");
+    static PackedScene CursedBlock = ResourceLoader.Load<PackedScene>("uid://ctw2ssdea4ogt");
+    static PackedScene HologramBlock = ResourceLoader.Load<PackedScene>("uid://b5cakofogsq20");
+    static PackedScene LaserBlock = ResourceLoader.Load<PackedScene>("uid://ce3gfft4hauva");
 
     static PackedScene[] Blocks = [
-        BasicBlock
+        BasicBlock,
+        CursedBlock,
+        null,
+        null,
+        HologramBlock,
+        LaserBlock
         ];
 
     static PackedScene BasicCardBlock = ResourceLoader.Load<PackedScene>("uid://bxjbghjidd7oe");
@@ -47,6 +55,7 @@ public class BagBlock(BlockType type, Vector2I position, Vector2I origin)
     static PackedScene BombCardBlock = ResourceLoader.Load<PackedScene>("uid://dttbse6kfd33n");
     static PackedScene HologramCardBlock = ResourceLoader.Load<PackedScene>("uid://cdeof6fwi5y2q");
     static PackedScene LaserCardBlock = ResourceLoader.Load<PackedScene>("uid://clg0cir271nly");
+    static PackedScene VoidCardBlock = ResourceLoader.Load<PackedScene>("uid://ds6nvclvlh6lo");
 
     static PackedScene[] CardBlocks = [
         BasicCardBlock,     //0
@@ -54,7 +63,8 @@ public class BagBlock(BlockType type, Vector2I position, Vector2I origin)
         ReinforcedCardBlock,//2
         BombCardBlock,      //3
         HologramCardBlock,  //4
-        LaserCardBlock      //5
+        LaserCardBlock,     //5
+        VoidCardBlock
         ];
 
     

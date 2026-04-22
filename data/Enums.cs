@@ -11,5 +11,9 @@ public enum BlockType
 
 public enum PieceType
 {
-    Basic
+    Basic,          //0
+    Flux,           //1
+    Clockwork,      //2
+    Mirror,         //3
+    DirectPlacement //4
 }

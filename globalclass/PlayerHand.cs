@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using static Godot.OpenXRInterface;
 
 [GlobalClass, Icon("res://texture/icon/handicon.png")]
 public partial class PlayerHand : Container
@@ -17,6 +18,8 @@ public partial class PlayerHand : Container
     public List<PieceCard> Hand = [];
     Stack<PieceCard> queuedCards = [];
 
+	int staleTotalCards = 0;
+
     const float DrawAnimationLength = .4f;
 	const float ScaleTweenLength = .3f;
 	const float MoveHandAnimationLength = .25f;
@@ -30,14 +33,12 @@ public partial class PlayerHand : Container
 
     public override void _EnterTree()
     {
-        Bag = Data.debugBag.CreateBag();
+        Bag = Data.magnetBag.CreateBag();
     }
     
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-		
-
 		Position = new(0, GetNewYOffset());
     }
 
@@ -54,6 +55,11 @@ public partial class PlayerHand : Container
 
     }
 
+	void OnHandUpdated()
+	{
+
+	}
+
 	public void OnTurnStart()
 	{
 		InputEnabled = true;
@@ -65,11 +71,25 @@ public partial class PlayerHand : Container
 
 	public void OnTurnEnd()
 	{
-		RemoveCard(SelectionIndex);
+		DiscardCard(SelectionIndex);
 	}
 
-	public void RemoveCard(int index)
+	public void DiscardHand()
 	{
+		foreach(var card in Hand)
+		{
+			card.Destroy();
+		}
+		Hand.Clear();
+	}
+
+	public void DiscardCard(int index)
+	{
+		if(index < 0 || index >= Hand.Count)
+		{
+			GD.PushError("Attempted to discard card at invalid index " + index + "!");
+			return;
+		}
 		PieceCard card = Hand[index];
 		card.Destroy();
 
@@ -137,6 +157,12 @@ public partial class PlayerHand : Container
 				return;
             }
 		}
+
+        if (Input.IsActionJustPressed("Debug1"))
+        {
+            DiscardHand();
+            DrawHand();
+        }
     }
 
 	void PlayCard(PieceCard card)

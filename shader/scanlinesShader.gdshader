@@ -8,7 +8,7 @@ void fragment() {
 
 	vec3 scanlines = vec3(sin(2.0 * centered_uv.y * 180.0 - (TIME * 2.)) * .2 + 1.2);
 
-	vec3 screen_color = textureLod(screen_texture, (centered_uv + 1.0) / 2.0, 0.4).rgb * scanlines;
+	vec3 screen_color = textureLod(screen_texture, (centered_uv + 1.0) / 2.0, .5).rgb * scanlines;
 	
-	COLOR = vec4(screen_color, 0.45);
+	COLOR = vec4(screen_color, 0.6);
 }

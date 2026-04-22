@@ -3,20 +3,47 @@
 [ext_resource type="Texture2D" uid="uid://d2umw6muvt05b" path="res://texture/pieceCard.png" id="1_v7a0n"]
 [ext_resource type="Script" uid="uid://y6dpg27acggw" path="res://globalclass/CardBlockSprite.cs" id="2_2e7xm"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_6tevu"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_v7a0n"]
+atlas = ExtResource("1_v7a0n")
+region = Rect2(28, 74, 7, 7)
 
-[node name="HologramCardBlock" type="Sprite2D" unique_id=347132184 node_paths=PackedStringArray("SecondLayer", "AnimatedSprite")]
-texture = ExtResource("1_v7a0n")
-region_enabled = true
+[sub_resource type="AtlasTexture" id="AtlasTexture_2e7xm"]
+atlas = ExtResource("1_v7a0n")
+region = Rect2(28, 81, 7, 7)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6tevu"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v7a0n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2e7xm")
+}],
+"loop": true,
+"name": &"hologramcardblock",
+"speed": 4.0
+}]
+
+[node name="BasicCardBlock" type="Node2D" unique_id=459041350 node_paths=PackedStringArray("FirstLayer", "SecondLayer")]
 script = ExtResource("2_2e7xm")
-SecondLayer = NodePath("Sprite2D")
-AnimatedSprite = NodePath("AnimatedSprite2D")
+FirstLayer = NodePath("Layer1Sprite")
+SecondLayer = NodePath("Layer2Sprite")
 metadata/_custom_type_script = "uid://y6dpg27acggw"
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=656421469]
+[node name="Layer1Sprite" type="AnimatedSprite2D" parent="." unique_id=250860896]
+sprite_frames = SubResource("SpriteFrames_6tevu")
+animation = &"hologramcardblock"
+autoplay = "hologramcardblock"
+frame_progress = 0.30345085
+
+[node name="Layer2Sprite" type="Sprite2D" parent="." unique_id=656421469]
 visible = false
 texture = ExtResource("1_v7a0n")
 region_enabled = true
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1359437372]
-sprite_frames = SubResource("SpriteFrames_6tevu")
+region_rect = Rect2(28, 81, 7, 7)

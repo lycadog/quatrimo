@@ -1,5 +1,6 @@
 
 using Godot;
+using System;
 
 public partial class BoardRow(int y, int boardWidth) : Node
 {
@@ -7,6 +8,8 @@ public partial class BoardRow(int y, int boardWidth) : Node
     public int totalScorability = 0;
 
     public Cell[] cells;
+
+    public event Action ScoringStarted;
 
     public bool Scorable
     {
@@ -23,6 +26,7 @@ public partial class BoardRow(int y, int boardWidth) : Node
     {
         if (Scorable)
         {
+            ScoringStarted?.Invoke();
             StartScoring();
         }
     }
@@ -60,8 +64,8 @@ public partial class BoardRow(int y, int boardWidth) : Node
         //if we failed to make an iterator, emergency backup! this starts from the middle and goes out
         if (!createdIterator)
         {
-            CreateIterator(boardWidth / 2 - 1, -1);
-            CreateIterator(boardWidth / 2, 1);
+            CreateIterator(boardWidth / 2 + 1, -1);
+            CreateIterator(boardWidth / 2 - 1, 1);
         }
     }
 

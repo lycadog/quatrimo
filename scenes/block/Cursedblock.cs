@@ -1,0 +1,67 @@
+using Godot;
+using System;
+
+[GlobalClass]
+public partial class Cursedblock : Block
+{
+	bool open = false;
+	int openCounter = 0;
+
+	static readonly Rect2 closedRect = new(140, 0, 10, 10);
+    static readonly Rect2 closedRectLayer2 = new(140, 10, 10, 10);
+
+    static readonly Rect2 openRect = new(150, 00, 10, 10);
+    static readonly Rect2 openRectLayer2 = new(150, 10, 10, 10);
+
+    // Called when the node enters the scene tree for the first time.
+    public override void _Ready()
+	{
+	}
+
+	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	public override void _Process(double delta)
+	{
+	}
+
+    protected override void CustomScore()
+    {
+		openCounter = 4;
+		if (!open)
+		{
+            OpenEye();
+        }
+    }
+	void OpenEye()
+	{
+		open = true;
+		ScoreValue += 3;
+
+		(SpriteLayer1 as Sprite2D).RegionRect = openRect;
+		(SpriteLayer2 as Sprite2D).RegionRect = openRectLayer2;
+	}
+
+	void CloseEye()
+	{
+		open = false;
+		ScoreValue -= 3;
+
+        (SpriteLayer1 as Sprite2D).RegionRect = closedRect;
+        (SpriteLayer2 as Sprite2D).RegionRect = closedRectLayer2;
+
+    }
+
+    protected override void TickBlock()
+    {
+		GD.Print($"cursed block ticked. open = {open}, openCounter = {openCounter}");
+		if (open)
+		{
+			openCounter--;
+
+
+			if (openCounter <= 0)
+			{
+				CloseEye();
+			}
+		}
+    }
+}
