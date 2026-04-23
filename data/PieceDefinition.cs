@@ -11,24 +11,6 @@ public abstract class PieceDefinition
 
     protected (float, float, float) hsv; //Randomize the HSV every time we get a new piece
 
-    public PieceDefinition(PieceShape shape, Rect2 textureRegion, string name = null)
-    {
-        Shape = shape;
-        TextureRegion = textureRegion;
-        Name = name;
-
-        if(name == null) { Name = shape.name; }
-    }
-
-    public PieceDefinition(PieceShape shape, string name = null)
-    {
-        Shape = shape;
-        TextureRegion = new Rect2(0, 30, 10, 10);
-        Name = name;
-
-        if (name == null) { Name = shape.name; }
-    }
-
     public abstract BagPiece GetPiece();
 
 
