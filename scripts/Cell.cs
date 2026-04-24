@@ -2,14 +2,16 @@
 using Godot;
 using System;
 
-public class Cell(int x, int y, Vector2 cellRealPosition)
+public class Cell(int x, int y, Vector2 realPosition)
 {
     public int x = x, y = y;
+    public Vector2 RealPosition = realPosition;
+
     Block _HeldBlock;
     public Block HeldBlock { get => _HeldBlock; set => SetBlock(value); }
 
     bool _Occupied = false;
-    bool Occupied 
+    bool Occupied
     { 
         get => _Occupied;
         set
@@ -62,7 +64,7 @@ public class Cell(int x, int y, Vector2 cellRealPosition)
     {
         get
         {
-            if (Occupied && ScoreFlag == ScoringFlags.CanScore)
+            if (Occupied && (ScoreFlag == ScoringFlags.CanScore || ScoreFlag == ScoringFlags.CanScoreButFullyRestrictAfterScoring))
             {
                 return _HeldBlock.Scorable;
             }
@@ -88,11 +90,33 @@ public class Cell(int x, int y, Vector2 cellRealPosition)
         }
     }
 
+    public bool FilledInOnScoring
+    {
+        get
+        {
+            if (_Occupied)
+            {
+                return HeldBlock.RemovedOnScoring;
+            }
+                return true;
+            }
+    }
+
+    public BlockType BlockType
+    {
+        get
+        {
+            if (_Occupied) { return HeldBlock.type; }
+
+            return BlockType.None;
+        }
+    }
 
     public event Action BecameScorable;
     public event Action BecameNonScorable;
     public event Action UpdatedBoard;
     public event Action<Block> DeletedBlock;
+    public event Action<Cell> Scored;
 
     public int LowerDistance
     {
@@ -194,7 +218,7 @@ public class Cell(int x, int y, Vector2 cellRealPosition)
 
         _HeldBlock = block;
         _HeldBlock.EmitSignal(Block.SignalName.MovedCells);
-        _HeldBlock.Position = cellRealPosition; //Update our blocks position to ensure it is placed right
+        _HeldBlock.Position = RealPosition; //Update our blocks position to ensure it is placed right
         _HeldBlock.boardX = x; _HeldBlock.boardY = y;
         Occupied = true;
 
@@ -223,8 +247,18 @@ public class Cell(int x, int y, Vector2 cellRealPosition)
         {
             HeldBlock.Score();
         }
+
+        Scored.Invoke(this);
+
+        if (ScoreFlag == ScoringFlags.CanScoreButFullyRestrictAfterScoring)
+        {
+            ScoreFlag = ScoringFlags.CannotScoreThisTurn;
+            return;
+        }
+
+        //if we're in this method we already know we are flagged to score, so we don't need to check
+        ScoreFlag = ScoringFlags.CannotScoreThisStep; 
         
-        ScoreFlag = ScoringFlags.CannotScoreThisStep;
     }
 
     public void OnScoreStepBegin(bool isInitialStep)
@@ -246,6 +280,7 @@ public class Cell(int x, int y, Vector2 cellRealPosition)
     public enum ScoringFlags
     {
         CanScore,
+        CanScoreButFullyRestrictAfterScoring,   //After scoring this is set to CannotScoreThisTurn
         CannotScoreThisStep,    //Each scoring step can only process a block once. Set to this when we score
         CannotScoreThisTurn     //We reset this on the initial scoring step!
     }

@@ -6,27 +6,32 @@ public class PooledPieceDefinition : PieceDefinition
 {
     static ObjectPool<PieceType> BasicPool = new ObjectPool<PieceType>(PieceType.Basic);
 
-    ObjectPool<PieceType> PiecePool;
+    ObjectPool<PieceShape> ShapePool;
+    ObjectPool<PieceType> PieceTypePool;
     ObjectPool<BlockType> BlockPool;
 
-    static readonly int[] randomGroupPool = { 1, 2, 2, 3, 4 }; //use this in random type distribution
+    static readonly int[] randomGroupPool = { 1, 1, 2, 2, 2, 2, 3, 3, 4 }; //use this in random type distribution
 
-    public PooledPieceDefinition(ObjectPool<PieceType> piecePool, ObjectPool<BlockType> blockPool, PieceShape shape, Rect2 textureRegion, string name = null) : base(shape, textureRegion, name)
+    public PooledPieceDefinition(ObjectPool<PieceType> piecePool, ObjectPool<BlockType> blockPool, ObjectPool<PieceShape> shapePool, Rect2 textureRegion) : base(textureRegion)
     {
-        PiecePool = piecePool;
+        PieceTypePool = piecePool;
         BlockPool = blockPool;
+        ShapePool = shapePool;
+        TextureRegion = textureRegion;
     }
 
-    public PooledPieceDefinition(ObjectPool<PieceType> piecePool, ObjectPool<BlockType> blockPool, PieceShape shape, string name = null) : base(shape, name)
+    public PooledPieceDefinition(ObjectPool<PieceType> piecePool, ObjectPool<BlockType> blockPool, ObjectPool<PieceShape> shapePool) : base()
     {
-        PiecePool = piecePool;
+        PieceTypePool = piecePool;
         BlockPool = blockPool;
+        ShapePool = shapePool;
     }
 
-    public PooledPieceDefinition(ObjectPool<BlockType> blockPool, PieceShape shape, string name = null) : base(shape, name)
+    public PooledPieceDefinition(ObjectPool<BlockType> blockPool, ObjectPool<PieceShape> shapePool) : base()
     {
-        PiecePool = BasicPool;
+        PieceTypePool = BasicPool;
         BlockPool = blockPool;
+        ShapePool = shapePool;
     }
 
     //how does random type distribution work?
@@ -37,12 +42,13 @@ public class PooledPieceDefinition : PieceDefinition
 
     public override BagPiece GetPiece()
     {
+        Shape = ShapePool.GetRandom();
         SetColor();
 
         BlockType[] blockTypes = DistributeBlockTypes();
         BagBlock[] blocks = CreateBlocks(blockTypes);
 
-        return new BagPiece(PiecePool.GetRandom(), blocks, Shape.dimensions, TextureRegion, hsv.Item1, hsv.Item2, hsv.Item3, Name);
+        return new BagPiece(PieceTypePool.GetRandom(), blocks, Shape.dimensions, TextureRegion, hsv.Item1, hsv.Item2, hsv.Item3, Shape.name);
 
     }
 
@@ -77,7 +83,7 @@ public class PooledPieceDefinition : PieceDefinition
         List<int> indexes = [0, 1, 2, 3];
         //indexes to access type array
 
-        int SplitSize = randomGroupPool[GD.RandRange(0, 4)];
+        int SplitSize = randomGroupPool[GD.RandRange(0, randomGroupPool.Length-1)];
         //Size of split 1, pertaining to StarterType
 
         //Draw a random value from the list, use it as the index for types[], then discard the value until the list is empty

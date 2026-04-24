@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://4uffm5qf4t0i"]
+
+[ext_resource type="PackedScene" uid="uid://blmpsbuqvqptb" path="res://scenes/block/Block.tscn" id="1_pcsbq"]
+[ext_resource type="Script" uid="uid://bdlxbmtb11nsm" path="res://scenes/block/ReinforcedBlock.cs" id="2_hr8yx"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hr8yx"]
+particle_flag_disable_z = true
+angle_min = 88.20001
+angle_max = 170.40001
+direction = Vector3(0, -1, 0)
+spread = 24.0
+initial_velocity_min = 151.04
+initial_velocity_max = 204.09999
+angular_velocity_min = -720.0
+angular_velocity_max = 719.99994
+gravity = Vector3(0, 392, 0)
+scale_min = 4.0
+scale_max = 4.0
+
+[node name="Block" unique_id=537382246 node_paths=PackedStringArray("particles") instance=ExtResource("1_pcsbq")]
+script = ExtResource("2_hr8yx")
+particles = NodePath("GPUParticles2D")
+RemovedOnScoring = false
+OverrideTexture = true
+
+[node name="SpriteLayer1" parent="." index="0" unique_id=602452335]
+region_rect = Rect2(160, 0, 10, 10)
+
+[node name="SpriteLayer2" parent="SpriteLayer1" index="0" unique_id=212297080]
+visible = true
+region_rect = Rect2(160, 10, 10, 10)
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." index="1" unique_id=1217836637]
+emitting = false
+amount = 1
+lifetime = 3.0
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_hr8yx")

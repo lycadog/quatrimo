@@ -5,21 +5,27 @@ using System;
 public partial class PieceCard : Control
 {
 
-	[Export] TextureRect CardBorder;
+    public BagPiece LinkedPiece;
+
+    public int index = -1;
+    bool IsSelected = false;
+
+	[Export] TextureRect FullCard;
+    [Export] TextureRect CardBorder;
 	[Export] TextureRect CardNumber;
 	[Export] TextureRect HighlightBars;
 	[Export] Control BlockBox;
+	[Export] ColorRect WhiteFlashBox;
+	[Export] AnimationPlayer animation;
+
+	public event Action DiscardAnimationComplete;
 
     static readonly PackedScene CardScene = ResourceLoader.Load<PackedScene>("uid://lcfq5pnqafa3");
 
-    public BagPiece LinkedPiece;
+	public float BaseYPosition = 0;
+	public float AnimatedYOffset;
 
-	int index = -1;
-
-	bool IsSelected = false;
-	public float YOffset;
-
-	public static PieceCard CreateNewCard(BagPiece piece)
+    public static PieceCard CreateNewCard(BagPiece piece)
 	{
 		PieceCard card = (PieceCard)CardScene.Instantiate();
 		card.Initialize(piece);
@@ -29,7 +35,6 @@ public partial class PieceCard : Control
 	void Initialize(BagPiece piece)
 	{
 		LinkedPiece = piece;
-		
         CardBorder.SelfModulate = Color.FromHsv(piece.h, piece.s, piece.v);
 
         //TODO: add piece type icon here!
@@ -47,16 +52,6 @@ public partial class PieceCard : Control
         BlockBox.Position -= offset;
     }
 
-	public void UpdatePosition(float spacing, int index)
-	{
-		//updating this constantly is inefficient, especially the index! TODO change this!
-		float y = (index * 34) + (spacing * index) + YOffset; 
-		
-		Position = new(0, y);
-
-		SetIndex(index);
-	}
-
 	public void Select()
 	{
 		HighlightBars.Visible = true;
@@ -71,14 +66,23 @@ public partial class PieceCard : Control
 
 	public void SetIndex(int index)
 	{
+		this.index = index;
 		Rect2 textureRect = new(index * 5, 120, 5, 8);
 
 		(CardNumber.Texture as AtlasTexture).Region = textureRect;
 	}
 
-	public void Destroy()
+	public void Discard()
 	{
-		//TODO: replace with removal animation
+		FullCard.Visible = false;
+        WhiteFlashBox.Visible = true;
+
+        animation.Play("CardFlashDisappear");
+	}
+
+	public void OnDiscardAnimationFinished(StringName name)
+	{
+		DiscardAnimationComplete?.Invoke();
 		QueueFree();
 	}
 
@@ -90,5 +94,6 @@ public partial class PieceCard : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		Position = new(Position.X, BaseYPosition + AnimatedYOffset);
 	}
 }

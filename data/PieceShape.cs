@@ -37,4 +37,32 @@ public class PieceShape
         B = new(this);
     }
 
+    /// <summary>
+    /// Returns a pieceshape flipped across the X axis
+    /// </summary>
+    /// <param name="leftShape"></param>
+    public PieceShape(PieceShape leftShape)
+    {
+        dimensions = leftShape.dimensions;
+
+
+        int originX = leftShape.origin.X + dimensions.X / 2 - 1;
+
+        origin = new(originX, leftShape.origin.Y);
+
+        shape = new int[dimensions.X, dimensions.Y];
+
+        for(int x = 0; x < dimensions.X; x++)
+        {
+            for(int y = 0; y < dimensions.Y; y++)
+            {
+                int flippedX = dimensions.X - x - 1;
+
+                shape[flippedX, y] = leftShape[x, y];
+            }
+        }
+
+        B = new(this);
+    }
+
 }

@@ -7,6 +7,22 @@ public partial class BoardRow(int y, int boardWidth) : Node
     public int y = y;
     public int totalScorability = 0;
 
+    int minimumRequiredScorability
+    {
+        get
+        {
+            return boardWidth - RunStats.EmptySpacesAllowedInScoring - RunStats.EmptySpacesRequiredInScoring;
+        }
+    }
+
+    int maximumAllowedScorability
+    {
+        get
+        {
+            return boardWidth - RunStats.EmptySpacesRequiredInScoring;
+        }
+    }
+
     public Cell[] cells;
 
     public event Action ScoringStarted;
@@ -16,9 +32,9 @@ public partial class BoardRow(int y, int boardWidth) : Node
         get
         {
             return
-                totalScorability >= boardWidth - RunStats.EmptySpacesAllowedInScoring - RunStats.EmptySpacesRequiredInScoring
+                totalScorability >= minimumRequiredScorability
                 &&
-                totalScorability <= boardWidth - RunStats.EmptySpacesRequiredInScoring;
+                totalScorability <= maximumAllowedScorability;
         }
     }
 
@@ -26,6 +42,8 @@ public partial class BoardRow(int y, int boardWidth) : Node
     {
         if (Scorable)
         {
+            CursedBlockFailsafe();
+
             ScoringStarted?.Invoke();
             StartScoring();
         }
@@ -75,6 +93,26 @@ public partial class BoardRow(int y, int boardWidth) : Node
         ScoreIterator newIterator = new(x, direction, cells);
         AddChild(newIterator);
         
+    }
+
+    void CursedBlockFailsafe()
+    {
+        int cursedCount = 0;
+        foreach(var cell in cells)
+        {
+            if(cell.BlockType == BlockType.Cursed)
+            {
+                cursedCount++;
+            }
+        }
+
+        if(cursedCount >= minimumRequiredScorability && cursedCount <= maximumAllowedScorability)
+        {
+            foreach(var cell in cells)
+            {
+                cell.ScoreFlag = Cell.ScoringFlags.CanScoreButFullyRestrictAfterScoring;
+            }
+        }
     }
 
     public void BindCell(Cell cell)

@@ -34,7 +34,7 @@ public partial class ScoreIterator(int x, int direction, Cell[] row) : Node
 
 		Cell currentCell = row[x];
 
-		if(currentCell.ScoreFlag == Cell.ScoringFlags.CanScore)
+		if(currentCell.ScoreFlag == Cell.ScoringFlags.CanScore || currentCell.ScoreFlag == Cell.ScoringFlags.CanScoreButFullyRestrictAfterScoring)
 		{
 			currentCell.ScoreBlock();
 		}

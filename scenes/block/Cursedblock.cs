@@ -52,7 +52,6 @@ public partial class Cursedblock : Block
 
     protected override void TickBlock()
     {
-		GD.Print($"cursed block ticked. open = {open}, openCounter = {openCounter}");
 		if (open)
 		{
 			openCounter--;

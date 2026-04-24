@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ctw2ssdea4ogt"]
 
-[ext_resource type="PackedScene" uid="uid://blmpsbuqvqptb" path="res://scenes/block/block.tscn" id="1_3so8r"]
+[ext_resource type="PackedScene" uid="uid://blmpsbuqvqptb" path="res://scenes/block/Block.tscn" id="1_3so8r"]
 [ext_resource type="Script" uid="uid://ila157w5moha" path="res://scenes/block/Cursedblock.cs" id="2_s7t73"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_s7t73"]
@@ -13,6 +13,7 @@ load_path = "res://.godot/imported/atlas.png-56af98f5cfc24889da848b0c8a9b2c5e.ct
 
 [node name="Block" unique_id=537382246 instance=ExtResource("1_3so8r")]
 script = ExtResource("2_s7t73")
+type = 1
 RemovedOnScoring = false
 OverrideTexture = true
 

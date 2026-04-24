@@ -1,0 +1,22 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://dqhxueja2hvqy"]
+
+[ext_resource type="FontFile" uid="uid://b53sg1d4l2d46" path="res://lang/Ac437_ToshibaTxL1_8x8.ttf" id="1_vllvb"]
+
+[resource]
+font = ExtResource("1_vllvb")
+font_color = Color(0, 0, 0, 1)
+outline_size = 2
+shadow_size = 3
+shadow_color = Color(1, 0, 0.3499999, 1)
+stacked_outline_count = 1
+stacked_shadow_count = 3
+stacked_outline_0/size = 3
+stacked_shadow_0/offset = Vector2(-1, -1)
+stacked_shadow_0/color = Color(0, 0.7999997, 1, 1)
+stacked_shadow_0/outline_size = 3
+stacked_shadow_1/offset = Vector2(1, -1)
+stacked_shadow_1/color = Color(1, 1, 0, 1)
+stacked_shadow_1/outline_size = 3
+stacked_shadow_2/offset = Vector2(-1, 1)
+stacked_shadow_2/color = Color(0, 1, 0.3333335, 1)
+stacked_shadow_2/outline_size = 3

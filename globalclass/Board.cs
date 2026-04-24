@@ -24,6 +24,7 @@ public partial class Board : Control
 
     [Signal] public delegate void TurnStartedEventHandler();
 	[Signal] public delegate void PiecePlayedEventHandler();
+    [Signal] public delegate void PiecePlacedEventHandler();
     [Signal] public delegate void ScoreStepStartedEventHandler(bool isInitialStep);
     [Signal] public delegate void TickStepStartedEventHandler();
     [Signal] public delegate void TurnEndedEventHandler();
@@ -187,6 +188,7 @@ public partial class Board : Control
                 //bind cell events here ****************                                    <*************
                 newCell.UpdatedBoard += () => BoardUpdated = true;
                 newCell.DeletedBlock += OnBlockExitingTree;
+                newCell.Scored += OnCellScored;
 
                 CellBoard[x, y] = newCell;
 
@@ -204,32 +206,41 @@ public partial class Board : Control
     #endregion
     #region === Event Methods ===
 
+    void OnScoreNumberReachesScore(double number)
+    {
+        totalScore += number;
+        ScoreLabel.Text = totalScore.ToString();
+    }
+
     public void OnRowStartedScoring()
     {
         BoardUpdated = true;
         AnimationManager.StartAnimating(LowerToFillScoredSpaces);
         //set up our animationmanager to score again when we conclude!
     }
-    
 
     public void OnBlockScored(Block block)
+    {
+        var newNumber = MiniScoreNumber.GetNew(block.ScoreValue, ScoreLabel.GetGlobalRect().GetCenter());
+        newNumber.NumberReachedScore += OnScoreNumberReachesScore;
+        AddChild(newNumber);
+        newNumber.GlobalPosition = block.GlobalPosition;
+    }
+
+    public void OnCellScored(Cell cell)
     {
         ScoreAnimation animation = (ScoreAnimation)ScoreAnimation.Instantiate();
 
         AddChild(animation);
 
-        totalScore += block.ScoreValue;
-        ScoreLabel.Text = totalScore.ToString();
-
-        animation.GlobalPosition = block.GlobalPosition;
+        animation.Position = cell.RealPosition;
         animation.AnimationFinished += EmitSignalAnimationEnded;
 
         EmitSignalAnimationCreated();
 
-        if (block.RemovedOnScoring)
+        if (cell.FilledInOnScoring)
         {
-            GD.Print($"Flagging cell {block.boardX}, {block.boardY} for deletion");
-            ScoredCells.Add(CellBoard[block.boardX, block.boardY]);
+            ScoredCells.Add(cell);
         }
     }
 
@@ -262,6 +273,7 @@ public partial class Board : Control
 
     public void OnPiecePlaced(FallingPiece piece)
     {
+        EmitSignalPiecePlaced();
         CurrentPiece = null;
         ScoreBoard(true);
         //move onto scoring now!

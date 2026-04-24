@@ -1,11 +1,12 @@
 [gd_scene format=3 uid="uid://ce3gfft4hauva"]
 
-[ext_resource type="PackedScene" uid="uid://blmpsbuqvqptb" path="res://scenes/block/block.tscn" id="1_cw3hq"]
+[ext_resource type="PackedScene" uid="uid://blmpsbuqvqptb" path="res://scenes/block/Block.tscn" id="1_cw3hq"]
 [ext_resource type="Script" uid="uid://1orm4dej74ik" path="res://scenes/block/LaserBlock.cs" id="1_isth6"]
 [ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_cw3hq"]
 
 [node name="Block" unique_id=537382246 instance=ExtResource("1_cw3hq")]
 script = ExtResource("1_isth6")
+type = 5
 SolidWhenFalling = false
 SolidWhenPlaced = false
 OverrideColor = true

@@ -149,20 +149,6 @@ offset_right = 47.0
 offset_bottom = 23.0
 color = Color(0.11513337, 0.07700001, 0.22, 1)
 
-[node name="Board" parent="." unique_id=30435418 node_paths=PackedStringArray("ScoreLabel") instance=ExtResource("5_knim7")]
-layout_mode = 1
-ScoreLabel = NodePath("../Score/ScoreLabel")
-
-[node name="HandAnchor" type="Control" parent="." unique_id=1015045901]
-anchors_preset = 0
-offset_left = 96.0
-offset_top = 120.0
-offset_right = 165.0
-offset_bottom = 120.0
-
-[node name="PlayerHand" parent="HandAnchor" unique_id=73958776 instance=ExtResource("6_u7t6i")]
-layout_mode = 0
-
 [node name="Score2" type="NinePatchRect" parent="." unique_id=211670477]
 layout_mode = 0
 offset_left = 353.0
@@ -176,7 +162,7 @@ patch_margin_top = 8
 patch_margin_right = 8
 patch_margin_bottom = 8
 
-[node name="ScoreLabel" type="Label" parent="Score2" unique_id=606062256]
+[node name="MultLabel" type="Label" parent="Score2" unique_id=606062256]
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -187,7 +173,7 @@ offset_bottom = 6.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(30, 6)
-text = "50,642"
+text = "1X"
 label_settings = SubResource("LabelSettings_shipe")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -207,6 +193,7 @@ patch_margin_right = 8
 patch_margin_bottom = 8
 
 [node name="ScoreLabel" type="Label" parent="Score" unique_id=1148665305]
+z_index = 1
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -217,12 +204,26 @@ offset_bottom = 6.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.3, 1.3)
-pivot_offset = Vector2(35, 6)
-text = "112,051"
+pivot_offset = Vector2(43, 6)
+text = "0"
 label_settings = SubResource("LabelSettings_shipe")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
+
+[node name="Board" parent="." unique_id=30435418 node_paths=PackedStringArray("ScoreLabel") instance=ExtResource("5_knim7")]
+layout_mode = 1
+ScoreLabel = NodePath("../Score/ScoreLabel")
+
+[node name="HandAnchor" type="Control" parent="." unique_id=1015045901]
+anchors_preset = 0
+offset_left = 96.0
+offset_top = 120.0
+offset_right = 165.0
+offset_bottom = 120.0
+
+[node name="PlayerHand" parent="HandAnchor" unique_id=73958776 instance=ExtResource("6_u7t6i")]
+layout_mode = 0
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=88108828]
 layout_mode = 0
@@ -263,6 +264,6 @@ offset_right = 7.0
 offset_bottom = 6.0
 texture = SubResource("AtlasTexture_kciur")
 
-[connection signal="TurnEnded" from="Board" to="HandAnchor/PlayerHand" method="OnTurnEnd"]
+[connection signal="PiecePlaced" from="Board" to="HandAnchor/PlayerHand" method="OnPiecePlaced"]
 [connection signal="TurnStarted" from="Board" to="HandAnchor/PlayerHand" method="OnTurnStart"]
 [connection signal="CardPlayed" from="HandAnchor/PlayerHand" to="Board" method="OnCardPlayed"]

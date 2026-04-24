@@ -23,6 +23,8 @@ public partial class Block : Area2D
 
     bool ExitBoardBehaviorEnabled = true;
 
+    [Export] public BlockType type;
+
     [Export] public bool Scorable = true;
     [Export] public bool RemovedOnScoring = true;
     [Export] public double ScoreValue = 1;
@@ -94,6 +96,7 @@ public partial class Block : Area2D
 
         //temporarily make the white sprite visible so we get a little flash animation when we place stuff
         WhiteFlashSprite.Visible = true;
+
         Tween tween = GetTree().CreateTween().SetParallel();
         tween.TweenCallback(Callable.From(() => WhiteFlashSprite.Visible = false)).SetDelay(PlacementFlashLength);
         tween.TweenProperty(GetNode("WhiteFlashBox/PointLight2D"), "energy", 0, PlacementFlashLength);

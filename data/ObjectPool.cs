@@ -29,6 +29,87 @@ public class ObjectPool<T>
     }
 
     /// <summary>
+    /// Add with 2 arrays, each array has its own weight value for all its entries
+    /// </summary>
+    /// <param name="firstGroupValues"></param>
+    /// <param name="secondGroupValues"></param>
+    /// <param name="firstGroupWeight"></param>
+    /// <param name="secondGroupWeight"></param>
+    public ObjectPool(T[] firstGroupValues, T[] secondGroupValues, int firstGroupWeight, int secondGroupWeight)
+    {
+        foreach (T value in firstGroupValues)
+        {
+            AddNewEntry(value, firstGroupWeight);
+        }
+
+        foreach (T value in secondGroupValues)
+        {
+            AddNewEntry(value, secondGroupWeight);
+        }
+    }
+
+    /// <summary>
+    /// Add with 3 arrays, each array has its own weight value for all its entries
+    /// </summary>
+    /// <param name="firstGroupValues"></param>
+    /// <param name="secondGroupValues"></param>
+    /// <param name="thirdGroupValues"></param>
+    /// <param name="firstGroupWeight"></param>
+    /// <param name="secondGroupWeight"></param>
+    /// <param name="thirdGroupWeight"></param>
+    public ObjectPool(T[] firstGroupValues, T[] secondGroupValues, T[]thirdGroupValues, int firstGroupWeight, int secondGroupWeight, int thirdGroupWeight)
+    {
+        foreach (T value in firstGroupValues)
+        {
+            AddNewEntry(value, firstGroupWeight);
+        }
+
+        foreach (T value in secondGroupValues)
+        {
+            AddNewEntry(value, secondGroupWeight);
+        }
+
+        foreach (T value in thirdGroupValues)
+        {
+            AddNewEntry(value, thirdGroupWeight);
+        }
+    }
+
+    /// <summary>
+    /// Add with 4 arrays, each array has its own weight value for all its entries
+    /// </summary>
+    /// <param name="firstGroupValues"></param>
+    /// <param name="secondGroupValues"></param>
+    /// <param name="thirdGroupValues"></param>
+    /// <param name="fourthGroupValues"></param>
+    /// <param name="firstGroupWeight"></param>
+    /// <param name="secondGroupWeight"></param>
+    /// <param name="thirdGroupWeight"></param>
+    /// <param name="fourthGroupWeight"></param>
+    public ObjectPool(T[] firstGroupValues, T[] secondGroupValues, T[] thirdGroupValues, T[] fourthGroupValues, int firstGroupWeight, int secondGroupWeight, int thirdGroupWeight, int fourthGroupWeight)
+    {
+        foreach (T value in firstGroupValues)
+        {
+            AddNewEntry(value, firstGroupWeight);
+        }
+
+        foreach (T value in secondGroupValues)
+        {
+            AddNewEntry(value, secondGroupWeight);
+        }
+
+        foreach (T value in thirdGroupValues)
+        {
+            AddNewEntry(value, thirdGroupWeight);
+        }
+
+        foreach (T value in fourthGroupValues)
+        {
+            AddNewEntry(value, fourthGroupWeight);
+        }
+    }
+
+    /// <summary>
     /// Provide a list of values and a same-length list of weights
     /// </summary>
     /// <param name="values"></param>
@@ -52,7 +133,7 @@ public class ObjectPool<T>
     /// </summary>
     /// <param name="values"></param>
     /// <param name="weight"></param>
-    public ObjectPool(T[] values, int weight)
+    public ObjectPool(T[] values, int weight = 1)
     {
         foreach(T t in values)
         {
@@ -237,5 +318,10 @@ public class ObjectPool<T>
 
             parent.entries.Remove(this);
         }
+    }
+
+    public static implicit operator ObjectPool<T>(ObjectPool<PieceShape> v)
+    {
+        throw new NotImplementedException();
     }
 }

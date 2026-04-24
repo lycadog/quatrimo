@@ -20,7 +20,44 @@ region = Rect2(0, 120, 5, 8)
 atlas = ExtResource("1_dlunc")
 region = Rect2(1, 68, 67, 6)
 
-[node name="PieceCard" type="Control" unique_id=1109525706 node_paths=PackedStringArray("CardBorder", "CardNumber", "HighlightBars", "BlockBox")]
+[sub_resource type="Animation" id="Animation_naw20"]
+resource_name = "Squishandstretch"
+length = 0.18
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.18),
+"transitions": PackedFloat32Array(0.32987696, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(2, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_d5chy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_28hdg"]
+_data = {
+&"CardFlashDisappear": SubResource("Animation_naw20"),
+&"RESET": SubResource("Animation_d5chy")
+}
+
+[node name="PieceCard" type="Control" unique_id=1109525706 node_paths=PackedStringArray("FullCard", "CardBorder", "CardNumber", "HighlightBars", "BlockBox", "WhiteFlashBox", "animation")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 69.0
@@ -29,10 +66,13 @@ pivot_offset = Vector2(34.5, 17)
 size_flags_vertical = 4
 mouse_filter = 1
 script = ExtResource("2_ag2cg")
+FullCard = NodePath("CardBG")
 CardBorder = NodePath("CardBG/CardBorder")
 CardNumber = NodePath("CardBG/Number")
 HighlightBars = NodePath("CardBG/TopHighlight")
 BlockBox = NodePath("CardBG/BlockBox")
+WhiteFlashBox = NodePath("WhiteFlash")
+animation = NodePath("WhiteFlash/AnimationPlayer")
 metadata/_custom_type_script = "uid://dr053va3lvbk8"
 
 [node name="CardBG" type="TextureRect" parent="." unique_id=1866356336]
@@ -47,7 +87,7 @@ texture = SubResource("AtlasTexture_d5chy")
 stretch_mode = 4
 
 [node name="CardBorder" type="TextureRect" parent="CardBG" unique_id=1837139526]
-self_modulate = Color(0.32666662, 9.3854965e-07, 0.19559467, 1)
+self_modulate = Color(1, 0.13, 0.13, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -101,4 +141,18 @@ offset_right = 69.0
 offset_bottom = 34.0
 color = Color(0, 0, 0, 0.4)
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1584020593]
+[node name="WhiteFlash" type="ColorRect" parent="." unique_id=1936315795]
+visible = false
+modulate = Color(1, 1, 1, 0.7058824)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(34.5, 17)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="WhiteFlash" unique_id=614842837]
+libraries/ = SubResource("AnimationLibrary_28hdg")
+
+[connection signal="animation_finished" from="WhiteFlash/AnimationPlayer" to="." method="OnDiscardAnimationFinished"]

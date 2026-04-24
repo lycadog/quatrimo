@@ -12,6 +12,10 @@ public partial class FallingPiece : Node2D
 	double RightCooldown = 0;
 	double PostRotationLockout = 0;
 
+	const double TimeBeforeFalling = 0.4;
+	const double TimeBeforePlacement = 0.8;
+	const int FastfallSpeed = 80;
+
 	bool Falling = false;
 
 	public Vector2I Dimensions;
@@ -85,7 +89,7 @@ public partial class FallingPiece : Node2D
 	public override void _PhysicsProcess(double delta)
 	{
 
-		if(fallingCounter >= .4)
+		if(fallingCounter >= TimeBeforeFalling)
 		{
 			if (CanMoveDown())
 			{
@@ -101,7 +105,7 @@ public partial class FallingPiece : Node2D
 			else
 			{
 				//if we can't fall, then let's try to place!
-				if(placementCounter >= 1)
+				if(placementCounter >= TimeBeforePlacement)
 				{
 					Place();
 
@@ -141,13 +145,14 @@ public partial class FallingPiece : Node2D
 
             if (DownHeldTime >= 0.14) //After it's held for a bit move down some more
             {
-                fallingCounter += delta * 40;
+                fallingCounter += delta * FastfallSpeed;
             }
         }
 
         else if (Input.IsActionJustReleased("Down")) //Set the timer to negative when we release so we have more precision
         {
             fallingCounter = -.2;
+			placementCounter = -.2;
         }
 
 		else if (Input.IsActionPressed("Up"))
@@ -169,7 +174,7 @@ public partial class FallingPiece : Node2D
 			else if (LeftCooldown <= 0)
 			{
 				AttemptMoveLeft();
-				LeftCooldown = .03;
+				LeftCooldown = .034;
 				return;
 			}
 		}
@@ -187,7 +192,7 @@ public partial class FallingPiece : Node2D
 			else if (RightCooldown <= 0)
 			{
 				AttemptMoveRight();
-				RightCooldown = .03;
+				RightCooldown = .034;
 				return;
 			}
 		}

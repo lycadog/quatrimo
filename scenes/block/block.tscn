@@ -77,8 +77,6 @@ region_rect = Rect2(0, 10, 10, 10)
 
 [node name="PointLight2D" type="PointLight2D" parent="WhiteFlashBox" unique_id=319429166]
 energy = 0.12
-shadow_enabled = true
-shadow_item_cull_mask = 0
 texture = ExtResource("3_rfxuc")
 
 [node name="LeftArea" type="Area2D" parent="." unique_id=1907618161]

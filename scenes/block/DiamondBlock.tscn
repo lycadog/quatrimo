@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bd4fndwtna7f5"]
+
+[ext_resource type="PackedScene" uid="uid://blmpsbuqvqptb" path="res://scenes/block/Block.tscn" id="1_ag1bo"]
+[ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="2_vr3mr"]
+
+[node name="Block" unique_id=537382246 instance=ExtResource("1_ag1bo")]
+type = 7
+ScoreValue = 8.0
+OverrideTexture = true
+
+[node name="SpriteLayer1" parent="." index="0" unique_id=602452335]
+region_rect = Rect2(230, 0, 10, 10)
+
+[node name="SpriteLayer2" parent="SpriteLayer1" index="0" unique_id=212297080]
+visible = true
+region_rect = Rect2(230, 10, 10, 10)
+
+[node name="Layer3" type="Sprite2D" parent="SpriteLayer1/SpriteLayer2" index="0" unique_id=2094295946]
+texture = ExtResource("2_vr3mr")
+region_enabled = true
+region_rect = Rect2(230, 20, 10, 10)

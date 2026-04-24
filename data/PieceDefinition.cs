@@ -7,12 +7,32 @@ public abstract class PieceDefinition
     public PieceShape Shape;
 
     public Rect2 TextureRegion;
-    public string Name;
 
     protected (float, float, float) hsv; //Randomize the HSV every time we get a new piece
 
     public abstract BagPiece GetPiece();
 
+    public PieceDefinition(PieceShape shape, Rect2 textureRegion)
+    {
+        Shape = shape;
+        TextureRegion = textureRegion;
+    }
+
+    public PieceDefinition(PieceShape shape)
+    {
+        Shape = shape;
+        TextureRegion = new Rect2(0, 30, 10, 10);
+    }
+
+    public PieceDefinition(Rect2 textureRegion)
+    {
+        TextureRegion = textureRegion;
+    }
+
+    public PieceDefinition()
+    {
+        TextureRegion = new Rect2(0, 30, 10, 10);
+    }
 
     /// <summary>
     /// Create blocks with type array specifying the type for type values of 1 to 5

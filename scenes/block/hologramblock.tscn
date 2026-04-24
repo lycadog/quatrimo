@@ -81,6 +81,7 @@ collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_ymeqs")
 glowy = NodePath("SpriteLayer1/PointLight2D")
+type = 4
 SolidWhenFalling = false
 SolidWhenPlaced = false
 OverrideTexture = true

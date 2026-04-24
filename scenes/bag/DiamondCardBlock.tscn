@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://b4dhni0uy4obd"]
+
+[ext_resource type="PackedScene" uid="uid://bxjbghjidd7oe" path="res://scenes/bag/BasicCardBlock.tscn" id="1_evlkg"]
+[ext_resource type="Texture2D" uid="uid://d2umw6muvt05b" path="res://texture/pieceCard.png" id="2_uk1an"]
+
+[node name="BasicCardBlock" unique_id=459041350 instance=ExtResource("1_evlkg")]
+
+[node name="Layer1Sprite" parent="." index="0" unique_id=759158297]
+region_rect = Rect2(49, 74, 7, 7)
+
+[node name="Layer2Sprite" parent="." index="1" unique_id=656421469]
+visible = true
+region_rect = Rect2(49, 81, 7, 7)
+
+[node name="Layer2Sprite2" type="Sprite2D" parent="." index="2" unique_id=1716102368]
+position = Vector2(0, -1)
+texture = ExtResource("2_uk1an")
+region_enabled = true
+region_rect = Rect2(49, 87, 7, 7)
