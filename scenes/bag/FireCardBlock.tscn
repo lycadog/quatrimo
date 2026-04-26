@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://c8pgbevjjhh4q"]
+
+[ext_resource type="PackedScene" uid="uid://bxjbghjidd7oe" path="res://scenes/bag/BasicCardBlock.tscn" id="1_lacsl"]
+
+[node name="BasicCardBlock" unique_id=459041350 instance=ExtResource("1_lacsl")]
+OverrideColor = true
+
+[node name="Layer1Sprite" parent="." index="0" unique_id=759158297]
+region_rect = Rect2(63, 74, 7, 7)

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public class PieceShape
+public class PieceShape : IHasShape
 {
     readonly int[,] shape;
 
@@ -25,6 +25,11 @@ public class PieceShape
     /// Basic PieceType with no special types or anything
     /// </summary>
     public SimplePieceDefinition B;
+
+    public PieceShape GetShape()
+    {
+        return this;
+    }
 
     public PieceShape(int[,] shape, int originX, int originY, string name)
     {
@@ -46,7 +51,7 @@ public class PieceShape
         dimensions = leftShape.dimensions;
 
 
-        int originX = leftShape.origin.X + dimensions.X / 2 - 1;
+        int originX = dimensions.X - leftShape.origin.X - 1;
 
         origin = new(originX, leftShape.origin.Y);
 
@@ -64,5 +69,4 @@ public class PieceShape
 
         B = new(this);
     }
-
 }

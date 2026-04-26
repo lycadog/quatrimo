@@ -4,7 +4,6 @@
 
 [resource]
 font = ExtResource("1_bp7vm")
-font_size = 14
 font_color = Color(0, 0.7999997, 1, 1)
 outline_size = 4
 outline_color = Color(0, 0, 0, 1)

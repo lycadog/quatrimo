@@ -8,7 +8,10 @@ public enum BlockType
     Hologram,   //4
     Laser,      //5
     Void,       //6
-    Diamond     //7
+    Diamond,    //7
+    Gold,       //8
+    Fire,       //9
+    Glass       //10
 }
 
 public enum PieceType

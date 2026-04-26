@@ -28,6 +28,7 @@ public partial class Block : Area2D
     [Export] public bool Scorable = true;
     [Export] public bool RemovedOnScoring = true;
     [Export] public double ScoreValue = 1;
+    [Export] public bool RotateSprite = false;
 
     [Export] bool SolidWhenFalling = true;
     [Export] bool SolidWhenPlaced = true;
@@ -50,18 +51,34 @@ public partial class Block : Area2D
     [Signal] public delegate void ScoredEventHandler(Block block);
     [Signal] public delegate void MovedCellsEventHandler();
 
+    [Signal] public delegate void CreatedBlockEventHandler(Block block);
+    [Signal] public delegate void ScoreOtherBlockEventHandler(int boardX, int boardY);
+    [Signal] public delegate void CreateAnimationEventHandler(Vector2 GlobalPosition, ScoreAnimation animation);
+
     const double PlacementFlashLength = .18;
 
     #region === Board Interaction/Positional Methods ===
 
-    public virtual void Play()
+    public void Play()
     {
+        if (!SolidWhenFalling)
+        {
+            DropPreviewSprite.RegionRect = new Rect2(50, 0, 10, 10);
+        }
+
         ForceUpdateTransform();
         DropPreviewRaycast.ForceRaycastUpdate();
         DropPreviewSprite.Visible = true;
         UpdateRotationDestinations();
         ToggleOffBoardTexture(true);
+        OnPlayed();
     }
+
+    protected virtual void OnPlayed()
+    {
+
+    }
+
 
     public void Score()
     {
@@ -101,8 +118,15 @@ public partial class Block : Area2D
         tween.TweenCallback(Callable.From(() => WhiteFlashSprite.Visible = false)).SetDelay(PlacementFlashLength);
         tween.TweenProperty(GetNode("WhiteFlashBox/PointLight2D"), "energy", 0, PlacementFlashLength);
 
+        OnPlaced();
+
         EmitSignalPlaced(this);
         //do clipping? idk
+    }
+
+    protected virtual void OnPlaced()
+    {
+
     }
 
     public void Rotate(int direction = 1)
@@ -110,10 +134,19 @@ public partial class Block : Area2D
         if(direction == -1)
         {
             GlobalPosition = NegativeRotationArea.GlobalPosition;
+            if (RotateSprite)
+            {
+                SpriteLayer1.Rotate(Mathf.DegToRad(-90));
+            }
+            
         }
         else if(direction == 1)
         {
             GlobalPosition = PositiveRotationArea.GlobalPosition;
+            if (RotateSprite)
+            {
+                SpriteLayer1.Rotate(Mathf.DegToRad(90));
+            }
         }
 
         else { throw new ArgumentOutOfRangeException($"Attempted to rotate block with invalid direction value: {direction}"); }
@@ -234,6 +267,15 @@ public partial class Block : Area2D
     #region === Event Methods ===
 
     
+    public void ForceUpdateCollision()
+    {
+        ForceUpdateTransform();
+        LeftAreaChanged(null);
+        DownAreaChanged(null);
+        RightAreaChanged(null);
+        NegativeRotationAreaChanged(null);
+        PositiveRotationAreaChanged(null);
+    }
 
     public virtual void OnTurnStart()
     {
@@ -243,7 +285,7 @@ public partial class Block : Area2D
 
     public void OnTickStep()
     {
-        if (!IsTicked)
+        if (!IsTicked && !IsQueuedForDeletion())
         {
             IsTicked = true;
             TickBlock();

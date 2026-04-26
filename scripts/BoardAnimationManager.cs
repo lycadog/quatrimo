@@ -26,7 +26,6 @@ public partial class BoardAnimationManager : Node
 	{
 		CompletedAnimations++;
 
-		GD.Print($"animation {CompletedAnimations}/{TotalAnimations} completed");
 		if(CompletedAnimations == TotalAnimations)
 		{
 			AlreadyAnimating = false;

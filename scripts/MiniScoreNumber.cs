@@ -9,11 +9,18 @@ public partial class MiniScoreNumber : Node2D
     internal Vector2 finalPosition;
 	Vector2 velocity;
 
-	[Export] LabelSettings LowSettings;			//number 0 - 2
-    [Export] LabelSettings MediumSettings;		//number 3 - 7
-    [Export] LabelSettings HighSettings;		//number 8 - 19
-    [Export] LabelSettings ReallyHighSettings;	//number 20 - 49
-    [Export] LabelSettings CrazySettings;		//number 50 - ...
+	//number .. - 0
+	static LabelSettings BadSettings = ResourceLoader.Load<LabelSettings>("uid://dmamg3mk440hl");
+	//number 1 - 2
+	static LabelSettings LowSettings = ResourceLoader.Load<LabelSettings>("uid://dpwq1x5um0pgw");
+    //number 3 - 7
+    static LabelSettings MediumSettings = ResourceLoader.Load<LabelSettings>("uid://lbauet8ivo45");
+    //number 8 - 19
+    static LabelSettings HighSettings = ResourceLoader.Load<LabelSettings>("uid://bd6e47e5shbpb");
+    //number 20 - 49
+    static LabelSettings ReallyHighSettings = ResourceLoader.Load<LabelSettings>("uid://clmx5swa303r3");
+    //number 50 - ...
+    static LabelSettings CrazySettings = ResourceLoader.Load<LabelSettings>("uid://dqhxueja2hvqy");
 
 
 
@@ -52,13 +59,20 @@ public partial class MiniScoreNumber : Node2D
 
 		label.LabelSettings = LowSettings;
 
-		if(ScoreNumber < 3)
+		
+
+		if(ScoreNumber < 1)
 		{
-			return;
+			label.LabelSettings = BadSettings;
 		}
 
-		//this is shit lol TODO
-		if(ScoreNumber > 19)
+        if (ScoreNumber < 3)
+        {
+            return;
+        }
+
+        //this is shit lol TODO
+        if (ScoreNumber > 19)
 		{
 			Scale = new(1, 1);
 			label.LabelSettings = ReallyHighSettings;

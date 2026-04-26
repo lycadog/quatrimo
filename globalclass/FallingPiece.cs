@@ -10,10 +10,11 @@ public partial class FallingPiece : Node2D
 	double DownHeldTime = 0;
 	double LeftCooldown = 0;
 	double RightCooldown = 0;
-	double PostRotationLockout = 0;
 
-	const double TimeBeforeFalling = 0.4;
-	const double TimeBeforePlacement = 0.8;
+	double SlamLockout = 0.1;
+
+	const double TimeBeforeFalling = 0.6;
+	const double TimeBeforePlacement = 1.2;
 	const int FastfallSpeed = 80;
 
 	bool Falling = false;
@@ -32,14 +33,14 @@ public partial class FallingPiece : Node2D
 
     [Signal] public delegate void OnPiecePlacementEventHandler(FallingPiece piece);
 
-   
+
 	/// <summary>
 	/// Links the blocks to the newly-created piece
 	/// </summary>
 	/// <param name="blocks"></param>
 	void LinkBlocks(Block[] blocks)
 	{
-		foreach(var block in blocks)
+		foreach (var block in blocks)
 		{
 			Blocks.Add(block);
 			AddChild(block);
@@ -77,9 +78,13 @@ public partial class FallingPiece : Node2D
 		if (Falling)
 		{
             Blocks.Remove(block);
+			if(Blocks.Count == 0)
+			{
+				Place(); //we have no blocks so we need to stop our current behavior
+			}
         }
     }
-
+	
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
@@ -115,9 +120,15 @@ public partial class FallingPiece : Node2D
 			}
 		}
 
-        ProcessInput(delta); //this is after the rest because sometimes this needs to end the state
-		//we don't want to run the above code if the state is ended, so we run after!
+		foreach(var block in Blocks)
+		{
+			block.ForceUpdateCollision();
+		}
 
+        ProcessInput(delta); //this is after the rest because sometimes this needs to end the state
+							 //we don't want to run the above code if the state is ended, so we run after!
+
+		SlamLockout -= delta;
         fallingCounter += delta;
 		placementCounter += delta;
 
@@ -127,7 +138,7 @@ public partial class FallingPiece : Node2D
     public void ProcessInput(double delta)
 	{
 
-        if (Input.IsActionJustPressed("SlamPiece"))
+        if (Input.IsActionJustPressed("SlamPiece") && SlamLockout < 0)
 		{
 			SlamAndPlace();
 			return;
@@ -167,14 +178,14 @@ public partial class FallingPiece : Node2D
 			if (Input.IsActionJustPressed("Left"))
 			{
 				AttemptMoveLeft();
-				LeftCooldown = .1;
+				LeftCooldown = .11;
 				return;
 			}
 
 			else if (LeftCooldown <= 0)
 			{
 				AttemptMoveLeft();
-				LeftCooldown = .034;
+				LeftCooldown = .036;
 				return;
 			}
 		}
@@ -192,7 +203,7 @@ public partial class FallingPiece : Node2D
 			else if (RightCooldown <= 0)
 			{
 				AttemptMoveRight();
-				RightCooldown = .034;
+				RightCooldown = .036;
 				return;
 			}
 		}
@@ -275,7 +286,7 @@ public partial class FallingPiece : Node2D
     {
         foreach (var block in Blocks)
         {
-            if (!block.CanMoveLeft) { return false; }
+            if (!block.CanMoveLeft) {  return false; }
         }
 
         return true;

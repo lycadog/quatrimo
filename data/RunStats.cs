@@ -10,7 +10,7 @@ public static class RunStats
     /// <summary>
     /// Empty spaces allowed when scoring a row. Default: 0
     /// </summary>
-    public static int EmptySpacesAllowedInScoring = 1;      
+    public static int EmptySpacesAllowedInScoring = 0;      
     /// <summary>
     /// Empty spaces required for us to score a row. Also functions as the above stat, adding an allowed empty space for every value.
     /// </summary>
@@ -18,11 +18,11 @@ public static class RunStats
     /// <summary>
     /// When we draw our hand, we draw this many cards
     /// </summary>
-    public static int HandDrawSize = 2;
+    public static int HandDrawSize = 3;
     /// <summary>
     /// If player has this many cards or less in hand they will draw
     /// </summary>
-    public static int CardCountRequiredBeforeDrawing = 1;
+    public static int CardCountRequiredBeforeDrawing = 0;
 
 
     public static void ResetValues()

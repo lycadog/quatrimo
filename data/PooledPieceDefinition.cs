@@ -4,15 +4,19 @@ using System.Xml.Linq;
 
 public class PooledPieceDefinition : PieceDefinition 
 {
-    static ObjectPool<PieceType> BasicPool = new ObjectPool<PieceType>(PieceType.Basic);
+    static ObjectPool<PieceType> BasicPool = new(PieceType.Basic);
 
-    ObjectPool<PieceShape> ShapePool;
-    ObjectPool<PieceType> PieceTypePool;
-    ObjectPool<BlockType> BlockPool;
+    readonly ObjectPool<IHasShape> ShapePool;
+    readonly ObjectPool<PieceType> PieceTypePool;
+    readonly ObjectPool<BlockType> BlockPool;
+
+    static ObjectPool<Vector2I> randomTextures = new([new(0, 30), new(80, 30), new(0, 40)], [new (0, 50), new(40, 50), new(10, 30), new(90, 30), new(10, 40)], [new(20, 30), new(20, 40), new(10, 50), new(100, 30)], 10, 2, 1);
+
+    bool UseRandomTexture;
 
     static readonly int[] randomGroupPool = { 1, 1, 2, 2, 2, 2, 3, 3, 4 }; //use this in random type distribution
 
-    public PooledPieceDefinition(ObjectPool<PieceType> piecePool, ObjectPool<BlockType> blockPool, ObjectPool<PieceShape> shapePool, Rect2 textureRegion) : base(textureRegion)
+    public PooledPieceDefinition(ObjectPool<PieceType> piecePool, ObjectPool<BlockType> blockPool, ObjectPool<IHasShape> shapePool, Rect2 textureRegion) : base(textureRegion)
     {
         PieceTypePool = piecePool;
         BlockPool = blockPool;
@@ -20,18 +24,20 @@ public class PooledPieceDefinition : PieceDefinition
         TextureRegion = textureRegion;
     }
 
-    public PooledPieceDefinition(ObjectPool<PieceType> piecePool, ObjectPool<BlockType> blockPool, ObjectPool<PieceShape> shapePool) : base()
+    public PooledPieceDefinition(ObjectPool<PieceType> piecePool, ObjectPool<BlockType> blockPool, ObjectPool<IHasShape> shapePool, bool useRandomTexture = true) : base()
     {
         PieceTypePool = piecePool;
         BlockPool = blockPool;
         ShapePool = shapePool;
+        UseRandomTexture = useRandomTexture;
     }
 
-    public PooledPieceDefinition(ObjectPool<BlockType> blockPool, ObjectPool<PieceShape> shapePool) : base()
+    public PooledPieceDefinition(ObjectPool<BlockType> blockPool, ObjectPool<IHasShape> shapePool, bool useRandomTexture = true) : base()
     {
         PieceTypePool = BasicPool;
         BlockPool = blockPool;
         ShapePool = shapePool;
+        UseRandomTexture = useRandomTexture;
     }
 
     //how does random type distribution work?
@@ -42,13 +48,19 @@ public class PooledPieceDefinition : PieceDefinition
 
     public override BagPiece GetPiece()
     {
-        Shape = ShapePool.GetRandom();
         SetColor();
+        CurrentShape = ShapePool.GetRandom().GetShape();
 
         BlockType[] blockTypes = DistributeBlockTypes();
         BagBlock[] blocks = CreateBlocks(blockTypes);
 
-        return new BagPiece(PieceTypePool.GetRandom(), blocks, Shape.dimensions, TextureRegion, hsv.Item1, hsv.Item2, hsv.Item3, Shape.name);
+        Rect2 currentTexture = TextureRegion;
+        if (UseRandomTexture)
+        {
+            currentTexture = new(randomTextures.GetRandom(), new(10, 10));
+        }
+
+        return new BagPiece(PieceTypePool.GetRandom(), blocks, CurrentShape.dimensions, currentTexture, hsv.Item1, hsv.Item2, hsv.Item3, CurrentShape.name);
 
     }
 

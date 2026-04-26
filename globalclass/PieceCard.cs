@@ -37,6 +37,8 @@ public partial class PieceCard : Control
 		LinkedPiece = piece;
         CardBorder.SelfModulate = Color.FromHsv(piece.h, piece.s, piece.v);
 
+		TooltipText = LinkedPiece.Name;
+
         //TODO: add piece type icon here!
 
         foreach (var block in piece.Blocks) //create every preview sprite

@@ -9,11 +9,12 @@ angle_min = 88.20001
 angle_max = 170.40001
 direction = Vector3(0, -1, 0)
 spread = 24.0
-initial_velocity_min = 151.04
-initial_velocity_max = 204.09999
-angular_velocity_min = -720.0
+initial_velocity_min = 208.19
+initial_velocity_max = 257.16
+angular_velocity_min = 332.08
 angular_velocity_max = 719.99994
 gravity = Vector3(0, 392, 0)
+attractor_interaction_enabled = false
 scale_min = 4.0
 scale_max = 4.0
 

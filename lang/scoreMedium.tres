@@ -5,8 +5,8 @@
 [resource]
 font = ExtResource("1_21odd")
 font_size = 14
-font_color = Color(1, 0.992, 0.84000003, 1)
+font_color = Color(1, 0.8966667, 0.38, 1)
 outline_size = 2
-outline_color = Color(0.69, 0.57109, 0.0414, 1)
+outline_color = Color(0.61, 0.5048767, 0.0366, 1)
 shadow_size = 2
 shadow_color = Color(0, 0, 0, 1)

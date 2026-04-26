@@ -4,21 +4,21 @@ using System.Collections.Generic;
 
 public abstract class PieceDefinition
 {
-    public PieceShape Shape;
+    public IHasShape Shape;
+    protected PieceShape CurrentShape;
 
     public Rect2 TextureRegion;
 
     protected (float, float, float) hsv; //Randomize the HSV every time we get a new piece
 
     public abstract BagPiece GetPiece();
-
-    public PieceDefinition(PieceShape shape, Rect2 textureRegion)
+    public PieceDefinition(IHasShape shape, Rect2 textureRegion)
     {
         Shape = shape;
         TextureRegion = textureRegion;
     }
 
-    public PieceDefinition(PieceShape shape)
+    public PieceDefinition(IHasShape shape)
     {
         Shape = shape;
         TextureRegion = new Rect2(0, 30, 10, 10);
@@ -43,20 +43,20 @@ public abstract class PieceDefinition
     {
         List<BagBlock> blocks = [];
 
-        for (int x = 0; x < Shape.dimensions.X; x++)
+        for (int x = 0; x < CurrentShape.dimensions.X; x++)
         {
-            for (int y = 0; y < Shape.dimensions.Y; y++)
+            for (int y = 0; y < CurrentShape.dimensions.Y; y++)
             {
                 //Create a new block for each non-empty space
-                if (Shape[x, y] != 0)
+                if (CurrentShape[x, y] != 0)
                 {
 
                     //blocks[index] = new BagBlock(blockTypes[shape.shape[x, y]], localX, localY, chosenColor);
 
-                    BlockType type = blockTypes[Shape[x, y] - 1]; //subtracting 1 since we are starting at 1, not 0
-                    Vector2I pos = new(x - Shape.origin.X, y - Shape.origin.Y);
+                    BlockType type = blockTypes[CurrentShape[x, y] - 1]; //subtracting 1 since we are starting at 1, not 0
+                    Vector2I pos = new(x - CurrentShape.origin.X, y - CurrentShape.origin.Y);
 
-                    BagBlock block = new(type, pos, new(Shape.origin.X, Shape.origin.Y));
+                    BagBlock block = new(type, pos, new(CurrentShape.origin.X, CurrentShape.origin.Y));
 
                     blocks.Add(block);
                 }

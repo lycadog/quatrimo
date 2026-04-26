@@ -5,6 +5,7 @@ using System;
 public partial class Cursedblock : Block
 {
 	bool open = false;
+	bool justOpened = false;
 	int openCounter = 0;
 
 	static readonly Rect2 closedRect = new(140, 0, 10, 10);
@@ -34,7 +35,9 @@ public partial class Cursedblock : Block
 	void OpenEye()
 	{
 		open = true;
-		ScoreValue += 3;
+		justOpened = true; //we can't increase the score here since this runs before! our score value is obtained
+		//so we must increase it the first tick after, using this bool!
+		//then when we close again we remove the score and force close
 
 		(SpriteLayer1 as Sprite2D).RegionRect = openRect;
 		(SpriteLayer2 as Sprite2D).RegionRect = openRectLayer2;
@@ -55,9 +58,14 @@ public partial class Cursedblock : Block
 		if (open)
 		{
 			openCounter--;
+            if (justOpened)
+            {
+                ScoreValue += 3;
+				justOpened = false;
+				return;
+            }
 
-
-			if (openCounter <= 0)
+            if (openCounter <= 0)
 			{
 				CloseEye();
 			}

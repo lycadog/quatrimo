@@ -1,11 +1,103 @@
-[gd_scene format=3 uid="uid://blmpsbuqvqptb"]
+[gd_scene format=3 uid="uid://vtx0og4n4df0"]
 
-[ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="1_41chs"]
-[ext_resource type="Script" uid="uid://c4hn2t04rih3j" path="res://globalclass/Block.cs" id="1_jlhqy"]
-[ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_rfxuc"]
+[ext_resource type="Script" uid="uid://bbcc7n4b2mu33" path="res://scenes/block/FireBlock.cs" id="1_fy3in"]
+[ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="2_tlafi"]
+[ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_cggrb"]
 
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_rfxuc"]
-polygon = PackedVector2Array(-2, -2, -2, 2, 2, 2, 2, -2)
+[sub_resource type="AtlasTexture" id="AtlasTexture_eveqt"]
+atlas = ExtResource("2_tlafi")
+region = Rect2(170, 40, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d2m7c"]
+atlas = ExtResource("2_tlafi")
+region = Rect2(180, 40, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ghgxn"]
+atlas = ExtResource("2_tlafi")
+region = Rect2(200, 40, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hqf16"]
+atlas = ExtResource("2_tlafi")
+region = Rect2(210, 40, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8sssf"]
+atlas = ExtResource("2_tlafi")
+region = Rect2(220, 40, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t74gp"]
+atlas = ExtResource("2_tlafi")
+region = Rect2(180, 40, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fcq25"]
+atlas = ExtResource("2_tlafi")
+region = Rect2(230, 40, 10, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tbxw0"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.6,
+"texture": SubResource("AtlasTexture_eveqt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d2m7c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ghgxn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hqf16")
+}, {
+"duration": 1.6,
+"texture": SubResource("AtlasTexture_8sssf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t74gp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fcq25")
+}],
+"loop": true,
+"name": &"fireAnimation",
+"speed": 8.0
+}]
+
+[sub_resource type="Curve" id="Curve_0myh7"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.6388889, 0.704698), 0.0, 0.0, 0, 0, Vector2(0.99242425, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_05mlo"]
+curve = SubResource("Curve_0myh7")
+
+[sub_resource type="Gradient" id="Gradient_qcf75"]
+colors = PackedColorArray(1, 0.24833333, 0.18, 1, 1, 0.73333335, 0.5411765, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_8xa6f"]
+gradient = SubResource("Gradient_qcf75")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_b4mvw"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+radial_velocity_min = 3.9999776
+radial_velocity_max = 15.999977
+color_ramp = SubResource("GradientTexture1D_8xa6f")
+alpha_curve = SubResource("CurveTexture_05mlo")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1yhi1"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 4.0
+initial_velocity_max = 8.0
+radial_velocity_min = 3.9999776
+radial_velocity_max = 15.999977
+color = Color(0.6784314, 0.61960787, 0.5764706, 1)
+alpha_curve = SubResource("CurveTexture_05mlo")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bquqy"]
 size = Vector2(8, 8)
@@ -25,10 +117,19 @@ size = Vector2(8, 8)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mq3p5"]
 size = Vector2(8, 8)
 
-[node name="Block" type="Area2D" unique_id=537382246 node_paths=PackedStringArray("SpriteLayer1", "SpriteLayer2", "AboveBoardIndicatorSprite", "DropPreviewSprite", "WhiteFlashSprite", "LeftArea", "DownArea", "RightArea", "NegativeRotationArea", "PositiveRotationArea", "DropPreviewRaycast")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tbxw0"]
+size = Vector2(28, 28)
+
+[node name="Block" type="Area2D" unique_id=537382246 node_paths=PackedStringArray("burnArea", "SpriteLayer1", "SpriteLayer2", "AboveBoardIndicatorSprite", "DropPreviewSprite", "WhiteFlashSprite", "LeftArea", "DownArea", "RightArea", "NegativeRotationArea", "PositiveRotationArea", "DropPreviewRaycast")]
 collision_layer = 2
 collision_mask = 2
-script = ExtResource("1_jlhqy")
+script = ExtResource("1_fy3in")
+burnArea = NodePath("BurnArea")
+type = 9
+ScoreValue = 0.0
+SolidWhenPlaced = false
+OverrideColor = true
+OverrideTexture = true
 SpriteLayer1 = NodePath("SpriteLayer1")
 SpriteLayer2 = NodePath("SpriteLayer1/SpriteLayer2")
 AboveBoardIndicatorSprite = NodePath("AboveBoardIndicatorSprite")
@@ -42,42 +143,52 @@ PositiveRotationArea = NodePath("PositiveRotationArea")
 DropPreviewRaycast = NodePath("DropPreviewRaycast")
 metadata/_custom_type_script = "uid://c4hn2t04rih3j"
 
-[node name="SpriteLayer1" type="Sprite2D" parent="." unique_id=602452335]
-texture = ExtResource("1_41chs")
-region_enabled = true
-region_rect = Rect2(0, 30, 10, 10)
+[node name="SpriteLayer1" type="AnimatedSprite2D" parent="." unique_id=865750476]
+sprite_frames = SubResource("SpriteFrames_tbxw0")
+animation = &"fireAnimation"
+autoplay = "fireAnimation"
 
-[node name="SpriteLayer2" type="Sprite2D" parent="SpriteLayer1" unique_id=212297080]
+[node name="SpriteLayer2" type="Node2D" parent="SpriteLayer1" unique_id=1860918714]
 visible = false
-texture = ExtResource("1_41chs")
-region_enabled = true
-region_rect = Rect2(10, 10, 10, 10)
 
-[node name="LightOccluder2D" type="LightOccluder2D" parent="SpriteLayer1" unique_id=1443154381]
-occluder = SubResource("OccluderPolygon2D_rfxuc")
+[node name="PointLight2D" type="PointLight2D" parent="SpriteLayer1" unique_id=503813038]
+color = Color(1, 0.73333335, 0.5411765, 1)
+energy = 0.18
+shadow_enabled = true
+texture = ExtResource("3_cggrb")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="SpriteLayer1" unique_id=1949000914]
+amount = 12
+lifetime = 1.2
+process_material = SubResource("ParticleProcessMaterial_b4mvw")
+
+[node name="GPUParticles2D2" type="GPUParticles2D" parent="SpriteLayer1" unique_id=782924420]
+show_behind_parent = true
+amount = 6
+process_material = SubResource("ParticleProcessMaterial_1yhi1")
 
 [node name="AboveBoardIndicatorSprite" type="Sprite2D" parent="." unique_id=1898403300]
 visible = false
-texture = ExtResource("1_41chs")
+texture = ExtResource("2_tlafi")
 region_enabled = true
 region_rect = Rect2(20, 10, 10, 10)
 
 [node name="DropPreviewSprite" type="Sprite2D" parent="." unique_id=573667096]
 visible = false
 modulate = Color(1, 1, 1, 0.8)
-texture = ExtResource("1_41chs")
+texture = ExtResource("2_tlafi")
 region_enabled = true
 region_rect = Rect2(60, 0, 10, 10)
 
 [node name="WhiteFlashBox" type="Sprite2D" parent="." unique_id=1512181127]
 visible = false
-texture = ExtResource("1_41chs")
+texture = ExtResource("2_tlafi")
 region_enabled = true
 region_rect = Rect2(0, 10, 10, 10)
 
 [node name="PointLight2D" type="PointLight2D" parent="WhiteFlashBox" unique_id=319429166]
 energy = 0.12
-texture = ExtResource("3_rfxuc")
+texture = ExtResource("3_cggrb")
 
 [node name="LeftArea" type="Area2D" parent="." unique_id=1907618161]
 position = Vector2(-10, 0)
@@ -148,6 +259,14 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="BurnArea" type="Area2D" parent="." unique_id=602635994]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BurnArea" unique_id=1709110309]
+shape = SubResource("RectangleShape2D_tbxw0")
 
 [connection signal="area_entered" from="." to="." method="OnAreaEntered"]
 [connection signal="area_entered" from="LeftArea" to="." method="LeftAreaChanged"]

@@ -34,6 +34,11 @@ public partial class Board : Control
 
     public double totalScore = 0;
 
+    int RowsScored = 0;
+    int Level = 1;
+    int TurnCount = 1;
+
+
     public bool BoardUpdated = false;
 
     List<Cell> ScoredCells = [];
@@ -186,6 +191,7 @@ public partial class Board : Control
                 Cell newCell = new Cell(x, y, GetRealPosition(x, y));
 
                 //bind cell events here ****************                                    <*************
+
                 newCell.UpdatedBoard += () => BoardUpdated = true;
                 newCell.DeletedBlock += OnBlockExitingTree;
                 newCell.Scored += OnCellScored;
@@ -201,6 +207,33 @@ public partial class Board : Control
             row.cells = cellsInRow;
         }
 
+    }
+
+    #endregion
+    #region === Signal & Event Binding ===
+
+    void ConnectNewPiece(FallingPiece piece)
+    {
+        piece.Connect(FallingPiece.SignalName.OnPiecePlacement, new(this, MethodName.OnPiecePlaced), (uint)ConnectFlags.OneShot);
+    }
+
+    /// <summary>
+    /// Connect a new block to all the necessary signals
+    /// </summary>
+    /// <param name="block"></param>
+    void ConnectNewBlock(Block block)
+    {
+        block.Connect(Block.SignalName.Placed, new(this, MethodName.OnBlockPlaced), (uint)ConnectFlags.OneShot);
+        block.Connect(Block.SignalName.Scored, new(this, MethodName.OnBlockScored));
+        block.Connect(Node.SignalName.TreeExiting, new(this, MethodName.OnBlockExitingTree), (uint)ConnectFlags.AppendSourceObject);
+
+        block.Connect(Block.SignalName.ScoreOtherBlock, new(this, MethodName.OnBlockScoresBlock));
+        block.Connect(Block.SignalName.CreateAnimation, new(this, MethodName.BlockCreatesAnimation));
+        block.Connect(Block.SignalName.CreatedBlock, new(this, MethodName.BlockCreatesBlock));
+
+        Connect(SignalName.TurnStarted, new(block, Block.MethodName.OnTurnStart));
+        
+        Connect(SignalName.TickStepStarted, new(block, Block.MethodName.OnTickStep));
     }
 
     #endregion
@@ -284,6 +317,22 @@ public partial class Board : Control
 
     }
 
+    public void OnBlockScoresBlock(int x, int y)
+    {
+        CellBoard[x, y].ScoreBlock();
+    }
+
+    public void BlockCreatesAnimation(Vector2 globalPosition, ScoreAnimation animation)
+    {
+        AddChild(animation);
+        animation.GlobalPosition = globalPosition;
+    }
+
+    public void BlockCreatesBlock(Block block)
+    {
+        ConnectNewBlock(block);
+    }
+
     /// <summary>
     /// When a card is played we create its piece and its blocks, binding signals
     /// </summary>
@@ -294,20 +343,10 @@ public partial class Board : Control
 
         AddChild(CurrentPiece);
 
-        //BIND SIGNALS HERE **********************************************************************************************
-
-        CurrentPiece.Connect(FallingPiece.SignalName.OnPiecePlacement, new(this, MethodName.OnPiecePlaced), (uint)ConnectFlags.OneShot);
+        ConnectNewPiece(CurrentPiece);
         foreach (var block in CurrentPiece.Blocks)
         {
-            block.Connect(Block.SignalName.Placed, new(this, MethodName.OnBlockPlaced), (uint)ConnectFlags.OneShot);
-            block.Connect(Block.SignalName.Scored, new(this, MethodName.OnBlockScored));
-            block.Connect(Node.SignalName.TreeExiting, new(this, MethodName.OnBlockExitingTree), (uint)ConnectFlags.AppendSourceObject);
-
-            Connect(SignalName.TurnStarted, new(block, Block.MethodName.OnTurnStart));
-            Connect(SignalName.TickStepStarted, new(block, Block.MethodName.OnTickStep));
-
-
-            //block signals here
+            ConnectNewBlock(block);
         }
 
         CurrentPiece.Position = new Vector2(5, -Dimensions.Y * 5 + 5);

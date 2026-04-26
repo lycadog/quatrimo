@@ -208,11 +208,8 @@ public class Cell(int x, int y, Vector2 realPosition)
 
     void SetBlock(Block block)
     {
-        //TODO: maybe find a way to sync block to cell position here?
-        //we can define a global position for the cell if it uses a real node or similar. or even through math
         if (Occupied)
         {
-            GD.Print($"Block cell {x}, {y} overwritten");
             RemoveBlock();
         }
 

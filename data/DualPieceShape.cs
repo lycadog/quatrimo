@@ -1,6 +1,8 @@
 
 
-public class DualPieceShape
+using Godot;
+
+public class DualPieceShape : IHasShape
 {
     public readonly PieceShape L;
     public readonly PieceShape R;
@@ -24,4 +26,15 @@ public class DualPieceShape
         };
     }
 
+    public PieceShape GetShape()
+    {
+        float rand = GD.Randf();
+
+        if(rand > .5)
+        {
+            return L;
+        }
+
+        return R;
+    }
 }

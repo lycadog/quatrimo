@@ -1,0 +1,11 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://dmamg3mk440hl"]
+
+[ext_resource type="FontFile" uid="uid://b53sg1d4l2d46" path="res://lang/Ac437_ToshibaTxL1_8x8.ttf" id="1_4av2f"]
+
+[resource]
+font = ExtResource("1_4av2f")
+font_color = Color(0, 0, 0, 1)
+outline_size = 4
+outline_color = Color(1, 0, 0, 1)
+shadow_size = 3
+shadow_color = Color(0, 0, 0, 1)
