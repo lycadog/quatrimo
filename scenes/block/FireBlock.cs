@@ -9,8 +9,6 @@ public partial class FireBlock : Block
     static readonly PackedScene BurnAnimation = ResourceLoader.Load<PackedScene>("uid://by12ay4yqa5lo");
 
     int turnsLeft;
-    int burnCooldown = 0;
-
     public override void FallingBlockAttemptingPlacementOnUs(Block fallingBlock)
     {
         QueueFree();
@@ -18,7 +16,7 @@ public partial class FireBlock : Block
 
     protected override void OnPlaced()
     {
-        turnsLeft = GD.RandRange(3, 12);
+        turnsLeft = GD.RandRange(2, 12);
     }
 
     protected override void TickBlock()
@@ -31,14 +29,14 @@ public partial class FireBlock : Block
         }
 
         turnsLeft--;
-        burnCooldown--;
-        if(GD.Randf() > .8f && burnCooldown < 0)
+        if(GD.Randf() > .5f)
         {
 
             var areas = burnArea.GetOverlappingAreas();
 
             foreach(var area in areas)
             {
+                float spreadChance = .6f;
                 if (area is Block block && area is not FireBlock)
                 {
 
@@ -48,8 +46,6 @@ public partial class FireBlock : Block
                     newBlock.boardX = block.boardX; newBlock.boardY = block.boardY;
                     newBlock.ForceUpdateTransform();
 
-                    GD.Print($"newblock pos: {newBlock.boardX}, {newBlock.boardY}");
-
                     block.QueueFree(); //overwrite a nearby block
                     EmitSignalCreatedBlock(newBlock);
                     newBlock.Place();
@@ -58,11 +54,15 @@ public partial class FireBlock : Block
 
                     EmitSignalCreateAnimation(block.GlobalPosition, (ScoreAnimation)BurnAnimation.Instantiate());
 
-                    burnCooldown = GD.RandRange(2, 6);
+                    
+                    if(GD.Randf() > spreadChance)
+                    {
+                        break;
+                    }
+                    spreadChance -= .1f;
                 }
             }
-            //spread!
-            //add code here to overwrite a random adjacent block
+
         }
 
     }

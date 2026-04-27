@@ -8,15 +8,21 @@ using System.Threading.Tasks;
 
 public class PieceShape : IHasShape
 {
-    readonly int[,] shape;
+    readonly Vector2I[] Shape;
+    
 
-    public int this[int x, int y]
+    public Vector2I this[int i]
     {
-        get => shape[x,y];
-        set => shape[x, y] = value;
+        get => Shape[i];
+        set => Shape[i] = value;
     }
 
-    public Vector2I origin;
+    public int BlockCount
+    {
+        get => Shape.Length;
+    }
+
+    public BoundingBox BoundingBox;
     public Vector2I dimensions;
 
     public string name;
@@ -26,47 +32,52 @@ public class PieceShape : IHasShape
     /// </summary>
     public SimplePieceDefinition B;
 
+    public static ObjectPool<IHasShape> AllShapes = new();
+
     public PieceShape GetShape()
     {
         return this;
     }
 
-    public PieceShape(int[,] shape, int originX, int originY, string name)
+    public PieceShape((int, int)[] shape, string name, int weight = 6)
     {
-        this.shape = shape;
-        origin = new Vector2I(originX, originY);
+        Shape = new Vector2I[shape.Length];
+        for(int i = 0; i  < shape.Length; i++)
+        {
+            Shape[i] = new(shape[i].Item1, shape[i].Item2);
+        }
+        
         this.name = name;
 
-        dimensions = new Vector2I(shape.GetLength(0), shape.GetLength(1));
-
-        B = new(this);
-    }
-
-    /// <summary>
-    /// Returns a pieceshape flipped across the X axis
-    /// </summary>
-    /// <param name="leftShape"></param>
-    public PieceShape(PieceShape leftShape)
-    {
-        dimensions = leftShape.dimensions;
-
-
-        int originX = dimensions.X - leftShape.origin.X - 1;
-
-        origin = new(originX, leftShape.origin.Y);
-
-        shape = new int[dimensions.X, dimensions.Y];
-
-        for(int x = 0; x < dimensions.X; x++)
+        int minX = 100, minY = 100, maxX = -100, maxY = -100;
+        foreach(var vector in Shape)
         {
-            for(int y = 0; y < dimensions.Y; y++)
-            {
-                int flippedX = dimensions.X - x - 1;
+            minX = Math.Min(minX, vector.X);
+            minY = Math.Min(minY, vector.Y);
 
-                shape[flippedX, y] = leftShape[x, y];
-            }
+            maxX = Math.Max(maxX, vector.X);
+            maxY = Math.Max(maxY, vector.Y);
         }
 
+        BoundingBox = new(minX, maxX, minY, maxY);
+
+        dimensions = new(maxX + Math.Abs(minX) + 1, maxY + Math.Abs(minY) + 1);
+        //we add 1 because 0,0 is a valid spot, so -2 + 1 = 3, but actual dimensions is 4 (-2, -1, 0, 1)
+
         B = new(this);
+
+        AllShapes.AddNewEntry(this, weight);
+    }
+
+    public PieceShape GetFlippedShape()
+    {
+        (int, int)[] flippedShape = new (int, int)[Shape.Length];
+
+        for (int i = 0; i < flippedShape.Length; i++)
+        {
+            flippedShape[i] = (-Shape[i].X, Shape[i].Y);
+        }
+
+        return new(flippedShape, "Right " + name);
     }
 }

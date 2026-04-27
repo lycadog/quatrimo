@@ -127,19 +127,19 @@ texture = SubResource("AtlasTexture_dlunc")
 stretch_mode = 4
 flip_v = true
 
-[node name="BlockBox" type="Control" parent="CardBG" unique_id=1231716876]
-anchors_preset = 0
-offset_left = 28.0
-offset_top = 20.5
-offset_right = 28.0
-offset_bottom = 20.5
-
 [node name="BlackoutBox" type="ColorRect" parent="CardBG" unique_id=1658960950]
 visible = false
 layout_mode = 0
 offset_right = 69.0
 offset_bottom = 34.0
 color = Color(0, 0, 0, 0.4)
+
+[node name="BlockBox" type="Control" parent="CardBG" unique_id=1231716876]
+anchors_preset = 0
+offset_left = 31.5
+offset_top = 24.0
+offset_right = 31.5
+offset_bottom = 24.0
 
 [node name="WhiteFlash" type="ColorRect" parent="." unique_id=1936315795]
 visible = false

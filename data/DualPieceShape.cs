@@ -17,13 +17,15 @@ public class DualPieceShape : IHasShape
         get => R.B;
     }
 
-    public DualPieceShape(int[,] shape, int originX, int originY, string name)
+    public DualPieceShape((int, int)[] shape, string name)
     {
-        L = new(shape, originX, originY, "Left " + name);
-        R = new(L)
+        L = new(shape, name);
+        R = L.GetFlippedShape();
         {
-            name = "Right " + name
+            R.name = "Right " + name;
         };
+
+        L.name = "Left " + L.name; 
     }
 
     public PieceShape GetShape()

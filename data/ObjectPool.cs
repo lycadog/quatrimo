@@ -320,8 +320,5 @@ public class ObjectPool<T>
         }
     }
 
-    public static implicit operator ObjectPool<T>(ObjectPool<PieceShape> v)
-    {
-        throw new NotImplementedException();
-    }
+
 }

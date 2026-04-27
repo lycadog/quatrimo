@@ -10,11 +10,13 @@ public class PooledPieceDefinition : PieceDefinition
     readonly ObjectPool<PieceType> PieceTypePool;
     readonly ObjectPool<BlockType> BlockPool;
 
+    BlockType[] BlockTypes;
+
     static ObjectPool<Vector2I> randomTextures = new([new(0, 30), new(80, 30), new(0, 40)], [new (0, 50), new(40, 50), new(10, 30), new(90, 30), new(10, 40)], [new(20, 30), new(20, 40), new(10, 50), new(100, 30)], 10, 2, 1);
 
     bool UseRandomTexture;
 
-    static readonly int[] randomGroupPool = { 1, 1, 2, 2, 2, 2, 3, 3, 4 }; //use this in random type distribution
+    static readonly int[] randomGroupPool = { 1, 1, 1, 2, 2, 2, 2, 3, 3, 4 }; //use this in random type distribution
 
     public PooledPieceDefinition(ObjectPool<PieceType> piecePool, ObjectPool<BlockType> blockPool, ObjectPool<IHasShape> shapePool, Rect2 textureRegion) : base(textureRegion)
     {
@@ -51,8 +53,9 @@ public class PooledPieceDefinition : PieceDefinition
         SetColor();
         CurrentShape = ShapePool.GetRandom().GetShape();
 
-        BlockType[] blockTypes = DistributeBlockTypes();
-        BagBlock[] blocks = CreateBlocks(blockTypes);
+        BlockTypes = DistributeBlockTypes();
+
+        BagBlock[] blocks = CreateBlocks();
 
         Rect2 currentTexture = TextureRegion;
         if (UseRandomTexture)
@@ -60,11 +63,62 @@ public class PooledPieceDefinition : PieceDefinition
             currentTexture = new(randomTextures.GetRandom(), new(10, 10));
         }
 
-        return new BagPiece(PieceTypePool.GetRandom(), blocks, CurrentShape.dimensions, currentTexture, hsv.Item1, hsv.Item2, hsv.Item3, CurrentShape.name);
-
+        return new BagPiece(PieceTypePool.GetRandom(), blocks, CurrentShape.dimensions, CurrentShape.BoundingBox, currentTexture, hsv.Item1, hsv.Item2, hsv.Item3, CurrentShape.name);
     }
 
+    public override BagBlock[] CreateBlocks()
+    {
+        BagBlock[] blocks = new BagBlock[CurrentShape.BlockCount];
 
+        for (int i = 0; i < CurrentShape.BlockCount; i++)
+        {
+            blocks[i] = new(BlockTypes[GD.RandRange(0, BlockTypes.Length - 1)], CurrentShape[i]);
+            //get fully random type - maybe change later?
+        }
+        return blocks;
+    }
+
+    public BlockType[] DistributeBlockTypes()
+    {
+        int typeCount = randomGroupPool[GD.RandRange(0, randomGroupPool.Length - 1)];
+        BlockType[] types = new BlockType[typeCount];
+
+        for(int i = 0; i < typeCount; i++)
+        {
+            types[i] = BlockPool.GetRandom();
+        }
+
+        return types;
+    }
+
+    /*
+    public void DistributeBlockTypes()
+    {
+        int typeCount = randomGroupPool[GD.RandRange(0, randomGroupPool.Length - 1)];
+
+        BlockType[] types = new BlockType[typeCount];
+        int[] amountOfEachType = new int[typeCount];
+
+        int blocksLeft = CurrentShape.BlockCount;
+
+        for (int i = 0; i < typeCount; i++)
+        {
+            types[i] = BlockPool.GetRandom();
+            amountOfEachType[i] = GD.RandRange(0, blocksLeft);
+
+            blocksLeft = -amountOfEachType[i];
+        }
+
+        BlockTypesForShape = new BlockType[CurrentShape.BlockCount];
+
+        for (int i = 0; i < CurrentShape.BlockCount; i++)
+        {
+
+        }
+
+    }*/
+
+    /*
     /// <summary>
     /// Distributes block types randomly based on their numerical group. Returns a 5-element array, one element for each of the 5 groups
     /// </summary>
@@ -119,4 +173,6 @@ public class PooledPieceDefinition : PieceDefinition
 
         return types;
     }
+    */
+
 }

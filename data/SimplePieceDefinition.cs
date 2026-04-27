@@ -22,8 +22,20 @@ public class SimplePieceDefinition : PieceDefinition
         SetColor();
         CurrentShape = Shape.GetShape();
 
-        BagBlock[] blocks = CreateBlocks(blockType);
+        BagBlock[] blocks = CreateBlocks();
 
-        return new BagPiece(pieceType, blocks, CurrentShape.dimensions, TextureRegion, hsv.Item1, hsv.Item2, hsv.Item3, CurrentShape.name);
+        return new BagPiece(pieceType, blocks, CurrentShape.dimensions, CurrentShape.BoundingBox, TextureRegion, hsv.Item1, hsv.Item2, hsv.Item3, CurrentShape.name);
+    }
+
+    public override BagBlock[] CreateBlocks()
+    {
+        BagBlock[] blocks = new BagBlock[CurrentShape.BlockCount];
+
+        for(int i = 0; i < CurrentShape.BlockCount; i++)
+        {
+            blocks[i] = new(blockType, CurrentShape[i]);
+        }
+
+        return blocks;
     }
 }

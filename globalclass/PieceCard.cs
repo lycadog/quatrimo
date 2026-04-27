@@ -49,7 +49,8 @@ public partial class PieceCard : Control
         }
 
 		//we try to automatically center the piece based on dimensions here
-		Vector2 offset = new(piece.Dimensions.X * 3.5f, piece.Dimensions.Y * 3.5f);
+
+		Vector2 offset = new((piece.Dimensions.X + 1 % 2) * 3.5f + piece.BoundingBox.Left * 7, (piece.Dimensions.Y + 1 % 2) * 3.5f + piece.BoundingBox.Top * 7);
 
         BlockBox.Position -= offset;
     }

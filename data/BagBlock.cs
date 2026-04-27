@@ -3,17 +3,16 @@
 using Godot;
 using System;
 
-public class BagBlock(BlockType type, Vector2I position, Vector2I origin)
+public class BagBlock(BlockType type, Vector2I position)
 {
     BlockType Type = type;
     Vector2I Position = position;
-    Vector2I PieceOrigin = origin;
 
     public CardBlockSprite GetCardPreviewSprite(float h, float s, float v)
     {
         var sprite = (CardBlockSprite) CardBlocks [(int)Type] .Instantiate();
 
-        sprite.Position = (Position + PieceOrigin) * 7;
+        sprite.Position = Position * 7;
 
         sprite.SetColor(h, s, v);
 

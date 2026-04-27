@@ -51,7 +51,7 @@ public partial class PlayerHand : Container
 
     public override void _EnterTree()
     {
-        Bag = Data.magnetBag.CreateBag();
+        Bag = Data.randomBullshitBag.CreateBag();
     }
 
     // Called when the node enters the scene tree for the first time.
