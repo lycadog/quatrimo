@@ -19,11 +19,12 @@ public partial class FireBlock : Block
         turnsLeft = GD.RandRange(2, 12);
     }
 
-    protected override void TickBlock()
+    protected override void DestructiveTickBlock()
     {
         if(turnsLeft == 0)
         {
-            EmitSignalCreateAnimation(GlobalPosition, (ScoreAnimation)BurnAnimation.Instantiate());
+
+            BlockCommandHandler.AddAnimationToBoard((Node2D)BurnAnimation.Instantiate(), GlobalPosition);
             QueueFree();
             return;
         }
@@ -33,33 +34,30 @@ public partial class FireBlock : Block
         {
 
             var areas = burnArea.GetOverlappingAreas();
+            float mutliSpreadChance = .8f;
 
-            foreach(var area in areas)
+            foreach (var area in areas)
             {
-                float spreadChance = .6f;
+                
                 if (area is Block block && area is not FireBlock)
                 {
 
                     FireBlock newBlock = (FireBlock)fireBlockScene.Instantiate();
-                    AddChild(newBlock);
-                    newBlock.GlobalPosition = block.GlobalPosition;
-                    newBlock.boardX = block.boardX; newBlock.boardY = block.boardY;
-                    newBlock.ForceUpdateTransform();
+
+                    newBlock.boardPos = block.boardPos;
 
                     block.QueueFree(); //overwrite a nearby block
-                    EmitSignalCreatedBlock(newBlock);
-                    newBlock.Place();
+                    BlockCommandHandler.AddBlockToBoard(newBlock);
 
                     newBlock.WhiteFlashSprite.Visible = false;
 
-                    EmitSignalCreateAnimation(block.GlobalPosition, (ScoreAnimation)BurnAnimation.Instantiate());
+                    BlockCommandHandler.AddAnimationToBoard((Node2D)BurnAnimation.Instantiate(), block.GlobalPosition);
 
-                    
-                    if(GD.Randf() > spreadChance)
+                    if(GD.Randf() > mutliSpreadChance)
                     {
                         break;
                     }
-                    spreadChance -= .1f;
+                    mutliSpreadChance -= .2f;
                 }
             }
 

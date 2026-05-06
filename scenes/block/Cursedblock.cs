@@ -30,8 +30,16 @@ public partial class Cursedblock : Block
 		if (!open)
 		{
             OpenEye();
+			return;
         }
+
+		if (justOpened)
+		{
+			ScoreValue += 3;
+			justOpened = false;
+		}
     }
+
 	void OpenEye()
 	{
 		open = true;
@@ -53,7 +61,7 @@ public partial class Cursedblock : Block
 
     }
 
-    protected override void TickBlock()
+    protected override void MainTickBlock()
     {
 		if (open)
 		{

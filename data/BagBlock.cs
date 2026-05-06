@@ -23,6 +23,7 @@ public class BagBlock(BlockType type, Vector2I position)
     {
         Block block = (Block)Blocks[(int)Type].Instantiate();
         block.Position = Position * 10;
+        block.localPos = Position;
         block.SetColor(h, s, v);
         block.SetTexture(rect);
 

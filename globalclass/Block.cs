@@ -5,7 +5,8 @@ using System.Security.Cryptography;
 [GlobalClass, Icon("res://texture/icon/blockicon.png")]
 public partial class Block : Area2D
 {
-    public int boardX, boardY;
+    public Vector2I boardPos;
+    public Vector2I localPos;
 
     public float SlamOffset;
     public bool CanMoveLeft = true;
@@ -19,6 +20,7 @@ public partial class Block : Area2D
 
     public bool JustPlaced = false;
     public bool IsScored = false;
+    public bool IsDestructiveTicked = false;
     public bool IsTicked = false;
 
     bool ExitBoardBehaviorEnabled = true;
@@ -51,10 +53,6 @@ public partial class Block : Area2D
     [Signal] public delegate void ScoredEventHandler(Block block);
     [Signal] public delegate void MovedCellsEventHandler();
 
-    [Signal] public delegate void CreatedBlockEventHandler(Block block);
-    [Signal] public delegate void ScoreOtherBlockEventHandler(int boardX, int boardY);
-    [Signal] public delegate void CreateAnimationEventHandler(Vector2 GlobalPosition, ScoreAnimation animation);
-
     const double PlacementFlashLength = .18;
 
     #region === Board Interaction/Positional Methods ===
@@ -79,6 +77,10 @@ public partial class Block : Area2D
 
     }
 
+    public void OnPieceMoved(Vector2I piecePos)
+    {
+        boardPos = new(piecePos.X + localPos.X, piecePos.Y - localPos.Y);
+    }
 
     public void Score()
     {
@@ -149,7 +151,9 @@ public partial class Block : Area2D
             }
         }
 
-        else { throw new ArgumentOutOfRangeException($"Attempted to rotate block with invalid direction value: {direction}"); }
+        else { GD.PushError($"Attempted to rotate block with invalid direction value: {direction}"); }
+
+        RotateLocalPos(direction);
 
         //Move to new positions
         UpdateRotationDestinations();
@@ -159,6 +163,11 @@ public partial class Block : Area2D
     {
         NegativeRotationArea.Position = GetAreaRotationPositon(Position, -1);
         PositiveRotationArea.Position = GetAreaRotationPositon(Position, 1);
+    }
+
+    void RotateLocalPos(int direction)
+    {
+        localPos = new(localPos.Y * -direction, localPos.X * direction);
     }
 
     Vector2 GetAreaRotationPositon(Vector2 initialPosition, int direction)
@@ -182,15 +191,6 @@ public partial class Block : Area2D
 
     #endregion
     #region === Godot Methods ===
-
-    public override void _Process(double delta)
-    {
-        //run process event here
-        //we need to make an event (empty by default) that runs every frame here for stuff like attack falling code using this block
-        //no we dont lol
-        //just make the attack run code every turn
-    }
-
     public override void _Ready()
     {
         if (!SolidWhenFalling)
@@ -267,32 +267,47 @@ public partial class Block : Area2D
     #region === Event Methods ===
 
     
-    public void ForceUpdateCollision()
+    public void UpdateFallingCollisions()
     {
-        ForceUpdateTransform();
-        LeftAreaChanged(null);
-        DownAreaChanged(null);
-        RightAreaChanged(null);
-        NegativeRotationAreaChanged(null);
-        PositiveRotationAreaChanged(null);
+        //this is kinda bad. but more optimized approaches dont work
+        if (LeftArea.HasOverlappingAreas()) { CanMoveLeft = false; } else { CanMoveLeft = true; }
+        if (DownArea.HasOverlappingAreas()) { CanMoveDown = false; } else { CanMoveDown = true; }
+        if (RightArea.HasOverlappingAreas()) { CanMoveRight = false; } else { CanMoveRight = true; }
+        if (NegativeRotationArea.HasOverlappingAreas()) { CanRotateNegative = false; } else { CanRotateNegative = true; }
+        if (PositiveRotationArea.HasOverlappingAreas()) { CanRotatePositive = false; } else { CanRotatePositive = true; }
     }
 
     public virtual void OnTurnStart()
     {
         JustPlaced = false;
+        IsDestructiveTicked = false;
         IsTicked = false;
     }
 
-    public void OnTickStep()
+    public void OnDestructiveTickStep()
+    {
+        if (!IsDestructiveTicked && !IsQueuedForDeletion())
+        {
+            IsDestructiveTicked = true;
+            DestructiveTickBlock();
+        }
+    }
+
+    public void OnMainTickStep()
     {
         if (!IsTicked && !IsQueuedForDeletion())
         {
             IsTicked = true;
-            TickBlock();
+            MainTickBlock();
         }
     }
 
-    protected virtual void TickBlock()
+    protected virtual void DestructiveTickBlock()
+    {
+
+    }
+
+    protected virtual void MainTickBlock()
     {
 
     }
@@ -363,32 +378,6 @@ public partial class Block : Area2D
     {
         //we are trying to place into a block! we must terminate instead
         QueueFree();
-    }
-
-
-    public void LeftAreaChanged(Area2D area)
-    {
-        if (LeftArea.HasOverlappingAreas()) { CanMoveLeft = false; } else { CanMoveLeft = true; }
-    }
-
-    public void DownAreaChanged(Area2D area)
-    {
-        if (DownArea.HasOverlappingAreas()) { CanMoveDown = false; } else { CanMoveDown = true; }
-    }
-
-    public void RightAreaChanged(Area2D area)
-    {
-        if (RightArea.HasOverlappingAreas()) { CanMoveRight = false; } else { CanMoveRight = true; }
-    }
-
-    public void NegativeRotationAreaChanged(Area2D area)
-    {
-        if (NegativeRotationArea.HasOverlappingAreas()) { CanRotateNegative = false; } else { CanRotateNegative = true; }
-    }
-
-    public void PositiveRotationAreaChanged(Area2D area)
-    {
-        if (PositiveRotationArea.HasOverlappingAreas()) { CanRotatePositive = false; } else { CanRotatePositive = true; }
     }
     #endregion
 }

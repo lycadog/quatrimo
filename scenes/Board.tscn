@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="2_hs2ul"]
 [ext_resource type="Texture2D" uid="uid://bq12fhs8hplyu" path="res://boardGradient.tres" id="2_w6jgk"]
 [ext_resource type="Texture2D" uid="uid://pf1ck3tc5dmk" path="res://texture/boardBG.png" id="3_66b1s"]
-[ext_resource type="Script" uid="uid://bh52m3rslxvoc" path="res://scripts/BoardAnimationManager.cs" id="5_xdl3i"]
+[ext_resource type="Script" uid="uid://481h7xwr5q1f" path="res://scripts/visuals/BoardAnimationManager.cs" id="3_xdl3i"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w6jgk"]
 size = Vector2(10, 40)
@@ -35,7 +35,7 @@ RightBorder = NodePath("Border/RightArea")
 metadata/_custom_type_script = "uid://cdm15780yiwua"
 
 [node name="AnimationManager" type="Node" parent="." unique_id=794881018]
-script = ExtResource("5_xdl3i")
+script = ExtResource("3_xdl3i")
 
 [node name="Border" type="NinePatchRect" parent="." unique_id=1026354413]
 custom_minimum_size = Vector2(140, 220)
@@ -130,8 +130,6 @@ monitorable = false
 [node name="BoardShape" type="CollisionShape2D" parent="BoardArea" unique_id=977289770]
 shape = SubResource("RectangleShape2D_wlyqt")
 
-[connection signal="AnimationCreated" from="." to="AnimationManager" method="OnAnimationCreated"]
-[connection signal="AnimationEnded" from="." to="AnimationManager" method="OnAnimationCompleted"]
 [connection signal="resized" from="Border" to="." method="OnBorderResize"]
 [connection signal="area_entered" from="BoardArea" to="." method="OnAreaEntered"]
 [connection signal="area_exited" from="BoardArea" to="." method="OnAreaExited"]

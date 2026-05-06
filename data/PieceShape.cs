@@ -39,7 +39,7 @@ public class PieceShape : IHasShape
         return this;
     }
 
-    public PieceShape((int, int)[] shape, string name, int weight = 6)
+    public PieceShape((int, int)[] shape, string name, int weight = 6, bool addEntry = true)
     {
         Shape = new Vector2I[shape.Length];
         for(int i = 0; i  < shape.Length; i++)
@@ -66,7 +66,11 @@ public class PieceShape : IHasShape
 
         B = new(this);
 
-        AllShapes.AddNewEntry(this, weight);
+
+        if (addEntry)
+        {
+            AllShapes.AddNewEntry(this, weight);
+        }
     }
 
     public PieceShape GetFlippedShape()
@@ -78,6 +82,6 @@ public class PieceShape : IHasShape
             flippedShape[i] = (-Shape[i].X, Shape[i].Y);
         }
 
-        return new(flippedShape, "Right " + name);
+        return new(flippedShape, "Right " + name, 0, false);
     }
 }

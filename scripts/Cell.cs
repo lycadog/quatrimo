@@ -202,6 +202,7 @@ public class Cell(int x, int y, Vector2 realPosition)
         {
             DeletedBlock?.Invoke(HeldBlock);
             _HeldBlock.QueueFree();
+            RemoveBlock();
         }
         //if not occupied: cool! we can just chill
     }
@@ -216,7 +217,7 @@ public class Cell(int x, int y, Vector2 realPosition)
         _HeldBlock = block;
         _HeldBlock.EmitSignal(Block.SignalName.MovedCells);
         _HeldBlock.Position = RealPosition; //Update our blocks position to ensure it is placed right
-        _HeldBlock.boardX = x; _HeldBlock.boardY = y;
+        _HeldBlock.boardPos = new(x, y);
         Occupied = true;
 
         _HeldBlock.TreeExiting += RemoveBlock;
@@ -246,6 +247,7 @@ public class Cell(int x, int y, Vector2 realPosition)
         }
 
         Scored.Invoke(this);
+        UpdatedBoard.Invoke(); //i'm not sure why this wasn't being invoked here already but it is now. could cause issues?
 
         if (ScoreFlag == ScoringFlags.CanScoreButFullyRestrictAfterScoring)
         {

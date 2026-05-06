@@ -9,6 +9,8 @@ public partial class MiniScoreNumber : Node2D
     internal Vector2 finalPosition;
 	Vector2 velocity;
 
+	bool isFinished = false;
+
 	//number .. - 0
 	static LabelSettings BadSettings = ResourceLoader.Load<LabelSettings>("uid://dmamg3mk440hl");
 	//number 1 - 2
@@ -93,10 +95,12 @@ public partial class MiniScoreNumber : Node2D
     public override void _PhysicsProcess(double delta)
 	{
 		Position += velocity;
-		
+
+		if (isFinished) { return; }
 
 		if (GlobalPosition.DistanceTo(finalPosition) < 20)
 		{
+			isFinished = true;
 
 			Tween tween = GetTree().CreateTween();
 			tween.TweenProperty(this, "scale", new Vector2(0, 0), .05).Finished += () => { QueueFree(); };

@@ -31,12 +31,12 @@ public partial class LaserBlock : Block
     {
         
         block.QueueFree();
-        EmitSignalCreateAnimation(block.GlobalPosition, (ScoreAnimation)BurnAnimation.Instantiate());
+        BlockCommandHandler.AddAnimationToBoard((Node2D)BurnAnimation.Instantiate(), block.GlobalPosition);
 
         if (burnsLeft == 0)
         {
             QueueFree();
-            EmitSignalCreateAnimation(GlobalPosition, (ScoreAnimation)BurnAnimation.Instantiate());
+            BlockCommandHandler.AddAnimationToBoard((Node2D)BurnAnimation.Instantiate(), GlobalPosition);
             return;
         }
 

@@ -3,6 +3,9 @@
 [ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="1_41chs"]
 [ext_resource type="Script" uid="uid://c4hn2t04rih3j" path="res://globalclass/Block.cs" id="1_jlhqy"]
 [ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_rfxuc"]
+[ext_resource type="Script" uid="uid://bxgo7xvu167oq" path="res://scenes/visuals/TooltipHaver.cs" id="4_0676f"]
+[ext_resource type="Theme" uid="uid://k0kv5clnucgm" path="res://resource/BasicTheme.tres" id="4_apwds"]
+[ext_resource type="PackedScene" uid="uid://bqjrqw2rwdwpj" path="res://scenes/tooltips/BlockTooltip.tscn" id="6_1r3xt"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_rfxuc"]
 polygon = PackedVector2Array(-2, -2, -2, 2, 2, 2, 2, -2)
@@ -140,23 +143,15 @@ hit_from_inside = true
 collide_with_areas = true
 collide_with_bodies = false
 
-[node name="TooltipControl" type="Control" parent="." unique_id=2005766006]
-custom_minimum_size = Vector2(10, 10)
+[node name="TooltipHaver" type="Control" parent="." unique_id=1466004147]
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
+theme = ExtResource("4_apwds")
+script = ExtResource("4_0676f")
+TooltipScene = ExtResource("6_1r3xt")
 
 [connection signal="area_entered" from="." to="." method="OnAreaEntered"]
-[connection signal="area_entered" from="LeftArea" to="." method="LeftAreaChanged"]
-[connection signal="area_exited" from="LeftArea" to="." method="LeftAreaChanged"]
-[connection signal="area_entered" from="DownArea" to="." method="DownAreaChanged"]
-[connection signal="area_exited" from="DownArea" to="." method="DownAreaChanged"]
-[connection signal="area_entered" from="RightArea" to="." method="RightAreaChanged"]
-[connection signal="area_exited" from="RightArea" to="." method="RightAreaChanged"]
-[connection signal="area_entered" from="NegativeRotationArea" to="." method="NegativeRotationAreaChanged"]
-[connection signal="area_exited" from="NegativeRotationArea" to="." method="NegativeRotationAreaChanged"]
-[connection signal="area_entered" from="PositiveRotationArea" to="." method="PositiveRotationAreaChanged"]
-[connection signal="area_exited" from="PositiveRotationArea" to="." method="PositiveRotationAreaChanged"]

@@ -7,22 +7,33 @@ public partial class BoardAnimationManager : Node
 	int CompletedAnimations;
 	int TotalAnimations;
 
+	int CompletedTurnEndAnimations;
+	int TotalTurnEndAnimations;
+
 	bool AlreadyAnimating = false;
 
 	[Signal] public delegate void BoardAnimationCompletedEventHandler();
+
+	//this class is primarily a non-
+
+
+
 
 	public void ClearAnimations()
 	{
 		CompletedAnimations = 0;
 		TotalAnimations = 0;
+
+		CompletedTurnEndAnimations = 0;
+		TotalTurnEndAnimations = 0;
 	}
 
-	public void OnAnimationCreated()
+	public void AnimationCreated()
 	{
 		TotalAnimations++;
 	}
 
-	public void OnAnimationCompleted()
+	public void AnimationCompleted()
 	{
 		CompletedAnimations++;
 
@@ -50,13 +61,5 @@ public partial class BoardAnimationManager : Node
 		Connect(SignalName.BoardAnimationCompleted, Callable.From(MethodCalledOnCompletion), (uint)ConnectFlags.OneShot);
 	}
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
-	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
 }

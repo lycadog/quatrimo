@@ -26,11 +26,9 @@ public partial class Board : Control
 	[Signal] public delegate void PiecePlayedEventHandler();
     [Signal] public delegate void PiecePlacedEventHandler();
     [Signal] public delegate void ScoreStepStartedEventHandler(bool isInitialStep);
-    [Signal] public delegate void TickStepStartedEventHandler();
+    [Signal] public delegate void DestructiveTickStepStartedEventHandler();
+    [Signal] public delegate void MainTickStepStartedEventHandler();
     [Signal] public delegate void TurnEndedEventHandler();
-
-    [Signal] public delegate void AnimationCreatedEventHandler();
-    [Signal] public delegate void AnimationEndedEventHandler();
 
     public double totalScore = 0;
 
@@ -91,11 +89,17 @@ public partial class Board : Control
     {
         //this may be too simple. reinspect it sooner todo
 
-        EmitSignalTickStepStarted();
+        //i think we should add two different tick steps, the first one is used for destructive effects
+        //second is used for everything else. this way we don't explode stuff and then it ticks before it gets destroyed
+        //or! we could just check if we're QueuedForDeletion and not run tick stuff! that could work but, scoring doesnt delete instantly
+        //so nevermind. we'd have to do a score step
+
+        EmitSignalDestructiveTickStepStarted();     //primary tick state is for destructive/board modifying blocks!
         //signal our blocks that we're ticking
 
         if (BoardUpdated) //if the board has updated we gotta check it again
         {
+            
             ScoreBoard(false);
             return;
         }
@@ -112,9 +116,12 @@ public partial class Board : Control
 
     void LowerToFillScoredSpaces()
     {
+        int lowestScoredY = 100;
         foreach(var cell in ScoredCells)
         {
             //iterate upwards in the array, setting lower values for every cell
+
+            lowestScoredY = Math.Min(cell.y, lowestScoredY); //get the lowest value of any scored cell
 
             for (int y = cell.y+1; y < CellDimensions.Y - 1; y++)
             {
@@ -128,7 +135,11 @@ public partial class Board : Control
 
         if(PlacedBlocks.Count == 0)
         {
-            //why are we returning? what are we returning to? doesn't this just hang forever???
+            //this is somewhat buggy. we had to change cell.DeleteBlock() to immediately remove the block to fix
+            //duplicated scoring from happening right here
+            //if we go through with lowering block, the animation takes enough time that
+            //the block is freed and removed from the cell, fixing the issue
+            ScoreBoard(false);
             return;
         }
 
@@ -138,17 +149,19 @@ public partial class Board : Control
 
         foreach(var block in PlacedBlocks)
         {
-            LowerBlock(block, tween);
+            LowerBlock(block, lowestScoredY, tween);
         }
-
-
     }
 
-    void LowerBlock(Block block, Tween tween)
+    void LowerBlock(Block block, int lowestScoredY, Tween tween)
     {
-        block.boardY -= block.LowerDistance;
+        block.boardPos = new(block.boardPos.X, block.boardPos.Y - block.LowerDistance);
 
-        EmitSignalAnimationCreated();
+        AnimationManager.AnimationCreated();
+
+        //we don't want the delay to be too long when we have a really tall board, so if it's too tall we decrease it by a bit
+        double decreaseDelayPerBlockAtHighValues = (block.boardPos.Y - lowestScoredY) * .0002;
+        double loweringDelay = (block.boardPos.Y - lowestScoredY) * (.03 - decreaseDelayPerBlockAtHighValues);
 
         //todo: change delay to be more exponential falloff. higher Y values give less delay
 
@@ -156,7 +169,7 @@ public partial class Board : Control
         tween.TweenProperty(block, "position",
             new Vector2(0, block.LowerDistance * 10), LowerAnimLength).AsRelative()
             .SetTrans(Tween.TransitionType.Quad)
-            .SetDelay(block.boardY * .03)
+            .SetDelay(loweringDelay)
             .Finished += () => OnBlockFinishedLowering(block);
     }
 
@@ -209,6 +222,17 @@ public partial class Board : Control
 
     }
 
+    /// <summary>
+    /// Place block directly on board at its board position
+    /// </summary>
+    /// <param name="block"></param>
+    public void PlaceBlockDirectlyOnBoard(Block block)
+    {
+        ConnectNewBlock(block);
+        AddChild(block);
+        block.Place();
+    }
+
     #endregion
     #region === Signal & Event Binding ===
 
@@ -221,19 +245,16 @@ public partial class Board : Control
     /// Connect a new block to all the necessary signals
     /// </summary>
     /// <param name="block"></param>
-    void ConnectNewBlock(Block block)
+    public void ConnectNewBlock(Block block)
     {
         block.Connect(Block.SignalName.Placed, new(this, MethodName.OnBlockPlaced), (uint)ConnectFlags.OneShot);
         block.Connect(Block.SignalName.Scored, new(this, MethodName.OnBlockScored));
         block.Connect(Node.SignalName.TreeExiting, new(this, MethodName.OnBlockExitingTree), (uint)ConnectFlags.AppendSourceObject);
 
-        block.Connect(Block.SignalName.ScoreOtherBlock, new(this, MethodName.OnBlockScoresBlock));
-        block.Connect(Block.SignalName.CreateAnimation, new(this, MethodName.BlockCreatesAnimation));
-        block.Connect(Block.SignalName.CreatedBlock, new(this, MethodName.BlockCreatesBlock));
-
         Connect(SignalName.TurnStarted, new(block, Block.MethodName.OnTurnStart));
         
-        Connect(SignalName.TickStepStarted, new(block, Block.MethodName.OnTickStep));
+        Connect(SignalName.DestructiveTickStepStarted, new(block, Block.MethodName.OnDestructiveTickStep));
+        Connect(SignalName.MainTickStepStarted, new(block, Block.MethodName.OnMainTickStep));
     }
 
     #endregion
@@ -267,9 +288,9 @@ public partial class Board : Control
         AddChild(animation);
 
         animation.Position = cell.RealPosition;
-        animation.AnimationFinished += EmitSignalAnimationEnded;
+        animation.AnimationFinished += AnimationManager.AnimationCompleted;
 
-        EmitSignalAnimationCreated();
+        AnimationManager.AnimationCreated();
 
         if (cell.FilledInOnScoring)
         {
@@ -279,10 +300,10 @@ public partial class Board : Control
 
     public void OnBlockFinishedLowering(Block block)
     {
-        CellBoard[block.boardX, block.boardY].HeldBlock = block;
+        CellBoard[block.boardPos.X, block.boardPos.Y].HeldBlock = block;
         block.LowerDistance = 0;
 
-        EmitSignalAnimationEnded();
+        AnimationManager.AnimationCompleted();
     }
 
     public void OnBlockExitingTree(Block block)
@@ -298,9 +319,7 @@ public partial class Board : Control
         block.Reparent(this);
         PlacedBlocks.Add(block);
 
-        Vector2I blockpos = GetBlockPosition(block.Position);
-
-        CellBoard[blockpos.X, blockpos.Y].PlaceBlock(block);
+        CellBoard[block.boardPos.X, block.boardPos.Y].PlaceBlock(block);
         //add block to CellBoard
     }
 
@@ -315,17 +334,6 @@ public partial class Board : Control
     public void OnPiecePlayed(FallingPiece piece)
     {
 
-    }
-
-    public void OnBlockScoresBlock(int x, int y)
-    {
-        CellBoard[x, y].ScoreBlock();
-    }
-
-    public void BlockCreatesAnimation(Vector2 globalPosition, ScoreAnimation animation)
-    {
-        AddChild(animation);
-        animation.GlobalPosition = globalPosition;
     }
 
     public void BlockCreatesBlock(Block block)
@@ -349,7 +357,11 @@ public partial class Board : Control
             ConnectNewBlock(block);
         }
 
-        CurrentPiece.Position = new Vector2(5, -Dimensions.Y * 5 + 5);
+        Vector2I startingPosition = new Vector2I(Dimensions.X / 2, Dimensions.Y);
+
+        //these two values need to be synced or major issues !!!!!!
+        CurrentPiece.Position = GetRealPosition(startingPosition.X, startingPosition.Y);
+        CurrentPiece.boardPos = startingPosition;
         CurrentPiece.Play();
 
         OnPiecePlayed(CurrentPiece);
@@ -381,6 +393,7 @@ public partial class Board : Control
     public override void _Ready()
     {
         SetDimensions(defaultX, defaultY);
+        BlockCommandHandler.LinkToBoard(this, CellBoard);
         StartTurn();
     }
 

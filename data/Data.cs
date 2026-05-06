@@ -40,6 +40,7 @@ public static class Data
     public static DualPieceShape sBranch = new([(-2, 0), (-1, 0), (-1, -1), (0, 0), (1, 0), (1, 1)], "Branch");
     public static DualPieceShape sFPiece = new([(-1, 0), (0, 0), (0, 1), (1, 0), (2, 0), (2, 1)], "F Piece");
 
+    public static DualPieceShape sWrench = new([(-2, -1), (-1, -1), (-1, 0), (0, 0), (1, 0)], "Wrench");
 
     public static PieceShape sLongLine = new([(-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0)], "Long Line", 5);
     public static PieceShape sLongerLine = new([(-3, 0), (-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0)], "Longer Line", 4);
@@ -99,10 +100,12 @@ public static class Data
 
     #endregion
     #region === 2x3 and 3x3 and 4x3 ===
+
     public static PieceShape sBigTee = new([(-1, -1), (0, -1), (1, -1), (0, 0), (0, 1)], "Big Tee");
     public static PieceShape sCorner = new([(-1, 1), (0, 1), (1, 1), (1, 0), (1, -1)], "Corner");
     public static PieceShape sStairs = new([(-1, 1), (0, 0), (0, 1), (1, -1), (1, 0), (1, 1)], "Stairs");
 
+    public static DualPieceShape Comma = new([(-1, 0), (0, -1), (0, 0), (1, -1), (1, 0)], "Comma");
     public static PieceShape sBowl = new([(-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0)], "Bowl");
     public static DualPieceShape sChippedBowl = new([(-1, 0), (0, 1), (1, 1), (1, 0)], "Chipped Bowl");
     public static PieceShape sBasin = new([(-2, 0), (-2, 1), (-1, 1), (0, 1), (1, 1), (1, 0)], "Basin");
@@ -125,7 +128,7 @@ public static class Data
     #endregion
     #region === Fat Fucks ===
     public static PieceShape sEllipse = new([(-1, 0), (0, -1), (0, 0), (0, 1), (1, -1), (1, 0), (1, 1), (2, 0)], "Ellipse");
-    public static PieceShape sHammer = new([(-1, 0), (0, 0), (1, -1), (1, -1), (1, 0), (1, 1)], "Hammer");
+    public static PieceShape sHammer = new([(-1, 0), (0, 0), (1, -1), (1, 0), (1, 1), (2, -1), (2, 0), (2, 1)], "Hammer");
 
     public static PieceShape sFatFuck = new([(-2, -2), (-2, -1), (-2, 0), (-2, 1), (-1, -2), (-1, -1), (-1, 0), (-1, 1), (0, -2), (0, -1), (0, 0), (0, 1), (1, -2), (1, -1), (1, 0), (1, 1)], "fat fuck", 2);
     public static PieceShape sBrick = new([(-2, -1), (-2, 0), (-2, 1), (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 0), (0, 1), (1, -1), (1, 0), (1, 1)], "Brick", 4);
@@ -164,7 +167,7 @@ public static class Data
 
     public static StarterBag randomBullshitBag = new([sTwig.B, sWedge.B, sLine.B, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece], "fuck");
     
-    public static StarterBag debugBag = new([sDiagonalLine.LB], "debug");
+    public static StarterBag debugBag = new([sLine.B], "debug");
 
     #endregion
 }

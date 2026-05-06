@@ -5,25 +5,28 @@ using System.Collections.Generic;
 [GlobalClass, Icon("res://texture/icon/pieceicon.png")]
 public partial class FallingPiece : Node2D
 {
-	double fallingCounter = -0.2;
-	double placementCounter = -0.2;
-	double DownHeldTime = 0;
-	double LeftCooldown = 0;
-	double RightCooldown = 0;
 
-	double SlamLockout = 0.1;
-
-	const double TimeBeforeFalling = 0.6;
-	const double TimeBeforePlacement = 1.2;
-	const int FastfallSpeed = 80;
-
-	bool Falling = false;
+    public Vector2I boardPos;
 
 	public Vector2I Dimensions;
 
 	public List<Block> Blocks = [];
 
-	public float TotalSlamOffset = 10000;
+    bool Falling = false;
+
+    float TotalSlamOffset = 10000;
+
+    double fallingCounter = -0.2;
+    double placementCounter = -0.2;
+    double DownHeldTime = 0;
+    double LeftCooldown = 0;
+    double RightCooldown = 0;
+
+    double SlamLockout = 0.1;
+
+    const double TimeBeforeFalling = 0.6;
+    const double TimeBeforePlacement = 1.2;
+    const int FastfallSpeed = 80;
 
     public FallingPiece(Block[] blocks, Vector2I dimensions)
     {
@@ -32,119 +35,88 @@ public partial class FallingPiece : Node2D
     }
 
     [Signal] public delegate void OnPiecePlacementEventHandler(FallingPiece piece);
+    [Signal] public delegate void MovedEventHandler(Vector2I newBoardPos);
 
+    #region === Initialization ===
 
-	/// <summary>
-	/// Links the blocks to the newly-created piece
-	/// </summary>
-	/// <param name="blocks"></param>
-	void LinkBlocks(Block[] blocks)
-	{
-		foreach (var block in blocks)
-		{
-			Blocks.Add(block);
-			AddChild(block);
-
-			block.TreeExiting += () => OnBlockExitingTree(block);
-		}
-		//do other stuff maybe
-	}
-
-    public virtual void Play()
+    /// <summary>
+    /// Links the blocks to the newly-created piece
+    /// </summary>
+    /// <param name="blocks"></param>
+    void LinkBlocks(Block[] blocks)
     {
-        ForceUpdateTransform();
-        Falling = true;
-		foreach(var block in Blocks)
-		{
-			block.Play();
-		}
-        SetNewSlamPosition();
-    }
+        foreach (var block in blocks)
+        {
+            Blocks.Add(block);
+            AddChild(block);
 
-    public virtual void Place()
-    {
-		Falling = false;
-		foreach(var block in Blocks)
-		{
-			block.Place();
-		}
-
-        QueueFree();
-        EmitSignalOnPiecePlacement(this);
-    }
-
-	protected void OnBlockExitingTree(Block block)
-	{
-		if (Falling)
-		{
-            Blocks.Remove(block);
-			if(Blocks.Count == 0)
-			{
-				Place(); //we have no blocks so we need to stop our current behavior
-			}
+            block.TreeExiting += () => OnBlockExitingTree(block);
+            Moved += block.OnPieceMoved;
         }
+        //do other stuff maybe
     }
-	
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-	{
-	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _PhysicsProcess(double delta)
-	{
+    #endregion
+    #region === Godot Methods ===
 
-		if(fallingCounter >= TimeBeforeFalling)
-		{
-			if (CanMoveDown())
-			{
-				//fall!
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _PhysicsProcess(double delta)
+    {
 
-				Move(0, 10); // move down!
-				fallingCounter = 0;
-				placementCounter = 0;
+        if (fallingCounter >= TimeBeforeFalling)
+        {
+            if (CanMoveDown())
+            {
+                //fall!
+
+                Move(0, 10); // move down!
+                fallingCounter = 0;
+                placementCounter = 0;
 
                 SetNewSlamPosition();
                 return;
-			}
-			else
-			{
-				//if we can't fall, then let's try to place!
-				if(placementCounter >= TimeBeforePlacement)
-				{
-					Place();
+            }
+            else
+            {
+                //if we can't fall, then let's try to place!
+                if (placementCounter >= TimeBeforePlacement)
+                {
+                    Place();
 
-					return;
-				}
+                    return;
+                }
 
-			}
-		}
+            }
+        }
 
-		foreach(var block in Blocks)
-		{
-			block.ForceUpdateCollision();
-		}
+        foreach (var block in Blocks)
+        {
+            block.UpdateFallingCollisions();
+        }
 
         ProcessInput(delta); //this is after the rest because sometimes this needs to end the state
-							 //we don't want to run the above code if the state is ended, so we run after!
+                             //we don't want to run the above code if the state is ended, so we run after!
 
-		SlamLockout -= delta;
+        SlamLockout -= delta;
         fallingCounter += delta;
-		placementCounter += delta;
+        placementCounter += delta;
 
-		SetNewSlamPosition();
+        SetNewSlamPosition();
     }
 
+    #endregion
+    #region === Input ===
+
     public void ProcessInput(double delta)
-	{
+    {
 
         if (Input.IsActionJustPressed("SlamPiece") && SlamLockout < 0)
-		{
-			SlamAndPlace();
-			return;
-		}
+        {
+            SlamAndPlace();
+            return;
+        }
 
-        if (Input.IsActionPressed("Down")) 
+        if (Input.IsActionPressed("Down"))
         {
             if (Input.IsActionJustPressed("Down")) //When down is pressed immediately move down, then 
             {
@@ -163,50 +135,50 @@ public partial class FallingPiece : Node2D
         else if (Input.IsActionJustReleased("Down")) //Set the timer to negative when we release so we have more precision
         {
             fallingCounter = -.2;
-			placementCounter = -.2;
+            placementCounter = -.2;
         }
 
-		else if (Input.IsActionPressed("Up"))
-		{
-			fallingCounter = 0;
-		}
+        else if (Input.IsActionPressed("Up"))
+        {
+            fallingCounter = 0;
+        }
 
         if (Input.IsActionPressed("Left"))
-		{
-			LeftCooldown -= delta;
+        {
+            LeftCooldown -= delta;
 
-			if (Input.IsActionJustPressed("Left"))
-			{
-				AttemptMoveLeft();
-				LeftCooldown = .11;
-				return;
-			}
+            if (Input.IsActionJustPressed("Left"))
+            {
+                AttemptMoveLeft();
+                LeftCooldown = .11;
+                return;
+            }
 
-			else if (LeftCooldown <= 0)
-			{
-				AttemptMoveLeft();
-				LeftCooldown = .036;
-				return;
-			}
-		}
-		
-		else if (Input.IsActionPressed("Right"))
-		{
-			RightCooldown -= delta;
-			if (Input.IsActionJustPressed("Right"))
-			{
-				AttemptMoveRight();
-				RightCooldown = .1;
-				return;
-			}
+            else if (LeftCooldown <= 0)
+            {
+                AttemptMoveLeft();
+                LeftCooldown = .036;
+                return;
+            }
+        }
 
-			else if (RightCooldown <= 0)
-			{
-				AttemptMoveRight();
-				RightCooldown = .036;
-				return;
-			}
-		}
+        else if (Input.IsActionPressed("Right"))
+        {
+            RightCooldown -= delta;
+            if (Input.IsActionJustPressed("Right"))
+            {
+                AttemptMoveRight();
+                RightCooldown = .1;
+                return;
+            }
+
+            else if (RightCooldown <= 0)
+            {
+                AttemptMoveRight();
+                RightCooldown = .036;
+                return;
+            }
+        }
 
         if (Input.IsActionJustPressed("RotateLeft"))
         {
@@ -220,25 +192,75 @@ public partial class FallingPiece : Node2D
 
     }
 
-	public void SlamAndPlace()
-	{
-		Position = new(Position.X, Position.Y + TotalSlamOffset);
-		Place();
-	}
+    #endregion
+    #region === Board Interaction & Movement ===
+
+    public virtual void Play()
+    {
+        ForceUpdateTransform();
+        Falling = true;
+        foreach (var block in Blocks)
+        {
+            block.Play();
+        }
+        SetNewSlamPosition();
+    }
+
+    public virtual void Place()
+    {
+        Falling = false;
+        foreach (var block in Blocks)
+        {
+            block.Place();
+        }
+
+        QueueFree();
+        EmitSignalOnPiecePlacement(this);
+    }
+
+    
+
+    void Move(float xOffset, float yOffset)
+    {
+        Position += new Vector2(xOffset, yOffset);
+
+        boardPos += new Vector2I((int)(xOffset / 10), -(int)(yOffset / 10));
+
+        EmitSignal(SignalName.Moved, boardPos);
+    }
+
+    void Rotate(int direction)
+    {
+        foreach (var block in Blocks)
+        {
+            block.Rotate(direction);
+        }
+
+        EmitSignal(SignalName.Moved, boardPos);
+    }
+
+    public void SlamAndPlace()
+    {
+        boardPos = new(boardPos.X, boardPos.Y - (int)TotalSlamOffset/10);
+        EmitSignal(SignalName.Moved, boardPos);
+
+        Position = new(Position.X, Position.Y + TotalSlamOffset);
+        Place();
+    }
 
     public void SetNewSlamPosition()
     {
         TotalSlamOffset = 10000;
 
-		//a bit inefficient to run this constantly
-		//ultimately doesn't matter much
-		//TODO maybe figure out a better way
+        //a bit inefficient to run this constantly
+        //ultimately doesn't matter much
+        //TODO maybe figure out a better way
 
         foreach (var block in Blocks)
         {
-			block.UpdateSlamPosition();
+            block.UpdateSlamPosition();
             TotalSlamOffset = Math.Min(block.SlamOffset, TotalSlamOffset);
-            
+
         }
 
         foreach (var block in Blocks)
@@ -247,59 +269,46 @@ public partial class FallingPiece : Node2D
         }
     }
 
-    public void Move(float xOffset, float yOffset)
-	{
-		Position = new Vector2(Position.X + xOffset, Position.Y + yOffset);
-	}
 
-	public void AttemptMoveLeft()
-	{
-		if (CanMoveLeft()) { Move(-10, 0); }
-	}
+    #endregion
+    #region === Collision ===
 
+    public void AttemptMoveLeft()
+    {
+        if (CanMoveLeft()) { Move(-10, 0); }
+    }
     public void AttemptMoveRight()
     {
         if (CanMoveRight()) { Move(10, 0); }
     }
-
-	public void AttemptLeftRotation()
-	{
-		if (CanRotateNegative()) { Rotate(-1); }
-	}
+    public void AttemptLeftRotation()
+    {
+        if (CanRotateNegative()) { Rotate(-1); }
+    }
 
     public void AttemptRightRotation()
     {
         if (CanRotatePositive()) { Rotate(1); }
     }
 
-    void Rotate(int direction)
-	{
-		foreach(var block in Blocks)
-		{
-			block.Rotate(direction);
-		}
-	}
-
-	
-
     protected bool CanMoveLeft()
     {
         foreach (var block in Blocks)
         {
-            if (!block.CanMoveLeft) {  return false; }
+            if (!block.CanMoveLeft) { return false; }
         }
 
         return true;
     }
     protected bool CanMoveDown()
-	{
-		foreach(var block in Blocks)
-		{
-			if (!block.CanMoveDown) { return false; }
-		}
+    {
+        foreach (var block in Blocks)
+        {
+            if (!block.CanMoveDown) { return false; }
+        }
 
-		return true;
-	}
+        return true;
+    }
     protected bool CanMoveRight()
     {
         foreach (var block in Blocks)
@@ -328,15 +337,18 @@ public partial class FallingPiece : Node2D
         return true;
     }
 
-    void BindBlockEvents(Block block)
-	{
-
-	}
-
-	void UnbindBlockEvents(Block block)
-	{
-
-	}
+    #endregion
 
 
+    protected void OnBlockExitingTree(Block block)
+    {
+        if (Falling)
+        {
+            Blocks.Remove(block);
+            if (Blocks.Count == 0)
+            {
+                Place(); //we have no blocks so we need to stop our current behavior
+            }
+        }
+    }
 }
