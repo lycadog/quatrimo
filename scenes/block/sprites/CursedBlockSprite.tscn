@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://che6me8eo42p7"]
+
+[ext_resource type="PackedScene" uid="uid://c7abv48quik18" path="res://scenes/block/sprites/BasicBlockSprite.tscn" id="1_ey4h2"]
+
+[node name="CursedBlockSprite" unique_id=910979645 instance=ExtResource("1_ey4h2")]
+region_rect = Rect2(140, 0, 10, 10)
+
+[node name="SpriteLayer2" parent="." index="0" unique_id=1725501272]
+visible = true
+region_rect = Rect2(140, 10, 10, 10)

@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://cxto0rlrr4pxj"]
+
+[ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="1_73evt"]
+[ext_resource type="Script" uid="uid://dvsu3pu6fsw5v" path="res://scripts/visuals/AnimatedBlockSprite.cs" id="2_0rlmn"]
+[ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_fm877"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ymeqs"]
+atlas = ExtResource("1_73evt")
+region = Rect2(210, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_swkhm"]
+atlas = ExtResource("1_73evt")
+region = Rect2(220, 0, 10, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gps6d"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ymeqs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_swkhm")
+}],
+"loop": true,
+"name": &"hologramAnimation",
+"speed": 8.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vl6iy"]
+atlas = ExtResource("1_73evt")
+region = Rect2(210, 10, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qr6gu"]
+atlas = ExtResource("1_73evt")
+region = Rect2(220, 10, 10, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_81pu3"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vl6iy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qr6gu")
+}],
+"loop": true,
+"name": &"hologramlayer2",
+"speed": 8.0
+}]
+
+[node name="HologramBlockSprite" type="AnimatedSprite2D" unique_id=1824951377 node_paths=PackedStringArray("Layer2")]
+sprite_frames = SubResource("SpriteFrames_gps6d")
+animation = &"hologramAnimation"
+autoplay = "hologramAnimation"
+frame_progress = 0.47454062
+script = ExtResource("2_0rlmn")
+Layer2 = NodePath("SpriteLayer2")
+metadata/_custom_type_script = "uid://dvsu3pu6fsw5v"
+
+[node name="SpriteLayer2" type="AnimatedSprite2D" parent="." unique_id=1503289481]
+sprite_frames = SubResource("SpriteFrames_81pu3")
+animation = &"hologramlayer2"
+autoplay = "hologramlayer2"
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=623356925]
+energy = 0.18
+shadow_enabled = true
+texture = ExtResource("3_fm877")

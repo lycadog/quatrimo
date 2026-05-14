@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dyb4r3k7drr66"]
+
+[ext_resource type="PackedScene" uid="uid://c7abv48quik18" path="res://scenes/block/sprites/BasicBlockSprite.tscn" id="1_iydgj"]
+
+[node name="LaserBlockSprite" unique_id=910979645 instance=ExtResource("1_iydgj")]
+region_rect = Rect2(130, 40, 10, 10)
+OverrideTexture = true
+OverrideColor = true

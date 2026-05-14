@@ -14,7 +14,7 @@ public partial class ScoreIterator(int x, int direction, Cell[] row) : Node
 	{
 		timer += delta;
 
-		if( timer > TimeBetweenIterating)
+		if(timer > TimeBetweenIterating)
 		{
 			timer = 0;
 			Iterate();

@@ -22,7 +22,7 @@ public class BagPiece(PieceType type, BagBlock[] blocks, Vector2I dimensions, Bo
     //Entry weight is reduced every time this is drawn, then reset after some amount of draws
     public int BaseWeight = 6;
 
-    static Func<Block[], Vector2I, FallingPiece>[] Pieces = [
+    static readonly Func<Block[], Vector2I, FallingPiece>[] Pieces = [
         (blocks, dimensions) => { return new FallingPiece(blocks, dimensions); }
         ];
 

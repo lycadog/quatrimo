@@ -12,10 +12,7 @@ size = Vector2(10, 40)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xdl3i"]
 size = Vector2(40, 30)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wlyqt"]
-size = Vector2(10, 10)
-
-[node name="Board" type="Control" unique_id=30435418 node_paths=PackedStringArray("AnimationManager", "border", "BoardArea", "BottomBorder", "LeftBorder", "RightBorder")]
+[node name="Board" type="Control" unique_id=30435418 node_paths=PackedStringArray("AnimationManager", "border", "BlockBox", "BottomBorder", "LeftBorder", "RightBorder")]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -28,7 +25,7 @@ script = ExtResource("1_qails")
 AnimationManager = NodePath("AnimationManager")
 border = NodePath("Border")
 darkGradient = ExtResource("2_w6jgk")
-BoardArea = NodePath("BoardArea")
+BlockBox = NodePath("BlockBox")
 BottomBorder = NodePath("Border/BottomArea")
 LeftBorder = NodePath("Border/LeftArea")
 RightBorder = NodePath("Border/RightArea")
@@ -121,15 +118,9 @@ monitoring = false
 position = Vector2(15, 0)
 shape = SubResource("RectangleShape2D_xdl3i")
 
-[node name="BoardArea" type="Area2D" parent="." unique_id=1084808968]
-scale = Vector2(11.5, 19.5)
-collision_layer = 0
-collision_mask = 2
-monitorable = false
-
-[node name="BoardShape" type="CollisionShape2D" parent="BoardArea" unique_id=977289770]
-shape = SubResource("RectangleShape2D_wlyqt")
+[node name="BlockBox" type="Node2D" parent="." unique_id=1446141951]
+z_index = 1
+z_as_relative = false
+position = Vector2(-55, 95)
 
 [connection signal="resized" from="Border" to="." method="OnBorderResize"]
-[connection signal="area_entered" from="BoardArea" to="." method="OnAreaEntered"]
-[connection signal="area_exited" from="BoardArea" to="." method="OnAreaExited"]

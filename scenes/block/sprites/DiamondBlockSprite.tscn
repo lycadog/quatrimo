@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dd55ic6xm5rxr"]
+
+[ext_resource type="PackedScene" uid="uid://c7abv48quik18" path="res://scenes/block/sprites/BasicBlockSprite.tscn" id="1_ms00h"]
+[ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="2_3dgkf"]
+
+[node name="DiamondBlockSprite" unique_id=910979645 instance=ExtResource("1_ms00h")]
+region_rect = Rect2(230, 0, 10, 10)
+OverrideTexture = true
+
+[node name="SpriteLayer2" parent="." index="0" unique_id=1725501272]
+visible = true
+region_rect = Rect2(230, 10, 10, 10)
+
+[node name="SpriteLayer3" type="Sprite2D" parent="SpriteLayer2" index="0" unique_id=840203785]
+texture = ExtResource("2_3dgkf")
+region_enabled = true
+region_rect = Rect2(230, 20, 10, 10)

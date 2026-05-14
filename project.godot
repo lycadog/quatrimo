@@ -13,9 +13,12 @@ config_version=5
 config/name="Quatrimo"
 run/main_scene="uid://pw611g77o37k"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
-run/max_fps=60
 boot_splash/use_filter=false
 config/icon="res://icon.svg"
+
+[autoload]
+
+FpsCounter="*uid://cdocau184lskj"
 
 [display]
 
@@ -24,6 +27,7 @@ window/size/viewport_height=270
 window/size/window_width_override=960
 window/size/window_height_override=540
 window/stretch/mode="canvas_items"
+window/vsync/vsync_mode=0
 mouse_cursor/tooltip_position_offset=Vector2(1, 1)
 
 [dotnet]
@@ -143,9 +147,8 @@ Debug5={
 
 [layer_names]
 
-2d_physics/layer_1="Placed Solid Blocks"
-2d_physics/layer_2="All Blocks (for block -> block interaction)"
-2d_physics/layer_3="Board Boundary"
+2d_physics/layer_1="Blocks"
+2d_physics/layer_2="Board Boundary"
 
 [physics]
 

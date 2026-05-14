@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cmriivs12gm1y"]
+
+[ext_resource type="PackedScene" uid="uid://c7abv48quik18" path="res://scenes/block/sprites/BasicBlockSprite.tscn" id="1_cj1i4"]
+
+[node name="ReinforcedBlockSprite" unique_id=910979645 instance=ExtResource("1_cj1i4")]
+region_rect = Rect2(160, 0, 10, 10)
+OverrideTexture = true
+
+[node name="SpriteLayer2" parent="." index="0" unique_id=1725501272]
+visible = true
+region_rect = Rect2(160, 10, 10, 10)

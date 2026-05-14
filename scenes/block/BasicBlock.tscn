@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dm7g0yeneuekf"]
+
+[ext_resource type="Script" uid="uid://cg1kqiptaygac" path="res://scripts/blocks/Block.cs" id="1_acuy0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_acuy0"]
+size = Vector2(8, 8)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_acuy0"]
+polygon = PackedVector2Array(-2, -2, -2, 2, 2, 2, 2, -2)
+
+[node name="BasicBlock" type="Area2D" unique_id=449507831]
+script = ExtResource("1_acuy0")
+metadata/_custom_type_script = "uid://cg1kqiptaygac"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1261478803]
+shape = SubResource("RectangleShape2D_acuy0")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="." unique_id=1415090328]
+occluder = SubResource("OccluderPolygon2D_acuy0")
+
+[connection signal="area_entered" from="." to="." method="OnAreaEntered"]

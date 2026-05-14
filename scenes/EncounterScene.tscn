@@ -267,4 +267,4 @@ texture = SubResource("AtlasTexture_kciur")
 
 [connection signal="PiecePlaced" from="Board" to="HandAnchor/PlayerHand" method="OnPiecePlaced"]
 [connection signal="TurnStarted" from="Board" to="HandAnchor/PlayerHand" method="OnTurnStart"]
-[connection signal="CardPlayed" from="HandAnchor/PlayerHand" to="Board" method="OnCardPlayed"]
+[connection signal="CardPlayed" from="HandAnchor/PlayerHand" to="Board" method="PlayCard"]

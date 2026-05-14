@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cdocau184lskj"]
+
+[ext_resource type="FontFile" uid="uid://dge055gh3jw0j" path="res://lang/CL_EagleIII_8x16.ttf" id="1_avdxm"]
+[ext_resource type="Script" uid="uid://d17d6muaa1i4x" path="res://scripts/visuals/FpsCounter.cs" id="2_cwn08"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ioiev"]
+font = ExtResource("1_avdxm")
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 1)
+
+[node name="FPSCounter" type="Label" unique_id=1591872974]
+offset_left = 6.0
+offset_top = 15.0
+offset_right = 42.0
+offset_bottom = 27.0
+text = "0 FPS"
+label_settings = SubResource("LabelSettings_ioiev")
+script = ExtResource("2_cwn08")

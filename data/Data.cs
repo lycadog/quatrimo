@@ -32,6 +32,7 @@ public static class Data
     public static PieceShape sTwig = new([(-1, 0), (0, 0)], "Twig");
 
     public static PieceShape sStump = new([(-1, 0), (0, -1), (0, 0), (1, -1), (1, 0), (2, 0)], "Stump");
+    public static DualPieceShape sHatchet = new([(-1, -1), (0, -1), (-1, 0), (0, 0), (1, 0), (2, 0)], "Hatchet");
     public static DualPieceShape sDiagonalLine = new([(-2, -1), (-1, -1), (0, 0), (1, 0)], "Diagonal line");
     public static DualPieceShape sCane = new([(-2, 0), (-1, -1), (0, 0), (1, 0)], "Cane");
     public static DualPieceShape sPick = new([(-1, 0), (0, -1), (0, 0), (1, 0), (2, 0)], "Pick");
@@ -99,7 +100,7 @@ public static class Data
 
 
     #endregion
-    #region === 2x3 and 3x3 and 4x3 ===
+    #region === Rectangular and Medium-Sized Pieces ===
 
     public static PieceShape sBigTee = new([(-1, -1), (0, -1), (1, -1), (0, 0), (0, 1)], "Big Tee");
     public static PieceShape sCorner = new([(-1, 1), (0, 1), (1, 1), (1, 0), (1, -1)], "Corner");
@@ -115,9 +116,6 @@ public static class Data
     public static PieceShape sGlider = new([(-1, 0), (0, -1), (0, 0), (1, 1)], "Glider");
     public static PieceShape sLongSlash = new([(-1, -1), (0, 0), (1, 1)], "Long Slash");
     public static PieceShape sHollowCore = new([(-2, 0), (-1, -1), (-1, 1), (0, 0)], "Hollow Core");
-
-    public static DualPieceShape sHatchet = new([(-1, -1), (0, -1), (-1, 0), (0, 0), (1, 0), (2, 0)], "Hatchet");
-
 
     #endregion
     #region === Weirdos ===

@@ -14,17 +14,7 @@ public partial class Cursedblock : Block
     static readonly Rect2 openRect = new(150, 00, 10, 10);
     static readonly Rect2 openRectLayer2 = new(150, 10, 10, 10);
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-	{
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
-
-    protected override void CustomScore()
+    protected override void RunScoreBehavior()
     {
 		openCounter = 4;
 		if (!open)
@@ -44,11 +34,11 @@ public partial class Cursedblock : Block
 	{
 		open = true;
 		justOpened = true; //we can't increase the score here since this runs before! our score value is obtained
-		//so we must increase it the first tick after, using this bool!
-		//then when we close again we remove the score and force close
+						   //so we must increase it the first tick after, using this bool!
+						   //then when we close again we remove the score and force close
 
-		(SpriteLayer1 as Sprite2D).RegionRect = openRect;
-		(SpriteLayer2 as Sprite2D).RegionRect = openRectLayer2;
+		BlockSprite.SetTexture(openRect);
+		BlockSprite.SetSecondLayerTexture(openRectLayer2);
 	}
 
 	void CloseEye()
@@ -56,12 +46,12 @@ public partial class Cursedblock : Block
 		open = false;
 		ScoreValue -= 3;
 
-        (SpriteLayer1 as Sprite2D).RegionRect = closedRect;
-        (SpriteLayer2 as Sprite2D).RegionRect = closedRectLayer2;
+        BlockSprite.SetTexture(closedRect);
+        BlockSprite.SetSecondLayerTexture(closedRectLayer2);
 
     }
 
-    protected override void MainTickBlock()
+    protected override void RunTickBehavior()
     {
 		if (open)
 		{

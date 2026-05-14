@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://c7abv48quik18"]
+
+[ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="1_7cu3q"]
+[ext_resource type="Script" uid="uid://l1ph7m4gf5id" path="res://scripts/visuals/BlockSprite.cs" id="1_m3rwu"]
+
+[node name="BasicBlockSprite" type="Sprite2D" unique_id=910979645 node_paths=PackedStringArray("Layer2")]
+texture = ExtResource("1_7cu3q")
+region_enabled = true
+region_rect = Rect2(0, 30, 10, 10)
+script = ExtResource("1_m3rwu")
+Layer2 = NodePath("SpriteLayer2")
+metadata/_custom_type_script = "uid://l1ph7m4gf5id"
+
+[node name="SpriteLayer2" type="Sprite2D" parent="." unique_id=1725501272]
+visible = false
+texture = ExtResource("1_7cu3q")
+region_enabled = true
+region_rect = Rect2(0, 0, 10, 10)

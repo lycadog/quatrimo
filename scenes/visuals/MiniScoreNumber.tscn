@@ -1,20 +1,11 @@
 [gd_scene format=3 uid="uid://cfpvh6h2homdf"]
 
-[ext_resource type="Script" uid="uid://d1kt762jcir6k" path="res://scripts/MiniScoreNumber.cs" id="1_ep2xn"]
+[ext_resource type="Script" uid="uid://caakrfy74wmw8" path="res://scripts/visuals/MiniScoreNumber.cs" id="1_e84ov"]
 [ext_resource type="LabelSettings" uid="uid://dpwq1x5um0pgw" path="res://lang/scoreLow.tres" id="2_e84ov"]
-[ext_resource type="LabelSettings" uid="uid://lbauet8ivo45" path="res://lang/scoreMedium.tres" id="3_5v8ky"]
-[ext_resource type="LabelSettings" uid="uid://bd6e47e5shbpb" path="res://lang/scoreHigh.tres" id="4_2lr34"]
-[ext_resource type="LabelSettings" uid="uid://clmx5swa303r3" path="res://lang/scoreReallyHigh.tres" id="5_247sa"]
-[ext_resource type="LabelSettings" uid="uid://dqhxueja2hvqy" path="res://lang/scoreCrazy.tres" id="6_ewkum"]
 
 [node name="MiniScoreNumber" type="Node2D" unique_id=839704288 node_paths=PackedStringArray("label")]
-script = ExtResource("1_ep2xn")
+script = ExtResource("1_e84ov")
 label = NodePath("Label")
-LowSettings = ExtResource("2_e84ov")
-MediumSettings = ExtResource("3_5v8ky")
-HighSettings = ExtResource("4_2lr34")
-ReallyHighSettings = ExtResource("5_247sa")
-CrazySettings = ExtResource("6_ewkum")
 
 [node name="Label" type="Label" parent="." unique_id=1498922901]
 anchors_preset = 8

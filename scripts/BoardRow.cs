@@ -7,7 +7,7 @@ public partial class BoardRow(int y, int boardWidth) : Node
     public int y = y;
     public int totalScorability = 0;
 
-    int minimumRequiredScorability
+    int MinimumRequiredScorability
     {
         get
         {
@@ -15,7 +15,7 @@ public partial class BoardRow(int y, int boardWidth) : Node
         }
     }
 
-    int maximumAllowedScorability
+    int MaximumAllowedScorability
     {
         get
         {
@@ -23,7 +23,7 @@ public partial class BoardRow(int y, int boardWidth) : Node
         }
     }
 
-    public Cell[] cells;
+    public Cell[] cellsInRow;
 
     public event Action ScoringStarted;
 
@@ -32,11 +32,12 @@ public partial class BoardRow(int y, int boardWidth) : Node
         get
         {
             return
-                totalScorability >= minimumRequiredScorability
+                totalScorability >= MinimumRequiredScorability
                 &&
-                totalScorability <= maximumAllowedScorability;
+                totalScorability <= MaximumAllowedScorability;
         }
     }
+
 
     public void AttemptScoring()
     {
@@ -59,9 +60,9 @@ public partial class BoardRow(int y, int boardWidth) : Node
             //if we find a newly placed block, iterate left from it. then change state to next line
             //if we find a block that isn't newly placed, iterate right from the block to the left of it. then revert state
 
-            if (cells[x].JustPlaced)
+            if (cellsInRow[x].JustPlaced)
             {
-                if (cells[x].Scorable) { cells[x].ScoreBlock(); }
+                if (cellsInRow[x].Scorable) { cellsInRow[x].ScoreBlock(); }
 
                 if (leftIteratorNext)
                 {
@@ -90,15 +91,14 @@ public partial class BoardRow(int y, int boardWidth) : Node
     void CreateIterator(int x, int direction)
     {
         GD.Print($"iterator created, x: {x}, direction: {direction}");
-        ScoreIterator newIterator = new(x, direction, cells);
+        ScoreIterator newIterator = new(x, direction, cellsInRow);
         AddChild(newIterator);
-        
     }
 
     void CursedBlockFailsafe()
     {
         int cursedCount = 0;
-        foreach(var cell in cells)
+        foreach(var cell in cellsInRow)
         {
             if(cell.BlockType == BlockType.Cursed)
             {
@@ -106,9 +106,9 @@ public partial class BoardRow(int y, int boardWidth) : Node
             }
         }
 
-        if(cursedCount >= minimumRequiredScorability && cursedCount <= maximumAllowedScorability)
+        if(cursedCount >= MinimumRequiredScorability && cursedCount <= MaximumAllowedScorability)
         {
-            foreach(var cell in cells)
+            foreach(var cell in cellsInRow)
             {
                 cell.ScoreFlag = Cell.ScoringFlags.CanScoreButFullyRestrictAfterScoring;
             }

@@ -1,9 +1,9 @@
-[gd_scene format=3 uid="uid://4uffm5qf4t0i"]
+[gd_scene format=3 uid="uid://kjbhut3hnmrt"]
 
-[ext_resource type="PackedScene" uid="uid://blmpsbuqvqptb" path="res://scenes/block/Block.tscn" id="1_pcsbq"]
-[ext_resource type="Script" uid="uid://bdlxbmtb11nsm" path="res://scenes/block/ReinforcedBlock.cs" id="2_hr8yx"]
+[ext_resource type="PackedScene" uid="uid://dm7g0yeneuekf" path="res://scenes/block/BasicBlock.tscn" id="1_hr8yx"]
+[ext_resource type="Script" uid="uid://bdlxbmtb11nsm" path="res://scripts/blocks/ReinforcedBlock.cs" id="2_mcbvb"]
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hr8yx"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3iuu7"]
 particle_flag_disable_z = true
 angle_min = 88.20001
 angle_max = 170.40001
@@ -18,22 +18,16 @@ attractor_interaction_enabled = false
 scale_min = 4.0
 scale_max = 4.0
 
-[node name="Block" unique_id=537382246 node_paths=PackedStringArray("particles") instance=ExtResource("1_pcsbq")]
-script = ExtResource("2_hr8yx")
+[node name="ReinforcedBlock" unique_id=449507831 node_paths=PackedStringArray("particles") instance=ExtResource("1_hr8yx")]
+script = ExtResource("2_mcbvb")
 particles = NodePath("GPUParticles2D")
+type = 2
 RemovedOnScoring = false
 OverrideTexture = true
 
-[node name="SpriteLayer1" parent="." index="0" unique_id=602452335]
-region_rect = Rect2(160, 0, 10, 10)
-
-[node name="SpriteLayer2" parent="SpriteLayer1" index="0" unique_id=212297080]
-visible = true
-region_rect = Rect2(160, 10, 10, 10)
-
-[node name="GPUParticles2D" type="GPUParticles2D" parent="." index="1" unique_id=1217836637]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." index="1" unique_id=1003895464]
 emitting = false
 amount = 1
 lifetime = 3.0
 one_shot = true
-process_material = SubResource("ParticleProcessMaterial_hr8yx")
+process_material = SubResource("ParticleProcessMaterial_3iuu7")

@@ -49,7 +49,14 @@ public static class Utils
         return Color.FromHsv(h, s, v);
     }
 
+    public static Vector2 GetRotatedVector(Vector2 vector, int direction)
+    {
+        return new Vector2(vector.Y * -direction, vector.X * direction);
+    }
 
-
+    public static Vector2I GetRotatedVector(Vector2I vector, int direction)
+    {
+        return new Vector2I(vector.Y * -direction, vector.X * direction);
+    }
 
 }

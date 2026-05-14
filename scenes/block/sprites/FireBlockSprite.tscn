@@ -1,0 +1,124 @@
+[gd_scene format=3 uid="uid://nqia601hryxr"]
+
+[ext_resource type="Script" uid="uid://dvsu3pu6fsw5v" path="res://scripts/visuals/AnimatedBlockSprite.cs" id="1_k4177"]
+[ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="1_saskh"]
+[ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_25myv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eveqt"]
+atlas = ExtResource("1_saskh")
+region = Rect2(170, 40, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d2m7c"]
+atlas = ExtResource("1_saskh")
+region = Rect2(180, 40, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ghgxn"]
+atlas = ExtResource("1_saskh")
+region = Rect2(200, 40, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hqf16"]
+atlas = ExtResource("1_saskh")
+region = Rect2(210, 40, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8sssf"]
+atlas = ExtResource("1_saskh")
+region = Rect2(220, 40, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t74gp"]
+atlas = ExtResource("1_saskh")
+region = Rect2(180, 40, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fcq25"]
+atlas = ExtResource("1_saskh")
+region = Rect2(230, 40, 10, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_68tua"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.6,
+"texture": SubResource("AtlasTexture_eveqt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d2m7c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ghgxn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hqf16")
+}, {
+"duration": 1.6,
+"texture": SubResource("AtlasTexture_8sssf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t74gp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fcq25")
+}],
+"loop": true,
+"name": &"fireAnimation",
+"speed": 8.0
+}]
+
+[sub_resource type="Curve" id="Curve_bo8q7"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.6388889, 0.704698), 0.0, 0.0, 0, 0, Vector2(0.99242425, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_05mlo"]
+curve = SubResource("Curve_bo8q7")
+
+[sub_resource type="Gradient" id="Gradient_a4rwj"]
+colors = PackedColorArray(1, 0.24833333, 0.18, 1, 1, 0.73333335, 0.5411765, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_8xa6f"]
+gradient = SubResource("Gradient_a4rwj")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_okiwk"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.0
+radial_velocity_min = 3.9999776
+radial_velocity_max = 15.999977
+color_ramp = SubResource("GradientTexture1D_8xa6f")
+alpha_curve = SubResource("CurveTexture_05mlo")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qjb1u"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 4.0
+initial_velocity_max = 8.0
+radial_velocity_min = 3.9999776
+radial_velocity_max = 15.999977
+color = Color(0.6784314, 0.61960787, 0.5764706, 1)
+alpha_curve = SubResource("CurveTexture_05mlo")
+
+[node name="FireBlockSprite" type="AnimatedSprite2D" unique_id=1346666511]
+sprite_frames = SubResource("SpriteFrames_68tua")
+animation = &"fireAnimation"
+autoplay = "fireAnimation"
+script = ExtResource("1_k4177")
+OverrideColor = true
+metadata/_custom_type_script = "uid://dvsu3pu6fsw5v"
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=1061513967]
+color = Color(1, 0.73333335, 0.5411765, 1)
+energy = 0.18
+shadow_enabled = true
+texture = ExtResource("3_25myv")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1568527752]
+amount = 12
+lifetime = 1.2
+process_material = SubResource("ParticleProcessMaterial_okiwk")
+
+[node name="GPUParticles2D2" type="GPUParticles2D" parent="." unique_id=1168334173]
+show_behind_parent = true
+amount = 6
+process_material = SubResource("ParticleProcessMaterial_qjb1u")

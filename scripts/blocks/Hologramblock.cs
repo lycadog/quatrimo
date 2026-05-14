@@ -5,9 +5,13 @@ using System;
 public partial class Hologramblock : Block
 {
     [Export] PointLight2D glowy;
-    public override void FallingBlockAttemptingPlacementOnUs(Block fallingBlock)
+
+    public override void CollidedWithBlock(Block otherBlock, bool attemptingPlacement = false)
     {
-		QueueFree();
+        if (IsPlaced && attemptingPlacement && otherBlock is not Hologramblock)
+        {
+            Delete();
+        }
     }
 
     public override void SetColor(float hue, float sat, float val)

@@ -1,27 +1,10 @@
-[gd_scene format=3 uid="uid://ctw2ssdea4ogt"]
+[gd_scene format=3 uid="uid://dggdcwjwy2bfe"]
 
-[ext_resource type="PackedScene" uid="uid://blmpsbuqvqptb" path="res://scenes/block/Block.tscn" id="1_3so8r"]
-[ext_resource type="Script" uid="uid://ila157w5moha" path="res://scenes/block/Cursedblock.cs" id="2_s7t73"]
+[ext_resource type="PackedScene" uid="uid://dm7g0yeneuekf" path="res://scenes/block/BasicBlock.tscn" id="1_fw7uf"]
+[ext_resource type="Script" uid="uid://ila157w5moha" path="res://scripts/blocks/Cursedblock.cs" id="2_djhke"]
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_s7t73"]
-resource_local_to_scene = true
-load_path = "res://.godot/imported/atlas.png-56af98f5cfc24889da848b0c8a9b2c5e.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_js22r"]
-resource_local_to_scene = true
-load_path = "res://.godot/imported/atlas.png-56af98f5cfc24889da848b0c8a9b2c5e.ctex"
-
-[node name="Block" unique_id=537382246 instance=ExtResource("1_3so8r")]
-script = ExtResource("2_s7t73")
+[node name="CursedBlock" unique_id=449507831 instance=ExtResource("1_fw7uf")]
+script = ExtResource("2_djhke")
 type = 1
 RemovedOnScoring = false
 OverrideTexture = true
-
-[node name="SpriteLayer1" parent="." index="0" unique_id=602452335]
-texture = SubResource("CompressedTexture2D_s7t73")
-region_rect = Rect2(140, 0, 10, 10)
-
-[node name="SpriteLayer2" parent="SpriteLayer1" index="0" unique_id=212297080]
-visible = true
-texture = SubResource("CompressedTexture2D_js22r")
-region_rect = Rect2(140, 10, 10, 10)

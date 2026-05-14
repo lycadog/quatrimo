@@ -2,11 +2,10 @@
 using Godot;
 using System;
 
-public class Cell(int x, int y, Vector2 realPosition)
+public class Cell(int x, int y)
 {
     public int x = x, y = y;
-    public Vector2 RealPosition = realPosition;
-
+    public Vector2 RealPosition = new(x * 10, -y * 10);
     Block _HeldBlock;
     public Block HeldBlock { get => _HeldBlock; set => SetBlock(value); }
 
@@ -32,10 +31,34 @@ public class Cell(int x, int y, Vector2 realPosition)
             bool staleScorable = Scorable;
             _ScoreFlag = value;
             ScorabilityUpdated(staleScorable); //this value may have changed so let's check if we should run our events
-
         }
     }
 
+    public bool Solid
+    {
+        get
+        {
+            if (_Occupied) { return HeldBlock.SolidWhenPlaced; }
+            return false;
+        }
+    }
+    public bool AbsoluteSolid
+    {
+        get
+        {
+            if (_Occupied) { return HeldBlock.AbsoluteSolid; }
+            return false;
+        }
+    }
+
+    public bool JustPlaced
+    {
+        get
+        {
+            if (_Occupied) { return HeldBlock.JustPlaced; }
+            return false;
+        }
+    }
     public double ScoreValue
     {
         get
@@ -56,10 +79,10 @@ public class Cell(int x, int y, Vector2 realPosition)
             else
             {
                 GD.PushWarning($"Attempted to give score value {value} to empty block!");
+                //todo: maybe remove this warning
             }
         }
     }
-
     public bool Scorable
     {
         get
@@ -71,16 +94,6 @@ public class Cell(int x, int y, Vector2 realPosition)
             return false;
         }
     }
-
-    public bool JustPlaced
-    {
-        get
-        {
-            if (_Occupied) { return HeldBlock.JustPlaced; }
-            return false;
-        }
-    }
-
     public bool IsScored
     {
         get
@@ -89,7 +102,6 @@ public class Cell(int x, int y, Vector2 realPosition)
             return false;
         }
     }
-
     public bool FilledInOnScoring
     {
         get
@@ -115,7 +127,6 @@ public class Cell(int x, int y, Vector2 realPosition)
     public event Action BecameScorable;
     public event Action BecameNonScorable;
     public event Action UpdatedBoard;
-    public event Action<Block> DeletedBlock;
     public event Action<Cell> Scored;
 
     public int LowerDistance
@@ -157,52 +168,52 @@ public class Cell(int x, int y, Vector2 realPosition)
     /// <summary>
     /// Place new block inside this cell
     /// </summary>
-    /// <param name="block"></param>
-    public void PlaceBlock(Block block)
+    /// <param name="newBlock"></param>
+    public void PlaceBlock(Block newBlock)
     {
 
-        if (!Occupied)
+        //if we're empty, OR our current block is going to be deleted: we can safely place the new block here
+        if (!Occupied || HeldBlock.IsQueuedForDeletion())
         {
-            SetBlock(block);
+            SetBlock(newBlock);
             return;
         }
 
         GD.Print("Placement clipping behavior ran!");
 
-        //clipping shenanigans below
-        //basically, we want to run through every possible method to ensure SOMETHING handles this.
-        //we need to run falling methods bc slamming blocks runs before normal falling methods can run
+        //we do this so we can keep a reference to the block if it deletes itself from our HeldBlock reference
+        Block oldBlock = HeldBlock;
 
-        //this is terrible. we have no way of knowing if things resolved properly so we have to check everything.
-        //TODO fix this mess
+        oldBlock.CollidedWithBlock(newBlock, true);
+        newBlock.CollidedWithBlock(oldBlock, true);
 
-        HeldBlock.CollidedWithBlockWhilePlaced(block);
+        //run both collision methods
+        //if the held block isn't deleted, we will delete the falling block and return
 
-        if (block.IsQueuedForDeletion()) { return; }
-        else if (HeldBlock.IsQueuedForDeletion()) { SetBlock(block); return; } //if any of our blocks have been deleted, return
+        //held block is null
 
-        HeldBlock.FallingBlockAttemptingPlacementOnUs(block);
-
-        if(!HeldBlock.IsQueuedForDeletion() && !block.IsQueuedForDeletion())
+        if (Occupied) //if we're still occupied: delete falling block
         {
-            //if nothing gets resolved, just delete the falling block and carry on
-            block.QueueFree();
+            GD.Print("Deleting falling block on clipping!");
+            newBlock.Delete();
+            return;
+        }
+        else if (newBlock.IsQueuedForDeletion())
+        {
             return;
         }
 
-        if (!block.IsQueuedForDeletion())
-        {
-            SetBlock(block); //if our falling block isn't queued for deletion the other block is. so let's place
-        }
+        //if the held block was deleted, we check if the falling block was deleted.
+        //if the falling block wasn't deleted then we can place it!
+    
+        SetBlock(newBlock);
     }
 
     public void DeleteBlock()
     {
         if (Occupied)
         {
-            DeletedBlock?.Invoke(HeldBlock);
-            _HeldBlock.QueueFree();
-            RemoveBlock();
+            _HeldBlock.Delete();
         }
         //if not occupied: cool! we can just chill
     }
@@ -217,10 +228,13 @@ public class Cell(int x, int y, Vector2 realPosition)
         _HeldBlock = block;
         _HeldBlock.EmitSignal(Block.SignalName.MovedCells);
         _HeldBlock.Position = RealPosition; //Update our blocks position to ensure it is placed right
-        _HeldBlock.boardPos = new(x, y);
+        _HeldBlock.BoardPos = new(x, y);
+
+        _HeldBlock.UpdateOutsideBoardSprite();
+
         Occupied = true;
 
-        _HeldBlock.TreeExiting += RemoveBlock;
+        _HeldBlock.Deleted += RemoveBlock;
         _HeldBlock.MovedCells += RemoveBlock;
         //If our block is deleted or *gasp* abandons us for a new cell! We need to discard our connections to it
 
@@ -230,7 +244,7 @@ public class Cell(int x, int y, Vector2 realPosition)
     {
         if (!Occupied) { GD.PushError("Attempted to remove block from unoccupied block!"); return; }
 
-        _HeldBlock.TreeExiting -= RemoveBlock;
+        _HeldBlock.Deleted -= RemoveBlock;
         _HeldBlock.MovedCells -= RemoveBlock;
 
         Occupied = false;
