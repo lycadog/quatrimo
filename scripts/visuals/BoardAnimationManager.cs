@@ -13,13 +13,32 @@ public partial class BoardAnimationManager : Node
 	bool AlreadyAnimating = false;
 
 	[Signal] public delegate void BoardAnimationCompletedEventHandler();
-
-	//this class is primarily a non-
-
+	[Signal] public delegate void TurnEndAnimationsCompletedEventHandler();
 
 
+	public void AddTurnEndAnimation()
+	{
+		TotalTurnEndAnimations++;
+	}
 
-	public void ClearAnimations()
+	public void TurnEndAnimationCompleted()
+	{
+		CompletedTurnEndAnimations++;
+		if(CompletedTurnEndAnimations >= TotalTurnEndAnimations)
+		{
+			EmitSignalTurnEndAnimationsCompleted();
+		}
+	}
+
+    public void StartEndOfTurnWaiting()
+    {
+        if (TotalTurnEndAnimations == 0)
+		{
+			EmitSignal(SignalName.TurnEndAnimationsCompleted);
+		}
+    }
+
+    public void ClearAnimations()
 	{
 		CompletedAnimations = 0;
 		TotalAnimations = 0;
@@ -35,6 +54,7 @@ public partial class BoardAnimationManager : Node
 
 	public void AnimationCompleted()
 	{
+		//GD.Print($"Completed animation {CompletedAnimations}/{TotalAnimations}");
 		CompletedAnimations++;
 
 		if(CompletedAnimations == TotalAnimations)

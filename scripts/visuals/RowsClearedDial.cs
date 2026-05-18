@@ -1,15 +1,74 @@
 using Godot;
 using System;
 
-public partial class RowsClearedDial : Node2D
+public partial class RowsClearedDial : Control
 {
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+	const double ScrollingTime = 0.2;
+
+	[Signal] public delegate void StartedScrollingEventHandler();
+    [Signal] public delegate void StoppedScrollingEventHandler();
+	[Signal] public delegate void ReachedNumberEventHandler(short number);
+
+    [Export] VBoxContainer Container;
+
+    short RowsCleared = 0;
+	short queuedRows = 0;
+
+    bool Scrolling = false;
+
+	public void AddRow()
 	{
+		if(RowsCleared >= 11)
+		{
+			return;
+		}
+
+		if (!Scrolling)
+		{
+			RowsCleared++;
+			EmitSignalStartedScrolling();
+			StartScrolling();
+			return;
+		}
+		queuedRows++;
+    }
+
+	void StartScrolling()
+	{
+		Scrolling = true;
+        GetTree().CreateTween().TweenProperty(Container, "position", new Vector2(0, 16), ScrollingTime)
+			.AsRelative().SetTrans(Tween.TransitionType.Cubic).Finished += DoneScrolling;
+    }
+
+	void DoneScrolling()
+	{
+		EmitSignalReachedNumber(RowsCleared);
+
+		//if we have more to scroll, go and do it!
+		if(queuedRows > 0)
+		{
+			queuedRows--;
+			StartScrolling();
+			return;
+		}
+
+		//if we're here we're done scrolling!
+
+		Scrolling = false;
+		EmitSignalStoppedScrolling();
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+	public void Reset()
 	{
-	}
+		if(RowsCleared == 0 && !Scrolling)
+		{
+			return;
+		}
+
+		RowsCleared = 0;
+		queuedRows = 0;
+        Tween tween = GetTree().CreateTween();
+        tween.TweenProperty(Container, "position", new Vector2(0, -175), 1)
+			.SetTrans(Tween.TransitionType.Bounce).SetEase(Tween.EaseType.Out);
+    }
 }

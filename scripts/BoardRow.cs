@@ -38,7 +38,6 @@ public partial class BoardRow(int y, int boardWidth) : Node
         }
     }
 
-
     public void AttemptScoring()
     {
         if (Scorable)

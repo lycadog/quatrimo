@@ -18,8 +18,25 @@ public partial class Block : Area2D
     [Signal] public delegate void MovedCellsEventHandler();
     [Signal] public delegate void DeletedEventHandler();
 
+    bool _IsPlaced;
+    public bool IsPlaced
+    {
+        get => _IsPlaced;
+        set
+        {
+            _IsPlaced = true;
+
+            SetCollisionLayerValue(1, !value);
+            SetCollisionLayerValue(2, value);
+
+            //if we're placed we want to be checking falling blocks (layer 1) and be solid on layer 2, but not layer 1
+            SetCollisionMaskValue(1, value);
+            SetCollisionMaskValue(2, !value);
+        }
+    }
+
+
     public bool JustPlaced = false;
-    public bool IsPlaced = false;
     public bool IsScored = false;
     public bool IsTicked = false;
     bool ForceHidden = false;
@@ -70,7 +87,8 @@ public partial class Block : Area2D
     protected PointLight2D WhiteFlashLight;
 
     static readonly CompressedTexture2D Atlas = ResourceLoader.Load<CompressedTexture2D>("uid://dib0bjbdg8no8");
-    static readonly CompressedTexture2D GlowTexture = ResourceLoader.Load<CompressedTexture2D>("uid://bgnyfnd1av01w");
+    static readonly CompressedTexture2D GlowTexture64 = ResourceLoader.Load<CompressedTexture2D>("uid://bgnyfnd1av01w");
+    static readonly CompressedTexture2D GlowTexture128 = ResourceLoader.Load<CompressedTexture2D>("uid://bgnyfnd1av01w");
 
 
     const float PlacementFlashLightEnergy = .12f; //brightness of placement flash's light
@@ -80,6 +98,7 @@ public partial class Block : Area2D
     public override void _Ready()
 	{
         CollisionData.Solid = SolidWhenFalling;
+        IsPlaced = false;
 
         //Get drop preview sprite. If nonsolid we have a different sprite
         Rect2 DropPreviewRect = new(60, 0, 10, 10);
@@ -117,7 +136,8 @@ public partial class Block : Area2D
         {
             Name = "WhiteFlashLight",
             Energy = PlacementFlashLightEnergy,
-            Texture = GlowTexture
+            Texture = GlowTexture64,
+            Enabled = false
         };
 
         AddChild(AboveBoardIndicatorSprite);
@@ -203,8 +223,6 @@ public partial class Block : Area2D
         //set this AFTER we place ourselves! very important for collision events!
         IsPlaced = true;
         JustPlaced = true;
-
-
     }
 
     protected virtual void RunPlacementBehavior()
@@ -303,15 +321,21 @@ public partial class Block : Area2D
         ToggleVisibility(false);
 
         WhiteFlashSprite.Visible = true;
+        WhiteFlashLight.Enabled = true;
 
         Tween tween = GetTree().CreateTween().SetParallel();
-        tween.TweenCallback(Callable.From(() => WhiteFlashSprite.Visible = false)).SetDelay(PlacementFlashLength);
+        tween.TweenCallback(Callable.From(() => WhiteFlashSprite.Visible = false)).SetDelay(PlacementFlashLength)
+            .Finished += WhiteFlashEnded;
+
+        //i think changing the energy harms performance
+        /*
         tween.TweenProperty(WhiteFlashLight, "energy", 0, PlacementFlashLength)
-            .Finished += WhiteFlashEnded; //reset brightness after animation is done
+            .Finished += WhiteFlashEnded; //reset brightness after animation is done*/
     }
     void WhiteFlashEnded()
     {
-        WhiteFlashLight.Energy = PlacementFlashLightEnergy;
+        //WhiteFlashLight.Energy = PlacementFlashLightEnergy;
+        WhiteFlashLight.Enabled = false;
         ToggleVisibility(true); //this will break shit prob
 
     }
@@ -331,7 +355,7 @@ public partial class Block : Area2D
         if (OverrideColor) { return; }
         BlockSprite.SetColor(hue, sat, val);
     }
-    public void ToggleVisibility(bool visible)
+    public virtual void ToggleVisibility(bool visible)
     {
         if (ForceHidden)
         {

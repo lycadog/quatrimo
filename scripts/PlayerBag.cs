@@ -30,7 +30,7 @@ public class PlayerBag
 
     public PieceCard DrawRandomCard()
     {
-        OnDraw();
+        CheckIfWeightShouldReset();
 
         var entry = PiecePool.GetRandomEntry();
         entry.SubtractWeight(2);
@@ -41,8 +41,9 @@ public class PlayerBag
     /// <summary>
     /// Whenever we draw we need to run this so we can increase piece weight
     /// </summary>
-    public void OnDraw()
+    void CheckIfWeightShouldReset()
     {
+        //todo: update this to use total piece baseweight in the calculation instead !!!!
         if(drawCounter >= Pieces.Count * 2)
         {
             ResetWeight();

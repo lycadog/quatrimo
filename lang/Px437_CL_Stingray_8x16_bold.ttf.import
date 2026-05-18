@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://dge055gh3jw0j"
-path="res://.godot/imported/CL_EagleIII_8x16.ttf-f54d919e529309134b7fba4f3d531205.fontdata"
+uid="uid://b5vpeyvrpesfd"
+path="res://.godot/imported/Px437_CL_Stingray_8x16_bold.ttf-7381ba78bd285bce71dd8cc6533cac8b.fontdata"
 
 [deps]
 
-source_file="res://lang/CL_EagleIII_8x16.ttf"
-dest_files=["res://.godot/imported/CL_EagleIII_8x16.ttf-f54d919e529309134b7fba4f3d531205.fontdata"]
+source_file="res://lang/Px437_CL_Stingray_8x16_bold.ttf"
+dest_files=["res://.godot/imported/Px437_CL_Stingray_8x16_bold.ttf-7381ba78bd285bce71dd8cc6533cac8b.fontdata"]
 
 [params]
 

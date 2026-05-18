@@ -17,12 +17,17 @@ public partial class FallingPiece : Node2D
 
     public Vector2I Dimensions;
 
-
     public FallingPiece(Block[] newBlocks, Vector2I dimensions)
     {
         foreach(var block in newBlocks)
         {
             AddBlock(block);
+
+            //check if we should offset! we offset if any piece has a non-integer boardposition (5 instead of 10)
+            if(block.Position.X % 10 != 0)
+            {
+                Offset = new(5, 5);
+            }
         }
 
         Dimensions = dimensions;
@@ -72,6 +77,11 @@ public partial class FallingPiece : Node2D
 
     public void StartFall(Vector2I StartingPosition)
 	{
+        if(Offset.X != 0)
+        {
+            //if we're weird and are using an offset: we are +1 +1 from our intended position, so we need to change it!
+            StartingPosition += new Vector2I(-1, 0);
+        }
         BoardPos = StartingPosition;
         Falling = true;
         UpdateCollision();
@@ -265,6 +275,7 @@ public partial class FallingPiece : Node2D
         else if (Input.IsActionPressed("Up"))
         {
             fallingCounter = 0;
+            placementCounter = 0;
         }
 
         if (Input.IsActionPressed("Left"))

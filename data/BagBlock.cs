@@ -3,13 +3,15 @@
 using Godot;
 using System;
 
-public class BagBlock(BlockType Type, Vector2I Position)
+public class BagBlock(BlockType Type, Vector2 Position)
 {
     public CardBlockSprite GetCardPreviewSprite(float h, float s, float v)
     {
         var sprite = (CardBlockSprite) CardBlocks [(int)Type] .Instantiate();
 
-        sprite.Position = Position * 7;
+        Vector2I flooredPosition = new((int)Position.X, (int)Position.Y);
+        
+        sprite.Position = Position.Floor() * 7;
 
         sprite.SetColor(h, s, v);
 
@@ -22,7 +24,6 @@ public class BagBlock(BlockType Type, Vector2I Position)
         block.Position = Position * 10;
         block.SetColor(h, s, v);
         block.SetTexture(rect);
-        //todo: this may need a local pos, but i dont think so
 
         return block;
     }

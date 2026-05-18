@@ -13,6 +13,7 @@ config_version=5
 config/name="Quatrimo"
 run/main_scene="uid://pw611g77o37k"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
+run/max_fps=60
 boot_splash/use_filter=false
 config/icon="res://icon.svg"
 
@@ -33,6 +34,10 @@ mouse_cursor/tooltip_position_offset=Vector2(1, 1)
 [dotnet]
 
 project/assembly_name="Quatrimo"
+
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
 
 [input]
 
@@ -147,8 +152,9 @@ Debug5={
 
 [layer_names]
 
-2d_physics/layer_1="Blocks"
-2d_physics/layer_2="Board Boundary"
+2d_physics/layer_1="Falling Blocks"
+2d_physics/layer_2="Placed Blocks"
+2d_physics/layer_3="Board Boundary"
 
 [physics]
 

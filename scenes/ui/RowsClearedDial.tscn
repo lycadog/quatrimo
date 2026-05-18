@@ -1,0 +1,586 @@
+[gd_scene format=3 uid="uid://3g8r3vdcymf3"]
+
+[ext_resource type="Script" uid="uid://dshxaoamgt7t5" path="res://scripts/visuals/RowsClearedDial.cs" id="1_1w2dp"]
+[ext_resource type="FontFile" uid="uid://cg88y1bvnly6p" path="res://Px437_ToshibaSat_8x16.ttf" id="2_16atd"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_55qdc"]
+line_spacing = 0.0
+font = ExtResource("2_16atd")
+font_color = Color(0, 0, 0, 1)
+outline_size = 2
+shadow_color = Color(1, 0, 0, 1)
+stacked_shadow_count = 1
+stacked_shadow_0/offset = Vector2(-1, -1)
+stacked_shadow_0/color = Color(0, 0.88235295, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_5dwat"]
+line_spacing = 0.0
+font = ExtResource("2_16atd")
+font_color = Color(0.99, 0.99, 0.99, 1)
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_16atd"]
+line_spacing = 0.0
+font = ExtResource("2_16atd")
+font_color = Color(0.78, 0.6942, 0.6942, 1)
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Gradient" id="Gradient_p7dbb"]
+offsets = PackedFloat32Array(0.16595745, 1)
+colors = PackedColorArray(0.82, 0.82, 0.82, 0.3764706, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_3csug"]
+gradient = SubResource("Gradient_p7dbb")
+width = 14
+height = 8
+fill_to = Vector2(0, 1)
+metadata/_snap_enabled = true
+
+[sub_resource type="Gradient" id="Gradient_dlo80"]
+colors = PackedColorArray(0, 0, 0, 0.61960787, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_y1b1p"]
+gradient = SubResource("Gradient_dlo80")
+width = 14
+height = 8
+fill_from = Vector2(0, 1)
+fill_to = Vector2(0, 0)
+metadata/_snap_enabled = true
+
+[node name="RowsClearedDial" type="Control" unique_id=337877635 node_paths=PackedStringArray("Container")]
+light_mask = 0
+layout_mode = 3
+anchors_preset = 0
+offset_right = 14.0
+offset_bottom = 48.0
+script = ExtResource("1_1w2dp")
+Container = NodePath("ClippingRect/VBoxContainer")
+
+[node name="BorderRect" type="ColorRect" parent="." unique_id=2041823665]
+layout_mode = 0
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 15.0
+offset_bottom = 50.0
+color = Color(0.0803, 0.082279995, 0.11, 1)
+
+[node name="ClippingRect" type="ColorRect" parent="." unique_id=837042089]
+clip_children = 1
+light_mask = 0
+layout_mode = 0
+offset_right = 14.0
+offset_bottom = 49.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ClippingRect" unique_id=1819890435]
+light_mask = 0
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -224.0
+offset_right = 7.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="X3" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=1644487945]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/X3" unique_id=1788692022]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.81960785, 0.81960785, 0.81960785, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/X3/ColorRect" unique_id=643347935]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "X"
+label_settings = SubResource("LabelSettings_55qdc")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="X2" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=806832902]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/X2" unique_id=1665863278]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.81960785, 0.81960785, 0.81960785, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/X2/ColorRect" unique_id=1890969146]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "X"
+label_settings = SubResource("LabelSettings_55qdc")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="X1" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=680431067]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/X1" unique_id=2060331094]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.81960785, 0.81960785, 0.81960785, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/X1/ColorRect" unique_id=1721983055]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "X"
+label_settings = SubResource("LabelSettings_55qdc")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="9" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=104605827]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+color = Color(0.9411765, 0.4, 0, 1)
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/9" unique_id=458140062]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.972549, 0.59607846, 0.32156864, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/9/ColorRect" unique_id=844228822]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "9"
+label_settings = SubResource("LabelSettings_5dwat")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="8" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=1408548890]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+color = Color(0.9411765, 0.4, 0, 1)
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/8" unique_id=276533372]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.972549, 0.59607846, 0.32156864, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/8/ColorRect" unique_id=420757110]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "8"
+label_settings = SubResource("LabelSettings_5dwat")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="7" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=940055689]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+color = Color(0.015686275, 0.49803922, 0.42745098, 1)
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/7" unique_id=1898561383]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.21960784, 0.7764706, 0.5176471, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/7/ColorRect" unique_id=1413918479]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "7"
+label_settings = SubResource("LabelSettings_5dwat")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="6" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=371926019]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+color = Color(0.015686275, 0.49803922, 0.42745098, 1)
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/6" unique_id=209036192]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.21960784, 0.7764706, 0.5176471, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/6/ColorRect" unique_id=925214992]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "6"
+label_settings = SubResource("LabelSettings_5dwat")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="5" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=1263487812]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+color = Color(0.5764706, 0.07450981, 0.21960784, 1)
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/5" unique_id=915030512]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.7764706, 0.21960784, 0.38039216, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/5/ColorRect" unique_id=1043402031]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "5"
+label_settings = SubResource("LabelSettings_5dwat")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="4" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=2047000058]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+color = Color(0.5764706, 0.07450981, 0.21960784, 1)
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/4" unique_id=657643417]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.7764706, 0.21960784, 0.38039216, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/4/ColorRect" unique_id=443247370]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "4"
+label_settings = SubResource("LabelSettings_5dwat")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="3" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=1771900746]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+color = Color(0.2901961, 0.29803923, 0.5647059, 1)
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/3" unique_id=1094299823]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.16078432, 0.13725491, 0.35686275, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/3/ColorRect" unique_id=1559508481]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "3"
+label_settings = SubResource("LabelSettings_5dwat")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="2" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=926691016]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+color = Color(0.2901961, 0.29803923, 0.5647059, 1)
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/2" unique_id=306403183]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.16078432, 0.13725491, 0.35686275, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/2/ColorRect" unique_id=647183188]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "2"
+label_settings = SubResource("LabelSettings_5dwat")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="1" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=377863610]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+color = Color(0.2901961, 0.29803923, 0.5647059, 1)
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/1" unique_id=1213924158]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.16078432, 0.13725491, 0.35686275, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/1/ColorRect" unique_id=1476055066]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "1"
+label_settings = SubResource("LabelSettings_5dwat")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="0" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=1817724407]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+color = Color(0.46666667, 0.46666667, 0.46666667, 1)
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/0" unique_id=327181229]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.13725491, 0.13725491, 0.13725491, 1)
+
+[node name="Label" type="Label" parent="ClippingRect/VBoxContainer/0/ColorRect" unique_id=1740992738]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 4.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0"
+label_settings = SubResource("LabelSettings_16atd")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="-1" type="ColorRect" parent="ClippingRect/VBoxContainer" unique_id=496451232]
+custom_minimum_size = Vector2(14, 16)
+layout_mode = 2
+color = Color(0.2901961, 0.2901961, 0.2901961, 1)
+
+[node name="ColorRect" type="ColorRect" parent="ClippingRect/VBoxContainer/-1" unique_id=1189459786]
+custom_minimum_size = Vector2(12, 15)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_right = 6.0
+offset_bottom = 15.0
+grow_horizontal = 2
+color = Color(0.13725491, 0.13725491, 0.13725491, 1)
+
+[node name="LightRect" type="TextureRect" parent="." unique_id=246170684]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -48.0
+offset_right = 7.0
+offset_bottom = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("GradientTexture2D_3csug")
+
+[node name="DarkRect" type="TextureRect" parent="." unique_id=1328948364]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -16.0
+offset_right = 7.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("GradientTexture2D_y1b1p")

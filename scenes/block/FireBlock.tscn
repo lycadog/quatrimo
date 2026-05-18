@@ -8,7 +8,7 @@ size = Vector2(16, 16)
 
 [node name="FireBlock" unique_id=449507831 node_paths=PackedStringArray("burnArea") instance=ExtResource("1_n078w")]
 script = ExtResource("2_tbxw0")
-burnArea = NodePath(".")
+burnArea = NodePath("BurnArea")
 type = 9
 SolidWhenPlaced = false
 ScoreValue = 0.0
@@ -16,8 +16,12 @@ PriorityTicker = true
 OverrideTexture = true
 OverrideColor = true
 
-[node name="BurnShape" type="CollisionShape2D" parent="." index="1" unique_id=1654070017]
-shape = SubResource("RectangleShape2D_0myh7")
-
-[node name="LightOccluder2D" parent="." index="2" unique_id=1415090328]
+[node name="LightOccluder2D" parent="." index="1" unique_id=1415090328]
 occluder_light_mask = 0
+
+[node name="BurnArea" type="Area2D" parent="." index="2" unique_id=274512755]
+collision_layer = 0
+collision_mask = 2
+
+[node name="BurnShape" type="CollisionShape2D" parent="BurnArea" index="0" unique_id=1654070017]
+shape = SubResource("RectangleShape2D_0myh7")

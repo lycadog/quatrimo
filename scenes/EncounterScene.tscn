@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://bpo3d227m28dj" path="res://scenes/bag/playerHand.tscn" id="6_u7t6i"]
 [ext_resource type="FontFile" uid="uid://cg88y1bvnly6p" path="res://Px437_ToshibaSat_8x16.ttf" id="7_oehty"]
 [ext_resource type="Shader" uid="uid://bymdcljo62wwu" path="res://shader/scanlinesShader.gdshader" id="8_us6u5"]
+[ext_resource type="Script" uid="uid://481h7xwr5q1f" path="res://scripts/visuals/BoardAnimationManager.cs" id="9_ioiev"]
+[ext_resource type="PackedScene" uid="uid://3g8r3vdcymf3" path="res://scenes/ui/RowsClearedDial.tscn" id="10_kciur"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3hoax"]
 shader = ExtResource("8_us6u5")
@@ -28,14 +30,6 @@ font_size = 12
 outline_size = 2
 outline_color = Color(0.18199989, 0, 0.28, 1)
 shadow_color = Color(0.58, 0.02320001, 0.39439988, 1)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ylu0l"]
-atlas = ExtResource("4_ioiev")
-region = Rect2(110, 35, 14, 39)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kciur"]
-atlas = ExtResource("4_ioiev")
-region = Rect2(110, 48, 14, 13)
 
 [node name="EncounterScene" type="Control" unique_id=556453924]
 layout_mode = 3
@@ -150,11 +144,11 @@ offset_right = 47.0
 offset_bottom = 23.0
 color = Color(0.11513337, 0.07700001, 0.22, 1)
 
-[node name="Score2" type="NinePatchRect" parent="." unique_id=211670477]
+[node name="MultBox" type="NinePatchRect" parent="." unique_id=211670477]
 layout_mode = 0
-offset_left = 353.0
+offset_left = 380.0
 offset_top = 136.0
-offset_right = 412.0
+offset_right = 439.0
 offset_bottom = 160.0
 texture = ExtResource("4_ioiev")
 region_rect = Rect2(70, 40, 30, 30)
@@ -163,7 +157,7 @@ patch_margin_top = 8
 patch_margin_right = 8
 patch_margin_bottom = 8
 
-[node name="MultLabel" type="Label" parent="Score2" unique_id=606062256]
+[node name="MultLabel" type="Label" parent="MultBox" unique_id=606062256]
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -182,9 +176,9 @@ autowrap_mode = 2
 
 [node name="Score" type="NinePatchRect" parent="." unique_id=396360349]
 layout_mode = 0
-offset_left = 340.0
+offset_left = 367.0
 offset_top = 94.0
-offset_right = 427.0
+offset_right = 454.0
 offset_bottom = 124.0
 texture = ExtResource("4_ioiev")
 region_rect = Rect2(40, 40, 30, 30)
@@ -212,59 +206,35 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="Board" parent="." unique_id=30435418 node_paths=PackedStringArray("ScoreLabel") instance=ExtResource("5_knim7")]
+[node name="Board" parent="." unique_id=30435418 node_paths=PackedStringArray("AnimationManager", "ScoreLabel", "RowsClearedDial") instance=ExtResource("5_knim7")]
 layout_mode = 1
+AnimationManager = NodePath("AnimationManager")
 ScoreLabel = NodePath("../Score/ScoreLabel")
+RowsClearedDial = NodePath("../RowsClearedDial")
 
-[node name="HandAnchor" type="Control" parent="." unique_id=1015045901]
+[node name="AnimationManager" type="Node" parent="Board" unique_id=1746969919]
+script = ExtResource("9_ioiev")
+
+[node name="Hand" type="Control" parent="." unique_id=1015045901]
 anchors_preset = 0
 offset_left = 96.0
 offset_top = 120.0
 offset_right = 165.0
 offset_bottom = 120.0
 
-[node name="PlayerHand" parent="HandAnchor" unique_id=73958776 instance=ExtResource("6_u7t6i")]
+[node name="PlayerHand" parent="Hand" unique_id=73958776 instance=ExtResource("6_u7t6i")]
 layout_mode = 0
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=88108828]
+[node name="RowsClearedDial" parent="." unique_id=337877635 instance=ExtResource("10_kciur")]
 layout_mode = 0
-offset_left = 375.0
-offset_top = 166.0
-offset_right = 389.0
-offset_bottom = 205.0
-texture = SubResource("AtlasTexture_ylu0l")
+offset_left = 338.0
+offset_top = 108.0
+offset_right = 352.0
+offset_bottom = 156.0
 
-[node name="Polygon2D" type="Polygon2D" parent="." unique_id=1580761197]
-clip_children = 1
-position = Vector2(419, 191)
-polygon = PackedVector2Array(-4.0000076, -19.999998, 3.9999924, -19.999998, 3.9999924, -18.999998, 4.9999924, -18.999998, 4.9999924, -15.999997, 5.9999924, -15.999997, 5.9999924, -10.999997, 6.9999924, -10.999997, 6.9999924, 10.000005, 5.9999924, 10.000005, 5.9999924, 15.000005, 4.9999924, 15.000005, 4.9999924, 18.000004, 3.9999924, 18.000004, 3.9999924, 19.000004, -4.0000076, 19.000004, -4.0000076, 18.000004, -5.0000076, 18.000004, -5.0000076, 15.000005, -6.0000076, 15.000005, -6.0000076, 10.000005, -7.0000076, 10.000005, -7.0000076, -10.999997, -6.0000076, -10.999997, -6.0000076, -15.999997, -5.0000076, -15.999997, -5.0000076, -18.999998, -4.0000076, -18.999998)
-uv = PackedVector2Array(113, 35, 121, 35, 121, 36, 122, 36, 122, 39, 123, 39, 123, 44, 124, 44, 124, 65, 123, 65, 123, 70, 122, 70, 122, 73, 121, 73, 121, 74, 113, 74, 113, 73, 112, 73, 112, 70, 111, 70, 111, 65, 110, 65, 110, 44, 111, 44, 111, 39, 112, 39, 112, 36, 113, 36)
-
-[node name="TextureRect3" type="TextureRect" parent="Polygon2D" unique_id=1599009949]
-modulate = Color(0.52748, 0.52748007, 0.52747977, 1)
-offset_left = -7.0
-offset_top = 7.0
-offset_right = 7.0
-offset_bottom = 20.0
-scale = Vector2(1, 0.85)
-texture = SubResource("AtlasTexture_kciur")
-
-[node name="TextureRect" type="TextureRect" parent="Polygon2D" unique_id=640455421]
-offset_left = -7.0
-offset_top = -18.0
-offset_right = 7.0
-offset_bottom = -5.0
-scale = Vector2(1, 0.765)
-texture = SubResource("AtlasTexture_kciur")
-
-[node name="TextureRect2" type="TextureRect" parent="Polygon2D" unique_id=207761899]
-modulate = Color(0.7430622, 0.7430624, 0.74306226, 1)
-offset_left = -7.0
-offset_top = -7.0
-offset_right = 7.0
-offset_bottom = 6.0
-texture = SubResource("AtlasTexture_kciur")
-
-[connection signal="PiecePlaced" from="Board" to="HandAnchor/PlayerHand" method="OnPiecePlaced"]
-[connection signal="TurnStarted" from="Board" to="HandAnchor/PlayerHand" method="OnTurnStart"]
-[connection signal="CardPlayed" from="HandAnchor/PlayerHand" to="Board" method="PlayCard"]
+[connection signal="PiecePlaced" from="Board" to="Hand/PlayerHand" method="OnPiecePlaced"]
+[connection signal="TurnStarted" from="Board" to="Hand/PlayerHand" method="OnTurnStart"]
+[connection signal="TurnEndAnimationsCompleted" from="Board/AnimationManager" to="Board" method="EndTurn"]
+[connection signal="CardPlayed" from="Hand/PlayerHand" to="Board" method="PlayCard"]
+[connection signal="StartedScrolling" from="RowsClearedDial" to="Board/AnimationManager" method="AddTurnEndAnimation"]
+[connection signal="StoppedScrolling" from="RowsClearedDial" to="Board/AnimationManager" method="TurnEndAnimationCompleted"]

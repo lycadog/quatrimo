@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bqjrqw2rwdwpj"]
 
+[ext_resource type="StyleBox" uid="uid://eoj5prkdrxku" path="res://texture/BasicStyleBox.tres" id="1_5uewh"]
 [ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="1_06ehf"]
 [ext_resource type="FontFile" uid="uid://cg88y1bvnly6p" path="res://Px437_ToshibaSat_8x16.ttf" id="2_50ulf"]
 [ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="2_ubl57"]
@@ -35,21 +36,25 @@ outline_color = Color(0, 0, 0, 1)
 atlas = ExtResource("1_06ehf")
 region = Rect2(0, 30, 10, 10)
 
-[node name="Tooltip" type="VBoxContainer" unique_id=51216703]
+[node name="PanelContainer" type="PanelContainer" unique_id=1795456240]
 offset_right = 66.0
 offset_bottom = 66.0
-theme_override_constants/separation = 2
+theme_override_styles/panel = ExtResource("1_5uewh")
 
-[node name="Header" type="HBoxContainer" parent="." unique_id=1314146057]
+[node name="Tooltip" type="VBoxContainer" parent="." unique_id=51216703]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="BlockBorder" type="TextureRect" parent="Header" unique_id=544610403]
+[node name="Header" type="HBoxContainer" parent="Tooltip" unique_id=1314146057]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="BlockBorder" type="TextureRect" parent="Tooltip/Header" unique_id=544610403]
 layout_mode = 2
 size_flags_vertical = 4
 texture = SubResource("AtlasTexture_ubl57")
 
-[node name="BlockSprite" type="TextureRect" parent="Header/BlockBorder" unique_id=1717090598]
+[node name="BlockSprite" type="TextureRect" parent="Tooltip/Header/BlockBorder" unique_id=1717090598]
 self_modulate = Color(0.04000002, 0.98400027, 1, 1)
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 1
@@ -66,14 +71,14 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("AtlasTexture_5uewh")
 
-[node name="Title" type="Label" parent="Header" unique_id=2025333174]
+[node name="Title" type="Label" parent="Tooltip/Header" unique_id=2025333174]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Basic
 Block"
 label_settings = SubResource("LabelSettings_5uewh")
 
-[node name="Divider" type="NinePatchRect" parent="." unique_id=665733073]
+[node name="Divider" type="NinePatchRect" parent="Tooltip" unique_id=665733073]
 custom_minimum_size = Vector2(0, 7)
 layout_mode = 2
 size_flags_vertical = 0
@@ -82,48 +87,48 @@ region_rect = Rect2(40, 31, 30, 6)
 patch_margin_left = 11
 patch_margin_right = 11
 
-[node name="Effects" type="VBoxContainer" parent="." unique_id=873669190]
+[node name="Effects" type="VBoxContainer" parent="Tooltip" unique_id=873669190]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="CostPanel" type="PanelContainer" parent="Effects" unique_id=57314194]
+[node name="CostPanel" type="PanelContainer" parent="Tooltip/Effects" unique_id=57314194]
 self_modulate = Color(0.1764706, 0.18039216, 0.27058825, 1)
 layout_mode = 2
 theme = ExtResource("4_ubl57")
 
-[node name="Cost" type="HBoxContainer" parent="Effects/CostPanel" unique_id=1415201163]
+[node name="Cost" type="HBoxContainer" parent="Tooltip/Effects/CostPanel" unique_id=1415201163]
 layout_mode = 2
 theme = ExtResource("4_ubl57")
 theme_override_constants/separation = 1
 
-[node name="EntrySprite" type="TextureRect" parent="Effects/CostPanel/Cost" unique_id=1270451364]
+[node name="EntrySprite" type="TextureRect" parent="Tooltip/Effects/CostPanel/Cost" unique_id=1270451364]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 texture = SubResource("AtlasTexture_50ulf")
 
-[node name="Effect1Label" type="Label" parent="Effects/CostPanel/Cost" unique_id=520113423]
+[node name="Effect1Label" type="Label" parent="Tooltip/Effects/CostPanel/Cost" unique_id=520113423]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Scores for 1"
 label_settings = SubResource("LabelSettings_50ulf")
 
-[node name="Effect1Panel" type="PanelContainer" parent="Effects" unique_id=1288891700]
+[node name="Effect1Panel" type="PanelContainer" parent="Tooltip/Effects" unique_id=1288891700]
 self_modulate = Color(0.08627451, 0.07450981, 0.12941177, 1)
 layout_mode = 2
 theme = ExtResource("4_ubl57")
 
-[node name="Effect1" type="HBoxContainer" parent="Effects/Effect1Panel" unique_id=1460551145]
+[node name="Effect1" type="HBoxContainer" parent="Tooltip/Effects/Effect1Panel" unique_id=1460551145]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="EntrySprite" type="TextureRect" parent="Effects/Effect1Panel/Effect1" unique_id=1548831544]
+[node name="EntrySprite" type="TextureRect" parent="Tooltip/Effects/Effect1Panel/Effect1" unique_id=1548831544]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 texture = SubResource("AtlasTexture_06ehf")
 
-[node name="Effect1Label" type="Label" parent="Effects/Effect1Panel/Effect1" unique_id=1184029947]
+[node name="Effect1Label" type="Label" parent="Tooltip/Effects/Effect1Panel/Effect1" unique_id=1184029947]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "No special effects"

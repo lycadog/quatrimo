@@ -25,6 +25,8 @@ public partial class Board : Control
 
     [Export] public Node2D BlockBox;
 
+    [Export] RowsClearedDial RowsClearedDial;
+
     [Export] Area2D BottomBorder;
     [Export] Area2D LeftBorder;
     [Export] Area2D RightBorder;
@@ -68,7 +70,7 @@ public partial class Board : Control
     FallingPiece CurrentPiece;
 
     static PackedScene ScoreAnimation = ResourceLoader.Load<PackedScene>("uid://joftg3j7lslu");
-    const double LowerAnimLength = .12;
+    const double LowerAnimLength = .3;
 
     #region === Board Logic ===
 
@@ -76,6 +78,7 @@ public partial class Board : Control
     {
         BoardUpdated = false;
         AnimationManager.ClearAnimations();
+        RowsClearedDial.Reset();
         EmitSignalTurnStarted();
     }
 
@@ -130,7 +133,13 @@ public partial class Board : Control
             return;
         }
 
-        EndTurn(); //nothing to score, let's progress
+        BeginTurnEnd(); //nothing to score, let's progress
+    }
+
+    void BeginTurnEnd()
+    {
+        //setup stuff here
+        AnimationManager.StartEndOfTurnWaiting();
     }
 
     void EndTurn()
@@ -194,8 +203,8 @@ public partial class Board : Control
         //tween lowering to our new position, and we actually move when its done with the method
         tween.TweenProperty(block, "position",
             new Vector2(0, block.LowerDistance * 10), LowerAnimLength).AsRelative()
-            .SetTrans(Tween.TransitionType.Quad)
-            .SetDelay(loweringDelay)
+            .SetTrans(Tween.TransitionType.Bounce)
+            .SetDelay(loweringDelay).SetEase(Tween.EaseType.Out)
             .Finished += () => OnBlockFinishedLowering(block);
     }
 
@@ -290,17 +299,22 @@ public partial class Board : Control
     {
         totalScore += number;
         ScoreLabel.Text = totalScore.ToString();
+        AnimationManager.TurnEndAnimationCompleted();
     }
 
     public void OnRowStartedScoring()
     {
         BoardUpdated = true;
         AnimationManager.StartAnimating(LowerToFillScoredSpaces);
+        RowsClearedDial.AddRow();
+        
         //set up our animationmanager to score again when we conclude!
     }
 
     public void OnBlockScored(Block block)
     {
+        AnimationManager.AddTurnEndAnimation();
+
         var newNumber = MiniScoreNumber.GetNew(block.ScoreValue, ScoreLabel.GetGlobalRect().GetCenter());
         newNumber.NumberReachedScore += OnScoreNumberReachesScore;
         BlockBox.AddChild(newNumber);
@@ -338,6 +352,8 @@ public partial class Board : Control
         if (block.IsPlaced || PlacedBlocks.Contains(block))
         {
             PlacedBlocks.Remove(block);
+            BoardUpdated = true; 
+            //why wasn't this updating the board?
         }
     }
 

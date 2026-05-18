@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="1_73evt"]
 [ext_resource type="Script" uid="uid://dvsu3pu6fsw5v" path="res://scripts/visuals/AnimatedBlockSprite.cs" id="2_0rlmn"]
-[ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_fm877"]
+[ext_resource type="Texture2D" uid="uid://cthbicthgfu0l" path="res://texture/64glow.png" id="3_73evt"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ymeqs"]
 atlas = ExtResource("1_73evt")
@@ -75,4 +75,5 @@ autoplay = "hologramlayer2"
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=623356925]
 energy = 0.18
 shadow_enabled = true
-texture = ExtResource("3_fm877")
+texture = ExtResource("3_73evt")
+texture_scale = 2.0

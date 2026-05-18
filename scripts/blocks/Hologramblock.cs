@@ -19,4 +19,12 @@ public partial class Hologramblock : Block
         base.SetColor(hue, sat, val);
         glowy.Color = Color.FromHsv(hue, sat, val);
     }
+
+    public override void ToggleVisibility(bool visible)
+    {
+        base.ToggleVisibility(visible);
+        glowy.Enabled = visible;
+    }
+
+    
 }

@@ -119,7 +119,7 @@ public class ObjectPool<T>
     {
         if (values.Count != weights.Length)
         {
-            throw new ArgumentException($"objPool constructor expects a list and an array of equal length. List 1 length: {values.Count}, Array 2 length: {weights.Length}");
+            throw new ArgumentException($"ObjectPool constructor expects a list and an array of equal length. List 1 length: {values.Count}, Array 2 length: {weights.Length}");
         }
 
         for (int i = 0; i < values.Count; i++)

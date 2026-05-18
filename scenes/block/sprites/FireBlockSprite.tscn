@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dvsu3pu6fsw5v" path="res://scripts/visuals/AnimatedBlockSprite.cs" id="1_k4177"]
 [ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="1_saskh"]
-[ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_25myv"]
+[ext_resource type="Texture2D" uid="uid://cthbicthgfu0l" path="res://texture/64glow.png" id="3_saskh"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eveqt"]
 atlas = ExtResource("1_saskh")
@@ -110,8 +110,8 @@ metadata/_custom_type_script = "uid://dvsu3pu6fsw5v"
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=1061513967]
 color = Color(1, 0.73333335, 0.5411765, 1)
 energy = 0.18
-shadow_enabled = true
-texture = ExtResource("3_25myv")
+texture = ExtResource("3_saskh")
+texture_scale = 2.0
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1568527752]
 amount = 12

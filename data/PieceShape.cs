@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 public class PieceShape : IHasShape
 {
-    readonly Vector2I[] Shape;
-    
+    readonly Vector2[] Shape;
 
-    public Vector2I this[int i]
+    public Vector2 this[int i]
     {
         get => Shape[i];
         set => Shape[i] = value;
@@ -39,24 +38,34 @@ public class PieceShape : IHasShape
         return this;
     }
 
-    public PieceShape((int, int)[] shape, string name, int weight = 6, bool addEntry = true)
+    public PieceShape((float, float)[] shape, string name, int weight = 6, bool addEntry = true)
     {
-        Shape = new Vector2I[shape.Length];
+        Shape = new Vector2[shape.Length];
         for(int i = 0; i  < shape.Length; i++)
         {
-            Shape[i] = new(shape[i].Item1, shape[i].Item2);
+            Vector2 newVector = new(shape[i].Item1, shape[i].Item2);
+
+            if (newVector != new Vector2() && Shape.Contains(newVector))
+            {
+                GD.PushError("Duplicate blocks in pieceshape " + name);
+            }
+
+            Shape[i] = newVector;
+            
         }
         
         this.name = name;
 
         int minX = 100, minY = 100, maxX = -100, maxY = -100;
-        foreach(var vector in Shape)
+        foreach(var Vector2 in Shape)
         {
-            minX = Math.Min(minX, vector.X);
-            minY = Math.Min(minY, vector.Y);
+            Vector2I flooredVector = (Vector2I)Vector2.Floor();
 
-            maxX = Math.Max(maxX, vector.X);
-            maxY = Math.Max(maxY, vector.Y);
+            minX = Math.Min(minX, flooredVector.X);
+            minY = Math.Min(minY, flooredVector.Y);
+
+            maxX = Math.Max(maxX, flooredVector.X);
+            maxY = Math.Max(maxY, flooredVector.Y);
         }
 
         BoundingBox = new(minX, maxX, minY, maxY);
@@ -66,7 +75,6 @@ public class PieceShape : IHasShape
 
         B = new(this);
 
-
         if (addEntry)
         {
             AllShapes.AddNewEntry(this, weight);
@@ -75,7 +83,7 @@ public class PieceShape : IHasShape
 
     public PieceShape GetFlippedShape()
     {
-        (int, int)[] flippedShape = new (int, int)[Shape.Length];
+        (float, float)[] flippedShape = new (float, float)[Shape.Length];
 
         for (int i = 0; i < flippedShape.Length; i++)
         {
