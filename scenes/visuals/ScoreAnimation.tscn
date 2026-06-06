@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://joftg3j7lslu"]
 
-[ext_resource type="Script" uid="uid://cdm32mfdugipb" path="res://scripts/ScoreAnimation.cs" id="2_mdtbv"]
+[ext_resource type="Script" uid="uid://cdm32mfdugipb" path="res://scripts/visuals/ScoreAnimation.cs" id="2_mdtbv"]
 [ext_resource type="SpriteFrames" uid="uid://b1ippmyjfd015" path="res://texture/scoreanimframes.tres" id="2_yhafw"]
 [ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_vfytb"]
 

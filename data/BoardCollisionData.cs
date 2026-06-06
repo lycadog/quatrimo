@@ -46,12 +46,25 @@ public class BoardCollisionData
         ValidRightRotations = ProcessRotation(1);
 
         //get new slam offset
+        UpdateSlamOffset();
+    }
+
+    public void UpdateFallingEnemyBlock(Vector2 blockPosition)
+    {
+        BoardPos = new((int)(blockPosition.X / 10), -(int)(blockPosition.Y / 10));
+        DownMoveValid = BoardAccessor.IsValidMoveTo(BoardPos + new Vector2I(0, -1), Solid);
+
+        UpdateSlamOffset();
+    }
+
+    public void UpdateSlamOffset()
+    {
         SlamYOffset = 0;
-        for(int y = BoardPos.Y - 1; true; y--)
+        for (int y = BoardPos.Y - 1; true; y--)
         {
             Vector2I loweredPosition = new(BoardPos.X, y);
 
-            if(!BoardAccessor.IsValidMoveTo(loweredPosition, Solid))
+            if (!BoardAccessor.IsValidMoveTo(loweredPosition, Solid))
             {
                 //if we can't move here:
                 //break loop. this way we will use the previous loop's value
@@ -59,7 +72,6 @@ public class BoardCollisionData
             }
             SlamYOffset++;
         }
-
     }
 
     bool[] ProcessRotation(int direction)

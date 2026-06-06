@@ -179,7 +179,7 @@ public class Cell(int x, int y)
             return;
         }
 
-        GD.Print("Placement clipping behavior ran!");
+        //GD.Print("Placement clipping behavior ran!");
 
         //we do this so we can keep a reference to the block if it deletes itself from our HeldBlock reference
         Block oldBlock = HeldBlock;
@@ -194,7 +194,7 @@ public class Cell(int x, int y)
 
         if (Occupied) //if we're still occupied: delete falling block
         {
-            GD.Print("Deleting falling block on clipping!");
+            //GD.Print("Deleting falling block on clipping!");
             newBlock.Delete();
             return;
         }

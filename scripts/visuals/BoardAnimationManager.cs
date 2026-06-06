@@ -12,6 +12,8 @@ public partial class BoardAnimationManager : Node
 
 	bool AlreadyAnimating = false;
 
+	bool WaitingOnTurnEnd = false;
+
 	[Signal] public delegate void BoardAnimationCompletedEventHandler();
 	[Signal] public delegate void TurnEndAnimationsCompletedEventHandler();
 
@@ -24,19 +26,25 @@ public partial class BoardAnimationManager : Node
 	public void TurnEndAnimationCompleted()
 	{
 		CompletedTurnEndAnimations++;
-		if(CompletedTurnEndAnimations >= TotalTurnEndAnimations)
-		{
-			EmitSignalTurnEndAnimationsCompleted();
-		}
+		CheckTurnEnd();
 	}
 
     public void StartEndOfTurnWaiting()
     {
-        if (TotalTurnEndAnimations == 0)
-		{
-			EmitSignal(SignalName.TurnEndAnimationsCompleted);
-		}
+		GD.Print("Started end of turn waiting!");
+		WaitingOnTurnEnd = true;
+		CheckTurnEnd();
     }
+
+	void CheckTurnEnd()
+	{
+		if(WaitingOnTurnEnd && CompletedTurnEndAnimations == TotalTurnEndAnimations)
+		{
+            GD.Print("Completed all " + TotalTurnEndAnimations + " turn end animations");
+            WaitingOnTurnEnd = false;
+			EmitSignalTurnEndAnimationsCompleted();
+		}
+	}
 
     public void ClearAnimations()
 	{
@@ -54,11 +62,11 @@ public partial class BoardAnimationManager : Node
 
 	public void AnimationCompleted()
 	{
-		//GD.Print($"Completed animation {CompletedAnimations}/{TotalAnimations}");
 		CompletedAnimations++;
 
-		if(CompletedAnimations == TotalAnimations)
+        if (CompletedAnimations == TotalAnimations)
 		{
+			//GD.Print($"Finished animating all {TotalAnimations} animations");
 			AlreadyAnimating = false;
 			EmitSignalBoardAnimationCompleted();
 		}

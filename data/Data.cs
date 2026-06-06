@@ -12,7 +12,6 @@ public static class Data
 
     #region === Basic pieces ===
 
-
     public static PieceShape sNub = new([(0, 0)], "Nub");
     public static PieceShape sWedge = new([(-.5f, .5f), (.5f, .5f), (.5f, -.5f)], "Wedge");
     public static PieceShape sSlash = new([(-1, -1), (0, 0)], "Slash");
@@ -40,8 +39,7 @@ public static class Data
     public static PieceShape sPin = new([(0, 0), (2, 0), (3, 0)], "Pin");
 
     public static DualPieceShape sBranch = new([(-2, 0), (-1, 0), (-1, -1), (0, 0), (1, 0), (1, 1)], "Branch");
-    public static DualPieceShape sFPiece = new([(-1, 0), (0, 0), (0, 1), (1, 0), (2, 0), (2, 1)], "F Piece");
-
+    public static DualPieceShape sSpikes = new([(-2, 0), (-1, -1), (-1, 0), (0, 0), (1, -1), (1, 0)], "Spikes");
     public static DualPieceShape sWrench = new([(-2, -1), (-1, -1), (-1, 0), (0, 0), (1, 0)], "Wrench");
 
     public static PieceShape sLongLine = new([(-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0)], "Long Line", 5);
@@ -53,8 +51,7 @@ public static class Data
 
     #endregion
     #region === Variants of Other Pieces ===
-
-    public static DualPieceShape sSpikes = new([(-2, 0), (-1, -1), (-1, 0), (0, 0), (1, -1), (1, 0)], "Spikes");
+    
     public static PieceShape sLongBigTee = new([(-1, -1), (-1, 0), (-1, 1), (0, 0), (1, 0), (2, 0)], "Long Big Tee");
     public static DualPieceShape sLongL = new([(-1, -1), (-1, 0), (0, 0), (1, 0), (2, 0)], "Long Elle");
     public static DualPieceShape sLongHook = new([(-2, 0), (-1, 0), (0, 0), (1, 0),], "Long Hook");
@@ -127,6 +124,9 @@ public static class Data
     public static PieceShape sBowl = new([(-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0)], "Bowl");
     public static DualPieceShape sChippedBowl = new([(-1, 0), (0, 1), (1, 1), (1, 0)], "Chipped Bowl");
     public static PieceShape sBasin = new([(-1.5f, -.5f), (-1.5f, .5f), (-.5f, .5f), (0.5f, .5f), (1.5f, .5f), (1.5f, -.5f)], "Basin");
+    public static PieceShape sRing = new([(-1.5f, .5f), (-.5f, -.5f), (.5f, -.5f), (1.5f, .5f)], "Ring");
+
+    public static DualPieceShape sBoxes = new([(-1, -1), (-1, 0), (0, -1), (0, 0), (0, 1), (1, 0), (1, 1)], "Boxes"); //TODO RENAME
 
     public static DualPieceShape sSPiece = new([(-1, -1), (-1, 0), (0, 0), (1, 0), (1, 1)], "Sssnake");
     public static PieceShape sArrow = new([(-1, -1), (-1, 0), (0, 0), (0, 1), (1, -1), (1, 0)], "Arrow");
@@ -184,9 +184,9 @@ public static class Data
 
     public static StarterBag longDistanceBag = new([sScatteredWedge.B, sSeperatedT.B, sScatteredL.LB, sScatteredL.RB, sSlash.B, sLepton.B, sTangle.LB, sTangle.RB, sBowl.B, sStick.B, sWedge.B, sNub.B, sLine.B], new Rect2(0, 50, 10, 10), "quanto bag idk");
 
-    public static StarterBag randomBullshitBag = new([sTwig.B, sWedge.B, sLine.B, sRoundedCorner.B, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece], "fuck");
+    public static StarterBag randomBullshitBag = new([sTwig.B, sWedge.B, sLine.B, CursedNub, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece], "fuck");
     
-    public static StarterBag debugBag = new([sBrick.B], "debug");
+    public static StarterBag debugBag = new([sMegalith.B, CursedNub], "debug");
 
     #endregion
 }

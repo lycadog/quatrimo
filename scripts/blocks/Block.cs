@@ -24,8 +24,10 @@ public partial class Block : Area2D
         get => _IsPlaced;
         set
         {
-            _IsPlaced = true;
+            //WHY WAS THIS SETTING TO TRUE????
+            _IsPlaced = value;
 
+            //swap our collision values depending on if we're placed or not
             SetCollisionLayerValue(1, !value);
             SetCollisionLayerValue(2, value);
 
@@ -122,7 +124,8 @@ public partial class Block : Area2D
             Name = "SlamPreviewSprite",
             Texture = Atlas,
             RegionRect = DropPreviewRect,
-            RegionEnabled = true
+            RegionEnabled = true,
+            SelfModulate = new(1, 1, 1, 0.8f)
         };
         WhiteFlashSprite = new Sprite2D
         {
@@ -177,9 +180,10 @@ public partial class Block : Area2D
 
     }
 
-    
+
     #endregion
     #region === Placement & Collision ===
+
     /// <summary>
     /// Updates collision and position using new root position. Ran whenever our root moves or the board is updated
     /// </summary>
@@ -307,6 +311,18 @@ public partial class Block : Area2D
     {
         SlamPreviewSprite.Position = new(0, CollisionData.SlamYOffset * 10);
     }
+
+    public void HideSlamSprite()
+    {
+        SlamPreviewSprite.Visible = false;
+    }
+
+    public void SetEnemySlamSprite()
+    {
+        SlamPreviewSprite.RegionRect = new(40, 10, 10, 10);
+        SlamPreviewSprite.SelfModulate = new(1, 1, 1, 0.6f);
+    }
+
     public void ToggleOutsideBoardSprite(bool outsideBoard)
     {
         AboveBoardIndicatorSprite.Visible = outsideBoard;

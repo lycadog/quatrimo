@@ -70,12 +70,19 @@ public partial class Board : Control
     FallingPiece CurrentPiece;
 
     static PackedScene ScoreAnimation = ResourceLoader.Load<PackedScene>("uid://joftg3j7lslu");
+
+    /// <summary>
+    /// Time scale for our animations, goes down every time blocks are lowered
+    /// </summary>
+    public static double AnimationTimescale = 1.0;
     const double LowerAnimLength = .3;
 
     #region === Board Logic ===
 
     public void StartTurn()
     {
+        GD.Print("Turn started!");
+        AnimationTimescale = 1.0;
         BoardUpdated = false;
         AnimationManager.ClearAnimations();
         RowsClearedDial.Reset();
@@ -84,7 +91,6 @@ public partial class Board : Control
 
     void ScoreBoard(bool initialStep)
     {
-
         if(!BoardUpdated && !initialStep)
         {
             //progress forwards!
@@ -95,6 +101,8 @@ public partial class Board : Control
 
         ScoredCells.Clear();
         EmitSignalScoreStepStarted(initialStep);
+
+        //set this to false. if we score a row, we will set it to true
         BoardUpdated = false;
 
         //this will create scoring animations, which will handle repeating this state if applicable.
@@ -105,8 +113,12 @@ public partial class Board : Control
 
         if(!BoardUpdated) //if the board hasn't changed after scoring we can progress
         {
+            GD.Print("Skipping score state because board is not updated");
             TickBlocks(); //this is the only other allowed end spot of this state
+            return;
         }
+
+        GD.Print("Scoring now");
     }
 
     void TickBlocks()
@@ -128,7 +140,6 @@ public partial class Board : Control
 
         if (BoardUpdated) //if the board has updated we gotta check it again
         {
-
             ScoreBoard(false);
             return;
         }
@@ -144,7 +155,6 @@ public partial class Board : Control
 
     void EndTurn()
     {
-        GD.Print("Turn ended!");
         EmitSignalTurnEnded();
         StartTurn();
     }
@@ -178,34 +188,47 @@ public partial class Board : Control
             return;
         }
 
-        AnimationManager.StartAnimating(() => ScoreBoard(false));
+        GD.Print("Lowering blocks");
 
         Tween tween = GetTree().CreateTween().SetParallel();
 
         foreach(var block in PlacedBlocks)
         {
+            AnimationManager.AnimationCreated();
             LowerBlock(block, lowestScoredY, tween);
         }
+
+        //shrink timescale each time this is ran so stuff goes by faster
+        AnimationTimescale = Math.Max(AnimationTimescale - .1, .04);
+        GD.Print(AnimationTimescale);
+
+        AnimationManager.StartAnimating(() => ScoreBoard(false));
     }
 
     void LowerBlock(Block block, int lowestScoredY, Tween tween)
     {
         block.BoardPos = new(block.BoardPos.X, block.BoardPos.Y - block.LowerDistance);
 
-        AnimationManager.AnimationCreated();
-
         //we don't want the delay to be too long when we have a really tall board, so if it's too tall we decrease it by a bit
         double decreaseDelayPerBlockAtHighValues = (block.BoardPos.Y - lowestScoredY) * .0002;
-        double loweringDelay = (block.BoardPos.Y - lowestScoredY) * (.03 - decreaseDelayPerBlockAtHighValues);
+        double loweringDelay = (block.BoardPos.Y - lowestScoredY) * (.03 - decreaseDelayPerBlockAtHighValues) * AnimationTimescale;
 
         //todo: change delay to be more exponential falloff. higher Y values give less delay
 
         //tween lowering to our new position, and we actually move when its done with the method
         tween.TweenProperty(block, "position",
-            new Vector2(0, block.LowerDistance * 10), LowerAnimLength).AsRelative()
+            new Vector2(0, block.LowerDistance * 10), LowerAnimLength * AnimationTimescale).AsRelative()
             .SetTrans(Tween.TransitionType.Bounce)
             .SetDelay(loweringDelay).SetEase(Tween.EaseType.Out)
-            .Finished += () => OnBlockFinishedLowering(block);
+            .Finished += () => Block_FinishedLowering(block);
+    }
+
+    public void Block_FinishedLowering(Block block)
+    {
+        CellBoard[block.BoardPos.X, block.BoardPos.Y].HeldBlock = block;
+        block.LowerDistance = 0;
+
+        AnimationManager.AnimationCompleted();
     }
 
     /// <summary>
@@ -230,7 +253,8 @@ public partial class Board : Control
             Rows[y] = row;
 
             //bind row events here *********                                                <*************
-            row.ScoringStarted += OnRowStartedScoring;
+            row.ScoringStarted += Row_StartedScoring;
+            row.CreatedIterator += Row_CreatedIterator;
 
             Cell[] cellsInRow = new Cell[width];
 
@@ -286,7 +310,6 @@ public partial class Board : Control
         block.Connect(Block.SignalName.Placed, new(this, MethodName.OnBlockPlaced), (uint)ConnectFlags.OneShot);
         block.Connect(Block.SignalName.Scored, new(this, MethodName.OnBlockScored));
         block.Connect(Block.SignalName.Deleted, new(this, MethodName.OnBlockDeleted), (uint)ConnectFlags.AppendSourceObject);
-        
 
         Connect(SignalName.TurnStarted, new(block, Block.MethodName.TurnStarted));
         Connect(SignalName.TickStep, new(block, Block.MethodName.Tick));
@@ -302,13 +325,19 @@ public partial class Board : Control
         AnimationManager.TurnEndAnimationCompleted();
     }
 
-    public void OnRowStartedScoring()
+    public void Row_StartedScoring()
     {
         BoardUpdated = true;
         AnimationManager.StartAnimating(LowerToFillScoredSpaces);
         RowsClearedDial.AddRow();
         
         //set up our animationmanager to score again when we conclude!
+    }
+
+    public void Row_CreatedIterator(ScoreIterator iterator)
+    {
+        AnimationManager.AnimationCreated();
+        iterator.IteratorCompleted += AnimationManager.AnimationCompleted;
     }
 
     public void OnBlockScored(Block block)
@@ -327,10 +356,10 @@ public partial class Board : Control
 
         BlockBox.AddChild(animation);
 
+        AnimationManager.AnimationCreated();
+
         animation.Position = cell.RealPosition;
         animation.AnimationFinished += AnimationManager.AnimationCompleted;
-
-        AnimationManager.AnimationCreated();
 
         if (cell.FilledInOnScoring)
         {
@@ -338,13 +367,7 @@ public partial class Board : Control
         }
     }
 
-    public void OnBlockFinishedLowering(Block block)
-    {
-        CellBoard[block.BoardPos.X, block.BoardPos.Y].HeldBlock = block;
-        block.LowerDistance = 0;
 
-        AnimationManager.AnimationCompleted();
-    }
 
     public void OnBlockDeleted(Block block)
     {
@@ -486,11 +509,6 @@ public partial class Board : Control
     {
         SetDimensions(dimensions.X, dimensions.Y);
     }
-
-    #endregion
-    #region === Board Utils ===
-
-
 
     #endregion
 

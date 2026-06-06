@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="4_ioiev"]
 [ext_resource type="PackedScene" uid="uid://dl7cdkh88t5p0" path="res://scenes/Board.tscn" id="5_knim7"]
 [ext_resource type="PackedScene" uid="uid://bpo3d227m28dj" path="res://scenes/bag/playerHand.tscn" id="6_u7t6i"]
-[ext_resource type="FontFile" uid="uid://cg88y1bvnly6p" path="res://Px437_ToshibaSat_8x16.ttf" id="7_oehty"]
+[ext_resource type="FontFile" uid="uid://detcuigmobye" path="res://lang/ApricotXenC.ttf" id="7_ioiev"]
 [ext_resource type="Shader" uid="uid://bymdcljo62wwu" path="res://shader/scanlinesShader.gdshader" id="8_us6u5"]
 [ext_resource type="Script" uid="uid://481h7xwr5q1f" path="res://scripts/visuals/BoardAnimationManager.cs" id="9_ioiev"]
 [ext_resource type="PackedScene" uid="uid://3g8r3vdcymf3" path="res://scenes/ui/RowsClearedDial.tscn" id="10_kciur"]
@@ -25,13 +25,12 @@ region = Rect2(110, 0, 49, 27)
 
 [sub_resource type="LabelSettings" id="LabelSettings_shipe"]
 line_spacing = 2.0
-font = ExtResource("7_oehty")
-font_size = 12
+font = ExtResource("7_ioiev")
 outline_size = 2
 outline_color = Color(0.18199989, 0, 0.28, 1)
 shadow_color = Color(0.58, 0.02320001, 0.39439988, 1)
 
-[node name="EncounterScene" type="Control" unique_id=556453924]
+[node name="EncounterScene" type="Control" unique_id=556453924 node_paths=PackedStringArray("CRTRect")]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -45,8 +44,14 @@ offset_bottom = 135.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ylu0l")
+CRTRect = NodePath("Static UI/CRTRect")
 
-[node name="CRTRect" type="ColorRect" parent="." unique_id=1396225142]
+[node name="Static UI" type="Control" parent="." unique_id=1977397568]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CRTRect" type="ColorRect" parent="Static UI" unique_id=1396225142]
 visible = false
 top_level = true
 material = SubResource("ShaderMaterial_3hoax")
@@ -58,7 +63,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Background" type="TextureRect" parent="." unique_id=803257186]
+[node name="Background" type="TextureRect" parent="Static UI" unique_id=803257186]
 modulate = Color(0.88972396, 0.889724, 0.88972396, 1)
 self_modulate = Color(0.041599996, 0.06725333, 0.16, 1)
 light_mask = 0
@@ -68,7 +73,7 @@ offset_right = 480.0
 offset_bottom = 270.0
 texture = ExtResource("1_ymjt5")
 
-[node name="BagroundColor2" type="ColorRect" parent="Background" unique_id=900331187]
+[node name="BagroundColor2" type="ColorRect" parent="Static UI/Background" unique_id=900331187]
 show_behind_parent = true
 light_mask = 0
 layout_mode = 1
@@ -79,32 +84,21 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.16533333, 0, 0.31, 1)
 
-[node name="BG2" type="ColorRect" parent="." unique_id=1887796625]
-visible = false
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.17099997, 0, 0.27, 1)
-
-[node name="TopBar" type="TextureRect" parent="." unique_id=1258485659]
+[node name="TopBar" type="TextureRect" parent="Static UI" unique_id=1258485659]
 light_mask = 0
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -230.0
-offset_right = 230.0
+offset_left = -10.0
+offset_right = 450.0
 offset_bottom = 10.0
 grow_horizontal = 2
 texture = ExtResource("2_ylu0l")
 stretch_mode = 4
 metadata/_edit_use_anchors_ = true
 
-[node name="ColorRect" type="ColorRect" parent="TopBar" unique_id=700189775]
+[node name="ColorRect" type="ColorRect" parent="Static UI/TopBar" unique_id=700189775]
 show_behind_parent = true
 light_mask = 0
 layout_mode = 1
@@ -117,18 +111,19 @@ offset_bottom = 10.0
 grow_horizontal = 2
 color = Color(0, 0, 0, 1)
 
-[node name="BottomLeftPanel" type="TextureRect" parent="." unique_id=1544023865]
+[node name="BottomLeftPanel" type="TextureRect" parent="Static UI" unique_id=1544023865]
 light_mask = 0
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -55.0
+offset_top = 175.0
 offset_right = 166.0
+offset_bottom = 230.0
 grow_vertical = 0
 texture = SubResource("AtlasTexture_06til")
 
-[node name="DeckIcon" type="TextureRect" parent="BottomLeftPanel" unique_id=972193955]
+[node name="DeckIcon" type="TextureRect" parent="Static UI/BottomLeftPanel" unique_id=972193955]
 layout_mode = 0
 offset_left = 107.0
 offset_top = 22.0
@@ -136,7 +131,7 @@ offset_right = 156.0
 offset_bottom = 49.0
 texture = SubResource("AtlasTexture_3q3ns")
 
-[node name="ColorRect" type="ColorRect" parent="BottomLeftPanel/DeckIcon" unique_id=762823310]
+[node name="ColorRect" type="ColorRect" parent="Static UI/BottomLeftPanel/DeckIcon" unique_id=762823310]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 2.0
@@ -144,37 +139,12 @@ offset_right = 47.0
 offset_bottom = 23.0
 color = Color(0.11513337, 0.07700001, 0.22, 1)
 
-[node name="MultBox" type="NinePatchRect" parent="." unique_id=211670477]
-layout_mode = 0
-offset_left = 380.0
-offset_top = 136.0
-offset_right = 439.0
-offset_bottom = 160.0
-texture = ExtResource("4_ioiev")
-region_rect = Rect2(70, 40, 30, 30)
-patch_margin_left = 8
-patch_margin_top = 8
-patch_margin_right = 8
-patch_margin_bottom = 8
+[node name="ScoreUI" type="Control" parent="." unique_id=1055703099]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="MultLabel" type="Label" parent="MultBox" unique_id=606062256]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -6.0
-offset_bottom = 6.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset = Vector2(30, 6)
-text = "1X"
-label_settings = SubResource("LabelSettings_shipe")
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="Score" type="NinePatchRect" parent="." unique_id=396360349]
+[node name="Score" type="NinePatchRect" parent="ScoreUI" unique_id=396360349]
 layout_mode = 0
 offset_left = 367.0
 offset_top = 94.0
@@ -187,7 +157,7 @@ patch_margin_top = 8
 patch_margin_right = 8
 patch_margin_bottom = 8
 
-[node name="ScoreLabel" type="Label" parent="Score" unique_id=1148665305]
+[node name="ScoreLabel" type="Label" parent="ScoreUI/Score" unique_id=1148665305]
 z_index = 1
 layout_mode = 1
 anchors_preset = 14
@@ -206,11 +176,48 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
+[node name="MultBox" type="NinePatchRect" parent="ScoreUI" unique_id=211670477]
+layout_mode = 0
+offset_left = 380.0
+offset_top = 136.0
+offset_right = 439.0
+offset_bottom = 160.0
+texture = ExtResource("4_ioiev")
+region_rect = Rect2(70, 40, 30, 30)
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="MultLabel" type="Label" parent="ScoreUI/MultBox" unique_id=606062256]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -6.0
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(30, 6)
+text = "1.0"
+label_settings = SubResource("LabelSettings_shipe")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="RowsClearedDial" parent="ScoreUI" unique_id=337877635 instance=ExtResource("10_kciur")]
+layout_mode = 0
+offset_left = 338.0
+offset_top = 108.0
+offset_right = 352.0
+offset_bottom = 156.0
+
 [node name="Board" parent="." unique_id=30435418 node_paths=PackedStringArray("AnimationManager", "ScoreLabel", "RowsClearedDial") instance=ExtResource("5_knim7")]
 layout_mode = 1
 AnimationManager = NodePath("AnimationManager")
-ScoreLabel = NodePath("../Score/ScoreLabel")
-RowsClearedDial = NodePath("../RowsClearedDial")
+ScoreLabel = NodePath("../ScoreUI/Score/ScoreLabel")
+RowsClearedDial = NodePath("../ScoreUI/RowsClearedDial")
 
 [node name="AnimationManager" type="Node" parent="Board" unique_id=1746969919]
 script = ExtResource("9_ioiev")
@@ -225,16 +232,9 @@ offset_bottom = 120.0
 [node name="PlayerHand" parent="Hand" unique_id=73958776 instance=ExtResource("6_u7t6i")]
 layout_mode = 0
 
-[node name="RowsClearedDial" parent="." unique_id=337877635 instance=ExtResource("10_kciur")]
-layout_mode = 0
-offset_left = 338.0
-offset_top = 108.0
-offset_right = 352.0
-offset_bottom = 156.0
-
+[connection signal="StartedScrolling" from="ScoreUI/RowsClearedDial" to="Board/AnimationManager" method="AddTurnEndAnimation"]
+[connection signal="StoppedScrolling" from="ScoreUI/RowsClearedDial" to="Board/AnimationManager" method="TurnEndAnimationCompleted"]
 [connection signal="PiecePlaced" from="Board" to="Hand/PlayerHand" method="OnPiecePlaced"]
 [connection signal="TurnStarted" from="Board" to="Hand/PlayerHand" method="OnTurnStart"]
 [connection signal="TurnEndAnimationsCompleted" from="Board/AnimationManager" to="Board" method="EndTurn"]
 [connection signal="CardPlayed" from="Hand/PlayerHand" to="Board" method="PlayCard"]
-[connection signal="StartedScrolling" from="RowsClearedDial" to="Board/AnimationManager" method="AddTurnEndAnimation"]
-[connection signal="StoppedScrolling" from="RowsClearedDial" to="Board/AnimationManager" method="TurnEndAnimationCompleted"]

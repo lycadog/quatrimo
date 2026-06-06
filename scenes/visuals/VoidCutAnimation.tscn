@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dimdmpusy70a1"]
 
 [ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="1_xpp6y"]
-[ext_resource type="Script" uid="uid://cdm32mfdugipb" path="res://scripts/ScoreAnimation.cs" id="2_2gpol"]
+[ext_resource type="Script" uid="uid://cdm32mfdugipb" path="res://scripts/visuals/ScoreAnimation.cs" id="2_2gpol"]
 
 [sub_resource type="Gradient" id="Gradient_7amkc"]
 offsets = PackedFloat32Array(0.23030303, 1)

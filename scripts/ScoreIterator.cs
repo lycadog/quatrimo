@@ -14,7 +14,7 @@ public partial class ScoreIterator(int x, int direction, Cell[] row) : Node
 	{
 		timer += delta;
 
-		if(timer > TimeBetweenIterating)
+		if (timer > (TimeBetweenIterating * Board.AnimationTimescale))
 		{
 			timer = 0;
 			Iterate();
@@ -27,7 +27,7 @@ public partial class ScoreIterator(int x, int direction, Cell[] row) : Node
 		if(x >= row.Length || x < 0) //if we have gone beyond the board, we are done
 		{
 			EmitSignalIteratorCompleted();
-			QueueFree();
+			Free();
 			return;
 
 		}

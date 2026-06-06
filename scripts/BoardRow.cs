@@ -26,6 +26,7 @@ public partial class BoardRow(int y, int boardWidth) : Node
     public Cell[] cellsInRow;
 
     public event Action ScoringStarted;
+    public event Action<ScoreIterator> CreatedIterator;
 
     public bool Scorable
     {
@@ -44,8 +45,8 @@ public partial class BoardRow(int y, int boardWidth) : Node
         {
             CursedBlockFailsafe();
 
-            ScoringStarted?.Invoke();
             StartScoring();
+            ScoringStarted.Invoke();
         }
     }
 
@@ -89,9 +90,10 @@ public partial class BoardRow(int y, int boardWidth) : Node
 
     void CreateIterator(int x, int direction)
     {
-        GD.Print($"iterator created, x: {x}, direction: {direction}");
         ScoreIterator newIterator = new(x, direction, cellsInRow);
         AddChild(newIterator);
+
+        CreatedIterator.Invoke(newIterator);
     }
 
     void CursedBlockFailsafe()

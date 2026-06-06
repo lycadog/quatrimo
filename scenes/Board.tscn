@@ -11,7 +11,7 @@ size = Vector2(10, 40)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xdl3i"]
 size = Vector2(40, 30)
 
-[node name="Board" type="Control" unique_id=30435418 node_paths=PackedStringArray("AnimationManager", "border", "BlockBox", "BottomBorder", "LeftBorder", "RightBorder")]
+[node name="Board" type="Control" unique_id=30435418 node_paths=PackedStringArray("border", "BlockBox", "BottomBorder", "LeftBorder", "RightBorder")]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -21,7 +21,6 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qails")
-AnimationManager = NodePath("")
 border = NodePath("Border")
 darkGradient = ExtResource("2_w6jgk")
 BlockBox = NodePath("BlockBox")

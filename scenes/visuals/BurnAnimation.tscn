@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://by12ay4yqa5lo"]
 
-[ext_resource type="Script" uid="uid://cdm32mfdugipb" path="res://scripts/ScoreAnimation.cs" id="1_e40o2"]
+[ext_resource type="Script" uid="uid://cdm32mfdugipb" path="res://scripts/visuals/ScoreAnimation.cs" id="1_e40o2"]
 [ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="2_x34o8"]
 [ext_resource type="Texture2D" uid="uid://bgnyfnd1av01w" path="res://texture/128glow.png" id="3_x34o8"]
 
