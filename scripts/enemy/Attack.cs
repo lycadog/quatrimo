@@ -1,44 +1,63 @@
-
 using Godot;
 using System;
-using System.Numerics;
 
-public abstract class Attack
+public abstract partial class Attack : Node
 {
     public int TurnsToExecute = 0;
     public int TurnsToReveal = 0;
 
     protected float IntensityFactor = 1;
 
-    int MinTurnsToExecute, MaxTurnsToExecute;
-    int MinTurnsToReveal, MaxTurnsToReveal;
 
-    public event Action AttackCompleted;
+    [Export] int BecomesAvailableAtLevel = 0;
+    [Export] int BecomesUnavailableAtLevel = 1000000;
 
-    public virtual void StartAttack(int EnemyLevel)
+    [Export] int MinTurnsToExecute = 10, MaxTurnsToExecute = 16;
+    [Export] int MinTurnsToReveal = 6, MaxTurnsToReveal = 10;
+
+    [Export] bool ScaleCooldownWithLevel = true;
+    [Export] float CooldownScalingPerLevel = .05f;
+    [Export] float MinimumCooldown = .2f;
+
+    [Export] bool ScaleIntensityWithLevel = true;
+    [Export] float IntensityPerLevel = .08f;
+    [Export] float MaximumIntensity = 1000;
+
+
+    public void StartAttack(int EnemyLevel)
     {
         TurnsToExecute = GD.RandRange(MinTurnsToExecute, MaxTurnsToExecute);
         MinTurnsToReveal = GD.RandRange(MinTurnsToReveal, MaxTurnsToReveal);
 
-        float CooldownMultiplier = Math.Max(1 - EnemyLevel * 0.08f, 0.2f);
-
-        TurnsToExecute *= (int)CooldownMultiplier;
-        TurnsToReveal *= (int)CooldownMultiplier;
-    }
-
-    public virtual void Update(int EnemyLevel)
-    {
-        TurnsToExecute--;
-        TurnsToReveal--;
-
-        if(TurnsToExecute < 0)
+        if (ScaleCooldownWithLevel)
         {
-            IntensityFactor = 1 + EnemyLevel * 0.08f;
-            ExecuteAttack();
+            float CooldownMultiplier = Math.Max(1 - EnemyLevel * CooldownScalingPerLevel, MinimumCooldown);
+            //scale cooldown to be 5% faster per level, maxxing out at 5x faster
+
+            TurnsToExecute *= (int)CooldownMultiplier;
+            TurnsToReveal *= (int)CooldownMultiplier;
+        }
+        
+        if (ScaleIntensityWithLevel)
+        {
+            IntensityFactor = Math.Min(1 + EnemyLevel * IntensityPerLevel, MaximumIntensity);
         }
     }
 
-    protected abstract void ExecuteAttack();
-    
+    public void UpdateAttack()
+    {
+        TurnsToReveal--;
+        if(TurnsToReveal > 0) { return; }
+
+        TurnsToExecute--;
+
+        if(TurnsToExecute <= 0)
+        {
+            ExecuteAttack();
+        }
+        
+    }
+
+    public abstract void ExecuteAttack();
 
 }
