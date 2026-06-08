@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dl7cdkh88t5p0" path="res://scenes/Board.tscn" id="5_knim7"]
 [ext_resource type="PackedScene" uid="uid://bpo3d227m28dj" path="res://scenes/bag/playerHand.tscn" id="6_u7t6i"]
 [ext_resource type="FontFile" uid="uid://detcuigmobye" path="res://lang/ApricotXenC.ttf" id="7_ioiev"]
+[ext_resource type="LabelSettings" uid="uid://cb8e71wwnksds" path="res://lang/ScoreLabel.tres" id="7_knim7"]
 [ext_resource type="Shader" uid="uid://bymdcljo62wwu" path="res://shader/scanlinesShader.gdshader" id="8_us6u5"]
 [ext_resource type="Script" uid="uid://481h7xwr5q1f" path="res://scripts/visuals/BoardAnimationManager.cs" id="9_ioiev"]
 [ext_resource type="PackedScene" uid="uid://3g8r3vdcymf3" path="res://scenes/ui/RowsClearedDial.tscn" id="10_kciur"]
@@ -23,12 +24,12 @@ region = Rect2(0, 0, 166, 55)
 atlas = ExtResource("4_ioiev")
 region = Rect2(110, 0, 49, 27)
 
-[sub_resource type="LabelSettings" id="LabelSettings_shipe"]
-line_spacing = 2.0
+[sub_resource type="LabelSettings" id="LabelSettings_u7t6i"]
+line_spacing = 0.0
 font = ExtResource("7_ioiev")
-outline_size = 2
-outline_color = Color(0.18199989, 0, 0.28, 1)
-shadow_color = Color(0.58, 0.02320001, 0.39439988, 1)
+font_size = 12
+outline_size = 1
+outline_color = Color(8.731843e-06, 8.731842e-06, 8.731842e-06, 1)
 
 [node name="EncounterScene" type="Control" unique_id=556453924 node_paths=PackedStringArray("CRTRect")]
 layout_mode = 3
@@ -141,15 +142,16 @@ color = Color(0.11513337, 0.07700001, 0.22, 1)
 
 [node name="ScoreUI" type="Control" parent="." unique_id=1055703099]
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 325.0
+offset_top = 60.0
+offset_right = 470.0
+offset_bottom = 159.0
 
 [node name="Score" type="NinePatchRect" parent="ScoreUI" unique_id=396360349]
 layout_mode = 0
-offset_left = 367.0
-offset_top = 94.0
-offset_right = 454.0
-offset_bottom = 124.0
+offset_left = 24.0
+offset_right = 111.0
+offset_bottom = 30.0
 texture = ExtResource("4_ioiev")
 region_rect = Rect2(40, 40, 30, 30)
 patch_margin_left = 8
@@ -171,17 +173,17 @@ grow_vertical = 2
 scale = Vector2(1.3, 1.3)
 pivot_offset = Vector2(43, 6)
 text = "0"
-label_settings = SubResource("LabelSettings_shipe")
+label_settings = ExtResource("7_knim7")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="MultBox" type="NinePatchRect" parent="ScoreUI" unique_id=211670477]
 layout_mode = 0
-offset_left = 380.0
-offset_top = 136.0
-offset_right = 439.0
-offset_bottom = 160.0
+offset_left = 38.0
+offset_top = 40.0
+offset_right = 97.0
+offset_bottom = 64.0
 texture = ExtResource("4_ioiev")
 region_rect = Rect2(70, 40, 30, 30)
 patch_margin_left = 8
@@ -201,17 +203,27 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(30, 6)
 text = "1.0"
-label_settings = SubResource("LabelSettings_shipe")
+label_settings = ExtResource("7_knim7")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="RowsClearedDial" parent="ScoreUI" unique_id=337877635 instance=ExtResource("10_kciur")]
 layout_mode = 0
-offset_left = 338.0
-offset_top = 108.0
-offset_right = 352.0
-offset_bottom = 156.0
+offset_top = 13.0
+offset_bottom = 61.0
+
+[node name="Label" type="Label" parent="ScoreUI" unique_id=1769553033]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 69.0
+offset_right = 90.0
+offset_bottom = 94.0
+text = "17/100
+09"
+label_settings = SubResource("LabelSettings_u7t6i")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Board" parent="." unique_id=30435418 node_paths=PackedStringArray("AnimationManager", "ScoreLabel", "RowsClearedDial") instance=ExtResource("5_knim7")]
 layout_mode = 1

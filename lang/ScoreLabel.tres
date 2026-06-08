@@ -1,0 +1,10 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://cb8e71wwnksds"]
+
+[ext_resource type="FontFile" uid="uid://detcuigmobye" path="res://lang/ApricotXenC.ttf" id="1_g0a3l"]
+
+[resource]
+line_spacing = 2.0
+font = ExtResource("1_g0a3l")
+outline_size = 2
+outline_color = Color(0.18199989, 0, 0.28, 1)
+shadow_color = Color(0.58, 0.02320001, 0.39439988, 1)

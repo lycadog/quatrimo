@@ -7,6 +7,7 @@ using System.Diagnostics;
 public partial class Board : Control
 {
     Cell[,] CellBoard;
+    public Enemy Enemy;
 
     public Cell this[int x, int y]
     {
