@@ -1,0 +1,165 @@
+[gd_scene format=3 uid="uid://o6pwekw2ruek"]
+
+[ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="1_kjvft"]
+[ext_resource type="LabelSettings" uid="uid://bcoq8lscv4ueb" path="res://lang/ScoreBox.tres" id="2_eh6m3"]
+[ext_resource type="Script" uid="uid://hmx6le7ahqy7" path="res://scripts/visuals/ScoreBox.cs" id="2_if122"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eh6m3"]
+atlas = ExtResource("1_kjvft")
+region = Rect2(157, 51, 99, 51)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kjvft"]
+atlas = ExtResource("1_kjvft")
+region = Rect2(216, 102, 40, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_if122"]
+atlas = ExtResource("1_kjvft")
+region = Rect2(216, 115, 40, 3)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n5en8"]
+atlas = ExtResource("1_kjvft")
+region = Rect2(230, 0, 14, 14)
+
+[sub_resource type="Gradient" id="Gradient_eh6m3"]
+colors = PackedColorArray(1, 1, 1, 1, 0.7129999, 0.59000003, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_if122"]
+gradient = SubResource("Gradient_eh6m3")
+
+[sub_resource type="Curve" id="Curve_eh6m3"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -0.800537, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_if122"]
+curve = SubResource("Curve_eh6m3")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_eh6m3"]
+particle_flag_disable_z = true
+angle_min = -720.0
+angle_max = 720.0
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 7.69
+initial_velocity_max = 80.78
+angular_velocity_min = -720.0
+angular_velocity_max = 719.99994
+gravity = Vector3(0, 0, 0)
+scale_min = 1.1999999
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_if122")
+color_ramp = SubResource("GradientTexture1D_if122")
+
+[node name="ScoreBox" type="TextureRect" unique_id=1915225977 node_paths=PackedStringArray("ScoreLabel", "MultiplierLabel", "XSprite", "ScaledXSprite", "ColoredMultGlowy", "GlowyClippingRect", "XParticles")]
+custom_minimum_size = Vector2(99, 51)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -381.0
+offset_bottom = -219.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_eh6m3")
+script = ExtResource("2_if122")
+ScoreLabel = NodePath("Score")
+MultiplierLabel = NodePath("Multiplier")
+XSprite = NodePath("X")
+ScaledXSprite = NodePath("ScaledX")
+ColoredMultGlowy = NodePath("GlowyClippingRect/MultiplierGlowy/ColorGlowy")
+GlowyClippingRect = NodePath("GlowyClippingRect")
+XParticles = NodePath("X/XParticles")
+
+[node name="GlowyClippingRect" type="ColorRect" parent="." unique_id=2073208152]
+clip_children = 1
+layout_mode = 0
+offset_top = 17.0
+offset_bottom = 34.0
+
+[node name="MultiplierGlowy" type="TextureRect" parent="GlowyClippingRect" unique_id=1443154120]
+layout_mode = 0
+offset_top = 2.0
+offset_right = 40.0
+offset_bottom = 15.0
+texture = SubResource("AtlasTexture_kjvft")
+
+[node name="ColorGlowy" type="TextureRect" parent="GlowyClippingRect/MultiplierGlowy" unique_id=601829276]
+modulate = Color(0.39215687, 0.5254902, 0.77254903, 1)
+layout_mode = 0
+offset_top = 2.0
+offset_right = 40.0
+offset_bottom = 5.0
+texture = SubResource("AtlasTexture_if122")
+
+[node name="ColorGlowy2" type="TextureRect" parent="GlowyClippingRect/MultiplierGlowy/ColorGlowy" unique_id=801675325]
+layout_mode = 0
+offset_top = 6.0
+offset_right = 40.0
+offset_bottom = 9.0
+texture = SubResource("AtlasTexture_if122")
+
+[node name="X" type="TextureRect" parent="." unique_id=457417650]
+self_modulate = Color(0.47058824, 0.43529412, 0.44705883, 1)
+layout_mode = 0
+offset_left = 43.0
+offset_top = 19.0
+offset_right = 57.0
+offset_bottom = 33.0
+pivot_offset = Vector2(6.5, 6.5)
+texture = SubResource("AtlasTexture_n5en8")
+
+[node name="X" type="TextureRect" parent="X" unique_id=1590774338]
+self_modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 15.0
+offset_bottom = 15.0
+pivot_offset = Vector2(6.5, 6.5)
+texture = SubResource("AtlasTexture_n5en8")
+
+[node name="XParticles" type="GPUParticles2D" parent="X" unique_id=716007813]
+position = Vector2(6.5, 6.5)
+emitting = false
+amount = 40
+lifetime = 1.2
+one_shot = true
+speed_scale = 1.6
+explosiveness = 0.95
+process_material = SubResource("ParticleProcessMaterial_eh6m3")
+
+[node name="ScaledX" type="TextureRect" parent="." unique_id=345032938]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 43.0
+offset_top = 19.0
+offset_right = 57.0
+offset_bottom = 33.0
+pivot_offset = Vector2(6.5, 6.5)
+texture = SubResource("AtlasTexture_n5en8")
+
+[node name="Score" type="Label" parent="." unique_id=64002010]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_right = 3.0
+offset_bottom = 19.0
+grow_horizontal = 2
+text = "0"
+label_settings = ExtResource("2_eh6m3")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Multiplier" type="Label" parent="." unique_id=443973110]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -19.0
+offset_right = 3.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "1.0"
+label_settings = ExtResource("2_eh6m3")
+horizontal_alignment = 1
+vertical_alignment = 1

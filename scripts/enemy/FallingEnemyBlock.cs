@@ -3,17 +3,21 @@ using System;
 
 public partial class FallingEnemyBlock : Node2D
 {
+    public int BoardX;
+
 	Block block;
 	bool isFalling = false;
 
 	//Use this offset when a solid falling block is below us! We should place above them so lift up the preview
 	int AttackSlamOffset = 0;
     float velocity = 0;
+    const float acceleration = 4;
 
-    public FallingEnemyBlock(Block block, int attackSlamOffset)
+    public FallingEnemyBlock(Block block, int boardX, int attackSlamOffset)
     {
         this.block = block;
         AddChild(block);
+        BoardX = boardX;
         AttackSlamOffset = attackSlamOffset;
 
         //disable the block to prevent collision until we fall
@@ -68,7 +72,7 @@ public partial class FallingEnemyBlock : Node2D
 
 	void Fall(double delta)
 	{
-        velocity += (float)(delta * 4);
+        velocity += (float)(delta * acceleration);
 
         //accellerate downwards
         Position = new Vector2(Position.X, Position.Y - velocity);

@@ -3,20 +3,20 @@ using System;
 
 public partial class EncounterScene : Control
 {
-	[Export] ColorRect CRTRect;
+	ColorRect CrtRect;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		CRTRect.Visible = true;
-	}
+		CrtRect = GetNode<ColorRect>("/root/CrtRect");
+    }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
         if (Input.IsActionJustPressed("Debug5"))
         {
-			CRTRect.Visible = !CRTRect.Visible;
+			CrtRect.Visible = !CrtRect.Visible;
         }
     }
 }

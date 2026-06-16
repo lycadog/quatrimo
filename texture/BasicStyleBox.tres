@@ -1,15 +1,16 @@
 [gd_resource type="StyleBoxTexture" format=3 uid="uid://eoj5prkdrxku"]
 
-[ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="1_g784x"]
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_lkbnn"]
+load_path = "res://.godot/imported/uiElements.png-e1a8d0161019c475f1ee097eb2be773b.ctex"
 
 [resource]
 content_margin_left = 5.0
 content_margin_top = 5.0
 content_margin_right = 5.0
 content_margin_bottom = 5.0
-texture = ExtResource("1_g784x")
+texture = SubResource("CompressedTexture2D_lkbnn")
 texture_margin_left = 4.0
 texture_margin_top = 4.0
 texture_margin_right = 4.0
 texture_margin_bottom = 4.0
-region_rect = Rect2(0, 40, 30, 30)
+region_rect = Rect2(0, 70, 30, 30)

@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+[GlobalClass]
 public abstract partial class Enemy : Node
 {
 	public int Level;
@@ -23,23 +24,11 @@ public abstract partial class Enemy : Node
 	protected List<Attack> AllAttacks = [];
     protected List<Attack> AvailableAttacks = [];
 
-	[Export] int StartingLevel = 1;
-	[Export] int MaxLevel = -1;
+	[Export] protected int StartingLevel = 1;
+	[Export] protected int MaxLevel = -1;
 
-	[Export] bool ScaleLevelOvertime = true;
-	[Export] int LevelupEveryXTurns = 30;
-	
-	void InitializeAttacks()
-	{
-		var children = GetChildren();
-		foreach(var node in children)
-		{
-			if(node is Attack attack)
-			{
-				AvailableAttacks.Add(attack);
-			}
-		}
-	}
+	[Export] protected bool ScaleLevelOvertime = true;
+	[Export] protected int LevelupEveryXTurns = 30;
 	
 	public void PlayTurn()
 	{
@@ -53,19 +42,7 @@ public abstract partial class Enemy : Node
         CurrentAttack.UpdateAttack();
 	}
 
-	protected virtual void CustomTurnBehavior()
-	{
-
-	}
-
-
-	protected virtual void ScaleLevel()
-	{
-		if(TurnNumber % LevelupEveryXTurns == 0)
-		{
-			Level++;
-		}
-	}
+	protected virtual void CustomTurnBehavior() { }
 
 	public void Attack_Completed()
 	{
@@ -74,9 +51,29 @@ public abstract partial class Enemy : Node
 
 	protected abstract Attack GetNewAttack();
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
+    protected virtual void ScaleLevel()
+    {
+        if (TurnNumber % LevelupEveryXTurns == 0)
+        {
+            if (Level == MaxLevel) { return; }
+            Level++;
+        }
+    }
+
+    void InitializeAttacks()
+    {
+        var children = GetChildren();
+        foreach (var node in children)
+        {
+            if (node is Attack attack)
+            {
+                AvailableAttacks.Add(attack);
+            }
+        }
+    }
+    public override void _Ready()
 	{
+		Level = StartingLevel;
 		InitializeAttacks();
 	}
 }

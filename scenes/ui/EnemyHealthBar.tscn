@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://bumaamxmqdg05"]
+
+[ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="1_541wu"]
+[ext_resource type="Script" uid="uid://de6tuvae8fbmb" path="res://scripts/visuals/EnemyHealthBar.cs" id="1_ad782"]
+[ext_resource type="FontFile" uid="uid://doj0pcmvib5iu" path="res://lang/QuatrimoNumbers.ttf" id="2_shj0b"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_shj0b"]
+atlas = ExtResource("1_541wu")
+region = Rect2(230, 20, 18, 18)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_541wu"]
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_detail = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_shj0b"]
+font = ExtResource("2_shj0b")
+
+[sub_resource type="LabelSettings" id="LabelSettings_ad782"]
+font = ExtResource("2_shj0b")
+font_color = Color(0, 0, 0, 1)
+
+[node name="EnemyHealthBar" type="Control" unique_id=310443682 node_paths=PackedStringArray("HPTextBlack", "HPTextWhite", "HPRect")]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_ad782")
+HPTextBlack = NodePath("HPRect/HPTextBlack")
+HPTextWhite = NodePath("HPTextWhite")
+HPRect = NodePath("HPRect")
+
+[node name="Background" type="ColorRect" parent="." unique_id=2094047987]
+layout_mode = 0
+offset_right = 140.0
+offset_bottom = 18.0
+color = Color(0, 0, 0, 1)
+
+[node name="HeartIcon" type="TextureRect" parent="." unique_id=1126206623]
+layout_mode = 0
+offset_right = 18.0
+offset_bottom = 18.0
+texture = SubResource("AtlasTexture_shj0b")
+
+[node name="BarBorder" type="Panel" parent="." unique_id=985969330]
+clip_children = 2
+layout_mode = 0
+offset_left = 19.0
+offset_right = 140.0
+offset_bottom = 18.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_541wu")
+
+[node name="RedBorder" type="Panel" parent="BarBorder" unique_id=528583153]
+modulate = Color(0.9490196, 0.05882353, 0.05882353, 1)
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 119.0
+offset_bottom = 16.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_541wu")
+
+[node name="HPTextWhite" type="Label" parent="." unique_id=2116303009]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 4.0
+offset_right = 138.0
+offset_bottom = 18.0
+text = "123456789.0"
+label_settings = SubResource("LabelSettings_shj0b")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HPRect" type="ColorRect" parent="." unique_id=1304201099]
+clip_children = 2
+layout_mode = 0
+offset_left = 21.0
+offset_top = 2.0
+offset_right = 138.0
+offset_bottom = 16.0
+color = Color(0.9490196, 0.05882353, 0.05882353, 1)
+
+[node name="HPTextBlack" type="Label" parent="HPRect" unique_id=1999103305]
+layout_mode = 0
+offset_top = 2.0
+offset_right = 117.0
+offset_bottom = 16.0
+text = "123456789.0"
+label_settings = SubResource("LabelSettings_ad782")
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://d3iwqyva1g6n1"]
+
+[ext_resource type="Shader" uid="uid://bymdcljo62wwu" path="res://shader/scanlinesShader.gdshader" id="1_t3o4k"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3hoax"]
+shader = ExtResource("1_t3o4k")
+
+[node name="CRTRect" type="ColorRect" unique_id=954418321]
+top_level = true
+z_index = 10
+z_as_relative = false
+material = SubResource("ShaderMaterial_3hoax")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

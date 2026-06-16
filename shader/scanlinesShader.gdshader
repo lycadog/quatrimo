@@ -6,7 +6,7 @@ uniform sampler2D screen_texture: hint_screen_texture, filter_linear_mipmap;
 void fragment() {
 	vec2 centered_uv = SCREEN_UV* 2.0 -1.0;
 
-	vec3 scanlines = vec3(sin(2.0 * centered_uv.y * 180.0 - (TIME * 2.)) * .2 + 1.2);
+	vec3 scanlines = vec3(sin(3.5 * centered_uv.y * 180.0 - (TIME * 2.)) * .2 + 1.2);
 
 	vec3 screen_color = textureLod(screen_texture, (centered_uv + 1.0) / 2.0, .5).rgb * scanlines;
 	

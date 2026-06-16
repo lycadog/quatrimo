@@ -24,7 +24,8 @@ public class BoardCollisionData
 
     public bool Solid = true;
 
-    public static Vector2I[] RotationOffsets = [new(0, 0), new(-1, 0), new(1, 0), new(0, 1), new(-1, -1), new(1, -1), new(-2, 0), new(0, -2)];
+    //todo: redo these, they're kinda random rn
+    public static Vector2I[] RotationOffsets = [new(0, 0), new(-1, 0), new(1, 0), new(0, -1), new(-1, -1), new(1, -1), new(-2, 0), new(2, 0), new(0, -2), new(0, 1)];
 
     public bool[] ValidLeftRotations = new bool[RotationOffsets.Length];
     public bool[] ValidRightRotations = new bool[RotationOffsets.Length];

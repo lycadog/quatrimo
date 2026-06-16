@@ -25,7 +25,6 @@ public partial class RowsClearedDial : Control
 
 		if (!Scrolling)
 		{
-			RowsCleared++;
 			EmitSignalStartedScrolling();
 			StartScrolling();
 			return;
@@ -35,7 +34,8 @@ public partial class RowsClearedDial : Control
 
 	void StartScrolling()
 	{
-		Scrolling = true;
+        RowsCleared++;
+        Scrolling = true;
         GetTree().CreateTween().TweenProperty(Container, "position", new Vector2(0, 16), ScrollingTime)
 			.AsRelative().SetTrans(Tween.TransitionType.Cubic).Finished += DoneScrolling;
     }

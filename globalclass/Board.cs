@@ -22,11 +22,12 @@ public partial class Board : Control
 
     [Export] NinePatchRect border;
 	[Export] GradientTexture2D darkGradient;
-    [Export] Label ScoreLabel;
-
+    [Export] ScoreBox ScoreBox;
+    
     [Export] public Node2D BlockBox;
 
     [Export] RowsClearedDial RowsClearedDial;
+    [Export] EnemyHealthBar EnemyHealthBar;
 
     [Export] Area2D BottomBorder;
     [Export] Area2D LeftBorder;
@@ -43,9 +44,22 @@ public partial class Board : Control
 
     [Signal] public delegate void BoardChangedEventHandler();
 
-    public double totalScore = 0;
+    double _TotalScore = 0;
+    public double TotalScore
+    {
+        get => _TotalScore;
+        set { _TotalScore = value; ScoreBox.SetScore(_TotalScore); }
+    }
 
-    int RowsScored = 0;
+    double _LevelTimes = 1;
+    public double LevelTimes
+    {
+        get => _LevelTimes;
+        set { _LevelTimes = value; ScoreBox.SetMult(value); } 
+    }
+
+    int TotalRowsScored = 0;
+    int TurnRowsScored = 0;
     int Level = 1;
     int TurnCount = 1;
 
@@ -83,8 +97,12 @@ public partial class Board : Control
     public void StartTurn()
     {
         GD.Print("Turn started!");
+        ScoreBox.ResetValues(0, LevelTimes);
+
+        TurnRowsScored = 0;
         AnimationTimescale = 1.0;
         BoardUpdated = false;
+
         AnimationManager.ClearAnimations();
         RowsClearedDial.Reset();
         EmitSignalTurnStarted();
@@ -201,7 +219,6 @@ public partial class Board : Control
 
         //shrink timescale each time this is ran so stuff goes by faster
         AnimationTimescale = Math.Max(AnimationTimescale - .1, .04);
-        GD.Print(AnimationTimescale);
 
         AnimationManager.StartAnimating(() => ScoreBoard(false));
     }
@@ -321,16 +338,20 @@ public partial class Board : Control
 
     void OnScoreNumberReachesScore(double number)
     {
-        totalScore += number;
-        ScoreLabel.Text = totalScore.ToString();
+        TotalScore += number;
+        
         AnimationManager.TurnEndAnimationCompleted();
     }
 
     public void Row_StartedScoring()
     {
+        TotalRowsScored++;
+        TurnRowsScored++;
+        RowsClearedDial.AddRow();
+
         BoardUpdated = true;
         AnimationManager.StartAnimating(LowerToFillScoredSpaces);
-        RowsClearedDial.AddRow();
+        
         
         //set up our animationmanager to score again when we conclude!
     }
@@ -343,9 +364,10 @@ public partial class Board : Control
 
     public void OnBlockScored(Block block)
     {
+        //do stuff here with block mult
         AnimationManager.AddTurnEndAnimation();
 
-        var newNumber = MiniScoreNumber.GetNew(block.ScoreValue, ScoreLabel.GetGlobalRect().GetCenter());
+        var newNumber = MiniScoreNumber.GetNew(block.ScoreValue, ScoreBox.ScoreLabel.GetGlobalRect().GetCenter());
         newNumber.NumberReachedScore += OnScoreNumberReachesScore;
         BlockBox.AddChild(newNumber);
         newNumber.Position = block.Position;
@@ -443,18 +465,18 @@ public partial class Board : Control
     {
         if (Input.IsActionJustPressed("Debug2"))
         {
-
+            Row_StartedScoring();
         }
 
         if (Input.IsActionJustPressed("Debug3"))
         {
-            foreach (var row in Rows)
-            {
-                GD.Print($"row {row.y} scorability: {row.totalScorability}, can score: {row.Scorable}");
-            }
+            EnemyHealthBar.AddHealth(-2000);
         }
 
-        
+        if (Input.IsActionJustPressed("Debug6"))
+        {
+            ScoreBox.MultiplyScore(TotalScore * LevelTimes);
+        }
 
         if (Input.IsActionJustPressed("Fullscreen"))
         {

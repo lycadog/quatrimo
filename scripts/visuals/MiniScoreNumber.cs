@@ -5,7 +5,7 @@ public partial class MiniScoreNumber : Node2D
 {
 
 	[Export] Label label;
-    internal double ScoreNumber = 1;
+    internal double Value = 1;
     internal Vector2 finalPosition;
 	Vector2 velocity;
 
@@ -24,6 +24,7 @@ public partial class MiniScoreNumber : Node2D
     //number 50 - ...
     static LabelSettings CrazySettings = ResourceLoader.Load<LabelSettings>("uid://dqhxueja2hvqy");
 
+	static LabelSettings MultSettings = ResourceLoader.Load<LabelSettings>("uid://c11xh8necm285");
 
 
     float TimeAlive = 0;
@@ -37,57 +38,86 @@ public partial class MiniScoreNumber : Node2D
 	{
 		MiniScoreNumber newNumber = (MiniScoreNumber)NumberScene.Instantiate();
 
-		newNumber.ScoreNumber = number;
+		newNumber.Value = number;
         newNumber.finalPosition = endPosition;
 
+        newNumber.ChooseScoreSettings();
         return newNumber;
 	}
 
+	public static MiniScoreNumber GetNewMult(double number, Vector2 endPosition)
+	{
+        MiniScoreNumber newNumber = (MiniScoreNumber)NumberScene.Instantiate();
+
+        newNumber.Value = number;
+        newNumber.finalPosition = endPosition;
+
+		newNumber.ChooseMultSettings();
+        return newNumber;
+    }
 	 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		SetRandomStartingVelocity();
-
-        SetNumber();
         label.Visible = true;
-		
-		//setup children
 	}
 
-    void SetNumber()
+    void ChooseScoreSettings()
     {
-        label.Text = ScoreNumber.ToString();
+        label.Text = Value.ToString();
 
-		label.LabelSettings = LowSettings;
-
-		
-
-		if(ScoreNumber < 1)
+        if (Value < 1)
 		{
 			label.LabelSettings = BadSettings;
 		}
 
-        if (ScoreNumber < 3)
+        else if (Value < 4)
         {
-            return;
+            label.LabelSettings = LowSettings;
         }
-
-        //this is shit lol TODO
-        if (ScoreNumber > 19)
-		{
-			Scale = new(1, 1);
-			label.LabelSettings = ReallyHighSettings;
-		}
-		else if(ScoreNumber > 7)
-		{
-            Scale = new(0.9f, 0.9f);
-            label.LabelSettings = HighSettings;
-		}
-		else if(ScoreNumber > 2)
+		else if (Value < 8)
 		{
             Scale = new(0.8f, 0.8f);
             label.LabelSettings = MediumSettings;
+        }
+		else if( Value < 20)
+		{
+            Scale = new(0.9f, 0.9f);
+            label.LabelSettings = HighSettings;
+        }
+		else if (Value < 50)
+		{
+            Scale = new(1, 1);
+            label.LabelSettings = ReallyHighSettings;
+		}
+		else
+		{
+            Scale = new(1, 1);
+            label.LabelSettings = CrazySettings;
+        }
+    }
+
+	void ChooseMultSettings()
+	{
+        //×
+        label.Text = "x" + Value.ToString();
+
+		if(Value > 0)
+		{
+			label.LabelSettings = BadSettings;
+		}
+		else if(Value > 1.5)
+		{
+			label.LabelSettings = MultSettings;
+		}
+		else if(Value > 3)
+		{
+			label.LabelSettings = ReallyHighSettings;
+		}
+		else
+		{
+			label.LabelSettings = CrazySettings;
 		}
     }
 
@@ -105,7 +135,7 @@ public partial class MiniScoreNumber : Node2D
 			Tween tween = GetTree().CreateTween();
 			tween.TweenProperty(this, "scale", new Vector2(0, 0), .05).Finished += () => { QueueFree(); };
 
-			EmitSignalNumberReachedScore(ScoreNumber);
+			EmitSignalNumberReachedScore(Value);
 			return;
 		}
 

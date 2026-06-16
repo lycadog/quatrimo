@@ -54,7 +54,7 @@ public static class Data
     
     public static PieceShape sLongBigTee = new([(-1, -1), (-1, 0), (-1, 1), (0, 0), (1, 0), (2, 0)], "Long Big Tee");
     public static DualPieceShape sLongL = new([(-1, -1), (-1, 0), (0, 0), (1, 0), (2, 0)], "Long Elle");
-    public static DualPieceShape sLongHook = new([(-2, 0), (-1, 0), (0, 0), (1, 0),], "Long Hook");
+    public static DualPieceShape sLongHook = new([(-1.5f, -0.5f), (-.5f, .5f), (.5f, .5f), (1.5f, .5f)], "Long Hook");
     public static DualPieceShape sLineHook = new([(-2, 0), (-1, 0), (0, 0), (1, 0), (2, -1)], "Line Hook");
     public static DualPieceShape sHookedWedge = new([(-2, 1), (-1, 0), (0, 0), (0, -1)], "Hooked Wedge");
     public static DualPieceShape sHookedTeeA = new([(-1, 0), (0, 0), (0, -1), (1, 0), (2, -1)], "Hooked Tee A");
@@ -157,7 +157,9 @@ public static class Data
 
     #region === Random Loot Pools ===
 
-    public static ObjectPool<BlockType> AllBlocksPool = new([BlockType.Basic], [BlockType.Reinforced, BlockType.Hologram, BlockType.Diamond], [BlockType.Cursed, BlockType.Laser, BlockType.Fire], 12, 3, 1);
+    public static ObjectPool<BlockType> AllBlocksPool = new([BlockType.Basic], [BlockType.Reinforced, BlockType.Hologram, BlockType.Diamond], [BlockType.Cursed, BlockType.Laser], 12, 3, 1);
+    
+    //why is this here?
     public static ObjectPool<IHasShape> DebugShapePool = new(sBox);
 
     #endregion
@@ -174,7 +176,7 @@ public static class Data
     #region === Bags ===
 
     
-    public static StarterBag magnetBag = new([sBigTee.B, sHatchet.LB, sHatchet.RB, sDipole.B, sHook.LB, sHook.RB, sLine.B, sTwig.B, sWedge.B, CursedNub, RandomPiece, RandomPiece, RandomPiece],
+    public static StarterBag magnetBag = new([sBigTee.B, sHatchet.LB, sHatchet.RB, sDipole.B, sHook.LB, sHook.RB, sLine.B, sTwig.B, sWedge.B, RandomPiece, RandomPiece, RandomPiece],
            [(334, .62f, .97f), (294, .77f, .973f), (280, .94f, .94f), (258, .65f, .98f), (163, .56f, .97f), (124, .66f, .96f), (348, .75f, .9f), (36, .73f, 1f), (240, .73f, .95f)],
                "magnet bag");
 
@@ -184,7 +186,7 @@ public static class Data
 
     public static StarterBag longDistanceBag = new([sScatteredWedge.B, sSeperatedT.B, sScatteredL.LB, sScatteredL.RB, sSlash.B, sLepton.B, sTangle.LB, sTangle.RB, sBowl.B, sStick.B, sWedge.B, sNub.B, sLine.B], new Rect2(0, 50, 10, 10), "quanto bag idk");
 
-    public static StarterBag randomBullshitBag = new([sTwig.B, sWedge.B, sLine.B, CursedNub, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece], "fuck");
+    public static StarterBag randomBullshitBag = new([sTwig.B, sWedge.B, sLine.B, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece], "fuck");
     
     public static StarterBag debugBag = new([sMegalith.B, CursedNub], "debug");
 

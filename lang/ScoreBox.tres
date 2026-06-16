@@ -1,0 +1,8 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://bcoq8lscv4ueb"]
+
+[ext_resource type="FontFile" uid="uid://y3nrp4nknidx" path="res://lang/C&C Red Alert [INET].ttf" id="1_0rfk1"]
+
+[resource]
+font = ExtResource("1_0rfk1")
+font_size = 18
+shadow_color = Color(0.3019608, 0, 0.16470589, 1)
