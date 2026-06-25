@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://dstcejes8xn86"]
+
+[sub_resource type="Gradient" id="Gradient_8ge3q"]
+offsets = PackedFloat32Array(0, 0.19444445)
+colors = PackedColorArray(0.83, 0.747, 0.77881664, 0.63529414, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_dy0jc"]
+gradient = SubResource("Gradient_8ge3q")
+
+[sub_resource type="Curve" id="Curve_ysfdn"]
+_data = [Vector2(0.007042259, 0.18568242), 0.0, 0.0, 0, 0, Vector2(0.7629108, 0.9910515), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_on6xs"]
+curve = SubResource("Curve_ysfdn")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yv2y0"]
+particle_flag_disable_z = true
+direction = Vector3(0, 1, 0)
+spread = 160.0
+initial_velocity_min = 30.0
+initial_velocity_max = 40.0
+angular_velocity_min = -200.00002
+angular_velocity_max = 199.99998
+gravity = Vector3(0, 0, 0)
+radial_accel_min = -2.0000021
+radial_accel_max = -2.0000021
+scale_min = 40.0
+scale_max = 40.0
+scale_curve = SubResource("CurveTexture_on6xs")
+color = Color(0.97, 0.9312, 0.9506, 1)
+color_ramp = SubResource("GradientTexture1D_dy0jc")
+
+[node name="Node2D" type="Node2D" unique_id=784436446]
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1574817306]
+amount = 2000
+lifetime = 20.0
+process_material = SubResource("ParticleProcessMaterial_yv2y0")

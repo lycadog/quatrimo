@@ -14,7 +14,6 @@ public partial class FallingPiece : Node2D
         }
         //set method that auto updates our position
     }
-
     public Vector2I Dimensions;
 
     public FallingPiece(Block[] newBlocks, Vector2I dimensions)
@@ -29,14 +28,20 @@ public partial class FallingPiece : Node2D
                 Offset = new(5, 5);
             }
         }
-
         Dimensions = dimensions;
+
+        SfxMove = new() { Stream = MoveBlip, VolumeDb = -16.0f };
+        AddChild(SfxMove);
     }
+
+    static AudioStreamWav MoveBlip = ResourceLoader.Load<AudioStreamWav>("uid://bklrddjdj5m80");
 
     Vector2 Offset = new(0, 0);
 
 	public List<Block> Blocks = [];
     protected BoardCollisionData CollisionData = new();
+
+    AudioStreamPlayer SfxMove;
 
     bool Falling = false;
     double fallingCounter = -0.2;

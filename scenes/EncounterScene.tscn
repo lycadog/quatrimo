@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bpo3d227m28dj" path="res://scenes/bag/playerHand.tscn" id="6_u7t6i"]
 [ext_resource type="PackedScene" uid="uid://o6pwekw2ruek" path="res://scenes/ui/ScoreBox.tscn" id="7_ioiev"]
 [ext_resource type="Script" uid="uid://481h7xwr5q1f" path="res://scripts/visuals/BoardAnimationManager.cs" id="9_ioiev"]
-[ext_resource type="FontFile" uid="uid://cg88y1bvnly6p" path="res://Px437_ToshibaSat_8x16.ttf" id="9_knim7"]
+[ext_resource type="PackedScene" uid="uid://bu7pideos4dsg" path="res://scenes/ui/LevelStats.tscn" id="9_knim7"]
 [ext_resource type="PackedScene" uid="uid://bumaamxmqdg05" path="res://scenes/ui/EnemyHealthBar.tscn" id="9_u7t6i"]
 [ext_resource type="PackedScene" uid="uid://3g8r3vdcymf3" path="res://scenes/ui/RowsClearedDial.tscn" id="10_kciur"]
 
@@ -20,13 +20,6 @@ region = Rect2(0, 0, 166, 55)
 [sub_resource type="AtlasTexture" id="AtlasTexture_3q3ns"]
 atlas = ExtResource("4_ioiev")
 region = Rect2(110, 0, 49, 27)
-
-[sub_resource type="LabelSettings" id="LabelSettings_u7t6i"]
-line_spacing = 0.0
-font = ExtResource("9_knim7")
-font_size = 8
-outline_size = 1
-outline_color = Color(8.731843e-06, 8.731842e-06, 8.731842e-06, 1)
 
 [node name="EncounterScene" type="Control" unique_id=556453924]
 layout_mode = 3
@@ -152,17 +145,6 @@ offset_bottom = 66.0
 grow_horizontal = 1
 grow_vertical = 1
 
-[node name="Label" type="Label" parent="RightUI" unique_id=1769553033]
-layout_mode = 0
-offset_left = 123.0
-offset_top = 57.0
-offset_right = 165.0
-offset_bottom = 82.0
-text = "17/100"
-label_settings = SubResource("LabelSettings_u7t6i")
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="EnemyHealthBar" parent="RightUI" unique_id=310443682 instance=ExtResource("9_u7t6i")]
 layout_mode = 0
 offset_left = 7.0
@@ -170,11 +152,19 @@ offset_top = -4.0
 offset_right = 7.0
 offset_bottom = -4.0
 
-[node name="Board" parent="." unique_id=30435418 node_paths=PackedStringArray("AnimationManager", "ScoreBox", "RowsClearedDial", "EnemyHealthBar") instance=ExtResource("5_knim7")]
+[node name="LevelStats" parent="RightUI" unique_id=1080291675 instance=ExtResource("9_knim7")]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 67.0
+offset_right = 131.0
+offset_bottom = 87.0
+
+[node name="Board" parent="." unique_id=30435418 node_paths=PackedStringArray("AnimationManager", "RowsClearedDial", "ScoreBox", "LevelStatBoxes", "EnemyHealthBar") instance=ExtResource("5_knim7")]
 layout_mode = 1
 AnimationManager = NodePath("AnimationManager")
-ScoreBox = NodePath("../RightUI/ScoreBox")
 RowsClearedDial = NodePath("../RightUI/RowsClearedDial")
+ScoreBox = NodePath("../RightUI/ScoreBox")
+LevelStatBoxes = NodePath("../RightUI/LevelStats")
 EnemyHealthBar = NodePath("../RightUI/EnemyHealthBar")
 
 [node name="AnimationManager" type="Node" parent="Board" unique_id=1746969919]
@@ -193,7 +183,11 @@ layout_mode = 0
 [connection signal="ReachedNumber" from="RightUI/RowsClearedDial" to="RightUI/ScoreBox" method="RowScored"]
 [connection signal="StartedScrolling" from="RightUI/RowsClearedDial" to="Board/AnimationManager" method="AddTurnEndAnimation"]
 [connection signal="StoppedScrolling" from="RightUI/RowsClearedDial" to="Board/AnimationManager" method="TurnEndAnimationCompleted"]
+[connection signal="FinishedTickingDown" from="RightUI/ScoreBox" to="Board" method="EndTurn"]
+[connection signal="StartedTickingDown" from="RightUI/ScoreBox" to="Board" method="ScoreBox_TickingDown"]
+[connection signal="TurnEndAnimationCompleted" from="RightUI/ScoreBox" to="Board/AnimationManager" method="TurnEndAnimationCompleted"]
+[connection signal="TurnEndAnimationCreated" from="RightUI/ScoreBox" to="Board/AnimationManager" method="AddTurnEndAnimation"]
 [connection signal="PiecePlaced" from="Board" to="Hand/PlayerHand" method="OnPiecePlaced"]
 [connection signal="TurnStarted" from="Board" to="Hand/PlayerHand" method="OnTurnStart"]
-[connection signal="TurnEndAnimationsCompleted" from="Board/AnimationManager" to="Board" method="EndTurn"]
+[connection signal="TurnEndAnimationsCompleted" from="Board/AnimationManager" to="Board" method="FinalizeScore"]
 [connection signal="CardPlayed" from="Hand/PlayerHand" to="Board" method="PlayCard"]

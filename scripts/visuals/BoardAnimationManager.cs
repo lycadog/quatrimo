@@ -29,7 +29,7 @@ public partial class BoardAnimationManager : Node
 		CheckTurnEnd();
 	}
 
-    public void StartEndOfTurnWaiting()
+    public void StartPreFinalizationWaiting()
     {
 		GD.Print("Started end of turn waiting!");
 		WaitingOnTurnEnd = true;

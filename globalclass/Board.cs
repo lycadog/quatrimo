@@ -18,15 +18,19 @@ public partial class Board : Control
     public Vector2I Dimensions;
     public Vector2I CellDimensions;
 
+    bool PlayingScoringSfx = false;
+
     [Export] BoardAnimationManager AnimationManager;
+    [Export] AudioStreamPlayer ScoringSfx;
 
     [Export] NinePatchRect border;
 	[Export] GradientTexture2D darkGradient;
-    [Export] ScoreBox ScoreBox;
     
     [Export] public Node2D BlockBox;
 
     [Export] RowsClearedDial RowsClearedDial;
+    [Export] ScoreBox ScoreBox;
+    [Export] LevelStatBoxes LevelStatBoxes;
     [Export] EnemyHealthBar EnemyHealthBar;
 
     [Export] Area2D BottomBorder;
@@ -44,23 +48,46 @@ public partial class Board : Control
 
     [Signal] public delegate void BoardChangedEventHandler();
 
-    double _TotalScore = 0;
-    public double TotalScore
+    public double CurrentScore = 0;
+
+    double _LevelMult;
+    public double LevelMult
     {
-        get => _TotalScore;
-        set { _TotalScore = value; ScoreBox.SetScore(_TotalScore); }
+        get => _LevelMult;
+        set { _LevelMult = value; ScoreBox.SetMult(value); } 
     }
 
-    double _LevelTimes = 1;
-    public double LevelTimes
+    int _Level;
+    int Level
     {
-        get => _LevelTimes;
-        set { _LevelTimes = value; ScoreBox.SetMult(value); } 
+        get => _Level;
+        set { _Level = value; LevelStatBoxes.LevelLabel.Text = _Level.ToString(); }
+    }
+
+    double _MultPerLevel;
+    double MultPerLevel
+    {
+        get => _MultPerLevel;
+        set { _MultPerLevel = value;
+
+            LevelStatBoxes.XPerLevelLabel.Text = "+" + MultPerLevel + "x"; }
+    }
+
+    int _RowsUntilLevelUp;
+    int RowsUntilLevelUp
+    {
+        get => _RowsUntilLevelUp;
+        set { 
+            if(value <= 0)
+            {
+                LevelUp();
+                return;
+            }
+            _RowsUntilLevelUp = value; LevelStatBoxes.RowsToLevelUpLabel.Text = _RowsUntilLevelUp.ToString(); }
     }
 
     int TotalRowsScored = 0;
     int TurnRowsScored = 0;
-    int Level = 1;
     int TurnCount = 1;
 
     bool _BoardUpdated = false;
@@ -97,7 +124,8 @@ public partial class Board : Control
     public void StartTurn()
     {
         GD.Print("Turn started!");
-        ScoreBox.ResetValues(0, LevelTimes);
+        CurrentScore = Run.Current.BaseScore;
+        ScoreBox.ResetValues(LevelMult);
 
         TurnRowsScored = 0;
         AnimationTimescale = 1.0;
@@ -110,6 +138,7 @@ public partial class Board : Control
 
     void ScoreBoard(bool initialStep)
     {
+        PlayingScoringSfx = false;
         if(!BoardUpdated && !initialStep)
         {
             //progress forwards!
@@ -163,19 +192,49 @@ public partial class Board : Control
             return;
         }
 
-        BeginTurnEnd(); //nothing to score, let's progress
+        PreFinalizationWaiting(); //nothing to score, let's progress
     }
 
-    void BeginTurnEnd()
+    void PreFinalizationWaiting()
     {
         //setup stuff here
-        AnimationManager.StartEndOfTurnWaiting();
+        AnimationManager.StartPreFinalizationWaiting();
+    }
+
+    void FinalizeScore()
+    {
+
+
+
+        bool ShouldMultiply = TurnRowsScored >= 4;
+
+        if(ShouldMultiply)
+        {
+            CurrentScore *= LevelMult;
+        }
+
+        ScoreBox.ProcessScore(CurrentScore, ShouldMultiply);
+        //score box will trigger the next step through its signals, starting the ticking down/damaging of enemy.
+        //then that will signal to move onto the next turn
+    }
+
+    void ScoreBox_TickingDown()
+    {
+        EnemyHealthBar.DealDamage(CurrentScore);
     }
 
     void EndTurn()
     {
         EmitSignalTurnEnded();
         StartTurn();
+    }
+
+    void LevelUp()
+    {
+        //todo: play sounds idk
+        Level++;
+        LevelMult += MultPerLevel;
+        RowsUntilLevelUp += Run.Current.RowsNeededForLevelup;
     }
 
     void LowerToFillScoredSpaces()
@@ -338,15 +397,24 @@ public partial class Board : Control
 
     void OnScoreNumberReachesScore(double number)
     {
-        TotalScore += number;
+        CurrentScore += number;
+        ScoreBox.SetScore(CurrentScore);
         
         AnimationManager.TurnEndAnimationCompleted();
     }
 
     public void Row_StartedScoring()
     {
+        if (!PlayingScoringSfx)
+        {
+            ScoringSfx.Play();
+            PlayingScoringSfx = true;
+        }
+
         TotalRowsScored++;
         TurnRowsScored++;
+        RowsUntilLevelUp--;
+
         RowsClearedDial.AddRow();
 
         BoardUpdated = true;
@@ -454,6 +522,12 @@ public partial class Board : Control
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        LevelMult = Run.Current.BaseMult;
+
+        Level = Run.Current.BaseLevel;
+        MultPerLevel = Run.Current.MultPerLevel;
+        RowsUntilLevelUp = Run.Current.RowsNeededForLevelup;
+
         SetDimensions(defaultX, defaultY);
         BoardAccessor.CurrentBoard = this;
         StartTurn();
@@ -470,12 +544,12 @@ public partial class Board : Control
 
         if (Input.IsActionJustPressed("Debug3"))
         {
-            EnemyHealthBar.AddHealth(-2000);
+
         }
 
         if (Input.IsActionJustPressed("Debug6"))
         {
-            ScoreBox.MultiplyScore(TotalScore * LevelTimes);
+
         }
 
         if (Input.IsActionJustPressed("Fullscreen"))

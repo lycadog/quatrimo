@@ -1,6 +1,6 @@
 [gd_resource type="Theme" format=3 uid="uid://k0kv5clnucgm"]
 
-[ext_resource type="StyleBox" uid="uid://eoj5prkdrxku" path="res://texture/BasicStyleBox.tres" id="1_pfrwa"]
+[ext_resource type="StyleBox" uid="uid://eoj5prkdrxku" path="res://resource/BasicStyleBox.tres" id="1_pfrwa"]
 [ext_resource type="FontFile" uid="uid://cg88y1bvnly6p" path="res://Px437_ToshibaSat_8x16.ttf" id="2_q1nqw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pfrwa"]

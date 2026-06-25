@@ -1,0 +1,203 @@
+[gd_scene format=3 uid="uid://bu7pideos4dsg"]
+
+[ext_resource type="Script" uid="uid://fyc7i67y110s" path="res://scripts/visuals/LevelStatBoxes.cs" id="1_qooye"]
+[ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="1_t514q"]
+[ext_resource type="FontFile" uid="uid://y3nrp4nknidx" path="res://lang/C&C Red Alert [INET].ttf" id="2_qooye"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_t514q"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+texture = ExtResource("1_t514q")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+expand_margin_left = 3.0
+expand_margin_top = 2.0
+expand_margin_right = 3.0
+expand_margin_bottom = 2.0
+region_rect = Rect2(10, 50, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t514q"]
+atlas = ExtResource("1_t514q")
+region = Rect2(244, 0, 3, 2)
+
+[sub_resource type="LabelSettings" id="LabelSettings_t514q"]
+font = ExtResource("2_qooye")
+font_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_u3xo5"]
+font = ExtResource("2_qooye")
+font_size = 12
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_34wlw"]
+font = ExtResource("2_qooye")
+font_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_fiyoj"]
+font = ExtResource("2_qooye")
+font_size = 6
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_se32y"]
+font = ExtResource("2_qooye")
+font_size = 10
+shadow_color = Color(0, 0, 0, 1)
+
+[node name="LevelStats" type="Control" unique_id=1310085233 node_paths=PackedStringArray("LevelLabel", "XPerLevelLabel", "RowsToLevelUpLabel")]
+self_modulate = Color(1.836182, 1.4979942, 1.4979942, 1)
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 104.0
+offset_bottom = 22.0
+script = ExtResource("1_qooye")
+LevelLabel = NodePath("HBoxContainer/LVL/Level/LevelLabel")
+XPerLevelLabel = NodePath("HBoxContainer/+X Per Level/+X Per Lvl/+X Label")
+RowsToLevelUpLabel = NodePath("HBoxContainer/Level Up in X Rows/LVL UP/Rows Label")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=907330087]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 2.0
+offset_right = 103.0
+offset_bottom = 20.0
+theme_override_constants/separation = 10
+
+[node name="LVL" type="Panel" parent="HBoxContainer" unique_id=485477380]
+self_modulate = Color(1.8247963, 1.5575267, 1.7178886, 1)
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_t514q")
+
+[node name="Level" type="VBoxContainer" parent="HBoxContainer/LVL" unique_id=424353406]
+layout_mode = 0
+offset_right = 26.0
+offset_bottom = 18.0
+theme_override_constants/separation = -1
+
+[node name="LevelHeader" type="Control" parent="HBoxContainer/LVL/Level" unique_id=1659880367]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="HeaderSprites" type="VBoxContainer" parent="HBoxContainer/LVL/Level/LevelHeader" unique_id=1223673269]
+layout_mode = 0
+offset_left = 1.0
+offset_right = 4.0
+offset_bottom = 7.0
+theme_override_constants/separation = 1
+alignment = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/LVL/Level/LevelHeader/HeaderSprites" unique_id=1972337235]
+self_modulate = Color(0.972549, 0.59607846, 0.32156864, 1)
+layout_mode = 2
+texture = SubResource("AtlasTexture_t514q")
+stretch_mode = 2
+
+[node name="TextureRect2" type="TextureRect" parent="HBoxContainer/LVL/Level/LevelHeader/HeaderSprites" unique_id=1382031573]
+self_modulate = Color(0.95686275, 0.17254902, 0.4, 1)
+layout_mode = 2
+texture = SubResource("AtlasTexture_t514q")
+stretch_mode = 2
+
+[node name="MiniLabel" type="Label" parent="HBoxContainer/LVL/Level/LevelHeader" unique_id=1614457226]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 1.0
+offset_right = 19.0
+offset_bottom = 8.0
+text = "LEVEL"
+label_settings = SubResource("LabelSettings_t514q")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="HeaderSprites2" type="VBoxContainer" parent="HBoxContainer/LVL/Level/LevelHeader" unique_id=11030451]
+layout_mode = 0
+offset_left = 21.0
+offset_right = 24.0
+offset_bottom = 7.0
+theme_override_constants/separation = 1
+alignment = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/LVL/Level/LevelHeader/HeaderSprites2" unique_id=117692854]
+self_modulate = Color(0.972549, 0.59607846, 0.32156864, 1)
+layout_mode = 2
+texture = SubResource("AtlasTexture_t514q")
+stretch_mode = 2
+
+[node name="TextureRect2" type="TextureRect" parent="HBoxContainer/LVL/Level/LevelHeader/HeaderSprites2" unique_id=1200522043]
+self_modulate = Color(0.95686275, 0.17254902, 0.4, 1)
+layout_mode = 2
+texture = SubResource("AtlasTexture_t514q")
+stretch_mode = 2
+
+[node name="LevelLabel" type="Label" parent="HBoxContainer/LVL/Level" unique_id=209616032]
+layout_mode = 2
+text = "25"
+label_settings = SubResource("LabelSettings_u3xo5")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="+X Per Level" type="Panel" parent="HBoxContainer" unique_id=785965893]
+self_modulate = Color(1.8510373, 0.8393019, 1.1596845, 1)
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_t514q")
+
+[node name="+X Per Lvl" type="VBoxContainer" parent="HBoxContainer/+X Per Level" unique_id=1170593690]
+layout_mode = 0
+offset_right = 29.0
+offset_bottom = 18.0
+theme_override_constants/separation = -2
+
+[node name="+X Label" type="Label" parent="HBoxContainer/+X Per Level/+X Per Lvl" unique_id=495474606]
+layout_mode = 2
+text = "+0.5x"
+label_settings = SubResource("LabelSettings_u3xo5")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MiniLabel" type="Label" parent="HBoxContainer/+X Per Level/+X Per Lvl" unique_id=63725228]
+layout_mode = 2
+text = "PER LEVEL"
+label_settings = SubResource("LabelSettings_34wlw")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Level Up in X Rows" type="Panel" parent="HBoxContainer" unique_id=132442688]
+self_modulate = Color(1.7388957, 1.0898122, 2.2025266, 1)
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_t514q")
+
+[node name="LVL UP" type="VBoxContainer" parent="HBoxContainer/Level Up in X Rows" unique_id=1899662252]
+layout_mode = 0
+offset_right = 26.0
+offset_bottom = 18.0
+theme_override_constants/separation = -3
+
+[node name="MiniLabel2" type="Label" parent="HBoxContainer/Level Up in X Rows/LVL UP" unique_id=1566112215]
+layout_mode = 2
+text = "LEVEL UP IN"
+label_settings = SubResource("LabelSettings_fiyoj")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Rows Label" type="Label" parent="HBoxContainer/Level Up in X Rows/LVL UP" unique_id=1106227209]
+layout_mode = 2
+text = "10"
+label_settings = SubResource("LabelSettings_se32y")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MiniLabel" type="Label" parent="HBoxContainer/Level Up in X Rows/LVL UP" unique_id=1920600363]
+layout_mode = 2
+text = " ROWS"
+label_settings = SubResource("LabelSettings_fiyoj")
+horizontal_alignment = 1
+vertical_alignment = 1

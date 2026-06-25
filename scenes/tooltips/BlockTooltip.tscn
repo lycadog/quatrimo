@@ -1,11 +1,10 @@
 [gd_scene format=3 uid="uid://bqjrqw2rwdwpj"]
 
-[ext_resource type="StyleBox" uid="uid://eoj5prkdrxku" path="res://texture/BasicStyleBox.tres" id="1_5uewh"]
+[ext_resource type="StyleBox" uid="uid://eoj5prkdrxku" path="res://resource/BasicStyleBox.tres" id="1_5uewh"]
 [ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="1_06ehf"]
-[ext_resource type="FontFile" uid="uid://cg88y1bvnly6p" path="res://Px437_ToshibaSat_8x16.ttf" id="2_50ulf"]
 [ext_resource type="Texture2D" uid="uid://dib0bjbdg8no8" path="res://texture/atlas.png" id="2_ubl57"]
+[ext_resource type="FontFile" uid="uid://y3nrp4nknidx" path="res://lang/C&C Red Alert [INET].ttf" id="4_5uewh"]
 [ext_resource type="Theme" uid="uid://k0kv5clnucgm" path="res://resource/BasicTheme.tres" id="4_ubl57"]
-[ext_resource type="FontFile" uid="uid://jewfd7fg582r" path="res://lang/Amstrad_PC-2y.ttf" id="6_v8aaa"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ubl57"]
 atlas = ExtResource("1_06ehf")
@@ -16,7 +15,7 @@ atlas = ExtResource("2_ubl57")
 region = Rect2(0, 30, 10, 10)
 
 [sub_resource type="LabelSettings" id="LabelSettings_5uewh"]
-font = ExtResource("2_50ulf")
+font = ExtResource("4_5uewh")
 font_size = 12
 outline_size = 2
 outline_color = Color(0.4361766, 0.07810001, 0.71, 1)
@@ -28,8 +27,8 @@ atlas = ExtResource("1_06ehf")
 region = Rect2(10, 27, 13, 13)
 
 [sub_resource type="LabelSettings" id="LabelSettings_50ulf"]
-font = ExtResource("6_v8aaa")
-font_size = 6
+font = ExtResource("4_5uewh")
+font_size = 8
 outline_size = 1
 outline_color = Color(0, 0, 0, 1)
 shadow_color = Color(0, 0, 0, 1)

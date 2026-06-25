@@ -11,7 +11,7 @@ public partial class BoardRow(int y, int boardWidth) : Node
     {
         get
         {
-            return boardWidth - RunStats.EmptySpacesAllowedInScoring - RunStats.EmptySpacesRequiredInScoring;
+            return boardWidth - Run.Current.EmptySpacesAllowedInScoring - Run.Current.EmptySpacesRequiredInScoring;
         }
     }
 
@@ -19,7 +19,7 @@ public partial class BoardRow(int y, int boardWidth) : Node
     {
         get
         {
-            return boardWidth - RunStats.EmptySpacesRequiredInScoring;
+            return boardWidth - Run.Current.EmptySpacesRequiredInScoring;
         }
     }
 

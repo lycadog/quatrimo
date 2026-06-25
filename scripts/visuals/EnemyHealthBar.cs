@@ -9,29 +9,31 @@ public partial class EnemyHealthBar : Control
     [Export] Label HPTextWhite;
     [Export] ColorRect HPRect;
 
-    const double BarChangeTime = 0.4;
+    public const double BarChangeTime = 0.8;
+    
 
-    public void AddHealth(double hp)
+    public void DealDamage(double damage)
     {
-        if(hp < 0)
+        
+        if(damage > 0)
         {
             DamageAnimation();
         }
 
-        HP += (int)hp;
-        UpdateText();
+        int oldHP = HP;
+        HP -= (int)damage;
 
-        float BarSize = (HP / (float)MaxHP) * 117f;
+        float BarSize = HP / (float)MaxHP * 117f;
 
-        GD.Print("hp size: " + BarSize);
-
-        GetTree().CreateTween().TweenProperty(HPRect, "size:x", BarSize, BarChangeTime).SetTrans(Tween.TransitionType.Cubic);
+        Tween tween = GetTree().CreateTween().SetParallel();
+        tween.TweenMethod(Callable.From<int>(TweenText), oldHP, HP, BarChangeTime);
+        tween.TweenProperty(HPRect, "size:x", BarSize, BarChangeTime).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
     }
 
     public override void _Ready()
     {
-        HP = 10000;
-        MaxHP = 10000;
+        HP = 140;
+        MaxHP = 140;
         UpdateText();
     }
 
@@ -44,6 +46,12 @@ public partial class EnemyHealthBar : Control
     void UpdateText()
     {
         HPTextBlack.Text = HP.ToString();
+        HPTextWhite.Text = HPTextBlack.Text;
+    }
+
+    void TweenText(int number)
+    {
+        HPTextBlack.Text = number.ToString();
         HPTextWhite.Text = HPTextBlack.Text;
     }
 }

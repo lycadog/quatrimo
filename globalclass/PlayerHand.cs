@@ -164,7 +164,7 @@ public partial class PlayerHand : Container
     public void OnTurnStart()
     {
         InputEnabled = true;
-        if (Hand.Count <= RunStats.CardCountRequiredBeforeDrawing)
+        if (Hand.Count <= Run.Current.CardCountRequiredBeforeDrawing)
         {
             DrawHand();
         }
@@ -218,7 +218,7 @@ public partial class PlayerHand : Container
 
     public void DrawHand()
     {
-        for (int i = 0; i < RunStats.HandDrawSize; i++)
+        for (int i = 0; i < Run.Current.HandDrawSize; i++)
         {
             AddToHand(Bag.DrawRandomCard());
         }
