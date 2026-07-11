@@ -6,9 +6,9 @@ public static class BoardAccessor
 {
     //todo: this sucks. but we need to check in on the board somehow!
 
-    static Board _CurrentBoard;
+    static BoardOld _CurrentBoard;
 
-    public static Board CurrentBoard
+    public static BoardOld CurrentBoard
     {
         private get => _CurrentBoard; 
         set => _CurrentBoard = value;

@@ -22,11 +22,17 @@ public partial class ScoreBox : TextureRect
     [Signal] public delegate void StartedTickingDownEventHandler();
     [Signal] public delegate void FinishedTickingDownEventHandler();
 
+    [Signal] public delegate void ResetFinishedEventHandler();
+
     int ScoreNumber = 0;
 
     const double GlowySpreadDuration = 0.25;
     const double MultiplicationAnimationDuration = 0.6;
     const double WaitTimeBeforeTickingDown = 0.4;
+
+    public const double ResetTime = 0.8;
+
+    static Color XOfflineColor = new(.188f, .159f, .168f);
 
     public override void _Ready()
     {
@@ -61,8 +67,6 @@ public partial class ScoreBox : TextureRect
 
     public void RowScored(short RowsScored)
     {
-        GD.Print("Score box reached rows: " + RowsScored);
-
         if (RowsScored == 4)
         {
             TweenGlowies(new Color(.957f, .173f, .4f));
@@ -74,6 +78,10 @@ public partial class ScoreBox : TextureRect
         else if(RowsScored == 8)
         {
             TweenGlowies(new Color(.973f, .596f, .322f));
+        }
+        else if(RowsScored == 10)
+        {
+            TweenGlowies(Colors.White);
         }
     }
 
@@ -99,9 +107,19 @@ public partial class ScoreBox : TextureRect
 
     void TurnOffGlowies()
     {
-        XSprite.SelfModulate = new Color(.188f, .159f, .168f);
+        if(StaticGlowy.Visible == false)
+        {
+            EmitSignalResetFinished();
+            return;
+        }
+
+        Tween tween = GetTree().CreateTween().SetParallel();
+        tween.TweenProperty(XSprite, "self_modulate", XOfflineColor, ResetTime).SetTrans(Tween.TransitionType.Quint)
+            .Finished += EmitSignalResetFinished;
+
         StaticGlowy.Visible = false;
-        AnimatedGlowyClippingRect.Size = new(0, 17);
+        AnimatedGlowyClippingRect.Size = new(40, 17);
+        tween.TweenProperty(AnimatedGlowyClippingRect, "size:x", 0, ResetTime - 0.2).SetTrans(Tween.TransitionType.Cubic);
     }
 
     /// <summary>
@@ -109,9 +127,11 @@ public partial class ScoreBox : TextureRect
     /// </summary>
     public void ResetValues(double Mult)
     {
-        TurnOffGlowies();
         ScoreLabel.SelfModulate = new Color(.58f, .48f, .48f);
+        ScoreLabel.Text = Run.Current.BaseScore.ToString();
         MultiplierLabel.Text = Mult.ToString();
+
+        TurnOffGlowies();
     }
 
     /// <summary>
@@ -154,6 +174,7 @@ public partial class ScoreBox : TextureRect
         }
         else
         {
+            //multiply!
             //add a small delay here before this starts!
             CreateTween().TweenCallback(Callable.From(() => 
             MultiplyScore(finalScore)))
@@ -168,7 +189,7 @@ public partial class ScoreBox : TextureRect
     {
         EmitSignalStartedTickingDown();
         //tick score down!
-        GetTree().CreateTween().TweenMethod(Callable.From<int>(SetLabelText), ScoreNumber, Run.Current.BaseScore,
+        GetTree().CreateTween().TweenMethod(Callable.From<int>(SetLabelNumber), ScoreNumber, Run.Current.BaseScore,
             EnemyHealthBar.BarChangeTime)
             .Finished += TickingDownFinished;
     }
@@ -179,9 +200,9 @@ public partial class ScoreBox : TextureRect
         ScoreLabel.SelfModulate = new Color(.58f, .48f, .48f);
     }
 
-    void SetLabelText(int text)
+    void SetLabelNumber(int number)
     {
-        ScoreLabel.Text = text.ToString();
+        ScoreLabel.Text = number.ToString();
     }
 
 }

@@ -2,16 +2,31 @@
 using Godot;
 using System;
 
-public partial class BoardRow(int y, int boardWidth) : Node
+public partial class BoardRow : Node
 {
-    public int y = y;
+    public int y;
+    int BoardWidth;
+    Cell[] Cells;
     public int totalScorability = 0;
+
+    public BoardRow(int y, int BoardWidth, Cell[] Cells)
+    {
+        this.y = y;
+        this.BoardWidth = BoardWidth;
+        this.Cells = Cells;
+
+        foreach(var cell in Cells)
+        {
+            //bind cell events
+            BindCell(cell);
+        }
+    }
 
     int MinimumRequiredScorability
     {
         get
         {
-            return boardWidth - Run.Current.EmptySpacesAllowedInScoring - Run.Current.EmptySpacesRequiredInScoring;
+            return BoardWidth - Run.Current.EmptySpacesAllowedInScoring - Run.Current.EmptySpacesRequiredInScoring;
         }
     }
 
@@ -19,11 +34,10 @@ public partial class BoardRow(int y, int boardWidth) : Node
     {
         get
         {
-            return boardWidth - Run.Current.EmptySpacesRequiredInScoring;
+            return BoardWidth - Run.Current.EmptySpacesRequiredInScoring;
         }
     }
 
-    public Cell[] cellsInRow;
 
     public event Action ScoringStarted;
     public event Action<ScoreIterator> CreatedIterator;
@@ -39,30 +53,21 @@ public partial class BoardRow(int y, int boardWidth) : Node
         }
     }
 
-    public void AttemptScoring()
-    {
-        if (Scorable)
-        {
-            CursedBlockFailsafe();
-
-            StartScoring();
-            ScoringStarted.Invoke();
-        }
-    }
-
     public void StartScoring()
     {
+        CursedBlockFailsafe();
+
         bool leftIteratorNext = true;
         bool createdIterator = false;
 
-        for(int x = 0; x < boardWidth; x++)
+        for(int x = 0; x < BoardWidth; x++)
         {
             //if we find a newly placed block, iterate left from it. then change state to next line
             //if we find a block that isn't newly placed, iterate right from the block to the left of it. then revert state
 
-            if (cellsInRow[x].JustPlaced)
+            if (Cells[x].JustPlaced)
             {
-                if (cellsInRow[x].Scorable) { cellsInRow[x].ScoreBlock(); }
+                if (Cells[x].Scorable) { Cells[x].ScoreBlock(); }
 
                 if (leftIteratorNext)
                 {
@@ -83,23 +88,26 @@ public partial class BoardRow(int y, int boardWidth) : Node
         //if we failed to make an iterator, emergency backup! this starts from the middle and goes out
         if (!createdIterator)
         {
-            CreateIterator(boardWidth / 2 + 1, -1);
-            CreateIterator(boardWidth / 2 - 1, 1);
+            CreateIterator(BoardWidth / 2 + 1, -1);
+            CreateIterator(BoardWidth / 2 - 1, 1);
         }
     }
 
     void CreateIterator(int x, int direction)
     {
-        ScoreIterator newIterator = new(x, direction, cellsInRow);
+        ScoreIterator newIterator = new(x, direction, Cells);
         AddChild(newIterator);
 
         CreatedIterator.Invoke(newIterator);
     }
 
+    /// <summary>
+    /// Check if every block is a cursed block. If so, restrict their scoring after they score!
+    /// </summary>
     void CursedBlockFailsafe()
     {
         int cursedCount = 0;
-        foreach(var cell in cellsInRow)
+        foreach(var cell in Cells)
         {
             if(cell.BlockType == BlockType.Cursed)
             {
@@ -109,7 +117,7 @@ public partial class BoardRow(int y, int boardWidth) : Node
 
         if(cursedCount >= MinimumRequiredScorability && cursedCount <= MaximumAllowedScorability)
         {
-            foreach(var cell in cellsInRow)
+            foreach(var cell in Cells)
             {
                 cell.ScoreFlag = Cell.ScoringFlags.CanScoreButFullyRestrictAfterScoring;
             }

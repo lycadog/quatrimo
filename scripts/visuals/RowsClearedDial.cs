@@ -7,29 +7,40 @@ public partial class RowsClearedDial : Control
 
 	[Signal] public delegate void StartedScrollingEventHandler();
     [Signal] public delegate void StoppedScrollingEventHandler();
-	[Signal] public delegate void ReachedNumberEventHandler(short number);
+	[Signal] public delegate void ReachedNumberEventHandler(int number);
+
+	[Signal] public delegate void ResetFinishedEventHandler();
 
     [Export] VBoxContainer Container;
 
-    short RowsCleared = 0;
-	short queuedRows = 0;
+    int RowsCleared = 0;
+    int queuedRows = 0;
 
     bool Scrolling = false;
 
-	public void AddRow()
+	public void AddRows(int rows)
 	{
-		if(RowsCleared >= 11)
+        queuedRows += rows;
+
+		int TotalRows = RowsCleared + queuedRows;
+
+		//clamp values within 11 rows!!!
+		if(TotalRows > 11)
 		{
-			return;
+			queuedRows = TotalRows - 11;
+
+			if(queuedRows == 0)
+			{
+				return;
+			}
 		}
 
-		if (!Scrolling)
-		{
-			EmitSignalStartedScrolling();
-			StartScrolling();
-			return;
-		}
-		queuedRows++;
+        if (!Scrolling)
+        {
+            EmitSignalStartedScrolling();
+            StartScrolling();
+            return;
+        }
     }
 
 	void StartScrolling()
@@ -62,13 +73,15 @@ public partial class RowsClearedDial : Control
 	{
 		if(RowsCleared == 0 && !Scrolling)
 		{
+			EmitSignalResetFinished();
 			return;
 		}
 
 		RowsCleared = 0;
 		queuedRows = 0;
+
         Tween tween = GetTree().CreateTween();
-        tween.TweenProperty(Container, "position", new Vector2(0, -175), 1)
-			.SetTrans(Tween.TransitionType.Bounce).SetEase(Tween.EaseType.Out);
+		tween.TweenProperty(Container, "position", new Vector2(0, -175), 1)
+			.SetTrans(Tween.TransitionType.Bounce).SetEase(Tween.EaseType.Out).Finished += EmitSignalResetFinished;
     }
 }

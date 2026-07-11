@@ -17,9 +17,11 @@ public abstract partial class Enemy : Node
 		{
 			_CurrentAttack = value;
 			value.StartAttack(Level);
-			value.Completed += Attack_Completed;
+			value.ExecutionFinished += Attack_Completed;
 		}
 	}
+
+	public bool AttackingThisTurn = false;
 
 	protected List<Attack> AllAttacks = [];
     protected List<Attack> AvailableAttacks = [];
@@ -29,6 +31,8 @@ public abstract partial class Enemy : Node
 
 	[Export] protected bool ScaleLevelOvertime = true;
 	[Export] protected int LevelupEveryXTurns = 30;
+
+	[Signal] public delegate void TurnCompletedEventHandler();
 	
 	public void PlayTurn()
 	{
@@ -40,13 +44,26 @@ public abstract partial class Enemy : Node
 
 		CustomTurnBehavior();
         CurrentAttack.UpdateAttack();
-	}
+
+		if(CurrentAttack.TurnsToExecute == 1)
+		{
+			AttackingThisTurn = true;
+		}
+    }
 
 	protected virtual void CustomTurnBehavior() { }
 
 	public void Attack_Completed()
 	{
+		//todo: add new attack visuals and animations here
 		CurrentAttack = GetNewAttack();
+		EmitSignalTurnCompleted();
+	}
+
+	void RegisterAttack(Attack attack)
+	{
+		attack.ExecutionFinished += Attack_Completed;
+		attack.UpdatingFinished += () => EmitSignalTurnCompleted();
 	}
 
 	protected abstract Attack GetNewAttack();

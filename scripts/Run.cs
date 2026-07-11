@@ -30,7 +30,7 @@ public partial class Run : Node
     /// <summary>
     /// Mult the player has at the start of encounter
     /// </summary>
-    public double BaseMult = 1.5;
+    public double BaseMult = 1;
 
     public int BaseLevel = 1;
     /// <summary>
@@ -41,6 +41,10 @@ public partial class Run : Node
     /// Scored rows required for each level up
     /// </summary>
     public int RowsNeededForLevelup = 10;
+    /// <summary>
+    /// Cleared rows required for the level multiplier to activate
+    /// </summary>
+    public int RowsNeededForMultiplier = 4;
 
     public override void _Ready()
     {

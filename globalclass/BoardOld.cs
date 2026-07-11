@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 [GlobalClass, Icon("res://texture/icon/boardicon.png")]
-public partial class Board : Control
+public partial class BoardOld : Control
 {
     Cell[,] CellBoard;
     public Enemy Enemy;
@@ -20,8 +20,9 @@ public partial class Board : Control
 
     bool PlayingScoringSfx = false;
 
-    [Export] BoardAnimationManager AnimationManager;
+    [Export] BoardAnimationManagerOld AnimationManager;
     [Export] AudioStreamPlayer ScoringSfx;
+    [Export] AudioStreamPlayer PlacementSfx;
 
     [Export] NinePatchRect border;
 	[Export] GradientTexture2D darkGradient;
@@ -124,15 +125,10 @@ public partial class Board : Control
     public void StartTurn()
     {
         GD.Print("Turn started!");
-        CurrentScore = Run.Current.BaseScore;
-        ScoreBox.ResetValues(LevelMult);
-
-        TurnRowsScored = 0;
         AnimationTimescale = 1.0;
         BoardUpdated = false;
 
         AnimationManager.ClearAnimations();
-        RowsClearedDial.Reset();
         EmitSignalTurnStarted();
     }
 
@@ -203,9 +199,6 @@ public partial class Board : Control
 
     void FinalizeScore()
     {
-
-
-
         bool ShouldMultiply = TurnRowsScored >= 4;
 
         if(ShouldMultiply)
@@ -215,12 +208,45 @@ public partial class Board : Control
 
         ScoreBox.ProcessScore(CurrentScore, ShouldMultiply);
         //score box will trigger the next step through its signals, starting the ticking down/damaging of enemy.
-        //then that will signal to move onto the next turn
+        //then that will signal to move onto the next step
     }
 
     void ScoreBox_TickingDown()
     {
         EnemyHealthBar.DealDamage(CurrentScore);
+    }
+
+    void ResetValues()
+    {
+        //reset values, starting animations
+        //if the enemy is going to attack, we need to wait for those animations
+
+        if (true) //should be Enemy.AttackingThisTurn
+        {
+            //if enemy is attacking, we need to wait for our animations to finish first!
+            AnimationManager.StartAnimating(RunEnemyTurn);
+        }
+        else
+        {
+            RunEnemyTurn();
+        }
+
+        AnimationManager.AnimationCreated();
+        AnimationManager.AnimationCreated();
+        //create two animations for our things below
+        //this is jank because sometimes the animations instantly finish
+
+        CurrentScore = Run.Current.BaseScore;
+        ScoreBox.ResetValues(LevelMult);
+
+        TurnRowsScored = 0;
+        RowsClearedDial.Reset();
+    }
+
+    void RunEnemyTurn()
+    {
+        //Enemy.PlayTurn();
+        EndTurn();
     }
 
     void EndTurn()
@@ -482,6 +508,7 @@ public partial class Board : Control
 
     public void OnPiecePlaced()
     {
+        PlacementSfx.Play();
         EmitSignalPiecePlaced();
         CurrentPiece = null;
         ScoreBoard(true);

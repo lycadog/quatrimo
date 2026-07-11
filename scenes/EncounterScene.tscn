@@ -181,9 +181,11 @@ offset_bottom = 120.0
 layout_mode = 0
 
 [connection signal="ReachedNumber" from="RightUI/RowsClearedDial" to="RightUI/ScoreBox" method="RowScored"]
+[connection signal="ResetFinished" from="RightUI/RowsClearedDial" to="Board/AnimationManager" method="AnimationCompleted"]
 [connection signal="StartedScrolling" from="RightUI/RowsClearedDial" to="Board/AnimationManager" method="AddTurnEndAnimation"]
 [connection signal="StoppedScrolling" from="RightUI/RowsClearedDial" to="Board/AnimationManager" method="TurnEndAnimationCompleted"]
-[connection signal="FinishedTickingDown" from="RightUI/ScoreBox" to="Board" method="EndTurn"]
+[connection signal="FinishedTickingDown" from="RightUI/ScoreBox" to="Board" method="ResetValues"]
+[connection signal="ResetFinished" from="RightUI/ScoreBox" to="Board/AnimationManager" method="AnimationCompleted"]
 [connection signal="StartedTickingDown" from="RightUI/ScoreBox" to="Board" method="ScoreBox_TickingDown"]
 [connection signal="TurnEndAnimationCompleted" from="RightUI/ScoreBox" to="Board/AnimationManager" method="TurnEndAnimationCompleted"]
 [connection signal="TurnEndAnimationCreated" from="RightUI/ScoreBox" to="Board/AnimationManager" method="AddTurnEndAnimation"]

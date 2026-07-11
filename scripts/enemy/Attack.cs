@@ -20,7 +20,8 @@ public abstract partial class Attack : Node
     [Export] protected float IntensityPerLevel = .08f;
     [Export] protected float MaximumIntensity = 1000;
 
-    public event Action Completed;
+    public event Action ExecutionFinished;
+    public event Action UpdatingFinished;
 
     public void StartAttack(int EnemyLevel)
     {
@@ -56,9 +57,14 @@ public abstract partial class Attack : Node
         if(TurnsToExecute <= 0)
         {
             GD.Print("Executing attack!");
+
+            //Execute Attack should trigger ExecutionFinished event !!!
+
             ExecuteAttack();
-            Completed.Invoke();
+            return;
         }
+
+        UpdatingFinished.Invoke();
     }
 
     public abstract void ExecuteAttack();

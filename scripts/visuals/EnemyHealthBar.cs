@@ -11,7 +11,6 @@ public partial class EnemyHealthBar : Control
 
     public const double BarChangeTime = 0.8;
     
-
     public void DealDamage(double damage)
     {
         
@@ -32,8 +31,8 @@ public partial class EnemyHealthBar : Control
 
     public override void _Ready()
     {
-        HP = 140;
-        MaxHP = 140;
+        HP = 1000;
+        MaxHP = 1000;
         UpdateText();
     }
 

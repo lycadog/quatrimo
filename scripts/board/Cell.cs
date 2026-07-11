@@ -9,6 +9,12 @@ public class Cell(int x, int y)
     Block _HeldBlock;
     public Block HeldBlock { get => _HeldBlock; set => SetBlock(value); }
 
+    public event Action BecameScorable;
+    public event Action BecameNonScorable;
+    public event Action UpdatedBoard;
+    public event Action<Cell> Scored;
+
+    #region Properties
     bool _Occupied = false;
     bool Occupied
     { 
@@ -124,11 +130,6 @@ public class Cell(int x, int y)
         }
     }
 
-    public event Action BecameScorable;
-    public event Action BecameNonScorable;
-    public event Action UpdatedBoard;
-    public event Action<Cell> Scored;
-
     public int LowerDistance
     {
         get
@@ -145,6 +146,7 @@ public class Cell(int x, int y)
             }
         }
     }
+    #endregion
 
     void ScorabilityUpdated(bool staleScorable)
     {
@@ -163,7 +165,6 @@ public class Cell(int x, int y)
         }
 
     }
-
 
     /// <summary>
     /// Place new block inside this cell
@@ -189,8 +190,6 @@ public class Cell(int x, int y)
 
         //run both collision methods
         //if the held block isn't deleted, we will delete the falling block and return
-
-        //held block is null
 
         if (Occupied) //if we're still occupied: delete falling block
         {
@@ -240,7 +239,7 @@ public class Cell(int x, int y)
 
     }
 
-    public void RemoveBlock()
+    void RemoveBlock()
     {
         if (!Occupied) { GD.PushError("Attempted to remove block from unoccupied block!"); return; }
 
@@ -274,14 +273,19 @@ public class Cell(int x, int y)
         
     }
 
-    public void OnScoreStepBegin(bool isInitialStep)
+    /// <summary>
+    /// Fully reset ScoringFlags on turn start.
+    /// </summary>
+    public void FullyResetScoringFlag()
     {
-        if (isInitialStep)
-        {
-            ScoreFlag = ScoringFlags.CanScore;
-            return;
-        }
+        ScoreFlag = ScoringFlags.CanScore;
+    }
 
+    /// <summary>
+    /// Partially reset ScoringFlags on each scoring step.
+    /// </summary>
+    public void PartiallyResetScoringFlag()
+    {
         if (ScoreFlag == ScoringFlags.CannotScoreThisTurn)
         {
             return;

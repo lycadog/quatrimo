@@ -14,7 +14,7 @@ public partial class ScoreIterator(int x, int direction, Cell[] row) : Node
 	{
 		timer += delta;
 
-		if (timer > (TimeBetweenIterating * Board.AnimationTimescale))
+		if (timer > (TimeBetweenIterating * BoardOld.AnimationTimescale))
 		{
 			timer = 0;
 			Iterate();

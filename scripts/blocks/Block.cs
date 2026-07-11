@@ -62,6 +62,10 @@ public partial class Block : Area2D
     /// </summary>
     [Export] public double ScoreValue = 1;
     /// <summary>
+    /// Mult value added to turn level mult upon scoring
+    /// </summary>
+    [Export] public double MultValue = 0;
+    /// <summary>
     /// If the block can fill a row for scoring
     /// </summary>
     [Export] public bool Scorable = true;

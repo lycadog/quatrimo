@@ -102,7 +102,7 @@ public partial class PlayerHand : Container
         }
         else if (Input.IsActionJustPressed("Up"))
         {
-            if (SelectionIndex == -1) //if no card selected: select the bottom-most card
+            if (SelectionIndex <= 0) //if no card selected, or at position 0: select the bottom-most card
             {
                 SelectCard(Hand.Count - 1);
             }

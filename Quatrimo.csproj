@@ -8,4 +8,7 @@
     <Compile Remove="board\**" />
     <EmbeddedResource Remove="board\**" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="scripts\board\" />
+  </ItemGroup>
 </Project>

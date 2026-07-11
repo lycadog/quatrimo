@@ -34,7 +34,7 @@ public partial class FallingPiece : Node2D
         AddChild(SfxMove);
     }
 
-    static AudioStreamWav MoveBlip = ResourceLoader.Load<AudioStreamWav>("uid://bklrddjdj5m80");
+    static AudioStreamWav MoveBlip = ResourceLoader.Load<AudioStreamWav>("uid://cawrk4lwnqcp3");
 
     Vector2 Offset = new(0, 0);
 
@@ -289,6 +289,7 @@ public partial class FallingPiece : Node2D
 
             if (Input.IsActionJustPressed("Left"))
             {
+                SfxMove.Play();
                 AttemptMoveLeft();
                 LeftCooldown = .11;
                 return;
@@ -307,6 +308,7 @@ public partial class FallingPiece : Node2D
             RightCooldown -= delta;
             if (Input.IsActionJustPressed("Right"))
             {
+                SfxMove.Play();
                 AttemptMoveRight();
                 RightCooldown = .1;
                 return;
@@ -322,11 +324,13 @@ public partial class FallingPiece : Node2D
 
         if (Input.IsActionJustPressed("RotateLeft"))
         {
+            SfxMove.Play();
             AttemptRotation(-1);
         }
 
         else if (Input.IsActionJustPressed("RotateRight"))
         {
+            SfxMove.Play();
             AttemptRotation(1);
         }
     }

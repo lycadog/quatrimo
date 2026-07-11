@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class BoardAnimationManager : Node
+public partial class BoardAnimationManagerOld : Node
 {
 	int CompletedAnimations;
 	int TotalAnimations;
@@ -63,10 +63,18 @@ public partial class BoardAnimationManager : Node
 	public void AnimationCompleted()
 	{
 		CompletedAnimations++;
+        GD.Print($"completed animation {CompletedAnimations}/{TotalAnimations}");
 
-        if (CompletedAnimations == TotalAnimations)
+        if (!AlreadyAnimating)
 		{
-			//GD.Print($"Finished animating all {TotalAnimations} animations");
+			GD.PushWarning("Animation completed without starting animation!");
+		}
+
+		//why weren't this AlreadyAnimating checks in here before now? todo may cause issues
+
+        if (CompletedAnimations == TotalAnimations && AlreadyAnimating)
+		{
+			GD.Print($"Finished animating all {TotalAnimations} animations");
 			AlreadyAnimating = false;
 			EmitSignalBoardAnimationCompleted();
 		}
@@ -83,7 +91,7 @@ public partial class BoardAnimationManager : Node
 	/// <param name="MethodCalledOnCompletion"></param>
 	public void StartAnimating(Action MethodCalledOnCompletion)
 	{
-		if (AlreadyAnimating) { return; } //already animating! dont animate twice!
+		if (AlreadyAnimating) { GD.PushWarning("Failed to start animating: AnimationManager already animating"); return; } //already animating! dont animate twice!
 
 		AlreadyAnimating = true;
 		Connect(SignalName.BoardAnimationCompleted, Callable.From(MethodCalledOnCompletion), (uint)ConnectFlags.OneShot);

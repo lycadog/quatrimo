@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://dl7cdkh88t5p0"]
 
-[ext_resource type="Script" uid="uid://cdm15780yiwua" path="res://globalclass/Board.cs" id="1_qails"]
+[ext_resource type="Script" uid="uid://cdm15780yiwua" path="res://globalclass/BoardOld.cs" id="1_qails"]
 [ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="2_hs2ul"]
 [ext_resource type="Texture2D" uid="uid://bq12fhs8hplyu" path="res://boardGradient.tres" id="2_w6jgk"]
 [ext_resource type="Texture2D" uid="uid://pf1ck3tc5dmk" path="res://texture/boardBG.png" id="3_66b1s"]
 [ext_resource type="AudioStream" uid="uid://16v0qwgprkog" path="res://sound/scoring/scoring base.wav" id="5_xdl3i"]
+[ext_resource type="AudioStream" uid="uid://dr0gobd5thws8" path="res://sound/piece slam.wav" id="6_wlyqt"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w6jgk"]
 size = Vector2(10, 40)
@@ -12,7 +13,7 @@ size = Vector2(10, 40)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xdl3i"]
 size = Vector2(40, 30)
 
-[node name="Board" type="Control" unique_id=30435418 node_paths=PackedStringArray("ScoringSfx", "border", "BlockBox", "BottomBorder", "LeftBorder", "RightBorder")]
+[node name="Board" type="Control" unique_id=30435418 node_paths=PackedStringArray("ScoringSfx", "PlacementSfx", "border", "BlockBox", "BottomBorder", "LeftBorder", "RightBorder")]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -23,6 +24,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qails")
 ScoringSfx = NodePath("ScoringSfx")
+PlacementSfx = NodePath("SlamSfx")
 border = NodePath("Border")
 darkGradient = ExtResource("2_w6jgk")
 BlockBox = NodePath("BlockBox")
@@ -123,5 +125,10 @@ position = Vector2(-55, 95)
 [node name="ScoringSfx" type="AudioStreamPlayer" parent="." unique_id=1553607368]
 stream = ExtResource("5_xdl3i")
 volume_db = -13.1
+pitch_scale = 1.1
+
+[node name="SlamSfx" type="AudioStreamPlayer" parent="." unique_id=476737735]
+stream = ExtResource("6_wlyqt")
+volume_db = -18.0
 
 [connection signal="resized" from="Border" to="." method="OnBorderResize"]
