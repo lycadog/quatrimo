@@ -7,6 +7,7 @@ public partial class RowsClearedDial : Control
 
 	[Signal] public delegate void StartedScrollingEventHandler();
     [Signal] public delegate void StoppedScrollingEventHandler();
+
 	[Signal] public delegate void ReachedNumberEventHandler(int number);
 
 	[Signal] public delegate void ResetFinishedEventHandler();

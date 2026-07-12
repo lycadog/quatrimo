@@ -6,6 +6,8 @@ using System.Collections.Generic;
 public abstract partial class Enemy : Node
 {
 	public int Level;
+	public double Health;
+	[Export] public double MaxHealth;
 
 	protected int TurnNumber = 0;
 

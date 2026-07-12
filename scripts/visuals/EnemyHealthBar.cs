@@ -8,10 +8,8 @@ public partial class EnemyHealthBar : Control
     [Export] Label HPTextBlack;
     [Export] Label HPTextWhite;
     [Export] ColorRect HPRect;
-
-    public const double BarChangeTime = 0.8;
     
-    public void DealDamage(double damage)
+    public void DealDamage(double damage, double TickdownTime)
     {
         
         if(damage > 0)
@@ -25,8 +23,8 @@ public partial class EnemyHealthBar : Control
         float BarSize = HP / (float)MaxHP * 117f;
 
         Tween tween = GetTree().CreateTween().SetParallel();
-        tween.TweenMethod(Callable.From<int>(TweenText), oldHP, HP, BarChangeTime);
-        tween.TweenProperty(HPRect, "size:x", BarSize, BarChangeTime).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
+        tween.TweenMethod(Callable.From<int>(TweenText), oldHP, HP, TickdownTime);
+        tween.TweenProperty(HPRect, "size:x", BarSize, TickdownTime).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
     }
 
     public override void _Ready()

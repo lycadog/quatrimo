@@ -16,11 +16,10 @@ public partial class ScoreBox : TextureRect
     [Export] ColorRect AnimatedGlowyClippingRect;
     [Export] TextureRect AnimatedColoredGlowy;
 
-    [Signal] public delegate void TurnEndAnimationCreatedEventHandler();
-    [Signal] public delegate void TurnEndAnimationCompletedEventHandler();
+    [Signal] public delegate void AnimationCreatedEventHandler();
+    [Signal] public delegate void AnimationFinishedEventHandler();
 
-    [Signal] public delegate void StartedTickingDownEventHandler();
-    [Signal] public delegate void FinishedTickingDownEventHandler();
+    [Signal] public delegate void FinishedProcessingScoreEventHandler();
 
     [Signal] public delegate void ResetFinishedEventHandler();
 
@@ -28,7 +27,7 @@ public partial class ScoreBox : TextureRect
 
     const double GlowySpreadDuration = 0.25;
     const double MultiplicationAnimationDuration = 0.6;
-    const double WaitTimeBeforeTickingDown = 0.4;
+    const double WaitTimeAfterProcessing = 0.4;
 
     public const double ResetTime = 0.8;
 
@@ -87,7 +86,7 @@ public partial class ScoreBox : TextureRect
 
     void TweenGlowies(Color color)
     {
-        EmitSignalTurnEndAnimationCreated();
+        EmitSignalAnimationCreated();
         GetTree().CreateTween().TweenProperty(AnimatedGlowyClippingRect, "size:x", 40, GlowySpreadDuration)
                     .SetTrans(Tween.TransitionType.Cubic)
                     .Finished += GlowyDoneTweening;
@@ -96,7 +95,7 @@ public partial class ScoreBox : TextureRect
 
     void GlowyDoneTweening()
     {
-        EmitSignalTurnEndAnimationCompleted();
+        EmitSignalAnimationFinished();
         XParticles.Restart();
         XSprite.SelfModulate = Colors.White;
 
@@ -134,6 +133,33 @@ public partial class ScoreBox : TextureRect
         TurnOffGlowies();
     }
 
+    public void ProcessScore(double finalScore, bool isMultiplied)
+    {
+        /* THIS should be unnecessary due to score checks inside board! TODO re-evaluate later
+        if(finalScore == 0)
+        {
+            EmitSignalFinishedProcessingScore();
+            return;
+        }*/
+
+        if (!isMultiplied)
+        {
+            ScoreNumber = (int)finalScore;
+            ScoreLabel.Text = ScoreNumber.ToString();
+            GetTree().CreateTween().TweenCallback(
+                Callable.From(EmitSignalFinishedProcessingScore))
+                .SetDelay(WaitTimeAfterProcessing);
+        }
+        else
+        {
+            //multiply!
+            //add a small delay here before this starts!
+            CreateTween().TweenCallback(Callable.From(() => 
+            MultiplyScore(finalScore)))
+                .SetDelay(0.6);
+        }
+    }
+
     /// <summary>
     /// Execute multiplication animations, showing the specified value afterwards as the result
     /// </summary>
@@ -153,50 +179,25 @@ public partial class ScoreBox : TextureRect
             .SetTrans(Tween.TransitionType.Cubic).SetEase(Tween.EaseType.Out);
         tween.TweenProperty(AnimatedXSprite, "self_modulate", new Color(0.7f, 0.7f, 0.9f, 0), MultiplicationAnimationDuration);
 
-        tween.TweenCallback(Callable.From(TickDownScore)).SetDelay(MultiplicationAnimationDuration + WaitTimeBeforeTickingDown);
+        //after a delay, finish the processing calling back to board to damage the enemy!
+        tween.TweenCallback(Callable.From(EmitSignalFinishedProcessingScore))
+            .SetDelay(MultiplicationAnimationDuration + WaitTimeAfterProcessing);
     }
 
-    public void ProcessScore(double finalScore, bool isMultiplied)
-    {
-        if(finalScore == 0)
-        {
-            EmitSignalFinishedTickingDown();
-            return;
-        }
-
-        if (!isMultiplied)
-        {
-            ScoreNumber = (int)finalScore;
-            ScoreLabel.Text = ScoreNumber.ToString();
-            GetTree().CreateTween().TweenCallback(
-                Callable.From(TickDownScore))
-                .SetDelay(WaitTimeBeforeTickingDown);
-        }
-        else
-        {
-            //multiply!
-            //add a small delay here before this starts!
-            CreateTween().TweenCallback(Callable.From(() => 
-            MultiplyScore(finalScore)))
-                .SetDelay(0.6);
-        }
-    }
-    
     /// <summary>
-    /// Tick down score, calling a signal that should also damage the enemy
+    /// Tick down score! This should be in sync with the enemy being damaged !!!!
     /// </summary>
-    void TickDownScore()
+    public void TickDownScore(double TickDownTime)
     {
-        EmitSignalStartedTickingDown();
+        //TODO: adjust tickdown time!
         //tick score down!
         GetTree().CreateTween().TweenMethod(Callable.From<int>(SetLabelNumber), ScoreNumber, Run.Current.BaseScore,
-            EnemyHealthBar.BarChangeTime)
+            TickDownTime)
             .Finished += TickingDownFinished;
     }
 
     void TickingDownFinished()
     {
-        EmitSignalFinishedTickingDown();
         ScoreLabel.SelfModulate = new Color(.58f, .48f, .48f);
     }
 

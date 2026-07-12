@@ -84,7 +84,7 @@ public partial class BoardOld : Control
                 LevelUp();
                 return;
             }
-            _RowsUntilLevelUp = value; LevelStatBoxes.RowsToLevelUpLabel.Text = _RowsUntilLevelUp.ToString(); }
+            _RowsUntilLevelUp = value; LevelStatBoxes.RowsUntilLevelUpLabel.Text = _RowsUntilLevelUp.ToString(); }
     }
 
     int TotalRowsScored = 0;

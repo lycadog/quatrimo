@@ -21,9 +21,12 @@ public partial class Board : Control
     public double CurrentScore;
     public double LevelMult;
 
-    double MultPerLevel;
+    //todo: make these properties
 
     int Level;
+
+
+    double MultPerLevel;
     int RowsNeededForLevelup;
     int RowsUntilLevelup;
 
@@ -83,7 +86,17 @@ public partial class Board : Control
     #endregion
 
     static PackedScene ScoreAnimation = ResourceLoader.Load<PackedScene>("uid://joftg3j7lslu");
+
+    #region == Constants ==
+
     const double LowerAnimLength = .3;
+    const double BaseScoreTickdownTime = 0.3;
+    const double WaitTimeAfterEnemyDies = 0.6;
+    //todo: maybe change this so the wait time is based on the enemy?
+
+    #endregion
+
+
 
     List<Block> PlacedBlocks = [];
 
@@ -141,34 +154,14 @@ public partial class Board : Control
     void TickNormalBlocks()
     {
 
+        //goto score processing after this !!!
     }
 
-    void TallyUpScore()
-    {
-        if(CurrentScore == 0)
-        {
-            //end early
-            //WE MAY not need this!!!1
-            return;
-        }
-
-        bool IsMultiplied = false;
-
-        if(TurnRowsScored >= Run.Current.RowsNeededForMultiplier)
-        {
-            //we multiply!
-            IsMultiplied = true;
-            CurrentScore *= LevelMult;
-        }
-        //fully process score and multiply it and stuff and then subtract it from enemy health
-
-        //score box will start tallying up everything. after a bit it will subtract from enemy health
-        //when this is done it will fire an event back to us, starting the turn values reset!
-        ScoreBox.ProcessScore(CurrentScore, IsMultiplied);
-    }
 
     void ResetTurnValues()
     {
+        CurrentScore = 0;
+
         //start reset animations
         //check here if the enemy's attacking! if so, we need to create an animation state, and wait before starting the enemy's turn!
     }
@@ -226,6 +219,7 @@ public partial class Board : Control
             }
         }
 
+        //if stuff scored: score it!
         if (ScorableRows.Count > 0)
         {
             //scoring happened so we gotta start it and handle it now
@@ -234,6 +228,9 @@ public partial class Board : Control
                 row.StartScoring();
             }
             RowsClearedDial.AddRows(ScorableRows.Count);
+
+            //rows cleared dial will run events to animate everything related to rows
+            //these will create superstate animations as well when they start
 
             RowsUntilLevelup -= ScorableRows.Count;
 
@@ -249,16 +246,21 @@ public partial class Board : Control
             }
 
             //TODO PLAY SOUNDS HERE
+            PlayScoringSounds(ScorableRows.Count);
             //we gotta start our animation waiting here, then progressing to LoweringBlocks after !!!
 
             StartStateAnimation(LowerScoredBlocks);
             //we need to update all rows-related values right here!
 
         }
+        //NO SCORING LETS LEAVE!!!!!
         else
         {
-            ExitBoardProcessing();
+            //WE NEED TO WAIT!!! on ALL superstate animations before exiting!!!!
             //no scoring happened! let's skip all this noise
+
+            StartSuperStateAnimation(ExitBoardProcessing);
+            //after all animations have fully finished, we can exit board processing!
         }
     }
 
@@ -267,6 +269,11 @@ public partial class Board : Control
         RowsUntilLevelup += RowsNeededForLevelup;
         Level++;
         LevelMult += MultPerLevel;
+    }
+
+    void PlayScoringSounds(int RowsScored)
+    {
+        //play sound depending on how many rows scored !!!
     }
 
     void Block_Scored(Block block)
@@ -390,6 +397,69 @@ public partial class Board : Control
         ProcessingReturnMethod = null;
     }
 
+
+
+
+
+    #endregion
+    #region === Score Processing ===
+
+    void TallyUpScore()
+    {
+        if (CurrentScore == 0)
+        {
+            //end early
+            //WE MAY not need this!!!1
+            ResetTurnValues();
+            return;
+        }
+
+        bool IsMultiplied = false;
+
+        if (TurnRowsScored >= Run.Current.RowsNeededForMultiplier)
+        {
+            //we multiply!
+            IsMultiplied = true;
+            CurrentScore *= LevelMult;
+        }
+        //fully process score and multiply it and stuff and then subtract it from enemy health
+
+        //score box will start tallying up everything.
+        //after a bit it will fire back to us, so we can handle damaging the enemy and resetting the score value!
+        ScoreBox.ProcessScore(CurrentScore, IsMultiplied);
+    }
+
+    void SubtractScoreFromEnemyHP()
+    {
+        //subtract health, then animate it!
+        Enemy.Health -= CurrentScore;
+
+        //we want to take slightly longer to animate based on score, but this shouldn't be mind-numbingly slow at high values
+        //so we make it reverse exponential growth
+        double ExponentialTimeFactorFromScore = Math.Max(Math.Pow(CurrentScore, 0.2) * 0.05, 0);
+        double TickdownAnimationTime = BaseScoreTickdownTime + ExponentialTimeFactorFromScore;
+
+        ScoreBox.TickDownScore(TickdownAnimationTime);
+        EnemyHealthBar.DealDamage(CurrentScore, TickdownAnimationTime);
+
+        //start animations, then wait until a bit after them to check enemy HP!
+
+        GetTree().CreateTween()
+            .TweenCallback(Callable.From(CheckEnemyHP))
+            .SetDelay(TickdownAnimationTime + WaitTimeAfterEnemyDies);
+    }
+
+    void CheckEnemyHP()
+    {
+        if (Enemy.Health <= 0)
+        {
+            //if enemy is below hp, END encounter!!!
+            return;
+        }
+
+        //enemy alive, let's continue!
+        ResetTurnValues();
+    }
 
 
 
