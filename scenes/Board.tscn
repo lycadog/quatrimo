@@ -1,19 +1,22 @@
 [gd_scene format=3 uid="uid://dl7cdkh88t5p0"]
 
-[ext_resource type="Script" uid="uid://cdm15780yiwua" path="res://globalclass/BoardOld.cs" id="1_qails"]
+[ext_resource type="Script" uid="uid://boy6eleyieyyx" path="res://scripts/board/Board.cs" id="1_wlyqt"]
 [ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="2_hs2ul"]
 [ext_resource type="Texture2D" uid="uid://bq12fhs8hplyu" path="res://boardGradient.tres" id="2_w6jgk"]
 [ext_resource type="Texture2D" uid="uid://pf1ck3tc5dmk" path="res://texture/boardBG.png" id="3_66b1s"]
 [ext_resource type="AudioStream" uid="uid://16v0qwgprkog" path="res://sound/scoring/scoring base.wav" id="5_xdl3i"]
 [ext_resource type="AudioStream" uid="uid://dr0gobd5thws8" path="res://sound/piece slam.wav" id="6_wlyqt"]
+[ext_resource type="AudioStream" uid="uid://1r3al5mqms5c" path="res://sound/scoring/scoring 1.wav" id="6_wxh2q"]
+[ext_resource type="AudioStream" uid="uid://bw08v7sufyr8d" path="res://sound/scoring/scoring 2.wav" id="7_w8n1y"]
+[ext_resource type="AudioStream" uid="uid://cd5mcdgj0sf1x" path="res://sound/scoring/scoring 3.wav" id="8_gc1oq"]
+[ext_resource type="AudioStream" uid="uid://ca3lqdo0xe64e" path="res://sound/scoring/scoring 4.wav" id="9_338j4"]
+[ext_resource type="AudioStream" uid="uid://bvg3usx4wfajt" path="res://sound/scoring/scoring 5.wav" id="10_25pyh"]
+[ext_resource type="AudioStream" uid="uid://c84u50mv86jjf" path="res://sound/scoring/scoring 6.wav" id="11_xxb6b"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w6jgk"]
 size = Vector2(10, 40)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xdl3i"]
-size = Vector2(40, 30)
-
-[node name="Board" type="Control" unique_id=30435418 node_paths=PackedStringArray("ScoringSfx", "PlacementSfx", "border", "BlockBox", "BottomBorder", "LeftBorder", "RightBorder")]
+[node name="Board" type="Control" unique_id=1276322868 node_paths=PackedStringArray("BlockBox", "border", "BottomBorder", "PlacementSfx")]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -22,15 +25,12 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_qails")
-ScoringSfx = NodePath("ScoringSfx")
-PlacementSfx = NodePath("SlamSfx")
+script = ExtResource("1_wlyqt")
+BlockBox = NodePath("BlockBox")
 border = NodePath("Border")
 darkGradient = ExtResource("2_w6jgk")
-BlockBox = NodePath("BlockBox")
 BottomBorder = NodePath("Border/BottomArea")
-LeftBorder = NodePath("Border/LeftArea")
-RightBorder = NodePath("Border/RightArea")
+PlacementSfx = NodePath("SlamSfx")
 metadata/_custom_type_script = "uid://cdm15780yiwua"
 
 [node name="Border" type="NinePatchRect" parent="." unique_id=1026354413]
@@ -97,38 +97,46 @@ monitoring = false
 position = Vector2(0, 15)
 shape = SubResource("RectangleShape2D_w6jgk")
 
-[node name="LeftArea" type="Area2D" parent="Border" unique_id=657418429]
-position = Vector2(5, 110)
-collision_layer = 4
-collision_mask = 0
-monitoring = false
-
-[node name="LeftShape" type="CollisionShape2D" parent="Border/LeftArea" unique_id=123635074]
-position = Vector2(-15, 0)
-shape = SubResource("RectangleShape2D_xdl3i")
-
-[node name="RightArea" type="Area2D" parent="Border" unique_id=1917224304]
-position = Vector2(135, 110)
-collision_layer = 4
-collision_mask = 0
-monitoring = false
-
-[node name="RightShape" type="CollisionShape2D" parent="Border/RightArea" unique_id=1840730440]
-position = Vector2(15, 0)
-shape = SubResource("RectangleShape2D_xdl3i")
-
 [node name="BlockBox" type="Node2D" parent="." unique_id=1446141951]
 z_index = 1
 z_as_relative = false
 position = Vector2(-55, 95)
 
-[node name="ScoringSfx" type="AudioStreamPlayer" parent="." unique_id=1553607368]
+[node name="ScoringSfxBase" type="AudioStreamPlayer" parent="." unique_id=1553607368]
 stream = ExtResource("5_xdl3i")
+volume_db = -12.8
+pitch_scale = 1.1
+
+[node name="ScoringSfxHarmonics1" type="AudioStreamPlayer" parent="." unique_id=1639646649]
+stream = ExtResource("6_wxh2q")
 volume_db = -13.1
+pitch_scale = 1.1
+
+[node name="ScoringSfxHarmonics2" type="AudioStreamPlayer" parent="." unique_id=650416934]
+stream = ExtResource("7_w8n1y")
+volume_db = -13.1
+pitch_scale = 1.1
+
+[node name="ScoringSfxHarmonics3" type="AudioStreamPlayer" parent="." unique_id=1717813059]
+stream = ExtResource("8_gc1oq")
+volume_db = -13.1
+pitch_scale = 1.1
+
+[node name="ScoringSfxHarmonics4" type="AudioStreamPlayer" parent="." unique_id=385501263]
+stream = ExtResource("9_338j4")
+volume_db = -13.1
+pitch_scale = 1.1
+
+[node name="ScoringSfxHarmonics5" type="AudioStreamPlayer" parent="." unique_id=1067638634]
+stream = ExtResource("10_25pyh")
+volume_db = -13.1
+pitch_scale = 1.1
+
+[node name="ScoringSfxHarmonics6" type="AudioStreamPlayer" parent="." unique_id=396734808]
+stream = ExtResource("11_xxb6b")
+volume_db = -13.8
 pitch_scale = 1.1
 
 [node name="SlamSfx" type="AudioStreamPlayer" parent="." unique_id=476737735]
 stream = ExtResource("6_wlyqt")
 volume_db = -18.0
-
-[connection signal="resized" from="Border" to="." method="OnBorderResize"]

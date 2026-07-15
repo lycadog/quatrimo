@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://fyc7i67y110s" path="res://scripts/visuals/LevelStatBoxes.cs" id="1_qooye"]
 [ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="1_t514q"]
 [ext_resource type="FontFile" uid="uid://y3nrp4nknidx" path="res://lang/C&C Red Alert [INET].ttf" id="2_qooye"]
+[ext_resource type="AudioStream" uid="uid://bjwhncgjg4lqh" path="res://sound/level up.wav" id="4_4yf7h"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_t514q"]
 content_margin_left = 5.0
@@ -34,6 +35,38 @@ font = ExtResource("2_qooye")
 font_size = 12
 shadow_color = Color(0, 0, 0, 1)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_qooye"]
+atlas = ExtResource("1_t514q")
+region = Rect2(161, 31, 28, 13)
+
+[sub_resource type="Curve" id="Curve_4yf7h"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.072769955, 1), 0.048872605, 0.048872605, 0, 0, Vector2(0.51877934, 1), 0.0, 0.0, 0, 0, Vector2(0.98826295, 0), -2.3348987, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_fiyoj"]
+curve = SubResource("Curve_4yf7h")
+
+[sub_resource type="Curve" id="Curve_qooye"]
+_data = [Vector2(0, 0.7494408), 0.0, 0.0, 0, 0, Vector2(0.129108, 0.9463088), 0.7022253, 0.7022253, 0, 0, Vector2(0.9976526, 0.704698), -2.3825512, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_4yf7h"]
+curve = SubResource("Curve_qooye")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_34wlw"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+spread = 0.0
+initial_velocity_min = 48.0
+initial_velocity_max = 48.0
+gravity = Vector3(0, 0, 0)
+damping_min = 36.0
+damping_max = 36.0
+scale_min = 1.5999999
+scale_max = 1.5999999
+scale_curve = SubResource("CurveTexture_4yf7h")
+alpha_curve = SubResource("CurveTexture_fiyoj")
+
 [sub_resource type="LabelSettings" id="LabelSettings_34wlw"]
 font = ExtResource("2_qooye")
 font_size = 6
@@ -49,7 +82,7 @@ font = ExtResource("2_qooye")
 font_size = 10
 shadow_color = Color(0, 0, 0, 1)
 
-[node name="LevelStats" type="Control" unique_id=1310085233 node_paths=PackedStringArray("LevelLabel", "XPerLevelLabel", "RowsToLevelUpLabel")]
+[node name="LevelStats" type="Control" unique_id=1310085233 node_paths=PackedStringArray("LevelLabel", "MultPerLevelLabel", "RowsUntilLevelUpLabel", "LevelUpParticles", "LevelUpSFX")]
 self_modulate = Color(1.836182, 1.4979942, 1.4979942, 1)
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 3
@@ -58,8 +91,10 @@ offset_right = 104.0
 offset_bottom = 22.0
 script = ExtResource("1_qooye")
 LevelLabel = NodePath("HBoxContainer/LVL/Level/LevelLabel")
-XPerLevelLabel = NodePath("HBoxContainer/+X Per Level/+X Per Lvl/+X Label")
-RowsToLevelUpLabel = NodePath("HBoxContainer/Level Up in X Rows/LVL UP/Rows Label")
+MultPerLevelLabel = NodePath("HBoxContainer/+X Per Level/+X Per Lvl/+X Label")
+RowsUntilLevelUpLabel = NodePath("HBoxContainer/Level Up in X Rows/LVL UP/Rows Label")
+LevelUpParticles = NodePath("HBoxContainer/LVL/LevelUpParticle")
+LevelUpSFX = NodePath("LevelUpSound")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=907330087]
 layout_mode = 0
@@ -138,10 +173,19 @@ stretch_mode = 2
 
 [node name="LevelLabel" type="Label" parent="HBoxContainer/LVL/Level" unique_id=209616032]
 layout_mode = 2
-text = "25"
+text = "ERROR"
 label_settings = SubResource("LabelSettings_u3xo5")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="LevelUpParticle" type="GPUParticles2D" parent="HBoxContainer/LVL" unique_id=1391284464]
+position = Vector2(12, 8)
+emitting = false
+amount = 1
+texture = SubResource("AtlasTexture_qooye")
+lifetime = 2.4
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_34wlw")
 
 [node name="+X Per Level" type="Panel" parent="HBoxContainer" unique_id=785965893]
 self_modulate = Color(1.8510373, 0.8393019, 1.1596845, 1)
@@ -201,3 +245,7 @@ text = " ROWS"
 label_settings = SubResource("LabelSettings_fiyoj")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="LevelUpSound" type="AudioStreamPlayer" parent="." unique_id=180874418]
+stream = ExtResource("4_4yf7h")
+volume_db = 6.0

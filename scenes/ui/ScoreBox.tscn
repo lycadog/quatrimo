@@ -3,6 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="1_kjvft"]
 [ext_resource type="LabelSettings" uid="uid://bcoq8lscv4ueb" path="res://lang/ScoreBox.tres" id="2_eh6m3"]
 [ext_resource type="Script" uid="uid://hmx6le7ahqy7" path="res://scripts/visuals/ScoreBox.cs" id="2_if122"]
+[ext_resource type="AudioStream" uid="uid://cs4jvst3qkn31" path="res://sound/Square Chime.wav" id="4_n5en8"]
+[ext_resource type="AudioStream" uid="uid://bhf7wp38iwo8" path="res://sound/ui/multiply sound.wav" id="5_541so"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eh6m3"]
 atlas = ExtResource("1_kjvft")
@@ -49,7 +51,7 @@ scale_max = 2.0
 scale_curve = SubResource("CurveTexture_if122")
 color_ramp = SubResource("GradientTexture1D_if122")
 
-[node name="ScoreBox" type="TextureRect" unique_id=1915225977 node_paths=PackedStringArray("ScoreLabel", "MultiplierLabel", "XSprite", "XParticles", "AnimatedXSprite", "StaticGlowy", "StaticColoredGlowy", "AnimatedGlowyClippingRect", "AnimatedColoredGlowy")]
+[node name="ScoreBox" type="TextureRect" unique_id=1915225977 node_paths=PackedStringArray("ScoreLabel", "MultiplierLabel", "XSprite", "XParticles", "AnimatedXSprite", "StaticGlowy", "StaticColoredGlowy", "AnimatedGlowyClippingRect", "AnimatedColoredGlowy", "NumberHitSFX", "MultiplicationSFX")]
 custom_minimum_size = Vector2(99, 51)
 anchors_preset = 15
 anchor_right = 1.0
@@ -69,6 +71,8 @@ StaticGlowy = NodePath("MultiplierGlowy")
 StaticColoredGlowy = NodePath("MultiplierGlowy/ColorGlowy")
 AnimatedGlowyClippingRect = NodePath("GlowyClippingRect")
 AnimatedColoredGlowy = NodePath("GlowyClippingRect/AnimatedMultiplierGlowy/AnimatedColorGlowy")
+NumberHitSFX = NodePath("ScoreNumberHitSFX")
+MultiplicationSFX = NodePath("MultiplicationSFX")
 
 [node name="MultiplierGlowy" type="TextureRect" parent="." unique_id=885181921]
 visible = false
@@ -193,3 +197,11 @@ text = "1.0"
 label_settings = ExtResource("2_eh6m3")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="ScoreNumberHitSFX" type="AudioStreamPlayer" parent="." unique_id=1801637574]
+stream = ExtResource("4_n5en8")
+volume_db = -9.0
+
+[node name="MultiplicationSFX" type="AudioStreamPlayer" parent="." unique_id=1364895175]
+stream = ExtResource("5_541so")
+volume_db = -6.0

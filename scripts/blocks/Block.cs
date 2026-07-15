@@ -245,7 +245,7 @@ public partial class Block : Area2D
     /// <summary>
     /// Reset certain values on turn started
     /// </summary>
-    public void TurnStarted()
+    public void Turn_Started()
     {
         IsTicked = false;
     }

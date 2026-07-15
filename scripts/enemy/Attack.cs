@@ -9,6 +9,9 @@ public abstract partial class Attack : Node
 
     protected float IntensityFactor = 1;
 
+    /// <summary>
+    /// First we tick down our reveal time, then reveal the attack, then tick down execution time
+    /// </summary>
     [Export] protected int MinTurnsToExecute = 10, MaxTurnsToExecute = 16;
     [Export] protected int MinTurnsToReveal = 6, MaxTurnsToReveal = 10;
 
@@ -25,6 +28,7 @@ public abstract partial class Attack : Node
 
     public void StartAttack(int EnemyLevel)
     {
+        //pull random cooldowns
         TurnsToExecute = GD.RandRange(MinTurnsToExecute, MaxTurnsToExecute);
         MinTurnsToReveal = GD.RandRange(MinTurnsToReveal, MaxTurnsToReveal);
 

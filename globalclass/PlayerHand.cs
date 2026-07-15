@@ -7,6 +7,8 @@ using static Godot.OpenXRInterface;
 [GlobalClass, Icon("res://texture/icon/handicon.png")]
 public partial class PlayerHand : Container
 {
+    StarterBag DefaultBag = Data.magnetBag;
+
 	[Export] float NewCardYPosition;
     [Signal] public delegate void DrawOperationStartedEventHandler();
     [Signal] public delegate void DrawOperationCompletedEventHandler();
@@ -51,7 +53,7 @@ public partial class PlayerHand : Container
 
     public override void _EnterTree()
     {
-        Bag = Data.magnetBag.CreateBag();
+        Bag = DefaultBag.CreateBag();
     }
 
     // Called when the node enters the scene tree for the first time.
@@ -76,6 +78,9 @@ public partial class PlayerHand : Container
 
     void CheckInput()
     {
+        //somehow there is a potential index out of range error here.
+        //maybe there is a 1 frame window where we can press this after input is re-enabled but before cards are done drawing?
+        //likely related to spamming the f1 debug command
         if (Input.IsActionJustPressed("One"))
         {
             SelectCard(0);
@@ -170,7 +175,7 @@ public partial class PlayerHand : Container
         }
     }
 
-    public void OnPiecePlaced()
+    public void DiscardSelectedCard()
     {
         DiscardCard(SelectionIndex);
     }

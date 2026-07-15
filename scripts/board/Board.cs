@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+[GlobalClass, Icon("res://texture/icon/boardicon.png")]
 public partial class Board : Control
 {
     Cell[,] CellBoard;
@@ -16,19 +17,15 @@ public partial class Board : Control
     public Vector2I VisualDimensions;
     public Vector2I CellDimensions;
 
+    [Export] public AnimationWaiter StateAnimator;
+    [Export] public AnimationWaiter SuperStateAnimator;
+
     public Enemy Enemy;
 
     public double CurrentScore;
-    public double LevelMult;
-
-    //todo: make these properties
-
-    int Level;
 
 
-    double MultPerLevel;
-    int RowsNeededForLevelup;
-    int RowsUntilLevelup;
+    int RowsNeededEveryLevelup;
 
     int TotalRowsScored = 0;
     int TurnRowsScored = 0;
@@ -41,15 +38,57 @@ public partial class Board : Control
         get => _Board_HasUnprocessedUpdates;
         set
         {
+            
             _Board_HasUnprocessedUpdates = value;
             if (value) { EmitSignalBoardUpdated(); }
         }
     }
 
+    double _LevelMult;
+    public double LevelMult
+    {
+        get => _LevelMult;
+        set { _LevelMult = value; ScoreBox.MultiplierLabel.Text = value.ToString(); }
+    }
+
+    //these properties auto-update their corresponding UI element
+    int _Level;
+    int Level
+    {
+        get => _Level;
+        set
+        {
+            _Level = value;
+            LevelStatBoxes.LevelLabel.Text = _Level.ToString(); ;
+        }
+    }
+
+
+    double _MultPerLevel;
+    double MultPerLevel
+    {
+        get => _MultPerLevel;
+        set
+        {
+            _MultPerLevel = value;
+            LevelStatBoxes.MultPerLevelLabel.Text = "+" +_MultPerLevel + "x";
+        }
+    }
+
+
+    int _RowsUntilLevelUp;
+    int RowsUntilLevelUp
+    {
+        get => _RowsUntilLevelUp;
+        set
+        {
+            _RowsUntilLevelUp = value;
+            LevelStatBoxes.RowsUntilLevelUpLabel.Text = _RowsUntilLevelUp.ToString(); ;
+        }
+    }
+
     #endregion
     #region == Export Fields ==
-    [Export] AudioStreamPlayer ScoringSfx;
-    [Export] AudioStreamPlayer PlacementSfx;
 
     [Export] public Node2D BlockBox;
     [Export] NinePatchRect border;
@@ -70,7 +109,7 @@ public partial class Board : Control
 
     [Signal] public delegate void PlayerTurn_StartedEventHandler();
     [Signal] public delegate void Piece_PlayedEventHandler();
-    [Signal] public delegate void Piece_PlacedEventHandler();
+    [Signal] public delegate void Piecefall_EndedEventHandler();
 
     /// <summary>
     /// Ran each time the Board Processing loops again, before we actually process the board.
@@ -90,13 +129,11 @@ public partial class Board : Control
     #region == Constants ==
 
     const double LowerAnimLength = .3;
-    const double BaseScoreTickdownTime = 0.3;
-    const double WaitTimeAfterEnemyDies = 0.6;
+    const double BaseScoreTickdownTime = 0.4;
+    const double WaitTimeAfterEnemyDies = 0.8;
     //todo: maybe change this so the wait time is based on the enemy?
 
     #endregion
-
-
 
     List<Block> PlacedBlocks = [];
 
@@ -115,28 +152,55 @@ public partial class Board : Control
         //handle playerhand things
     }
 
-    void PlayerPlaysCard(PieceCard Piece)
+    void PlayerPlaysCard(PieceCard Card)
     {
+        //create piece and bind signals
+        CurrentPiece = Card.LinkedPiece.CreatePiece();
+
+        CurrentPiece.PiecePlaced += Piecefall_Finished;
+        Connect(SignalName.BoardUpdated, new(CurrentPiece, FallingPiece.MethodName.UpdateCollision));
+
+        BlockBox.AddChild(CurrentPiece);
+
+        foreach (var block in CurrentPiece.Blocks)
+        {
+            ConnectNewBlock(block);
+        }
+        //this stuff should? just work?
+
+        Vector2I startingPosition = new(CellDimensions.X / 2, CellDimensions.Y - 8);
+
+        CurrentPiece.StartFall(startingPosition);
+
+
         //start piecefall
         EmitSignalPiece_Played();
     }
 
     void PlaceBlock(Block block)
     {
+        GD.Print("Block placed!");
+        block.Reparent(BlockBox);
+        PlacedBlocks.Add(block);
 
+        CellBoard[block.BoardPos.X, block.BoardPos.Y].PlaceBlock(block);
+        //add block to CellBoard
     }
 
     void Piecefall_Finished()
     {
-        EmitSignalPiece_Placed();
+        PlacementSfx.Play();
+        CurrentPiece = null;
+        EmitSignalPiecefall_Ended();
         StartBoardProcessing(TickPriorityBlocks);
-        //process score moving onto block ticking after
+        //process board moving onto block ticking after
     }
 
-    /// Break logic here to score ///
+    /// Logic stops here to go to board processing!!! ///
 
     void TickPriorityBlocks()
     {
+        GD.Print("Ticking blocks with priority!");
         EmitSignalTickBlocks(true);
 
         if (Board_HasUnprocessedUpdates)
@@ -146,29 +210,66 @@ public partial class Board : Control
         }
 
         TickNormalBlocks();
-        //WE MISSED a key part of this state in the diagram! we have to run this logic TWICE, the first time being for destructive ticks
-        //WAIT this may need to be a part of score processing
-        //actually probably not. if stuff gets placed by an enemy it doesn't need to be ticked immediately
     }
 
     void TickNormalBlocks()
     {
+        EmitSignalTickBlocks(false);
 
+        if (Board_HasUnprocessedUpdates)
+        {
+            StartBoardProcessing(TallyUpScore);
+            return;
+        }
+
+        //wait. we can add animation support super easily here i think. if we just start waiting 
         //goto score processing after this !!!
+
+        TallyUpScore();
+        //we end up at ResetTurnValues after processing score
     }
 
+    // Logic stops here for score processing!!
 
+    /// <summary>
+    /// Reset values and either wait if the enemy is attacking, or progress immediately if not
+    /// </summary>
     void ResetTurnValues()
     {
-        CurrentScore = 0;
+        CurrentScore = Run.Current.BaseScore;
+        ScoreBox.ResetNumberHitSFX();
 
-        //start reset animations
-        //check here if the enemy's attacking! if so, we need to create an animation state, and wait before starting the enemy's turn!
+        TurnRowsScored = 0;
+
+        //it is a bit awkward always creating these animations, even when we're not waiting on them,
+        //but it prevents excess animations finished error.
+        //this may cause a brief pause if a very short animation is started immediately after this, though it shouldn't really matter
+        //0.5 second or less pause
+        StateAnimator.AddAnimation();
+        StateAnimator.AddAnimation();
+
+        //start reset animations, these will finish the animations created above even if we aren't waiting on them (which is fine)
+        ScoreBox.ResetValues(LevelMult);
+        RowsClearedDial.Reset();
+
+        //todo: change!!!
+        if (false)//Enemy.AttackingThisTurn)
+        {
+            //if the enemy is attacking: wait on all the animations first
+            StateAnimator.StartAnimation(StartEnemyTurn);
+        }
+        else
+        {
+            //if they're not attacking, progress immediately
+            StartEnemyTurn();
+        }
     }
 
     void StartEnemyTurn()
     {
-        //we need to wait for reset animations ONLY IF the enemy is going to attack!!!
+        //start attacking!
+
+        StartPlayerTurn();
     }
 
     void FinishEnemyTurn()
@@ -177,6 +278,7 @@ public partial class Board : Control
     }
 
     #endregion
+
     #region === Board Processing ===
 
     Action ProcessingReturnMethod;
@@ -192,6 +294,7 @@ public partial class Board : Control
     /// <param name="ReturnMethod"></param>
     void StartBoardProcessing(Action ReturnMethod)
     {
+        GD.Print("Board processing started!");
         if(ProcessingReturnMethod != null)
         {
             GD.PushError("Attempted to start board processing while board processing is already happening!");
@@ -199,8 +302,6 @@ public partial class Board : Control
         }
 
         ProcessingReturnMethod = ReturnMethod;
-        ScorableRows.Clear();
-        ScoredCells.Clear();
 
         CheckScorability();
     }
@@ -208,6 +309,8 @@ public partial class Board : Control
     void CheckScorability()
     {
         ScorableRows.Clear();
+        ScoredCells.Clear();
+
         EmitSignalBoardProcessingLoop_Started();
 
         //scan all rows for scorability, adding them to a list
@@ -219,6 +322,7 @@ public partial class Board : Control
             }
         }
 
+
         //if stuff scored: score it!
         if (ScorableRows.Count > 0)
         {
@@ -227,59 +331,75 @@ public partial class Board : Control
             {
                 row.StartScoring();
             }
+            GD.Print($"Scoring {ScorableRows.Count} rows!");
             RowsClearedDial.AddRows(ScorableRows.Count);
 
             //rows cleared dial will run events to animate everything related to rows
             //these will create superstate animations as well when they start
 
-            RowsUntilLevelup -= ScorableRows.Count;
-
-            TurnRowsScored += ScorableRows.Count;
-            TotalRowsScored += ScorableRows.Count;
-
-            while(RowsUntilLevelup <= 0)
-            {
-                //level up until we no longer have enough to levelup
-                //we use a while loop so we can level up multiple times at once
-                LevelUp();
-
-            }
-
             //TODO PLAY SOUNDS HERE
             PlayScoringSounds(ScorableRows.Count);
             //we gotta start our animation waiting here, then progressing to LoweringBlocks after !!!
 
-            StartStateAnimation(LowerScoredBlocks);
+            StateAnimator.StartAnimation(LowerScoredBlocks);
             //we need to update all rows-related values right here!
 
         }
         //NO SCORING LETS LEAVE!!!!!
         else
         {
+            GD.Print("Attempting to leave board processing!");
             //WE NEED TO WAIT!!! on ALL superstate animations before exiting!!!!
             //no scoring happened! let's skip all this noise
 
-            StartSuperStateAnimation(ExitBoardProcessing);
+
+            if(SuperStateAnimator.AnimationsCount == 0)
+            {
+                ExitBoardProcessing();
+                return;
+            }
+
+            SuperStateAnimator.StartAnimation(ExitBoardProcessing);
             //after all animations have fully finished, we can exit board processing!
+        }
+    }
+
+    void Row_CreatedIterator(ScoreIterator iterator)
+    {
+        StateAnimator.AddAnimation();
+        iterator.IteratorCompleted += StateAnimator.FinishAnimation;
+    }
+
+    /// <summary>
+    /// Updates all cleared row-dependent things, including UI. ClearedRowDial runs this every time it scrolls to a new number!
+    /// </summary>
+    void AddClearedRowToCount(int rowCount)
+    {
+        TurnRowsScored++;
+        TotalRowsScored++;
+
+        RowsUntilLevelUp--;
+
+        if (RowsUntilLevelUp <= 0)
+        {
+            LevelUp();
         }
     }
 
     void LevelUp()
     {
-        RowsUntilLevelup += RowsNeededForLevelup;
+        GD.Print("rows until levelup: " + RowsUntilLevelUp);
         Level++;
-        LevelMult += MultPerLevel;
-    }
+        LevelStatBoxes.LevelUp();
 
-    void PlayScoringSounds(int RowsScored)
-    {
-        //play sound depending on how many rows scored !!!
+        RowsUntilLevelUp += RowsNeededEveryLevelup;
+        LevelMult += MultPerLevel;
     }
 
     void Block_Scored(Block block)
     {
         //create score number here!!!
-        SuperStateAnimationsCount++;
+        SuperStateAnimator.AddAnimation();
 
         var newNumber = MiniScoreNumber.GetNew(block.ScoreValue, ScoreBox.ScoreLabel.GetGlobalRect().GetCenter());
         newNumber.NumberReachedScore += AddScoreNumberToScore;
@@ -297,22 +417,23 @@ public partial class Board : Control
     {
         CurrentScore += score;
         ScoreBox.SetScore(CurrentScore);
+        ScoreBox.PlayNumberHitSFX();
 
         //score numbers are superstate animations
-        SuperStateAnimationsFinished++;
+        SuperStateAnimator.FinishAnimation();
     }
 
     void Cell_Scored(Cell cell)
     {
-        //add scoring animation here!!!
+        //we start scoring animation!!!
 
-        StateAnimationsCount++;
+        StateAnimator.AddAnimation();
 
         ScoreAnimation animation = (ScoreAnimation)ScoreAnimation.Instantiate();
         BlockBox.AddChild(animation);
 
         animation.Position = cell.RealPosition;
-        animation.AnimationFinished += () => StateAnimationsFinished++;
+        animation.AnimationFinished += () => StateAnimator.FinishAnimation();
 
         if (cell.FilledInOnScoring)
         {
@@ -348,19 +469,20 @@ public partial class Board : Control
         if(PlacedBlocks.Count == 0)
         {
             //abort lowering since there's nothing to lower!
+            GD.Print("aborting lowering");
             CheckScorability();
             return;
         }
 
-        Tween tween = GetTree().CreateTween();
+        Tween tween = GetTree().CreateTween().SetParallel();
         foreach (var block in PlacedBlocks)
         {
-            StateAnimationsCount++;
+            StateAnimator.AddAnimation();
             LowerBlock(block, LowestScoredY, tween);
         }
 
         //loop back to checking scorability after lowering
-        StartStateAnimation(CheckScorability);
+        StateAnimator.StartAnimation(CheckScorability);
     }
 
     void LowerBlock(Block block, int lowestScoredY, Tween tween)
@@ -371,7 +493,6 @@ public partial class Board : Control
         double decreaseDelayPerBlockAtHighValues = (block.BoardPos.Y - lowestScoredY) * .0002;
         double loweringDelay = (block.BoardPos.Y - lowestScoredY) * (.03 - decreaseDelayPerBlockAtHighValues); //* AnimationTimescale;
 
-        StateAnimationsCount++;
         //tween lowering to our new position, and we actually move when its done with the method
         tween.TweenProperty(block, "position",
             new Vector2(0, block.LowerDistance * 10), LowerAnimLength).AsRelative()
@@ -386,11 +507,13 @@ public partial class Board : Control
         CellBoard[block.BoardPos.X, block.BoardPos.Y].HeldBlock = block;
         block.LowerDistance = 0;
 
-        StateAnimationsFinished++;
+        StateAnimator.FinishAnimation();
+
     }
 
     void ExitBoardProcessing()
     {
+        GD.Print("Exiting board processing!");
         Board_HasUnprocessedUpdates = false;
 
         ProcessingReturnMethod.Invoke();
@@ -402,10 +525,12 @@ public partial class Board : Control
 
 
     #endregion
+
     #region === Score Processing ===
 
     void TallyUpScore()
     {
+        GD.Print("Starting score processing!");
         if (CurrentScore == 0)
         {
             //end early
@@ -432,7 +557,8 @@ public partial class Board : Control
     void SubtractScoreFromEnemyHP()
     {
         //subtract health, then animate it!
-        Enemy.Health -= CurrentScore;
+        //Enemy.Health -= CurrentScore;
+        //TODO uncomment
 
         //we want to take slightly longer to animate based on score, but this shouldn't be mind-numbingly slow at high values
         //so we make it reverse exponential growth
@@ -443,15 +569,16 @@ public partial class Board : Control
         EnemyHealthBar.DealDamage(CurrentScore, TickdownAnimationTime);
 
         //start animations, then wait until a bit after them to check enemy HP!
+        //why the fuck were we waiting unnecessarily long on this before? it makes no sense to wait when they don't die. what?
 
         GetTree().CreateTween()
             .TweenCallback(Callable.From(CheckEnemyHP))
-            .SetDelay(TickdownAnimationTime + WaitTimeAfterEnemyDies);
+            .SetDelay(TickdownAnimationTime); //+ WaitTimeAfterEnemyDies);
     }
 
     void CheckEnemyHP()
     {
-        if (Enemy.Health <= 0)
+        if (false)//Enemy.Health <= 0)
         {
             //if enemy is below hp, END encounter!!!
             return;
@@ -461,110 +588,73 @@ public partial class Board : Control
         ResetTurnValues();
     }
 
-
-
-
     #endregion
-    #region === Animations ===
 
-    #region State Animations
+    #region === Signal Binding & Board Events ===
 
     /// <summary>
-    /// Start a state animation, specifying the method to call after it ends
+    /// Connect a new block to the necessary signals
     /// </summary>
-    /// <param name="action"></param>
-    void StartStateAnimation(Action action)
+    /// <param name="block"></param>
+    public void ConnectNewBlock(Block block)
     {
-        StateAnimationReturnMethod = action;
-        StateAnimationsInProgress = true;
-        CheckStateAnimations();
+        block.Placed += PlaceBlock;
+        block.Scored += Block_Scored;
+        block.Deleted += () => Block_Deleted(block);
+
+        Connect(SignalName.PlayerTurn_Started, new(block, Block.MethodName.Turn_Started));
+        Connect(SignalName.TickBlocks, new(block, Block.MethodName.Tick));
     }
 
-    //Where to return to after all StateAnimations have finished
-    Action StateAnimationReturnMethod;
-    bool StateAnimationsInProgress;
-
-    //Brief animations for a certain state in board logic, like scoring or lowering
-    int _StateAnimationsFinished;
-    int StateAnimationsFinished
+    public void Block_Deleted(Block block)
     {
-        get => _StateAnimationsFinished;
-        set 
-        { 
-            _StateAnimationsFinished = value;
-            CheckStateAnimations();
-        }
-    }
-
-    int StateAnimationsCount;
-
-    void CheckStateAnimations()
-    {
-        //if we're animating AND have finished all animations: progress!
-        if(StateAnimationsInProgress && StateAnimationsFinished == StateAnimationsCount)
+        //sometimes just barely placed blocks need to be removed, and their IsPlaced is not updated yet!
+        if (block.IsPlaced || PlacedBlocks.Contains(block))
         {
-            StateAnimationsCount = 0;
-            StateAnimationsFinished = 0;
-
-            StateAnimationReturnMethod.Invoke();
-            StateAnimationsInProgress = false;
-        }
-        else if(StateAnimationsFinished > StateAnimationsCount)
-        {
-            GD.PushError($"Too many state animations finished! Completed {StateAnimationsFinished} out of {StateAnimationsCount} animations!");
-        }
-    }
-    #endregion
-    #region Super State Animations
-
-    /// <summary>
-    /// Start a super state animation, specifying the method to call after it ends
-    /// </summary>
-    /// <param name="action"></param>
-    void StartSuperStateAnimation(Action action)
-    {
-        SuperStateAnimationReturnMethod = action;
-        SuperStateAnimationsInProgress = true;
-        CheckSuperStateAnimations();
-    }
-
-    //Where to return to after all SuperStateAnimations have finished
-    Action SuperStateAnimationReturnMethod;
-    bool SuperStateAnimationsInProgress;
-
-    //Animations that persist in-between states, often at the same time as State Animations, so they need seperate handling
-    int _SuperStateAnimationsFinished;
-    int SuperStateAnimationsFinished
-    {
-        get => _SuperStateAnimationsFinished;
-        set
-        {
-            _SuperStateAnimationsFinished = value;
-            CheckSuperStateAnimations();
+            PlacedBlocks.Remove(block);
+            Board_HasUnprocessedUpdates = true;
         }
     }
 
-    int SuperStateAnimationsCount;
 
-    void CheckSuperStateAnimations()
-    {
-        //if we're animating AND have finished all animations: progress!
-        if (SuperStateAnimationsInProgress && SuperStateAnimationsFinished == SuperStateAnimationsCount)
-        {
-            SuperStateAnimationsCount = 0;
-            SuperStateAnimationsFinished = 0;
-
-            SuperStateAnimationReturnMethod.Invoke();
-            SuperStateAnimationsInProgress = false;
-        }
-        else if (SuperStateAnimationsFinished > SuperStateAnimationsCount)
-        {
-            GD.PushError($"Too many superstate animations finished! Completed {SuperStateAnimationsFinished} out of {SuperStateAnimationsCount} animations!");
-        }
-    }
     #endregion
 
+    #region === Sound Effects ===
+
+    AudioStreamPlayer ScoringSfx;
+    AudioStreamPlayer ScoringSfxHarmonics1;
+    AudioStreamPlayer ScoringSfxHarmonics2;
+    AudioStreamPlayer ScoringSfxHarmonics3;
+    AudioStreamPlayer ScoringSfxHarmonics4;
+    AudioStreamPlayer ScoringSfxHarmonics5;
+    AudioStreamPlayer ScoringSfxHarmonics6;
+
+    AudioStreamPlayer[] ScoringSFXTable;
+
+
+    [Export] AudioStreamPlayer PlacementSfx;
+
+    void PlayScoringSounds(int RowsScored)
+    {
+        //play sound depending on how many rows scored !!!
+
+        RowsScored--;
+
+        if(RowsScored < 11)
+        {
+            ScoringSFXTable[RowsScored].Play();
+        }
+        else
+        {
+            //if really high: play final sound
+            ScoringSfxHarmonics6.Play();
+        }
+    }
+
+
+
     #endregion
+
     #region === Initialization Logic ===
     //setup border and graphics and here and stuff
     //like rows too
@@ -577,13 +667,39 @@ public partial class Board : Control
         //we need a method to properly set fields and instantly set related UI elements to the correct number,
         //WITH NO animations/visual logic. we can run this when encounter starts!
 
-        MultPerLevel = Run.Current.MultPerLevel;
-        RowsNeededForLevelup = Run.Current.RowsNeededForLevelup;
         Level = Run.Current.BaseLevel;
+        MultPerLevel = Run.Current.MultPerLevel;
+        RowsNeededEveryLevelup = Run.Current.RowsNeededForLevelup;
+        RowsUntilLevelUp = RowsNeededEveryLevelup;
 
         LevelMult = Run.Current.BaseMult + Level * MultPerLevel;
-        
+
+        SetupBoard(defaultX, defaultY);
+        BoardAccessor.CurrentBoard = this;
+
+
+        ScoringSfx = (AudioStreamPlayer)GetNode("ScoringSfxBase");
+        ScoringSfxHarmonics1 = (AudioStreamPlayer)GetNode("ScoringSfxHarmonics1");
+        ScoringSfxHarmonics2 = (AudioStreamPlayer)GetNode("ScoringSfxHarmonics2");
+        ScoringSfxHarmonics3 = (AudioStreamPlayer)GetNode("ScoringSfxHarmonics3");
+        ScoringSfxHarmonics4 = (AudioStreamPlayer)GetNode("ScoringSfxHarmonics4");
+        ScoringSfxHarmonics5 = (AudioStreamPlayer)GetNode("ScoringSfxHarmonics5");
+        ScoringSfxHarmonics6 = (AudioStreamPlayer)GetNode("ScoringSfxHarmonics6");
+
+        ScoringSFXTable = 
+            [ScoringSfx, 
+            ScoringSfxHarmonics1, ScoringSfxHarmonics1, //2, 3
+            ScoringSfxHarmonics2, ScoringSfxHarmonics2, //4, 5
+            ScoringSfxHarmonics3, ScoringSfxHarmonics3, //6, 7
+            ScoringSfxHarmonics4, ScoringSfxHarmonics4, //8, 9
+            ScoringSfxHarmonics5, ScoringSfxHarmonics5];//10, 11
+
+
+        StartPlayerTurn();
     }
+
+
+
 
     public void SetupBoard(int width, int height)
     {
@@ -625,6 +741,9 @@ public partial class Board : Control
         }
 
         BoardRow newRow = new(y, CellDimensions.X, cells);
+
+        newRow.CreatedIterator += Row_CreatedIterator;
+
         AddChild(newRow);
         BoardRows[y] = newRow;
 
@@ -641,11 +760,51 @@ public partial class Board : Control
         PlayerTurn_Started += NewCell.FullyResetScoringFlag;
         BoardProcessingLoop_Started += NewCell.PartiallyResetScoringFlag;
         
+        
         //todo
 
         return NewCell;
     }
 
+
+
+    #endregion
+
+    #region === Debug Features ===
+
+    public override void _Process(double delta)
+    {
+        if (Input.IsActionJustPressed("Debug2"))
+        {
+        }
+
+        if (Input.IsActionJustPressed("Debug3"))
+        {
+
+        }
+
+        if (Input.IsActionJustPressed("Debug6"))
+        {
+
+        }
+
+        if (Input.IsActionJustPressed("Fullscreen"))
+        {
+            if (DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Fullscreen)
+            {
+                DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
+                return;
+            }
+
+            DisplayServer.WindowSetMode(DisplayServer.WindowMode.Fullscreen);
+        }
+
+        if (Input.IsActionJustPressed("Restart"))
+        {
+            GetTree().ReloadCurrentScene();
+        }
+
+    }
 
 
     #endregion

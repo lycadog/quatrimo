@@ -8,10 +8,10 @@
 [ext_resource type="PackedScene" uid="uid://dl7cdkh88t5p0" path="res://scenes/Board.tscn" id="5_knim7"]
 [ext_resource type="PackedScene" uid="uid://bpo3d227m28dj" path="res://scenes/bag/playerHand.tscn" id="6_u7t6i"]
 [ext_resource type="PackedScene" uid="uid://o6pwekw2ruek" path="res://scenes/ui/ScoreBox.tscn" id="7_ioiev"]
-[ext_resource type="Script" uid="uid://481h7xwr5q1f" path="res://scripts/visuals/BoardAnimationManager.cs" id="9_ioiev"]
 [ext_resource type="PackedScene" uid="uid://bu7pideos4dsg" path="res://scenes/ui/LevelStats.tscn" id="9_knim7"]
 [ext_resource type="PackedScene" uid="uid://bumaamxmqdg05" path="res://scenes/ui/EnemyHealthBar.tscn" id="9_u7t6i"]
 [ext_resource type="PackedScene" uid="uid://3g8r3vdcymf3" path="res://scenes/ui/RowsClearedDial.tscn" id="10_kciur"]
+[ext_resource type="Script" uid="uid://mycxnrgewdvt" path="res://scripts/visuals/AnimationWaiter.cs" id="11_knim7"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_06til"]
 atlas = ExtResource("3_kciur")
@@ -65,6 +65,7 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -257.5
+offset_top = -26.0
 offset_right = 257.5
 offset_bottom = 10.0
 grow_horizontal = 2
@@ -80,7 +81,7 @@ offset_right = 480.0
 offset_bottom = 270.0
 texture = ExtResource("1_ymjt5")
 
-[node name="BagroundColor2" type="ColorRect" parent="Static UI/Background" unique_id=900331187]
+[node name="BackgroundColor2" type="ColorRect" parent="Static UI/Background" unique_id=900331187]
 show_behind_parent = true
 light_mask = 0
 layout_mode = 1
@@ -159,16 +160,21 @@ offset_top = 67.0
 offset_right = 131.0
 offset_bottom = 87.0
 
-[node name="Board" parent="." unique_id=30435418 node_paths=PackedStringArray("AnimationManager", "RowsClearedDial", "ScoreBox", "LevelStatBoxes", "EnemyHealthBar") instance=ExtResource("5_knim7")]
+[node name="Board" parent="." unique_id=30435418 node_paths=PackedStringArray("StateAnimator", "SuperStateAnimator", "Hand", "RowsClearedDial", "ScoreBox", "LevelStatBoxes", "EnemyHealthBar") instance=ExtResource("5_knim7")]
 layout_mode = 1
-AnimationManager = NodePath("AnimationManager")
+StateAnimator = NodePath("StateAnimator")
+SuperStateAnimator = NodePath("SuperStateAnimator")
+Hand = NodePath("../Hand/PlayerHand")
 RowsClearedDial = NodePath("../RightUI/RowsClearedDial")
 ScoreBox = NodePath("../RightUI/ScoreBox")
 LevelStatBoxes = NodePath("../RightUI/LevelStats")
 EnemyHealthBar = NodePath("../RightUI/EnemyHealthBar")
 
-[node name="AnimationManager" type="Node" parent="Board" unique_id=1746969919]
-script = ExtResource("9_ioiev")
+[node name="StateAnimator" type="Node" parent="Board" unique_id=2110997595]
+script = ExtResource("11_knim7")
+
+[node name="SuperStateAnimator" type="Node" parent="Board" unique_id=1860166547]
+script = ExtResource("11_knim7")
 
 [node name="Hand" type="Control" parent="." unique_id=1015045901]
 anchors_preset = 0
@@ -181,15 +187,13 @@ offset_bottom = 120.0
 layout_mode = 0
 
 [connection signal="ReachedNumber" from="RightUI/RowsClearedDial" to="RightUI/ScoreBox" method="RowScored"]
-[connection signal="ResetFinished" from="RightUI/RowsClearedDial" to="Board/AnimationManager" method="AnimationCompleted"]
-[connection signal="StartedScrolling" from="RightUI/RowsClearedDial" to="Board/AnimationManager" method="AddTurnEndAnimation"]
-[connection signal="StoppedScrolling" from="RightUI/RowsClearedDial" to="Board/AnimationManager" method="TurnEndAnimationCompleted"]
-[connection signal="FinishedTickingDown" from="RightUI/ScoreBox" to="Board" method="ResetValues"]
-[connection signal="ResetFinished" from="RightUI/ScoreBox" to="Board/AnimationManager" method="AnimationCompleted"]
-[connection signal="StartedTickingDown" from="RightUI/ScoreBox" to="Board" method="ScoreBox_TickingDown"]
-[connection signal="TurnEndAnimationCompleted" from="RightUI/ScoreBox" to="Board/AnimationManager" method="TurnEndAnimationCompleted"]
-[connection signal="TurnEndAnimationCreated" from="RightUI/ScoreBox" to="Board/AnimationManager" method="AddTurnEndAnimation"]
-[connection signal="PiecePlaced" from="Board" to="Hand/PlayerHand" method="OnPiecePlaced"]
-[connection signal="TurnStarted" from="Board" to="Hand/PlayerHand" method="OnTurnStart"]
-[connection signal="TurnEndAnimationsCompleted" from="Board/AnimationManager" to="Board" method="FinalizeScore"]
-[connection signal="CardPlayed" from="Hand/PlayerHand" to="Board" method="PlayCard"]
+[connection signal="ReachedNumber" from="RightUI/RowsClearedDial" to="Board" method="AddClearedRowToCount"]
+[connection signal="ResetFinished" from="RightUI/RowsClearedDial" to="Board/StateAnimator" method="FinishAnimation"]
+[connection signal="StartedScrolling" from="RightUI/RowsClearedDial" to="Board/SuperStateAnimator" method="AddAnimation"]
+[connection signal="StoppedScrolling" from="RightUI/RowsClearedDial" to="Board/SuperStateAnimator" method="FinishAnimation"]
+[connection signal="AnimationCreated" from="RightUI/ScoreBox" to="Board/SuperStateAnimator" method="AddAnimation"]
+[connection signal="AnimationFinished" from="RightUI/ScoreBox" to="Board/SuperStateAnimator" method="FinishAnimation"]
+[connection signal="FinishedProcessingScore" from="RightUI/ScoreBox" to="Board" method="SubtractScoreFromEnemyHP"]
+[connection signal="ResetFinished" from="RightUI/ScoreBox" to="Board/StateAnimator" method="FinishAnimation"]
+[connection signal="Piecefall_Ended" from="Board" to="Hand/PlayerHand" method="DiscardSelectedCard"]
+[connection signal="CardPlayed" from="Hand/PlayerHand" to="Board" method="PlayerPlaysCard"]

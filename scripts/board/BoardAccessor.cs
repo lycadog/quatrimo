@@ -6,9 +6,9 @@ public static class BoardAccessor
 {
     //todo: this sucks. but we need to check in on the board somehow!
 
-    static BoardOld _CurrentBoard;
+    static Board _CurrentBoard;
 
-    public static BoardOld CurrentBoard
+    public static Board CurrentBoard
     {
         private get => _CurrentBoard; 
         set => _CurrentBoard = value;
@@ -41,8 +41,8 @@ public static class BoardAccessor
     }
     public static bool IsOutsideVisualBoard(Vector2I position)
     {
-        if (position.X < 0 || position.X >= CurrentBoard.Dimensions.X - 2
-        || position.Y < 0 || position.Y >= CurrentBoard.Dimensions.Y - 2)
+        if (position.X < 0 || position.X >= CurrentBoard.VisualDimensions.X - 2
+        || position.Y < 0 || position.Y >= CurrentBoard.VisualDimensions.Y - 2)
         {
             return true;
         }
@@ -72,7 +72,8 @@ public static class BoardAccessor
     }
     public static void PlaceBlockDirectlyToBoard(Block block, bool doWhiteFlash = true)
     {
-        CurrentBoard.PlaceBlockDirectlyOnBoard(block, doWhiteFlash);
+        //CurrentBoard.PlaceBlockDirectlyOnBoard(block, doWhiteFlash);
+        //TODO implement this!!!!
     }
 
 

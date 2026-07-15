@@ -8,6 +8,7 @@ public partial class EnemyHealthBar : Control
     [Export] Label HPTextBlack;
     [Export] Label HPTextWhite;
     [Export] ColorRect HPRect;
+    [Export] AudioStreamPlayer HPDamageSFX;
     
     public void DealDamage(double damage, double TickdownTime)
     {
@@ -15,6 +16,7 @@ public partial class EnemyHealthBar : Control
         if(damage > 0)
         {
             DamageAnimation();
+            HPDamageSFX.Play();
         }
 
         int oldHP = HP;

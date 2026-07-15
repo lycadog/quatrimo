@@ -30,18 +30,22 @@ public partial class FallingPiece : Node2D
         }
         Dimensions = dimensions;
 
-        SfxMove = new() { Stream = MoveBlip, VolumeDb = -16.0f };
-        AddChild(SfxMove);
+        MoveSfx = new() { Stream = MoveBlip, VolumeDb = -16.0f };
+        FailedMoveSfx = new() { Stream = FailedMoveBlip, VolumeDb = -12.0f };
+        AddChild(MoveSfx);
+        AddChild(FailedMoveSfx);
     }
 
     static AudioStreamWav MoveBlip = ResourceLoader.Load<AudioStreamWav>("uid://cawrk4lwnqcp3");
+    static AudioStreamWav FailedMoveBlip = ResourceLoader.Load<AudioStreamWav>("uid://dsm285qxxu7fq");
 
     Vector2 Offset = new(0, 0);
 
 	public List<Block> Blocks = [];
     protected BoardCollisionData CollisionData = new();
 
-    AudioStreamPlayer SfxMove;
+    AudioStreamPlayer MoveSfx;
+    AudioStreamPlayer FailedMoveSfx;
 
     bool Falling = false;
     double fallingCounter = -0.2;
@@ -94,6 +98,7 @@ public partial class FallingPiece : Node2D
 
     public void Place()
     {
+        GD.Print("piece placing yay!");
         Falling = false;
         QueueFree();
 
@@ -143,19 +148,23 @@ public partial class FallingPiece : Node2D
         UpdateCollision();
     }
 
-    void AttemptMoveLeft()
+    bool AttemptMoveLeft()
     {
         if (CollisionData.LeftMoveValid)
         {
             Move(-1, 0);
         }
+
+        return CollisionData.LeftMoveValid;
     }
-    void AttemptMoveRight()
+    bool AttemptMoveRight()
     {
         if (CollisionData.RightMoveValid)
         {
             Move(1, 0);
         }
+
+        return CollisionData.RightMoveValid;
     }
 
     void AttemptRotation(int direction)
@@ -289,8 +298,14 @@ public partial class FallingPiece : Node2D
 
             if (Input.IsActionJustPressed("Left"))
             {
-                SfxMove.Play();
-                AttemptMoveLeft();
+                if (AttemptMoveLeft())
+                {
+                    MoveSfx.Play();
+                }
+                else
+                {
+                    FailedMoveSfx.Play();
+                }
                 LeftCooldown = .11;
                 return;
             }
@@ -308,9 +323,15 @@ public partial class FallingPiece : Node2D
             RightCooldown -= delta;
             if (Input.IsActionJustPressed("Right"))
             {
-                SfxMove.Play();
-                AttemptMoveRight();
-                RightCooldown = .1;
+                if (AttemptMoveRight())
+                {
+                    MoveSfx.Play();
+                }
+                else
+                {
+                    FailedMoveSfx.Play();
+                }
+                    RightCooldown = .11;
                 return;
             }
 
@@ -324,13 +345,13 @@ public partial class FallingPiece : Node2D
 
         if (Input.IsActionJustPressed("RotateLeft"))
         {
-            SfxMove.Play();
+            MoveSfx.Play();
             AttemptRotation(-1);
         }
 
         else if (Input.IsActionJustPressed("RotateRight"))
         {
-            SfxMove.Play();
+            MoveSfx.Play();
             AttemptRotation(1);
         }
     }

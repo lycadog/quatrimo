@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-[GlobalClass, Icon("res://texture/icon/boardicon.png")]
 public partial class BoardOld : Control
 {
+    /*
     Cell[,] CellBoard;
     public Enemy Enemy;
 
@@ -636,4 +636,5 @@ public partial class BoardOld : Control
 
     #endregion
 
+    */
 }

@@ -16,6 +16,9 @@ public partial class ScoreBox : TextureRect
     [Export] ColorRect AnimatedGlowyClippingRect;
     [Export] TextureRect AnimatedColoredGlowy;
 
+    [Export] AudioStreamPlayer NumberHitSFX;
+    [Export] AudioStreamPlayer MultiplicationSFX;
+
     [Signal] public delegate void AnimationCreatedEventHandler();
     [Signal] public delegate void AnimationFinishedEventHandler();
 
@@ -26,10 +29,12 @@ public partial class ScoreBox : TextureRect
     int ScoreNumber = 0;
 
     const double GlowySpreadDuration = 0.25;
-    const double MultiplicationAnimationDuration = 0.6;
-    const double WaitTimeAfterProcessing = 0.4;
+    const double MultiplicationAnimationDuration = 0.8;
+    const double WaitTimeBeforeMultiplying = 0.8;
+    const double WaitTimeAfterProcessing = 0.8;
 
-    public const double ResetTime = 0.8;
+    
+    const double ResetTime = 0.8;
 
     static Color XOfflineColor = new(.188f, .159f, .168f);
 
@@ -54,6 +59,17 @@ public partial class ScoreBox : TextureRect
         }
     }
 
+    public void PlayNumberHitSFX()
+    {
+        NumberHitSFX.PitchScale += 0.05f;
+        NumberHitSFX.Play();
+    }
+
+    public void ResetNumberHitSFX()
+    {
+        NumberHitSFX.PitchScale = 1.0f;
+    }
+
     public void SetMult(double mult, bool temporary = false)
     {
         MultiplierLabel.Text = mult.ToString();
@@ -64,7 +80,7 @@ public partial class ScoreBox : TextureRect
         }
     }
 
-    public void RowScored(short RowsScored)
+    public void RowScored(int RowsScored)
     {
         if (RowsScored == 4)
         {
@@ -146,6 +162,7 @@ public partial class ScoreBox : TextureRect
         {
             ScoreNumber = (int)finalScore;
             ScoreLabel.Text = ScoreNumber.ToString();
+
             GetTree().CreateTween().TweenCallback(
                 Callable.From(EmitSignalFinishedProcessingScore))
                 .SetDelay(WaitTimeAfterProcessing);
@@ -156,7 +173,7 @@ public partial class ScoreBox : TextureRect
             //add a small delay here before this starts!
             CreateTween().TweenCallback(Callable.From(() => 
             MultiplyScore(finalScore)))
-                .SetDelay(0.6);
+                .SetDelay(WaitTimeBeforeMultiplying);
         }
     }
 
@@ -173,6 +190,7 @@ public partial class ScoreBox : TextureRect
         AnimatedXSprite.SelfModulate = Colors.White;
 
         XParticles.Restart();
+        MultiplicationSFX.Play();
 
         Tween tween = GetTree().CreateTween().SetParallel(true);
         tween.TweenProperty(AnimatedXSprite, "scale", new Vector2(4, 4), MultiplicationAnimationDuration)

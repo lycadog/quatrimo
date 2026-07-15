@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dixq7rei14xy4"
+path="res://.godot/imported/downwards enemy damage.wav-786d6a8ba03f5015de708765eedb8329.sample"
+
+[deps]
+
+source_file="res://sound/enemy/downwards enemy damage.wav"
+dest_files=["res://.godot/imported/downwards enemy damage.wav-786d6a8ba03f5015de708765eedb8329.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

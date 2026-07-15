@@ -176,7 +176,7 @@ public static class Data
     #region === Bags ===
 
     
-    public static StarterBag magnetBag = new([sBigTee.B, sHatchet.LB, sHatchet.RB, sDipole.B, sHook.LB, sHook.RB, sLine.B, sTwig.B, sWedge.B],
+    public static StarterBag magnetBag = new([sBigTee.B, sHatchet.LB, sHatchet.RB, sDipole.B, sHook.LB, sHook.RB, sLine.B, sTwig.B, sWedge.B, RandomPiece, RandomPiece],
            [(334, .62f, .97f), (294, .77f, .973f), (280, .94f, .94f), (258, .65f, .98f), (163, .56f, .97f), (124, .66f, .96f), (348, .75f, .9f), (36, .73f, 1f), (240, .73f, .95f)],
                "magnet bag");
 
@@ -186,7 +186,7 @@ public static class Data
 
     public static StarterBag longDistanceBag = new([sScatteredWedge.B, sSeperatedT.B, sScatteredL.LB, sScatteredL.RB, sSlash.B, sLepton.B, sTangle.LB, sTangle.RB, sBowl.B, sStick.B, sWedge.B, sNub.B, sLine.B], new Rect2(0, 50, 10, 10), "quanto bag idk");
 
-    public static StarterBag randomBullshitBag = new([sTwig.B, sWedge.B, sLine.B, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece, RandomPiece], "fuck");
+    public static StarterBag randomBullshitBag = new([sTwig.B, sWedge.B, sLine.B, RandomPiece, RandomPiece, RandomPiece, RandomPiece], "fuck");
     
     public static StarterBag debugBag = new([sMegalith.B, CursedNub], "debug");
 
