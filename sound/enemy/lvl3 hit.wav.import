@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c2im0xty17oso"
+path="res://.godot/imported/lvl3 hit.wav-c52b7b7f9bc8d14be34573039e3d514a.sample"
+
+[deps]
+
+source_file="res://sound/enemy/lvl3 hit.wav"
+dest_files=["res://.godot/imported/lvl3 hit.wav-c52b7b7f9bc8d14be34573039e3d514a.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

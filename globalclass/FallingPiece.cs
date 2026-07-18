@@ -98,7 +98,6 @@ public partial class FallingPiece : Node2D
 
     public void Place()
     {
-        GD.Print("piece placing yay!");
         Falling = false;
         QueueFree();
 
@@ -150,21 +149,25 @@ public partial class FallingPiece : Node2D
 
     bool AttemptMoveLeft()
     {
+        bool preMovementCollisionData = CollisionData.LeftMoveValid;
+
         if (CollisionData.LeftMoveValid)
         {
             Move(-1, 0);
         }
 
-        return CollisionData.LeftMoveValid;
+        return preMovementCollisionData;
     }
     bool AttemptMoveRight()
     {
+        bool preMovementCollisionData = CollisionData.LeftMoveValid;
+
         if (CollisionData.RightMoveValid)
         {
             Move(1, 0);
         }
 
-        return CollisionData.RightMoveValid;
+        return preMovementCollisionData;
     }
 
     void AttemptRotation(int direction)

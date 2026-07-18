@@ -3,8 +3,9 @@ using System;
 
 public partial class BasicEnemy : Enemy
 {
-    protected override Attack GetNewAttack()
+    protected override void GetNewAttack()
     {
-        return AvailableAttacks[GD.RandRange(0, AvailableAttacks.Count - 1)];
+        int RandomIndex = GD.RandRange(0, AvailableAttacks.Count - 1);
+        CurrentAttack = AvailableAttacks[RandomIndex];
     }
 }

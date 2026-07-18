@@ -1,0 +1,90 @@
+[gd_scene format=3 uid="uid://bjxu87cpu4tiu"]
+
+[ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="1_ucfp4"]
+[ext_resource type="FontFile" uid="uid://y3nrp4nknidx" path="res://lang/C&C Red Alert [INET].ttf" id="2_70qwu"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_to41f"]
+line_spacing = 0.0
+font = ExtResource("2_70qwu")
+font_size = 10
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e81pi"]
+atlas = ExtResource("1_ucfp4")
+region = Rect2(227, 41, 9, 9)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_62xsx"]
+atlas = ExtResource("1_ucfp4")
+region = Rect2(236, 41, 9, 9)
+
+[node name="CurrencyNumbers" type="ColorRect" unique_id=1613472465]
+z_index = 2
+custom_minimum_size = Vector2(42, 10)
+offset_right = 42.0
+offset_bottom = 10.0
+color = Color(0, 0, 0, 1)
+
+[node name="BorderBarLeft" type="ColorRect" parent="." unique_id=282888422]
+custom_minimum_size = Vector2(1, 9)
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 2.0
+offset_bottom = 10.0
+size_flags_vertical = 4
+color = Color(0.2901961, 0.29803923, 0.5647059, 1)
+
+[node name="BorderBarRight" type="ColorRect" parent="." unique_id=636651223]
+custom_minimum_size = Vector2(1, 9)
+layout_mode = 0
+offset_left = 40.0
+offset_top = 1.0
+offset_right = 41.0
+offset_bottom = 10.0
+size_flags_vertical = 4
+color = Color(0.2901961, 0.29803923, 0.5647059, 1)
+
+[node name="ScrapContainer" type="HBoxContainer" parent="." unique_id=1471032171]
+layout_mode = 0
+offset_left = 3.0
+offset_right = 25.0
+offset_bottom = 12.0
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="ScrapLabel" type="Label" parent="ScrapContainer" unique_id=1446637907]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "20"
+label_settings = SubResource("LabelSettings_to41f")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScrapIcon" type="TextureRect" parent="ScrapContainer" unique_id=1133951974]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_e81pi")
+
+[node name="RareScrapContainer" type="HBoxContainer" parent="." unique_id=1980126579]
+layout_mode = 0
+offset_left = 17.0
+offset_right = 39.0
+offset_bottom = 12.0
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+alignment = 2
+
+[node name="ScrapLabel2" type="Label" parent="RareScrapContainer" unique_id=1292231458]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "4"
+label_settings = SubResource("LabelSettings_to41f")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RareScrapIcon" type="TextureRect" parent="RareScrapContainer" unique_id=1060549170]
+layout_mode = 2
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_62xsx")

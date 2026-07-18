@@ -14,7 +14,7 @@ public partial class LaserBlock : Block
     void DeleteBlock(Block block)
     {
         BoardAccessor.DestroyBlock(block);
-        BoardAccessor.AddSprite((Node2D)BurnAnimation.Instantiate(), block.BoardPos);
+        BoardAccessor.AddNodeToBoard((Node2D)BurnAnimation.Instantiate(), block.BoardPos);
 
         if (burnsLeft == 0)
         {

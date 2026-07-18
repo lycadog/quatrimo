@@ -153,6 +153,8 @@ public partial class Block : Area2D
         WhiteFlashSprite.AddChild(WhiteFlashLight);
     }
 
+    
+
     public void Delete()
     {
         if (IsQueuedForDeletion())
@@ -323,8 +325,9 @@ public partial class Block : Area2D
 
     public void SetEnemySlamSprite()
     {
+        GD.Print("is null? " + SlamPreviewSprite == null);
+
         SlamPreviewSprite.RegionRect = new(40, 10, 10, 10);
-        SlamPreviewSprite.SelfModulate = new(1, 1, 1, 0.6f);
     }
 
     public void ToggleOutsideBoardSprite(bool outsideBoard)

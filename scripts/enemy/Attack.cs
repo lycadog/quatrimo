@@ -4,41 +4,39 @@ using System;
 [GlobalClass]
 public abstract partial class Attack : Node
 {
-    public int TurnsToExecute = 0;
-    public int TurnsToReveal = 0;
+    public int ChargeupTurnsLeft = 0;
 
-    protected float IntensityFactor = 1;
+    public float IntensityFactor = 1;
 
-    /// <summary>
-    /// First we tick down our reveal time, then reveal the attack, then tick down execution time
-    /// </summary>
-    [Export] protected int MinTurnsToExecute = 10, MaxTurnsToExecute = 16;
-    [Export] protected int MinTurnsToReveal = 6, MaxTurnsToReveal = 10;
+    [Export] protected int MinChargeupTime = 10, MaxChargeupTime = 16;
+    [Export] protected int MinCooldownTime = 4, MaxCooldownTime = 8;
 
-    [Export] protected bool ScaleCooldownWithLevel = true;
-    [Export] protected float CooldownScalingPerLevel = .05f;
-    [Export] protected float MinimumCooldown = .2f;
+    [Export] protected bool ReduceChargeupTimeWithLevel = true;
+    [Export] protected float ChargeupTimeReductionPerLevel = .05f;
+    [Export] protected float MinimumReduction = .2f;
 
     [Export] protected bool ScaleIntensityWithLevel = true;
     [Export] protected float IntensityPerLevel = .08f;
     [Export] protected float MaximumIntensity = 1000;
 
-    public event Action ExecutionFinished;
-    public event Action UpdatingFinished;
+    [Export] public Rect2 IconTextureRegion = new(0, 0, 26, 16);
+
+    [Signal] public delegate void ExecutionFinishedEventHandler();
+    [Signal] public delegate void UpdatingFinishedEventHandler();
 
     public void StartAttack(int EnemyLevel)
     {
-        //pull random cooldowns
-        TurnsToExecute = GD.RandRange(MinTurnsToExecute, MaxTurnsToExecute);
-        MinTurnsToReveal = GD.RandRange(MinTurnsToReveal, MaxTurnsToReveal);
+        EnemyLevel--;
+        //subtract 1 from level so scaling starts after level 1
 
-        if (ScaleCooldownWithLevel)
+        ChargeupTurnsLeft = GD.RandRange(MinChargeupTime, MaxChargeupTime);
+
+        if (ReduceChargeupTimeWithLevel)
         {
-            float CooldownMultiplier = Math.Max(1 - EnemyLevel * CooldownScalingPerLevel, MinimumCooldown);
+            float ChargeupReduction = Math.Max(1 - EnemyLevel * ChargeupTimeReductionPerLevel, MinimumReduction);
             //scale cooldown to be 5% faster per level, maxxing out at 5x faster
 
-            TurnsToExecute = Math.Max((int)CooldownMultiplier * TurnsToExecute, 1);
-            TurnsToReveal = Math.Max((int)CooldownMultiplier * TurnsToReveal, 1);
+            ChargeupTurnsLeft = Math.Max((int)ChargeupReduction * ChargeupTurnsLeft, 1);
         }
         
         if (ScaleIntensityWithLevel)
@@ -49,16 +47,21 @@ public abstract partial class Attack : Node
         SetupAttack();
     }
 
+    public int GetCooldown()
+    {
+        return GD.RandRange(MinCooldownTime, MaxCooldownTime);
+    }
+
     protected virtual void SetupAttack() { }
+
+    public void TickDownTimers()
+    {
+        ChargeupTurnsLeft--;
+    }
 
     public void UpdateAttack()
     {
-        TurnsToReveal--;
-        if(TurnsToReveal <= 0) { return; }
-
-        TurnsToExecute--;
-
-        if(TurnsToExecute <= 0)
+        if (ChargeupTurnsLeft <= 0)
         {
             GD.Print("Executing attack!");
 
@@ -68,7 +71,7 @@ public abstract partial class Attack : Node
             return;
         }
 
-        UpdatingFinished.Invoke();
+        EmitSignalUpdatingFinished();
     }
 
     public abstract void ExecuteAttack();

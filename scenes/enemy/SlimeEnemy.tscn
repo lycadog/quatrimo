@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://1d3m7ucqbcrk"]
+
+[ext_resource type="Script" uid="uid://nmexckwgm4aq" path="res://scripts/enemy/BasicEnemy.cs" id="1_8uvf7"]
+[ext_resource type="Script" uid="uid://dvv0j143gn720" path="res://scripts/enemy/FallingBlocksAttack.cs" id="2_8uvf7"]
+
+[node name="SlimeEnemy" type="Node" unique_id=1848171791 node_paths=PackedStringArray("Attacks")]
+script = ExtResource("1_8uvf7")
+MaxHealth = 1000.0
+Attacks = [NodePath("Node")]
+
+[node name="Node" type="Node" parent="." unique_id=375852693]
+script = ExtResource("2_8uvf7")
+BlockTypes = Array[int]([0])
+MinChargeupTime = 8
+MaxChargeupTime = 4

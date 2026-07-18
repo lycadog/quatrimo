@@ -1,0 +1,263 @@
+[gd_scene format=3 uid="uid://cjl7yat75mpst"]
+
+[ext_resource type="Script" uid="uid://bcdxwswyibq6h" path="res://scripts/visuals/EnemyAttackPanel.cs" id="1_mldnn"]
+[ext_resource type="Texture2D" uid="uid://dpm7nrprlu64b" path="res://texture/uiElements.png" id="1_rsytb"]
+[ext_resource type="FontFile" uid="uid://y3nrp4nknidx" path="res://lang/C&C Red Alert [INET].ttf" id="2_kkhmg"]
+[ext_resource type="Texture2D" uid="uid://b7w4hfu7a6p3g" path="res://texture/AttackAtlas.png" id="3_wrtu7"]
+[ext_resource type="Texture2D" uid="uid://cthbicthgfu0l" path="res://texture/64glow.png" id="5_rs13x"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mldnn"]
+atlas = ExtResource("3_wrtu7")
+region = Rect2(0, 0, 26, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kkhmg"]
+atlas = ExtResource("1_rsytb")
+region = Rect2(214, 120, 42, 56)
+
+[sub_resource type="LabelSettings" id="LabelSettings_wrtu7"]
+font = ExtResource("2_kkhmg")
+font_size = 7
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mldnn"]
+font = ExtResource("2_kkhmg")
+font_size = 24
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_kkhmg"]
+font = ExtResource("2_kkhmg")
+font_size = 10
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rs13x"]
+atlas = ExtResource("1_rsytb")
+region = Rect2(209, 139, 5, 20)
+
+[node name="EnemyAttackPanel" type="Control" unique_id=486709585 node_paths=PackedStringArray("TurnsLeftNumberLabel", "TurnsTextLabel", "IncomingWarning", "Intensity1Glowy", "Intensity2Glowy", "Intensity3Glowy")]
+custom_minimum_size = Vector2(42, 56)
+layout_mode = 3
+anchor_right = 0.087000005
+anchor_bottom = 0.20700002
+offset_right = 0.23999786
+offset_bottom = 0.109996796
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mldnn")
+TurnsLeftNumberLabel = NodePath("TurnNumberLabel")
+TurnsTextLabel = NodePath("TURNSLabel")
+AttackIconTexture = SubResource("AtlasTexture_mldnn")
+IncomingWarning = NodePath("IncomingWarning")
+Intensity1Glowy = NodePath("Intensity1Glowy")
+Intensity2Glowy = NodePath("Intensity2Glowy")
+Intensity3Glowy = NodePath("Intensity3Glowy")
+
+[node name="PanelTexture" type="TextureRect" parent="." unique_id=757457760]
+light_mask = 3
+visibility_layer = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_kkhmg")
+
+[node name="HeaderLabel" type="Label" parent="." unique_id=38638175]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -17.0
+offset_top = -26.0
+offset_right = 17.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "ATTACKING IN"
+label_settings = SubResource("LabelSettings_wrtu7")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TurnNumberLabel" type="Label" parent="." unique_id=248364117]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -22.0
+offset_right = 18.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "???"
+label_settings = SubResource("LabelSettings_mldnn")
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="TURNSLabel" type="Label" parent="." unique_id=430356866]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -17.0
+offset_top = -4.5
+offset_right = 17.0
+offset_bottom = 6.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "TURNS"
+label_settings = SubResource("LabelSettings_kkhmg")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Intensity1Glowy" type="ColorRect" parent="." unique_id=1267525564]
+visible = false
+layout_mode = 0
+offset_left = 4.0
+offset_top = 35.0
+offset_right = 5.0
+offset_bottom = 53.0
+color = Color(1, 0.24705882, 0.24705882, 1)
+
+[node name="Intensity1GlowyRight" type="ColorRect" parent="Intensity1Glowy" unique_id=1216891268]
+layout_mode = 0
+offset_left = 33.0
+offset_right = 34.0
+offset_bottom = 18.0
+color = Color(1, 0.24705882, 0.24705882, 1)
+
+[node name="RedLight2" type="PointLight2D" parent="Intensity1Glowy" unique_id=440375406]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(33, 7.499998)
+scale = Vector2(0.34375, 0.984375)
+color = Color(1, 0.24705882, 0.24705882, 1)
+energy = 0.5
+texture = ExtResource("5_rs13x")
+
+[node name="RedLight3" type="PointLight2D" parent="Intensity1Glowy" unique_id=1548597593]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(1, 5.499998)
+scale = Vector2(0.34375, 0.984375)
+color = Color(1, 0.24705882, 0.24705882, 1)
+energy = 0.5
+texture = ExtResource("5_rs13x")
+
+[node name="Intensity2Glowy" type="ColorRect" parent="." unique_id=1296243789]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 36.0
+offset_right = 3.0
+offset_bottom = 52.0
+color = Color(1, 0.24705882, 0.24705882, 1)
+
+[node name="Intensity2GlowyRight" type="ColorRect" parent="Intensity2Glowy" unique_id=1632016246]
+layout_mode = 0
+offset_left = 37.0
+offset_right = 38.0
+offset_bottom = 16.0
+color = Color(1, 0.24705882, 0.24705882, 1)
+
+[node name="RedLight2" type="PointLight2D" parent="Intensity2Glowy" unique_id=548154070]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(37.000004, 7.499998)
+scale = Vector2(0.34375, 0.984375)
+color = Color(1, 0.24705882, 0.24705882, 1)
+energy = 0.5
+texture = ExtResource("5_rs13x")
+
+[node name="RedLight3" type="PointLight2D" parent="Intensity2Glowy" unique_id=4564676]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(1, 5.499998)
+scale = Vector2(0.34375, 0.984375)
+color = Color(1, 0.24705882, 0.24705882, 1)
+energy = 0.5
+texture = ExtResource("5_rs13x")
+
+[node name="Intensity3Glowy" type="ColorRect" parent="." unique_id=1727426147]
+visible = false
+layout_mode = 0
+offset_top = 37.0
+offset_right = 1.0
+offset_bottom = 51.0
+color = Color(1, 0.24705882, 0.24705882, 1)
+
+[node name="Intensity3GlowyRight" type="ColorRect" parent="Intensity3Glowy" unique_id=1841480871]
+layout_mode = 0
+offset_left = 41.0
+offset_right = 42.0
+offset_bottom = 14.0
+color = Color(1, 0.24705882, 0.24705882, 1)
+
+[node name="RedLight2" type="PointLight2D" parent="Intensity3Glowy" unique_id=740952428]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(40.000004, 7.499998)
+scale = Vector2(0.34375, 0.984375)
+color = Color(1, 0.24705882, 0.24705882, 1)
+energy = 0.5
+texture = ExtResource("5_rs13x")
+
+[node name="RedLight3" type="PointLight2D" parent="Intensity3Glowy" unique_id=246896546]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(1, 5.499998)
+scale = Vector2(0.34375, 0.984375)
+color = Color(1, 0.24705882, 0.24705882, 1)
+energy = 0.5
+texture = ExtResource("5_rs13x")
+
+[node name="AttackIcon" type="TextureRect" parent="." unique_id=401479977]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1904762
+anchor_top = 0.64285713
+anchor_right = 0.81000006
+anchor_bottom = 0.929
+offset_right = -0.020004272
+offset_bottom = -0.024002075
+texture = SubResource("AtlasTexture_mldnn")
+metadata/_edit_use_anchors_ = true
+
+[node name="IncomingWarning" type="TextureRect" parent="." unique_id=59495379]
+visible = false
+layout_mode = 0
+offset_left = 2.0
+offset_top = 12.0
+offset_right = 7.0
+offset_bottom = 32.0
+texture = SubResource("AtlasTexture_rs13x")
+
+[node name="IncomingWarning2" type="TextureRect" parent="IncomingWarning" unique_id=2047683598]
+layout_mode = 0
+offset_left = 33.0
+offset_right = 38.0
+offset_bottom = 20.0
+texture = SubResource("AtlasTexture_rs13x")
+flip_h = true
+
+[node name="RedLight" type="PointLight2D" parent="IncomingWarning/IncomingWarning2" unique_id=365942898]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(2, 9.5)
+scale = Vector2(0.34375, 0.984375)
+color = Color(1, 0.24705882, 0.24705882, 1)
+texture = ExtResource("5_rs13x")
+
+[node name="RedLight" type="PointLight2D" parent="IncomingWarning" unique_id=1112592166]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(1.999999, 9.5)
+scale = Vector2(0.34375, 0.984375)
+color = Color(1, 0.24705882, 0.24705882, 1)
+texture = ExtResource("5_rs13x")

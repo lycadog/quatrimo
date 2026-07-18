@@ -29,10 +29,10 @@ public partial class EnemyHealthBar : Control
         tween.TweenProperty(HPRect, "size:x", BarSize, TickdownTime).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
     }
 
-    public override void _Ready()
+    public void SetupBar(double hp, double maxHP)
     {
-        HP = 1000;
-        MaxHP = 1000;
+        HP = (int)hp;
+        MaxHP = (int)maxHP;
         UpdateText();
     }
 

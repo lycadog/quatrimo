@@ -82,7 +82,7 @@ font = ExtResource("2_qooye")
 font_size = 10
 shadow_color = Color(0, 0, 0, 1)
 
-[node name="LevelStats" type="Control" unique_id=1310085233 node_paths=PackedStringArray("LevelLabel", "MultPerLevelLabel", "RowsUntilLevelUpLabel", "LevelUpParticles", "LevelUpSFX")]
+[node name="LevelStats" type="Control" unique_id=1310085233 node_paths=PackedStringArray("LevelLabel", "MultPerLevelLabel", "RowsUntilLevelUpLabel", "RowsWordLabel", "LevelUpParticles", "LevelUpSFX")]
 self_modulate = Color(1.836182, 1.4979942, 1.4979942, 1)
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 3
@@ -93,6 +93,7 @@ script = ExtResource("1_qooye")
 LevelLabel = NodePath("HBoxContainer/LVL/Level/LevelLabel")
 MultPerLevelLabel = NodePath("HBoxContainer/+X Per Level/+X Per Lvl/+X Label")
 RowsUntilLevelUpLabel = NodePath("HBoxContainer/Level Up in X Rows/LVL UP/Rows Label")
+RowsWordLabel = NodePath("HBoxContainer/Level Up in X Rows/LVL UP/RowsDescriptionLabel")
 LevelUpParticles = NodePath("HBoxContainer/LVL/LevelUpParticle")
 LevelUpSFX = NodePath("LevelUpSound")
 
@@ -239,7 +240,7 @@ label_settings = SubResource("LabelSettings_se32y")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MiniLabel" type="Label" parent="HBoxContainer/Level Up in X Rows/LVL UP" unique_id=1920600363]
+[node name="RowsDescriptionLabel" type="Label" parent="HBoxContainer/Level Up in X Rows/LVL UP" unique_id=1920600363]
 layout_mode = 2
 text = " ROWS"
 label_settings = SubResource("LabelSettings_fiyoj")

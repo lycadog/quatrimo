@@ -26,7 +26,7 @@ public partial class FireBlock : Block
         if(turnsLeft == 0)
         {
 
-            BoardAccessor.AddSprite((Node2D)BurnAnimation.Instantiate(), Position);
+            BoardAccessor.AddNodeToBoard((Node2D)BurnAnimation.Instantiate(), Position);
             Delete();
             return;
         }
@@ -49,7 +49,7 @@ public partial class FireBlock : Block
 
                     BoardAccessor.PlaceBlockDirectlyToBoard(newBlock, false);
 
-                    BoardAccessor.AddSprite((Node2D)BurnAnimation.Instantiate(), block.BoardPos);
+                    BoardAccessor.AddNodeToBoard((Node2D)BurnAnimation.Instantiate(), block.BoardPos);
 
                     if(GD.Randf() > multiSpreadChance)
                     {

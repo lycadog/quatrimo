@@ -24,7 +24,6 @@ public partial class Board : Control
 
     public double CurrentScore;
 
-
     int RowsNeededEveryLevelup;
 
     int TotalRowsScored = 0;
@@ -63,7 +62,6 @@ public partial class Board : Control
         }
     }
 
-
     double _MultPerLevel;
     double MultPerLevel
     {
@@ -71,10 +69,9 @@ public partial class Board : Control
         set
         {
             _MultPerLevel = value;
-            LevelStatBoxes.MultPerLevelLabel.Text = "+" +_MultPerLevel + "x";
+            LevelStatBoxes.UpdateMultPerLevelLabel(value);
         }
     }
-
 
     int _RowsUntilLevelUp;
     int RowsUntilLevelUp
@@ -83,7 +80,7 @@ public partial class Board : Control
         set
         {
             _RowsUntilLevelUp = value;
-            LevelStatBoxes.RowsUntilLevelUpLabel.Text = _RowsUntilLevelUp.ToString(); ;
+            LevelStatBoxes.UpdateRowsUntilLevelUpLabel(value);
         }
     }
 
@@ -108,7 +105,7 @@ public partial class Board : Control
     [Signal] public delegate void BoardUpdatedEventHandler();
 
     [Signal] public delegate void PlayerTurn_StartedEventHandler();
-    [Signal] public delegate void Piece_PlayedEventHandler();
+    [Signal] public delegate void Piecefall_StartedEventHandler();
     [Signal] public delegate void Piecefall_EndedEventHandler();
 
     /// <summary>
@@ -138,7 +135,6 @@ public partial class Board : Control
     List<Block> PlacedBlocks = [];
 
     FallingPiece CurrentPiece;
-
 
     #region === Board Logic ===
 
@@ -174,12 +170,11 @@ public partial class Board : Control
 
 
         //start piecefall
-        EmitSignalPiece_Played();
+        EmitSignalPiecefall_Started();
     }
 
     void PlaceBlock(Block block)
     {
-        GD.Print("Block placed!");
         block.Reparent(BlockBox);
         PlacedBlocks.Add(block);
 
@@ -200,7 +195,6 @@ public partial class Board : Control
 
     void TickPriorityBlocks()
     {
-        GD.Print("Ticking blocks with priority!");
         EmitSignalTickBlocks(true);
 
         if (Board_HasUnprocessedUpdates)
@@ -253,7 +247,7 @@ public partial class Board : Control
         RowsClearedDial.Reset();
 
         //todo: change!!!
-        if (false)//Enemy.AttackingThisTurn)
+        if (Enemy.AttackingThisTurn)
         {
             //if the enemy is attacking: wait on all the animations first
             StateAnimator.StartAnimation(StartEnemyTurn);
@@ -269,12 +263,20 @@ public partial class Board : Control
     {
         //start attacking!
 
-        StartPlayerTurn();
+        Enemy.PlayTurn();
+        //when enemy is done, it will run StartPlayerTurn()
     }
 
-    void FinishEnemyTurn()
+    void FinishTurn()
     {
-        //finish the enemy's turn, updating their cooldowns and then moving onto the next turn!
+        if (Board_HasUnprocessedUpdates)
+        {
+            StartBoardProcessing(StartPlayerTurn);
+            return;
+        }
+
+        StartPlayerTurn();
+
     }
 
     #endregion
@@ -285,6 +287,8 @@ public partial class Board : Control
     List<Cell> ScoredCells = [];
     List<BoardRow> ScorableRows = [];
 
+    bool BoardProcessingActive = false;
+
     //we need to implement animations for rows and numbers and such
     //and superstate animations for these, waiting on them before progressing past board processing
 
@@ -294,14 +298,14 @@ public partial class Board : Control
     /// <param name="ReturnMethod"></param>
     void StartBoardProcessing(Action ReturnMethod)
     {
-        GD.Print("Board processing started!");
-        if(ProcessingReturnMethod != null)
+        if(BoardProcessingActive)
         {
             GD.PushError("Attempted to start board processing while board processing is already happening!");
             return;
         }
 
         ProcessingReturnMethod = ReturnMethod;
+        BoardProcessingActive = true;
 
         CheckScorability();
     }
@@ -331,7 +335,6 @@ public partial class Board : Control
             {
                 row.StartScoring();
             }
-            GD.Print($"Scoring {ScorableRows.Count} rows!");
             RowsClearedDial.AddRows(ScorableRows.Count);
 
             //rows cleared dial will run events to animate everything related to rows
@@ -348,7 +351,6 @@ public partial class Board : Control
         //NO SCORING LETS LEAVE!!!!!
         else
         {
-            GD.Print("Attempting to leave board processing!");
             //WE NEED TO WAIT!!! on ALL superstate animations before exiting!!!!
             //no scoring happened! let's skip all this noise
 
@@ -388,7 +390,6 @@ public partial class Board : Control
 
     void LevelUp()
     {
-        GD.Print("rows until levelup: " + RowsUntilLevelUp);
         Level++;
         LevelStatBoxes.LevelUp();
 
@@ -513,16 +514,13 @@ public partial class Board : Control
 
     void ExitBoardProcessing()
     {
-        GD.Print("Exiting board processing!");
+
         Board_HasUnprocessedUpdates = false;
+        BoardProcessingActive = false;
 
         ProcessingReturnMethod.Invoke();
         ProcessingReturnMethod = null;
     }
-
-
-
-
 
     #endregion
 
@@ -530,7 +528,6 @@ public partial class Board : Control
 
     void TallyUpScore()
     {
-        GD.Print("Starting score processing!");
         if (CurrentScore == 0)
         {
             //end early
@@ -557,8 +554,7 @@ public partial class Board : Control
     void SubtractScoreFromEnemyHP()
     {
         //subtract health, then animate it!
-        //Enemy.Health -= CurrentScore;
-        //TODO uncomment
+        Enemy.Health -= CurrentScore;
 
         //we want to take slightly longer to animate based on score, but this shouldn't be mind-numbingly slow at high values
         //so we make it reverse exponential growth
@@ -578,9 +574,11 @@ public partial class Board : Control
 
     void CheckEnemyHP()
     {
-        if (false)//Enemy.Health <= 0)
+        if (Enemy.Health <= 0)
         {
             //if enemy is below hp, END encounter!!!
+
+            GetTree().Quit();
             return;
         }
 
@@ -616,6 +614,18 @@ public partial class Board : Control
         }
     }
 
+    /// <summary>
+    /// Place block directly on board at its board position
+    /// </summary>
+    /// <param name="block"></param>
+    public void PlaceBlockDirectlyOnBoard(Block block, bool doWhiteFlash = true)
+    {
+        ConnectNewBlock(block);
+        BlockBox.AddChild(block);
+        //for some reason this was previously adding block as child directly TO us.
+        //shouldnt this result in incorrect positioning?
+        block.Place(doWhiteFlash);
+    }
 
     #endregion
 
@@ -659,13 +669,15 @@ public partial class Board : Control
     //setup border and graphics and here and stuff
     //like rows too
 
-    public override void _Ready()
+    public void StartEncounter(Vector2I boardDimensions, Enemy enemy)
     {
-        //initialize fields here to the defaults. TODO remove this later with real encounter initialization logic!!!!
+        Enemy = enemy;
 
-        //TODO IMPORTANT
-        //we need a method to properly set fields and instantly set related UI elements to the correct number,
-        //WITH NO animations/visual logic. we can run this when encounter starts!
+        AddChild(enemy);
+
+        enemy.TurnCompleted += FinishTurn;
+
+        SetupBoard(boardDimensions.X, boardDimensions.Y);
 
         Level = Run.Current.BaseLevel;
         MultPerLevel = Run.Current.MultPerLevel;
@@ -674,9 +686,8 @@ public partial class Board : Control
 
         LevelMult = Run.Current.BaseMult + Level * MultPerLevel;
 
-        SetupBoard(defaultX, defaultY);
-        BoardAccessor.CurrentBoard = this;
-
+        EnemyHealthBar.SetupBar(Enemy.Health, Enemy.MaxHealth);
+        BoardAccessor.Board = this;
 
         ScoringSfx = (AudioStreamPlayer)GetNode("ScoringSfxBase");
         ScoringSfxHarmonics1 = (AudioStreamPlayer)GetNode("ScoringSfxHarmonics1");
@@ -686,8 +697,8 @@ public partial class Board : Control
         ScoringSfxHarmonics5 = (AudioStreamPlayer)GetNode("ScoringSfxHarmonics5");
         ScoringSfxHarmonics6 = (AudioStreamPlayer)GetNode("ScoringSfxHarmonics6");
 
-        ScoringSFXTable = 
-            [ScoringSfx, 
+        ScoringSFXTable =
+            [ScoringSfx,
             ScoringSfxHarmonics1, ScoringSfxHarmonics1, //2, 3
             ScoringSfxHarmonics2, ScoringSfxHarmonics2, //4, 5
             ScoringSfxHarmonics3, ScoringSfxHarmonics3, //6, 7
@@ -710,6 +721,8 @@ public partial class Board : Control
         //Cell Dimensions is different because of the buffer
 
         //setup sizes here
+
+        GD.Print("cell dimensions: " + CellDimensions);
 
         CellBoard = new Cell[CellDimensions.X, CellDimensions.Y];
         BoardRows = new BoardRow[CellDimensions.Y];

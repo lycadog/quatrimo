@@ -7,6 +7,8 @@ public partial class LevelStatBoxes : Control
     [Export] public Label MultPerLevelLabel;
     [Export] public Label RowsUntilLevelUpLabel;
 
+    [Export] Label RowsWordLabel;
+
     [Export] GpuParticles2D LevelUpParticles;
     [Export] AudioStreamPlayer LevelUpSFX;
 
@@ -18,8 +20,25 @@ public partial class LevelStatBoxes : Control
         LevelUpSFX.Play();
     }
 
- 
 
+    public void UpdateMultPerLevelLabel(double Mult)
+    {
+        MultPerLevelLabel.Text = "+" + Mult + "x";
+    }
+ 
+    public void UpdateRowsUntilLevelUpLabel(int rows)
+    {
+        if(rows == 1)
+        {
+            RowsWordLabel.Text = "ROW";
+        }
+        else
+        {
+            RowsWordLabel.Text = "ROWS";
+        }
+
+        RowsUntilLevelUpLabel.Text = rows.ToString();
+    }
 
 
     //some of these ui elements need actual real score values internally since they have to change their numbers during animations
