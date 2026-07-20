@@ -153,7 +153,24 @@ public partial class Block : Area2D
         WhiteFlashSprite.AddChild(WhiteFlashLight);
     }
 
-    
+    public void ToggleCollision(bool toggle)
+    {
+        if (toggle)
+        {
+            //lol
+            //this should reset collision
+            //todo remove collision calculation from this property later
+            IsPlaced = IsPlaced;
+        }
+        else
+        {
+            SetCollisionLayerValue(1, false);
+            SetCollisionLayerValue(2, false);
+
+            SetCollisionMaskValue(1, false);
+            SetCollisionMaskValue(2, false);
+        }
+    }
 
     public void Delete()
     {
@@ -219,7 +236,7 @@ public partial class Block : Area2D
     /// Place on the board, setting our values and telling the board
     /// </summary>
     /// <param name="DoPlacementFlash"></param>
-    public void Place(bool DoPlacementFlash = true)
+    public virtual void Place(bool DoPlacementFlash = true)
     {
         RunPlacementBehavior();
 
@@ -250,6 +267,7 @@ public partial class Block : Area2D
     public void Turn_Started()
     {
         IsTicked = false;
+        JustPlaced = false;
     }
 
     /// <summary>
@@ -325,8 +343,6 @@ public partial class Block : Area2D
 
     public void SetEnemySlamSprite()
     {
-        GD.Print("is null? " + SlamPreviewSprite == null);
-
         SlamPreviewSprite.RegionRect = new(40, 10, 10, 10);
     }
 
@@ -378,6 +394,12 @@ public partial class Block : Area2D
         if (OverrideColor) { return; }
         BlockSprite.SetColor(hue, sat, val);
     }
+
+    public virtual void SetColor(Color color)
+    {
+        SetColor(color.H, color.S, color.V);
+    }
+
     public virtual void ToggleVisibility(bool visible)
     {
         if (ForceHidden)

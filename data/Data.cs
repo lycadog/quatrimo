@@ -157,7 +157,7 @@ public static class Data
 
     #region === Random Loot Pools ===
 
-    public static ObjectPool<BlockType> AllBlocksPool = new([BlockType.Basic], [BlockType.Reinforced, BlockType.Hologram, BlockType.Diamond], [BlockType.Cursed, BlockType.Laser], 12, 3, 1);
+    public static ObjectPool<BlockType> AllBlocksPool = new([BlockType.Basic], [BlockType.Reinforced, BlockType.Hologram, BlockType.Diamond], [BlockType.Cursed, BlockType.Laser, BlockType.Void], 12, 3, 1);
     
     //why is this here?
     public static ObjectPool<IHasShape> DebugShapePool = new(sBox);
@@ -169,6 +169,8 @@ public static class Data
     public static SimplePieceDefinition LaserLine = new(sStick, BlockType.Laser);
     public static SimplePieceDefinition BoomBox = new(sBox, BlockType.Bomb);
     public static SimplePieceDefinition CursedNub = new(sNub, BlockType.Cursed);
+
+    public static SimplePieceDefinition VoidNub = new(sNub, BlockType.Void);
 
     public static PooledPieceDefinition RandomPiece = new(AllBlocksPool, PieceShape.AllShapes);
     #endregion

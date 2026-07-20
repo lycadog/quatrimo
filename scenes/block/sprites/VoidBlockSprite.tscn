@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://beqqsni8uhl6l"]
+
+[ext_resource type="PackedScene" uid="uid://c7abv48quik18" path="res://scenes/block/sprites/BasicBlockSprite.tscn" id="1_psli8"]
+
+[sub_resource type="Gradient" id="Gradient_psli8"]
+offsets = PackedFloat32Array(0.23030303, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.22999993, 0, 0.3, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pi7fc"]
+gradient = SubResource("Gradient_psli8")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_41ymr"]
+lifetime_randomness = 0.11
+particle_flag_disable_z = true
+spread = 180.0
+angular_velocity_min = -461.39
+angular_velocity_max = 484.89996
+orbit_velocity_min = 0.3230001
+orbit_velocity_max = 0.7080001
+radial_velocity_min = 4.9999776
+radial_velocity_max = 7.9999776
+radial_accel_min = 31.539997
+radial_accel_max = 77.689995
+color_ramp = SubResource("GradientTexture1D_pi7fc")
+
+[node name="VoidBlockSprite" unique_id=910979645 instance=ExtResource("1_psli8")]
+region_rect = Rect2(140, 40, 10, 10)
+
+[node name="ScoreParticles" type="GPUParticles2D" parent="." index="1" unique_id=565669306]
+show_behind_parent = true
+amount = 16
+lifetime = 1.2
+process_material = SubResource("ParticleProcessMaterial_41ymr")

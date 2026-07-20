@@ -21,10 +21,10 @@ public class Cell(int x, int y)
         get => _Occupied;
         set
         {
-            UpdatedBoard.Invoke();
             bool staleScorable = Scorable;
             _Occupied = value;
             ScorabilityUpdated(staleScorable); //occupied changes this value so we need to mark this as updated
+            UpdatedBoard.Invoke();
         }
     }
 

@@ -86,6 +86,7 @@ public partial class FallingPiece : Node2D
 
     public void StartFall(Vector2I StartingPosition)
 	{
+        GD.Print("piecefall started!");
         if(Offset.X != 0)
         {
             //if we're weird and are using an offset: we are +1 +1 from our intended position, so we need to change it!

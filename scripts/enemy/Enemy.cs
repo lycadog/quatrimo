@@ -24,7 +24,7 @@ public abstract partial class Enemy : Node
 	}
 
     public bool AttackingThisTurn = false;
-    protected int AttackCooldown = 3;
+    protected int AttackCooldown = 18;
 
     [Export] public double MaxHealth;
 
@@ -47,6 +47,8 @@ public abstract partial class Enemy : Node
 	public void PlayTurn()
 	{
 		TurnNumber++;
+
+        AttackingThisTurn = false;
 
         if (ScaleLevelOvertime)
         {

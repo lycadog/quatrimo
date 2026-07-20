@@ -89,11 +89,11 @@ public static class BoardAccessor
         return newBlock;
     }
 
-    public static FallingEnemyBlock CreateFallingEnemyBlock(int x, int y, BlockType type)
+    public static FallingEnemyBlock CreateFallingEnemyBlock(int x, int blocksBeneath, int solidBlocksBeneath, BlockType type)
     {
         Block newBlock = CreateFallingBlock(type);
 
-        FallingEnemyBlock FallingBlock = new(newBlock, x, y);
+        FallingEnemyBlock FallingBlock = new(newBlock, x, blocksBeneath, solidBlocksBeneath);
 
         Board.BlockBox.AddChild(FallingBlock);
         FallingBlock.SetPreviewSprite();
@@ -104,7 +104,7 @@ public static class BoardAccessor
         Board.Connect(Board.SignalName.Piecefall_Ended,
             Callable.From(FallingBlock.SetNormalVisibility));
 
-        FallingBlock.Position = new(x * 10, (y + Board.CellDimensions.Y - 8) * -10);
+        FallingBlock.Position = new(x * 10, (blocksBeneath + Board.CellDimensions.Y - 8) * -10);
 
 
         return FallingBlock;

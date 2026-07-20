@@ -73,9 +73,6 @@ public class BoardCollisionData
             }
             SlamYOffset++;
         }
-
-        GD.Print("new offset " + SlamYOffset);
-
     }
 
     bool[] ProcessRotation(int direction)

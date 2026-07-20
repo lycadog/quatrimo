@@ -43,7 +43,7 @@ public class BagBlock(BlockType Type, Vector2 Position)
     static PackedScene BombBlock = ResourceLoader.Load<PackedScene>("uid://cmriivs12gm1y"); //TODO
     static PackedScene HologramBlock = ResourceLoader.Load<PackedScene>("uid://omknt2dnim28");
     static PackedScene LaserBlock = ResourceLoader.Load<PackedScene>("uid://6jlkgm20ess5");
-    static PackedScene VoidBlock = ResourceLoader.Load<PackedScene>("uid://cmriivs12gm1y"); //TODO
+    static PackedScene VoidBlock = ResourceLoader.Load<PackedScene>("uid://qomhw7dm8f34");
     static PackedScene DiamondBlock = ResourceLoader.Load<PackedScene>("uid://cjd2g4islgdk7");
     static PackedScene GoldBlock = ResourceLoader.Load<PackedScene>("uid://cmriivs12gm1y"); //TODO
     static PackedScene FireBlock = ResourceLoader.Load<PackedScene>("uid://dugo4rcb8mngf");
@@ -68,7 +68,7 @@ public class BagBlock(BlockType Type, Vector2 Position)
     static PackedScene BombBlockSprite = ResourceLoader.Load<PackedScene>("uid://cmriivs12gm1y"); //TODO
     static PackedScene HologramBlockSprite = ResourceLoader.Load<PackedScene>("uid://cxto0rlrr4pxj");
     static PackedScene LaserBlockSprite = ResourceLoader.Load<PackedScene>("uid://dyb4r3k7drr66");
-    static PackedScene VoidBlockSprite = ResourceLoader.Load<PackedScene>("uid://cmriivs12gm1y"); //TODO
+    static PackedScene VoidBlockSprite = ResourceLoader.Load<PackedScene>("uid://beqqsni8uhl6l");
     static PackedScene DiamondBlockSprite = ResourceLoader.Load<PackedScene>("uid://dd55ic6xm5rxr");
     static PackedScene GoldBlockSprite = ResourceLoader.Load<PackedScene>("uid://cmriivs12gm1y"); //TODO
     static PackedScene FireBlockSprite = ResourceLoader.Load<PackedScene>("uid://nqia601hryxr");

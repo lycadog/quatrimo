@@ -5,33 +5,52 @@ public partial class FallingEnemyBlock : Node2D
 {
     public int BoardX;
 
-	Block block;
+	public Block block;
 	bool Falling = false;
 
-	//Use this offset when a solid falling block is below us! We should place above them so lift up the preview
+	
 	int AttackSlamOffset = 0;
     float velocity = 0;
     const float acceleration = 8;
 
     public event Action FallingStarted;
-    public event Action FallingFinished;
+    public event Action<bool> FallingFinished;
 
-    public FallingEnemyBlock(Block block, int boardX, int attackSlamOffset)
+    public FallingEnemyBlock(Block block, int boardX, int blocksBeneath, int solidBlocksBeneath)
     {
         this.block = block;
         AddChild(block);
-        BoardX = boardX;
-        AttackSlamOffset = attackSlamOffset;
 
-        block.BoardPos = new(boardX, BoardAccessor.CellDimensions.Y - 8 + attackSlamOffset);
+        block.Deleted += BlockDeleted;
+
+        BoardX = boardX;
+
+        //Use this offset when a solid falling block is below us! We should place above them so lift up the preview
+        AttackSlamOffset = solidBlocksBeneath;
+
+        block.BoardPos = new(boardX, BoardAccessor.CellDimensions.Y - 8 + blocksBeneath);
 
         //disable the block to prevent collision until we fall
-        block.ProcessMode = ProcessModeEnum.Disabled;
+        block.ToggleCollision(false);
+    }
+
+    public void SetTexture(Rect2 region)
+    {
+        block.SetTexture(region);
+    }
+
+    public void SetColor(Color color)
+    {
+        block.SetColor(color);
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
 	{
+        if (IsQueuedForDeletion())
+        {
+            return;
+        }
 
 		if (Falling)
 		{
@@ -41,6 +60,12 @@ public partial class FallingEnemyBlock : Node2D
 
 		UpdateSlamPreview();
 	}
+
+    void BlockDeleted()
+    {
+        FallingFinished.Invoke(false);
+        QueueFree();
+    }
 
     public void StartFall()
     {
@@ -57,7 +82,7 @@ public partial class FallingEnemyBlock : Node2D
         FallingStarted?.Invoke();
 
         //reenable the block
-        block.ProcessMode = ProcessModeEnum.Inherit;
+        block.ToggleCollision(true);
 
         Falling = true;
         Modulate = new(1, 1, 1, 1);
@@ -98,8 +123,10 @@ public partial class FallingEnemyBlock : Node2D
         //if we can't move down: place!
         if (!block.CollisionData.DownMoveValid)
         {
+            block.Deleted -= BlockDeleted;
+
             block.Place();
-            FallingFinished.Invoke();
+            FallingFinished.Invoke(true);
 
             Falling = false;
             QueueFree();

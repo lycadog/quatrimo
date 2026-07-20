@@ -10,6 +10,10 @@ Attacks = [NodePath("Node")]
 
 [node name="Node" type="Node" parent="." unique_id=375852693]
 script = ExtResource("2_8uvf7")
-BlockTypes = Array[int]([0])
+MaxBlocksDropped = 10
+BlockTypes = Array[int]([6])
+TextureRegion = Rect2(10, 40, 10, 10)
+BlockColor = Color(0.09800003, 0.98, 0.40670013, 1)
 MinChargeupTime = 8
 MaxChargeupTime = 4
+IconTextureRegion = Rect2(0, 32, 26, 16)

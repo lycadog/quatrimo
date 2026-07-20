@@ -37,9 +37,10 @@ public partial class Board : Control
         get => _Board_HasUnprocessedUpdates;
         set
         {
-            
             _Board_HasUnprocessedUpdates = value;
-            if (value) { EmitSignalBoardUpdated(); }
+            if (value) { EmitSignalBoardUpdated();
+                GD.Print("Board updated signal fired!");
+            }
         }
     }
 
@@ -155,6 +156,7 @@ public partial class Board : Control
 
         CurrentPiece.PiecePlaced += Piecefall_Finished;
         Connect(SignalName.BoardUpdated, new(CurrentPiece, FallingPiece.MethodName.UpdateCollision));
+        
 
         BlockBox.AddChild(CurrentPiece);
 
@@ -177,6 +179,9 @@ public partial class Board : Control
     {
         block.Reparent(BlockBox);
         PlacedBlocks.Add(block);
+
+        Connect(SignalName.PlayerTurn_Started, new(block, Block.MethodName.Turn_Started));
+        Connect(SignalName.TickBlocks, new(block, Block.MethodName.Tick));
 
         CellBoard[block.BoardPos.X, block.BoardPos.Y].PlaceBlock(block);
         //add block to CellBoard
@@ -599,9 +604,6 @@ public partial class Board : Control
         block.Placed += PlaceBlock;
         block.Scored += Block_Scored;
         block.Deleted += () => Block_Deleted(block);
-
-        Connect(SignalName.PlayerTurn_Started, new(block, Block.MethodName.Turn_Started));
-        Connect(SignalName.TickBlocks, new(block, Block.MethodName.Tick));
     }
 
     public void Block_Deleted(Block block)
@@ -772,7 +774,6 @@ public partial class Board : Control
 
         PlayerTurn_Started += NewCell.FullyResetScoringFlag;
         BoardProcessingLoop_Started += NewCell.PartiallyResetScoringFlag;
-        
         
         //todo
 

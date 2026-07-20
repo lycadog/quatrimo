@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://qomhw7dm8f34"]
+
+[ext_resource type="PackedScene" uid="uid://dm7g0yeneuekf" path="res://scenes/block/BasicBlock.tscn" id="1_m6fu1"]
+[ext_resource type="Script" uid="uid://cf7s6gn2ypd40" path="res://scripts/blocks/VoidBlock.cs" id="2_wr0x4"]
+
+[node name="VoidBlock" unique_id=449507831 instance=ExtResource("1_m6fu1")]
+script = ExtResource("2_wr0x4")
+SolidWhenFalling = false
+SolidWhenPlaced = false
+Scorable = false
+OverrideTexture = true
+OverrideColor = true
+
+[node name="LightOccluder2D" parent="." index="1" unique_id=1415090328]
+occluder_light_mask = 0
